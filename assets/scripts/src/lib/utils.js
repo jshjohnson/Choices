@@ -439,7 +439,7 @@ export const getWidthOfInput = (input) => {
   let width = input.offsetWidth;
 
   if (value) {
-    const testEl = strToEl(`<span>${ value }</span>`);
+    const testEl = strToEl(`<input type="text" value="${value}">`);
     testEl.style.position = 'absolute';
     testEl.style.padding = '0';
     testEl.style.top = '-9999px';

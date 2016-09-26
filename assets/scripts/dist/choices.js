@@ -5057,7 +5057,7 @@
 	  var width = input.offsetWidth;
 
 	  if (value) {
-	    var testEl = strToEl("<span>" + value + "</span>");
+	    var testEl = strToEl("<input type=\"text\" value=\"" + value + "\">");
 	    testEl.style.position = 'absolute';
 	    testEl.style.padding = '0';
 	    testEl.style.top = '-9999px';
