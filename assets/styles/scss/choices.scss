@@ -20,7 +20,6 @@ $choices-highlight-color: $choices-primary-color !default;
 $choices-button-icon-path: '../../icons/' !default;
 $choices-button-dimension: 8px !default;
 $choices-button-offset: 8px !default;
-$choices-press-to-select-text: 'Press to select' !default;
 
 .#{$choices-selector} {
     position: relative;
@@ -219,7 +218,7 @@ $choices-press-to-select-text: 'Press to select' !default;
         @media (min-width: 640px) {
             padding-right: 100px;
             &:after {
-                content: $choices-press-to-select-text;
+                content: attr(data-select-text);
                 font-size: $choices-font-size-sm;
                 opacity: 0;
                 position: absolute;
