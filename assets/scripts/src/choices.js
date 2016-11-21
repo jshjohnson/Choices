@@ -23,6 +23,7 @@ import {
   getWidthOfInput,
   sortByAlpha,
   sortByScore,
+  triggerEvent
 }
 from './lib/utils.js';
 import './lib/polyfills.js';
@@ -905,6 +906,9 @@ class Choices {
         console.error('callbackOnChange: Callback is not a function');
       }
     }
+
+    // Trigger change event on passed element
+    triggerEvent(this.passedElement, 'change');
   }
 
   /**
