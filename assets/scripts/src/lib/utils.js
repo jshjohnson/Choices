@@ -471,3 +471,21 @@ export const sortByAlpha = (a, b) => {
 export const sortByScore = (a, b) => {
   return a.score - b.score;
 };
+
+export const triggerEvent = (element, type) => {
+  var e;
+
+  if ('createEvent' in document) {
+
+    e = document.createEvent('HTMLEvents');
+    e.initEvent(type, false, true);
+    return element.dispatchEvent(e);
+
+  } else {
+
+    e = document.createEventObject();
+    e.eventType = type;
+    return element.fireEvent('on' + e.eventType, e);
+
+  }
+};
