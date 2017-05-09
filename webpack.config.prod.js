@@ -1,9 +1,10 @@
 var path = require('path');
-var package = require('./package.json');
+var pkg = require('./package.json');
 var webpack = require('webpack');
 var wrapperPlugin = require('wrapper-webpack-plugin');
-var banner = `/*! ${ package.name } v${ package.version } | (c) ${ new Date().getFullYear() } ${ package.author } | ${ package.homepage } */ \n`;
+var banner = `/*! ${ pkg.name } v${ pkg.version } | (c) ${ new Date().getFullYear() } ${ pkg.author } | ${ pkg.homepage } */ \n`;
 var minimize = process.argv.indexOf('--minimize') !== -1;
+var transpile = process.argv.indexOf('--transpile') !== -1;
 
 var config = {
   devtool: 'cheap-module-source-map',
@@ -21,7 +22,6 @@ var config = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        // This has effect on the react lib size
         'NODE_ENV': JSON.stringify('production'),
       }
     }),
@@ -32,12 +32,21 @@ var config = {
   module: {
     loaders: [{
       test: /\.js$/,
+      include: path.join(__dirname, 'assets/scripts/src'),
       exclude: /(node_modules|bower_components)/,
-      loaders: ['babel'],
-      include: path.join(__dirname, 'assets/scripts/src')
+      loader: 'babel',
+      query: {
+        presets: ['es2015']
+      }
     }]
   }
 };
+
+if (!transpile) {
+  config.output.path = path.join(__dirname, '/assets/scripts/dist/es6');
+  config.module.loaders[0].query.presets = null;
+  config.module.loaders[0].query.plugins = ['transform-es2015-modules-commonjs'];
+}
 
 if (minimize) {
   config.plugins.unshift(new webpack.optimize.UglifyJsPlugin({

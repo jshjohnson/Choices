@@ -30,11 +30,10 @@ import {
 from './lib/utils.js';
 import './lib/polyfills.js';
 
-
 /**
  * Choices
  */
-class Choices {
+export default class Choices {
   constructor(element = '[data-choice]', userConfig = {}) {
     // If there are multiple elements, create a new instance
     // for each element besides the first one (as that already has an instance)
@@ -2300,5 +2299,3 @@ class Choices {
 
   /*=====  End of Private functions  ======*/
 }
-
-module.exports = Choices;

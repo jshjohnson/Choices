@@ -64,6 +64,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _fuse = __webpack_require__(2);
@@ -2584,7 +2588,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Choices;
 	}();
 
-		module.exports = Choices;
+		exports.default = Choices;
 
 /***/ },
 /* 2 */
@@ -2689,10 +2693,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {!Object<string, *>} options
 	   */
 	  function Fuse (list, options) {
-	    var i
-	    var len
 	    var key
-	    var keys
 
 	    this.list = list
 	    this.options = options = options || {}
@@ -2711,7 +2712,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	  }
 
-	  Fuse.VERSION = '2.6.0'
+	  Fuse.VERSION = '2.6.2'
 
 	  /**
 	   * Sets a new list for Fuse to match against.
@@ -5718,6 +5719,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      cancelable: false,
 	      detail: undefined
 	    };
+
 	    var evt = document.createEvent('CustomEvent');
 	    evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
 	    return evt;
