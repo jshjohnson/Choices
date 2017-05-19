@@ -333,9 +333,20 @@ const example = new Choices(element, {
 ### placeholderValue
 **Type:** `String` **Default:** `null`
 
-**Input types affected:** `text`, `select-one`, `select-multiple`
+**Input types affected:** `text`, `select-multiple`
 
 **Usage:** The value of the inputs placeholder.
+
+**Note:** To assign a placeholder to a single select box, assign a `placeholder` attribute to an option. For example:
+
+```html
+<select>
+  <option selected placeholder>This will appear like a placeholder</option>
+  <option value="one">One</option>
+  <option value="two">Two</option>
+  <option value="three">Three</option>
+</select>
+```
 
 ### prependValue
 **Type:** `String` **Default:** `null`
@@ -728,6 +739,7 @@ const example = new Choices(element, {
         {value: 'One', label: 'Label One'},
         {value: 'Two', label: 'Label Two', disabled: true},
         {value: 'Three', label: 'Label Three'},
+        {value: '', label: 'Choose a number...', placeholder: true},
     ],
 });
 

@@ -159,6 +159,19 @@ export default class Store {
 
     return foundGroup;
   }
+
+  /**
+   * Get placeholder choice from store
+   * @return {Object} Found placeholder
+   */
+  getPlaceholderChoice() {
+    const choices = this.getChoices();
+    const values = choices.filter((choice) => {
+      return choice.placeholder === true;
+    }, []);
+
+    return values[0];
+  }
 }
 
 module.exports = Store;

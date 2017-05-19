@@ -144,8 +144,7 @@
 
       <h2>Single select input</h2>
       <label for="choices-single-default">Default</label>
-      <select class="form-control" data-trigger name="choices-single-default" id="choices-single-default" placeholder="This is a search placeholder">
-        <option selected disabled>This is a placeholder</option>
+      <select class="form-control" data-trigger name="choices-single-default" id="choices-single-default">
         <option value="Dropdown item 1">Dropdown item 1</option>
         <option value="Dropdown item 2">Dropdown item 2</option>
         <option value="Dropdown item 3">Dropdown item 3</option>
@@ -154,13 +153,13 @@
       <p><small>If the following two examples do not load, the Discogs rate limit has probably been reached. Try again later!</small></p>
 
       <label for="choices-single-remote-fetch">Options from remote source (Fetch API)</label>
-      <select class="form-control" name="choices-single-remote-fetch" id="choices-single-remote-fetch" placeholder="Pick an Arctic Monkeys record"></select>
+      <select class="form-control" name="choices-single-remote-fetch" id="choices-single-remote-fetch"></select>
 
       <label for="choices-single-remove-xhr">Options from remote source (XHR) &amp; remove button</label>
-      <select class="form-control" name="choices-single-remove-xhr" id="choices-single-remove-xhr" placeholder="Pick a Smiths record"></select>
+      <select class="form-control" name="choices-single-remove-xhr" id="choices-single-remove-xhr"></select>
 
       <label for="choices-single-groups">Option groups</label>
-      <select class="form-control" data-trigger name="choices-single-groups" id="choices-single-groups" placeholder="This is a placeholder">
+      <select class="form-control" data-trigger name="choices-single-groups" id="choices-single-groups">
         <optgroup label="UK">
           <option value="London">London</option>
           <option value="Manchester">Manchester</option>
@@ -194,7 +193,7 @@
       </select>
 
       <label for="choices-single-rtl">Right-to-left</label>
-      <select class="form-control" data-trigger name="choices-single-rtl" id="choices-single-rtl" placeholder="This is a placeholder" dir="rtl">
+      <select class="form-control" data-trigger name="choices-single-rtl" id="choices-single-rtl" dir="rtl">
         <option value="Dropdown item 1">Dropdown item 1</option>
         <option value="Dropdown item 2">Dropdown item 2</option>
         <option value="Dropdown item 3">Dropdown item 3</option>
@@ -202,17 +201,18 @@
 
       <label for="choices-single-no-search">Options added via config with no search</label>
       <select class="form-control" name="choices-single-no-search" id="choices-single-no-search">
+        <option selected placeholder disabled>Press here</option>
         <option value="0">Zero</option>
       </select>
 
       <label for="choices-single-preset-options">Option and option groups added via config</label>
-      <select class="form-control" name="choices-single-preset-options" id="choices-single-preset-options" placeholder="This is a placeholder"></select>
+      <select class="form-control" name="choices-single-preset-options" id="choices-single-preset-options"></select>
 
       <label for="choices-single-selected-option">Option selected via config</label>
-      <select class="form-control" name="choices-single-selected-option" id="choices-single-selected-option" placeholder="This is a placeholder"></select>
+      <select class="form-control" name="choices-single-selected-option" id="choices-single-selected-option"></select>
 
       <label for="choices-single-no-sorting">Options without sorting</label>
-      <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting" placeholder="This is a placeholder">
+      <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting">
         <option value="Madrid">Madrid</option>
         <option value="Toronto">Toronto</option>
         <option value="Vancouver">Vancouver</option>
@@ -233,6 +233,14 @@
         <option value="Michigan">Michigan</option>
       </select>
 
+      <label for="choices-placeholder-option">Placeholder option</label>
+      <select class="form-control" name="choices-placeholder-option" id="choices-placeholder-option">
+        <option selected placeholder disabled>Press here</option>
+        <option value="one">One</option>
+        <option value="two">Two</option>
+        <option value="three">Three</option>
+      </select>
+
       <label for="choices-single-custom-templates">Custom templates</label>
       <select class="form-control" name="choices-single-custom-templates" id="choices-single-custom-templates" placeholder="This is a placeholder">
         <option value="React">React</option>
@@ -242,8 +250,8 @@
       </select>
 
       <p>Below is an example of how you could have two select inputs depend on eachother. 'Boroughs' will only be enabled if the value of 'States' is 'New York'</p>
-      <label for="states">States</label>
-      <select class="form-control" name="states" id="states" placeholder="Choose a state">
+      <label for="choices-states">States</label>
+      <select class="form-control" name="choices-states" id="choices-states">
         <option value="Michigan">Michigan</option>
         <option value="Texas">Texas</option>
         <option value="Chicago">Chicago</option>
@@ -251,8 +259,8 @@
         <option value="Washington">Washington</option>
       </select>
 
-      <label for="boroughs">Boroughs</label>
-      <select class="form-control" name="boroughs" id="boroughs" placeholder="Choose a borough">
+      <label for="choices-boroughs">Boroughs</label>
+      <select class="form-control" name="choices-boroughs" id="choices-boroughs">
         <option value="The Bronx">The Bronx</option>
         <option value="Brooklyn">Brooklyn</option>
         <option value="Manhattan">Manhattan</option>
@@ -312,9 +320,8 @@
       var multipleDefault = new Choices(document.getElementById('choices-multiple-groups'));
 
       var multipleFetch = new Choices('#choices-multiple-remote-fetch', {
-        searchChoices: false,
         placeholder: true,
-        placeholderValue: 'Pick an Strokes record',
+        placeholderValue: 'Pick a Strokes record',
         maxItemCount: 5,
       }).ajax(function(callback) {
         fetch('https://api.discogs.com/artists/55980/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW')
@@ -355,14 +362,19 @@
       });
 
       var singleFetch = new Choices('#choices-single-remote-fetch', {
-        placeholder: true,
-        placeholderValue: 'Pick an Arctic Monkeys record'
+        choices: [
+          {
+            value: 'Pick an Arctic Monkeys record',
+            placeholder: true,
+            selected: true,
+            disabled: true
+          },
+        ],
       }).ajax(function(callback) {
         fetch('https://api.discogs.com/artists/391170/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW')
         .then(function(response) {
           response.json().then(function(data) {
             callback(data.releases, 'title', 'title');
-            singleFetch.setValueByChoice('Fake Tales Of San Francisco');
           });
         })
         .catch(function(error) {
@@ -372,6 +384,7 @@
 
       var singleXhrRemove = new Choices('#choices-single-remove-xhr', {
         removeItemButton: true,
+        searchPlaceholderValue: 'Pick an Smith\'s record',
       }).ajax(function(callback) {
         var request = new XMLHttpRequest();
         request.open('get', 'https://api.discogs.com/artists/83080/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW', true);
@@ -407,12 +420,10 @@
       }).setChoices([
         {value: 'Four', label: 'Label Four', disabled: true},
         {value: 'Five', label: 'Label Five'},
-        {value: 'Six', label: 'Label Six', selected: true},
+        {value: 'Six', label: 'Label Six'},
       ], 'value', 'label', false);
 
-      var singlePresetOpts = new Choices('#choices-single-preset-options', {
-        placeholder: true,
-      }).setChoices([{
+      var singlePresetOpts = new Choices('#choices-single-preset-options').setChoices([{
         label: 'Group one',
         id: 1,
         disabled: false,
@@ -445,17 +456,24 @@
         shouldSort: false,
       });
 
-      var states = new Choices(document.getElementById('states'));
+      var singlePlaceholderOption = new Choices('#choices-placeholder-option', {
+        removeItemButton: false,
+        shouldSort: false,
+      });
 
-      states.passedElement.addEventListener('change', function(e) {
+      var singleStates = new Choices(document.getElementById('choices-states'));
+      var singleBoroughs = new Choices(document.getElementById('choices-boroughs')).disable();
+
+      singleStates.passedElement.addEventListener('change', function(e) {
         if(e.detail.value === 'New York') {
-          boroughs.enable();
+          singleBoroughs.enable();
         } else {
-          boroughs.disable();
+          singleBoroughs.disable();
         }
       });
 
       var customTemplates = new Choices(document.getElementById('choices-single-custom-templates'), {
+        searchPlaceholderValue: 'Choose your favourite framework...',
         callbackOnCreateTemplates: function (strToEl) {
           var classNames = this.config.classNames;
           var itemSelectText = this.config.itemSelectText;
@@ -492,8 +510,6 @@
           };
         }
       });
-
-      var boroughs = new Choices(document.getElementById('boroughs')).disable();
     });
   </script>
 

@@ -477,6 +477,20 @@ export const getWidthOfInput = (input) => {
     testEl.style.width = 'auto';
     testEl.style.whiteSpace = 'pre';
 
+    if (document.body.contains(input) && window.getComputedStyle) {
+      const inputStyle = window.getComputedStyle(input);
+
+      if (inputStyle) {
+        testEl.style.fontSize = inputStyle.fontSize;
+        testEl.style.fontFamily = inputStyle.fontFamily;
+        testEl.style.fontWeight = inputStyle.fontWeight;
+        testEl.style.fontStyle = inputStyle.fontStyle;
+        testEl.style.letterSpacing = inputStyle.letterSpacing;
+        testEl.style.textTransform = inputStyle.textTransform;
+        testEl.style.padding = inputStyle.padding;
+      }
+    }
+
     document.body.appendChild(testEl);
 
     if (value && testEl.offsetWidth !== input.offsetWidth) {

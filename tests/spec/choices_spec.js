@@ -78,12 +78,12 @@ describe('Choices', () => {
       expect(this.choices.config.searchEnabled).toEqual(jasmine.any(Boolean));
       expect(this.choices.config.searchChoices).toEqual(jasmine.any(Boolean));
       expect(this.choices.config.searchFloor).toEqual(jasmine.any(Number));
+      expect(this.choices.config.searchPlaceholderValue).toEqual(null);
       expect(this.choices.config.searchFields).toEqual(jasmine.any(Array) || jasmine.any(String));
       expect(this.choices.config.position).toEqual(jasmine.any(String));
       expect(this.choices.config.regexFilter).toEqual(null);
       expect(this.choices.config.sortFilter).toEqual(jasmine.any(Function));
       expect(this.choices.config.shouldSort).toEqual(jasmine.any(Boolean));
-      expect(this.choices.config.placeholder).toEqual(jasmine.any(Boolean));
       expect(this.choices.config.placeholderValue).toEqual(null);
       expect(this.choices.config.prependValue).toEqual(null);
       expect(this.choices.config.appendValue).toEqual(null);
@@ -257,7 +257,6 @@ describe('Choices', () => {
     beforeEach(function() {
       this.input = document.createElement('select');
       this.input.className = 'js-choices';
-      this.input.placeholder = 'Placeholder text';
 
       for (let i = 1; i < 4; i++) {
         const option = document.createElement('option');
@@ -525,6 +524,39 @@ describe('Choices', () => {
 
       expect(this.choices.currentState.choices[0].value).toEqual('Value 1');
     });
+
+    it('should set placeholder as first option if shouldSort true', function() {
+      const option = document.createElement('option');
+      option.setAttribute('selected', '');
+      option.setAttribute('placeholder', '');
+      option.setAttribute('disabled', '');
+      option.innerHTML = 'Placeholder';
+      this.input.appendChild(option);
+
+      this.choices = new Choices(this.input, { shouldSort: true });
+      expect(this.choices.currentState.choices[0].value).toEqual('Placeholder');
+    });
+
+    it('should set placeholder after click on remove item button', function() {
+      const option = document.createElement('option');
+      option.setAttribute('placeholder', '');
+      option.setAttribute('disabled', '');
+      option.innerHTML = 'Placeholder';
+      this.input.appendChild(option);
+
+      this.choices = new Choices(this.input, { removeItemButton: true });
+
+      const removeItemButton = this.choices.containerOuter.querySelector('[data-button]');
+
+      this.choices._onClick({
+        target: removeItemButton,
+        ctrlKey: false,
+        preventDefault: () => {}
+      });
+
+      expect(this.choices.currentState.items[1].value).toBe('Placeholder');
+      expect(this.choices.currentState.items[1].active).toBe(true);
+    });
   });
 
   describe('should accept multiple select inputs', function() {
@@ -550,6 +582,7 @@ describe('Choices', () => {
 
       this.choices = new Choices(this.input, {
         placeholderValue: 'Placeholder text',
+        preselectItem: true,
         choices: [{
           value: 'One',
           label: 'Label One',
