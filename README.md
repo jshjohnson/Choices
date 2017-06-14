@@ -72,6 +72,7 @@ Or include Choices directly:
     searchFloor: 1,
     searchResultLimit: 4,
     searchFields: ['label', 'value'],
+    searchInputAutofocus: true,
     position: 'auto',
     resetScrollPosition: true,
     regexFilter: null,
@@ -286,6 +287,13 @@ Pass an array of objects:
 **Input types affected:** `select-one`, `select-multiple`
 
 **Usage:** The minimum length a search value should be before choices are searched.
+
+### searchInputAutofocus
+**Type:** `Boolean` **Default:** `true`
+
+**Input types affected:** `select-one`
+
+**Usage:** Whether the search field must gain focus when its dropdown appear.
 
 ### searchResultLimit: 4,
 **Type:** `Number` **Default:** `4`
