@@ -1375,6 +1375,22 @@ class Choices {
               result['customProperties'],
             );
           }
+
+          if (this.passedElement.type === 'select-one') {
+            const placeholderChoice = this.store.getPlaceholderChoice();
+
+            if (placeholderChoice) {
+              this._addItem(
+                placeholderChoice.value,
+                placeholderChoice.label,
+                placeholderChoice.id,
+                placeholderChoice.groupId,
+                null,
+                placeholderChoice.placeholder
+              );
+              this._triggerChange(placeholderChoice.value);
+            }
+          }
         });
       } else {
         // No results, remove loading state

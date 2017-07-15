@@ -155,7 +155,9 @@
       <p><small>If the following two examples do not load, the Discogs rate limit has probably been reached. Try again later!</small></p>
 
       <label for="choices-single-remote-fetch">Options from remote source (Fetch API)</label>
-      <select class="form-control" name="choices-single-remote-fetch" id="choices-single-remote-fetch"></select>
+      <select class="form-control" name="choices-single-remote-fetch" id="choices-single-remote-fetch">
+        <option selected disabled placeholder>Pick an Arctic Monkeys record</option>
+      </select>
 
       <label for="choices-single-remove-xhr">Options from remote source (XHR) &amp; remove button</label>
       <select class="form-control" name="choices-single-remove-xhr" id="choices-single-remove-xhr">
@@ -371,7 +373,7 @@
       });
 
       var singleFetch = new Choices('#choices-single-remote-fetch', {
-        searchPlaceholderValue: 'Pick an Arctic Monkeys record',
+        searchPlaceholderValue: 'Search an Arctic Monkeys record',
       }).ajax(function(callback) {
         fetch('https://api.discogs.com/artists/391170/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW')
           .then(function(response) {
@@ -387,8 +389,8 @@
 
       var singleXhrRemove = new Choices('#choices-single-remove-xhr', {
         removeItemButton: true,
-        searchPlaceholderValue: 'Pick an Smith\'s record',
-        placeholderValue: 'This is a placeholder'
+        searchPlaceholderValue: 'Search an Smith\'s record',
+        placeholderValue: 'Pick an Smith\'s record'
       }).ajax(function(callback) {
         var request = new XMLHttpRequest();
         request.open('get', 'https://api.discogs.com/artists/83080/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW', true);
