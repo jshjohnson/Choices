@@ -2627,7 +2627,6 @@ class Choices {
     // Wrapper inner container with outer container
     wrap(containerInner, containerOuter);
 
-    console.log(placeholder, this.config.searchPlaceholderValue, this.passedElement.type);
     // If placeholder has been enabled and we have a value
     if (placeholder) {
       if (this.passedElement.type !== 'select-one' && !this.config.searchPlaceholderValue) {
