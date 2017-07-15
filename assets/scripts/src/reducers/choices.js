@@ -13,6 +13,7 @@ const choices = (state = [], action) => {
         value: action.value,
         label: (action.label || action.value),
         disabled: (action.disabled || false),
+        placeholder: action.placeholder,
         selected: false,
         active: true,
         score: 9999,

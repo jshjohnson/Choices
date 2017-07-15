@@ -1,4 +1,4 @@
-export const addItem = (value, label, id, choiceId, groupId, customProperties) => {
+export const addItem = (value, label, id, choiceId, groupId, customProperties, placeholder) => {
   return {
     type: 'ADD_ITEM',
     value,
@@ -6,7 +6,8 @@ export const addItem = (value, label, id, choiceId, groupId, customProperties) =
     id,
     choiceId,
     groupId,
-    customProperties
+    customProperties,
+    placeholder
   };
 };
 
@@ -26,7 +27,7 @@ export const highlightItem = (id, highlighted) => {
   };
 };
 
-export const addChoice = (value, label, id, groupId, disabled, elementId, customProperties) => {
+export const addChoice = (value, label, id, groupId, disabled, elementId, customProperties, placeholder) => {
   return {
     type: 'ADD_CHOICE',
     value,
@@ -35,7 +36,8 @@ export const addChoice = (value, label, id, groupId, disabled, elementId, custom
     groupId,
     disabled,
     elementId: elementId,
-    customProperties
+    customProperties,
+    placeholder
   };
 };
 

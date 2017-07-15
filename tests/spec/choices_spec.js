@@ -60,6 +60,7 @@ describe('Choices', () => {
       expect(this.choices.config.searchChoices).toEqual(jasmine.any(Boolean));
       expect(this.choices.config.searchFloor).toEqual(jasmine.any(Number));
       expect(this.choices.config.searchResultLimit).toEqual(jasmine.any(Number));
+      expect(this.choices.config.searchPlaceholderValue).toEqual(null);
       expect(this.choices.config.searchFields).toEqual(jasmine.any(Array) || jasmine.any(String));
       expect(this.choices.config.position).toEqual(jasmine.any(String));
       expect(this.choices.config.regexFilter).toEqual(null);
@@ -245,7 +246,6 @@ describe('Choices', () => {
     beforeEach(function() {
       this.input = document.createElement('select');
       this.input.className = 'js-choices';
-      this.input.placeholder = 'Placeholder text';
 
       for (let i = 1; i < 4; i++) {
         const option = document.createElement('option');
@@ -517,6 +517,39 @@ describe('Choices', () => {
 
       expect(this.choices.currentState.choices[0].value).toEqual('Value 1');
     });
+
+    it('should set placeholder as first option if shouldSort true', function() {
+      const option = document.createElement('option');
+      option.setAttribute('selected', '');
+      option.setAttribute('placeholder', '');
+      option.setAttribute('disabled', '');
+      option.innerHTML = 'Placeholder';
+      this.input.appendChild(option);
+
+      this.choices = new Choices(this.input, { shouldSort: true });
+      expect(this.choices.currentState.choices[0].value).toEqual('Placeholder');
+    });
+
+    it('should set placeholder after click on remove item button', function() {
+      const option = document.createElement('option');
+      option.setAttribute('placeholder', '');
+      option.setAttribute('disabled', '');
+      option.innerHTML = 'Placeholder';
+      this.input.appendChild(option);
+
+      this.choices = new Choices(this.input, { removeItemButton: true });
+
+      const removeItemButton = this.choices.containerOuter.querySelector('[data-button]');
+
+      this.choices._onClick({
+        target: removeItemButton,
+        ctrlKey: false,
+        preventDefault: () => {}
+      });
+
+      expect(this.choices.currentState.items[1].value).toBe('Placeholder');
+      expect(this.choices.currentState.items[1].active).toBe(true);
+    });
   });
 
   describe('should accept multiple select inputs', function() {
@@ -542,6 +575,7 @@ describe('Choices', () => {
 
       this.choices = new Choices(this.input, {
         placeholderValue: 'Placeholder text',
+        preselectItem: true,
         choices: [{
           value: 'One',
           label: 'Label One',
@@ -957,7 +991,8 @@ describe('Choices', () => {
         label: 'label',
         customProperties: {
           foo: 'bar'
-        }
+        },
+        placeholder: false
       };
 
       const expectedState = [{
@@ -968,7 +1003,8 @@ describe('Choices', () => {
         label: randomItem.label,
         active: true,
         highlighted: false,
-        customProperties: randomItem.customProperties
+        customProperties: randomItem.customProperties,
+        placeholder: false
       }];
 
       const action = addItemAction(
@@ -977,7 +1013,8 @@ describe('Choices', () => {
         randomItem.id,
         randomItem.choiceId,
         randomItem.groupId,
-        randomItem.customProperties
+        randomItem.customProperties,
+        randomItem.placeholder
       );
 
       expect(itemReducer([], action)).toEqual(expectedState);
@@ -993,7 +1030,8 @@ describe('Choices', () => {
         disabled: false,
         customProperties: {
           foo: 'bar'
-        }
+        },
+        placeholder: false
       };
 
       const expectedState = [{
@@ -1006,7 +1044,8 @@ describe('Choices', () => {
         selected: false,
         active: true,
         score: 9999,
-        customProperties: randomChoice.customProperties
+        customProperties: randomChoice.customProperties,
+        placeholder: false
       }];
 
       const action = addChoiceAction(
@@ -1016,7 +1055,8 @@ describe('Choices', () => {
         randomChoice.groupId,
         randomChoice.disabled,
         randomChoice.elementId,
-        randomChoice.customProperties
+        randomChoice.customProperties,
+        randomChoice.placeholder
       );
 
       expect(choiceReducer([], action)).toEqual(expectedState);

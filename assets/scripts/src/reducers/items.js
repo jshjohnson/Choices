@@ -10,7 +10,8 @@ const items = (state = [], action) => {
         label: action.label,
         active: true,
         highlighted: false,
-        customProperties: action.customProperties
+        customProperties: action.customProperties,
+        placeholder: action.placeholder
       }];
 
       return newState.map((item) => {
