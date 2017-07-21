@@ -579,14 +579,25 @@ example.passedElement.addEventListener('addItem', function(event) {
 **Usage:** Triggered when a user types into an input to search choices.
 
 ### showDropdown
-**Arguments:** - **Input types affected:** `select-one`, `select-multiple`
+**Arguments:** -
+
+**Input types affected:** `select-one`, `select-multiple`
 
 **Usage:** Triggered when the dropdown is shown.
 
 ### hideDropdown
-**Arguments:** - **Input types affected:** `select-one`, `select-multiple`
+**Arguments:** -
+
+**Input types affected:** `select-one`, `select-multiple`
 
 **Usage:** Triggered when the dropdown is hidden.
+
+### scrollToEnd
+**Arguments:** -
+
+**Input types affected:** `select-one`, `select-multiple`
+
+**Usage:** Triggered each time the last choice is revealed in the dropdown after being scrolled to.
 
 ## Methods
 Methods can be called either directly or by chaining:

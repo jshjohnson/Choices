@@ -209,8 +209,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.prevState = {};
 	    this.currentValue = '';
 
-	    // Retrieve triggering element (i.e. element with 'data-choice' trigger)
-	    this.element = element;
 	    this.passedElement = (0, _utils.isType)('String', element) ? document.querySelector(element) : element;
 	    this.isTextElement = this.passedElement.type === 'text';
 	    this.isSelectOneElement = this.passedElement.type === 'select-one';
@@ -266,6 +264,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._onMouseOver = this._onMouseOver.bind(this);
 	    this._onPaste = this._onPaste.bind(this);
 	    this._onInput = this._onInput.bind(this);
+	    this._onScroll = this._onScroll.bind(this);
 
 	    // Monitor touch taps/scrolls
 	    this.wasTap = true;
@@ -279,7 +278,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var canInit = (0, _utils.isElement)(this.passedElement) && this.isValidElementType;
 
 	    if (canInit) {
-	      // If element has already been initalised with Choices
+	      // If element has already been initialised with Choices
 	      if (this.passedElement.getAttribute('data-choice') === 'active') {
 	        return;
 	      }
@@ -1585,6 +1584,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.containerOuter.addEventListener('blur', this._onBlur);
 	      }
 
+	      if (this.isSelectElement) {
+	        this.choiceList.addEventListener('scroll', this._onScroll);
+	      }
+
 	      this.input.addEventListener('input', this._onInput);
 	      this.input.addEventListener('paste', this._onPaste);
 	      this.input.addEventListener('focus', this._onFocus);
@@ -1611,6 +1614,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.isSelectOneElement) {
 	        this.containerOuter.removeEventListener('focus', this._onFocus);
 	        this.containerOuter.removeEventListener('blur', this._onBlur);
+	      }
+
+	      if (this.isSelectElement) {
+	        this.choiceList.removeEventListener('scroll', this._onScroll);
 	      }
 
 	      this.input.removeEventListener('input', this._onInput);
@@ -2156,6 +2163,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    /**
+	     * Scroll event
+	     * @param  {Object} e Event
+	     * @return
+	     * @private
+	     */
+
+	  }, {
+	    key: '_onScroll',
+	    value: function _onScroll(e) {
+	      var _e$target = e.target,
+	          clientHeight = _e$target.clientHeight,
+	          scrollHeight = _e$target.scrollHeight,
+	          scrollTop = _e$target.scrollTop;
+
+
+	      var leftToEnd = scrollHeight - scrollTop;
+	      var scrolledToEnd = leftToEnd === clientHeight;
+	      if (scrolledToEnd) {
+	        (0, _utils.triggerEvent)(this.passedElement, 'scrollToEnd', {});
+	      }
+	    }
+
+	    /**
 	     * Tests value against a regular expression
 	     * @param  {string} value   Value to test
 	     * @return {Boolean}        Whether test passed/failed
@@ -2191,14 +2221,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	      }
 
-	      var dropdownHeight = this.choiceList.offsetHeight;
-	      var choiceHeight = choice.offsetHeight;
-	      // Distance from bottom of element to top of parent
-	      var choicePos = choice.offsetTop + choiceHeight;
-	      // Scroll position of dropdown
-	      var containerScrollPos = this.choiceList.scrollTop + dropdownHeight;
 	      // Difference between the choice and scroll position
-	      var endPoint = direction > 0 ? this.choiceList.scrollTop + choicePos - containerScrollPos : choice.offsetTop;
+	      var endPoint = void 0;
+	      if (direction > 0) {
+	        var dropdownHeight = this.choiceList.offsetHeight;
+	        var choiceHeight = choice.offsetHeight;
+	        var choiceComputedStyle = window.getComputedStyle(choice);
+	        var choiceBottomMargin = parseInt(choiceComputedStyle.marginBottom, 10);
+	        // Distance from bottom of element (including its bottom margin) to top of parent
+	        var choicePos = choice.offsetTop + choiceHeight + choiceBottomMargin;
+	        // Scroll position of dropdown
+	        var containerScrollPos = this.choiceList.scrollTop + dropdownHeight;
+	        endPoint = this.choiceList.scrollTop + choicePos - containerScrollPos;
+	      } else {
+	        endPoint = choice.offsetTop;
+	      }
 
 	      var animateScroll = function animateScroll() {
 	        var strength = 4;
