@@ -67,6 +67,7 @@ class Choices {
       searchFloor: 1,
       searchResultLimit: 4,
       searchFields: ['label', 'value'],
+      searchInputMoveToTop: false,
       position: 'auto',
       resetScrollPosition: true,
       regexFilter: null,
@@ -228,7 +229,6 @@ class Choices {
     }
 
     const canInit = isElement(this.passedElement) && this.isValidElementType;
-
     if (canInit) {
       // If element has already been initialised with Choices
       if (this.passedElement.getAttribute('data-choice') === 'active') {
@@ -511,9 +511,15 @@ class Choices {
           } else if (activeChoices.length >= 1) {
             choiceListFragment = this.renderChoices(activeChoices, choiceListFragment);
           }
-
           const activeItems = this.store.getItemsFilteredByActive();
           const canAddItem = this._canAddItem(activeItems, this.input.value);
+
+          if (this.isSelectOneElement && this.config.searchInputMoveToTop) {
+            if (!this.input.value && activeItems && !this.input.defaultValue) {
+              this.input.value = activeItems[0].label;
+              this.input.defaultValue = true;
+            }
+          }
 
           // If we have choices to show
           if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
@@ -573,6 +579,7 @@ class Choices {
 
       this.prevState = this.currentState;
     }
+
   }
 
   /**
@@ -1559,7 +1566,7 @@ class Choices {
 
     this.input.removeEventListener('input', this._onInput);
     this.input.removeEventListener('paste', this._onPaste);
-    this.input.removeEventListener('focus', this._onFocus);
+      this.input.removeEventListener('focus', this._onFocus);
     this.input.removeEventListener('blur', this._onBlur);
   }
 
@@ -2052,6 +2059,9 @@ class Choices {
           if (target === this.input && hasActiveDropdown) {
             // Hide dropdown if it is showing
             this.hideDropdown();
+          }
+          if (this.config.searchInputMoveToTop) {
+            this.input.value = activeItems[0].label;
           }
         },
         'select-multiple': () => {
@@ -2749,7 +2759,9 @@ class Choices {
 
     containerOuter.appendChild(containerInner);
     containerOuter.appendChild(dropdown);
-    containerInner.appendChild(itemList);
+    if (!this.config.searchInputMoveToTop) {
+      containerInner.appendChild(itemList);
+    }
 
     if (!this.isTextElement) {
       dropdown.appendChild(choiceList);
@@ -2758,7 +2770,11 @@ class Choices {
     if (this.isSelectMultipleElement || this.isTextElement) {
       containerInner.appendChild(input);
     } else if (this.canSearch) {
-      dropdown.insertBefore(input, dropdown.firstChild);
+      if (!this.config.searchInputMoveToTop) {
+        dropdown.insertBefore(input, dropdown.firstChild);
+      } else {
+        containerInner.appendChild(input);
+      }
     }
 
     if (this.isSelectElement) {
