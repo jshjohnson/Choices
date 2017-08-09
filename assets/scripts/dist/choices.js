@@ -285,6 +285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (!cuttingTheMustard && !this.config.silent) {
 	      console.error('Choices: Your browser doesn\'t support Choices');
 	    }
+
 	    var canInit = (0, _utils.isElement)(this.passedElement) && this.isValidElementType;
 	    if (canInit) {
 	      // If element has already been initialised with Choices
@@ -316,6 +317,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.initialised === true) {
 	        return;
 	      }
+
 	      var callback = this.config.callbackOnInit;
 
 	      // Set initialise flag
@@ -881,6 +883,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var body = document.body;
 	      var html = document.documentElement;
 	      var winHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+
 	      this.containerOuter.classList.add(this.config.classNames.openState);
 	      this.containerOuter.setAttribute('aria-expanded', 'true');
 	      this.dropdown.classList.add(this.config.classNames.activeState);
@@ -1743,6 +1746,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var backKey = 46;
 	      var deleteKey = 8;
 	      var enterKey = 13;
+	      var tabKey = 9;
 	      var aKey = 65;
 	      var escapeKey = 27;
 	      var upKey = 38;
@@ -1871,8 +1875,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      };
 
+	      var onTabKey = function onTabKey() {
+	        // If enter key is pressed and the input has a value
+	        if (_this16.isTextElement && target.value) {
+	          var value = _this16.input.value;
+	          var canAddItem = _this16._canAddItem(activeItems, value);
+
+	          // All is good, add
+	          if (canAddItem.response) {
+	            if (hasActiveDropdown) {
+	              _this16.hideDropdown();
+	            }
+	            _this16._addItem(value);
+	            _this16._triggerChange(value);
+	            _this16.clearInput();
+	          }
+	        }
+
+	        if (target.hasAttribute('data-button')) {
+	          _this16._handleButtonAction(activeItems, target);
+	          e.preventDefault();
+	        }
+
+	        if (hasActiveDropdown) {
+	          e.preventDefault();
+	          var highlighted = _this16.dropdown.querySelector('.' + _this16.config.classNames.highlightedState);
+
+	          // If we have a highlighted choice
+	          if (highlighted) {
+	            // add enter keyCode value
+	            if (activeItems[0]) {
+	              activeItems[0].keyCode = tabKey;
+	            }
+	            _this16._handleChoiceAction(activeItems, highlighted);
+	          }
+	        } else if (_this16.isSelectOneElement) {
+	          // Open single select dropdown if it's not active
+	          if (!hasActiveDropdown) {
+	            _this16.showDropdown(true);
+	            e.preventDefault();
+	          }
+	        }
+	      };
+
 	      // Map keys to key actions
-	      var keyDownActions = (_keyDownActions = {}, _defineProperty(_keyDownActions, aKey, onAKey), _defineProperty(_keyDownActions, enterKey, onEnterKey), _defineProperty(_keyDownActions, escapeKey, onEscapeKey), _defineProperty(_keyDownActions, upKey, onDirectionKey), _defineProperty(_keyDownActions, pageUpKey, onDirectionKey), _defineProperty(_keyDownActions, downKey, onDirectionKey), _defineProperty(_keyDownActions, pageDownKey, onDirectionKey), _defineProperty(_keyDownActions, deleteKey, onDeleteKey), _defineProperty(_keyDownActions, backKey, onDeleteKey), _keyDownActions);
+	      var keyDownActions = (_keyDownActions = {}, _defineProperty(_keyDownActions, aKey, onAKey), _defineProperty(_keyDownActions, enterKey, onEnterKey), _defineProperty(_keyDownActions, tabKey, onTabKey), _defineProperty(_keyDownActions, escapeKey, onEscapeKey), _defineProperty(_keyDownActions, upKey, onDirectionKey), _defineProperty(_keyDownActions, pageUpKey, onDirectionKey), _defineProperty(_keyDownActions, downKey, onDirectionKey), _defineProperty(_keyDownActions, pageDownKey, onDirectionKey), _defineProperty(_keyDownActions, deleteKey, onDeleteKey), _defineProperty(_keyDownActions, backKey, onDeleteKey), _keyDownActions);
 
 	      // If keycode has a function, run it
 	      if (keyDownActions[e.keyCode]) {
@@ -2136,6 +2183,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_onFocus',
 	    value: function _onFocus(e) {
 	      var _this17 = this;
+
 	      var target = e.target;
 	      // If target is something that concerns us
 	      if (this.containerOuter.contains(target)) {
@@ -2151,7 +2199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (target === _this17.input) {
 	              // Show dropdown if it isn't already showing
 	              if (!hasActiveDropdown) {
-	                _this17.showDropdown(true);
+	                _this17.showDropdown();
 	              }
 	            }
 	          },
@@ -2167,6 +2215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	          }
 	        };
+
 	        focusActions[this.passedElement.type]();
 	      }
 	    }
