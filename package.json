@@ -1,8 +1,9 @@
 {
   "name": "choices.js",
-  "version": "2.8.8",
+  "version": "3.0.2",
   "description": "A vanilla JS customisable text input/select box plugin",
   "main": "./assets/scripts/dist/choices.min.js",
+  "types": "index.d.ts",
   "scripts": {
     "start": "node server.js",
     "test": "karma start --single-run --no-auto-watch tests/karma.config.js",
@@ -14,7 +15,8 @@
     "css:min": "csso assets/styles/css/base.css assets/styles/css/base.min.css && csso assets/styles/css/choices.css assets/styles/css/choices.min.css",
     "js:build": "concurrently --prefix-colors yellow,green \"webpack --minimize --config webpack.config.prod.js\" \"webpack --config webpack.config.prod.js\"",
     "version": "node version.js --current $npm_package_version --new $npm_config_newVersion",
-    "postversion": "npm run js:build"
+    "postversion": "npm run js:build",
+    "dev": "dev"
   },
   "repository": {
     "type": "git",

@@ -40,7 +40,7 @@ p {
 
 hr {
   display: block;
-  margin: 36px 0;
+  margin: 30px 0;
   border: 0;
   border-bottom: 1px solid #eaeaea;
   height: 1px;
@@ -144,6 +144,10 @@ h6, .h6 {
 
 .zero-top {
   margin-top: 0;
+}
+
+.text-center {
+  text-align: center;
 }
 
 /*=====  End of Section comment block  ======*/

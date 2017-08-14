@@ -59,6 +59,7 @@ Or include Choices directly:
     silent: false,
     items: [],
     choices: [],
+    renderChoiceLimit: -1,
     maxItemCount: -1,
     addItems: true,
     removeItems: true,
@@ -80,6 +81,7 @@ Or include Choices directly:
     sortFilter: () => {...},
     placeholder: true,
     placeholderValue: null,
+    searchPlaceholderValue: null,
     prependValue: null,
     appendValue: null,
     renderSelectedChoices: 'auto',
@@ -106,25 +108,28 @@ Or include Choices directly:
       itemSelectable: 'choices__item--selectable',
       itemDisabled: 'choices__item--disabled',
       itemChoice: 'choices__item--choice',
+      placeholder: 'choices__placeholder',
       group: 'choices__group',
-      groupHeading : 'choices__heading',
+      groupHeading: 'choices__heading',
       button: 'choices__button',
       activeState: 'is-active',
       focusState: 'is-focused',
       openState: 'is-open',
-      disabledState: 'is-disabled',
+      disabledState: 'is-disaqbled',
       highlightedState: 'is-highlighted',
       hiddenState: 'is-hidden',
       flippedState: 'is-flipped',
       loadingState: 'is-loading',
+      noResults: 'has-no-results',
+      noChoices: 'has-no-choices'
     },
     // Choices uses the great Fuse library for searching. You
     // can find more options here: https://github.com/krisk/Fuse#options
     fuseOptions: {
-      include: 'score',
+      include: 'score'
     },
     callbackOnInit: null,
-    callbackOnCreateTemplates: null,
+    callbackOnCreateTemplates: null
   });
 ```
 
@@ -201,6 +206,13 @@ Pass an array of objects:
   },
 }]
 ```
+
+### renderChoiceLimit
+**Type:** `Number` **Default:** `-1`
+
+**Input types affected:** `select-one`, `select-multiple`
+
+**Usage:** The amount of choices to be rendered within the dropdown list ("-1" indicates no limit). This is useful if you have a lot of choices where it is easier for a user to use the search area to find a choice.
 
 ### maxItemCount
 **Type:** `Number` **Default:** `-1`
@@ -350,16 +362,34 @@ const example = new Choices(element, {
 ### placeholder
 **Type:** `Boolean` **Default:** `true`
 
-**Input types affected:** `text`, `select-one`, `select-multiple`
+**Input types affected:** `text`, `select-multiple`
 
 **Usage:** Whether the input should show a placeholder. Used in conjunction with `placeholderValue`. If `placeholder` is set to true and no value is passed to `placeholderValue`, the passed input's placeholder attribute will be used as the  placeholder value.
+
+**Note:** For single select boxes, the recommended way of adding a placeholder is as follows:
+
+```html
+<select>
+  <option placeholder>This is a placeholder</option>
+  <option>...</option>
+  <option>...</option>
+  <option>...</option>
+</select>
+```
 
 ### placeholderValue
 **Type:** `String` **Default:** `null`
 
-**Input types affected:** `text`, `select-one`, `select-multiple`
+**Input types affected:** `text`, `select-multiple`
 
 **Usage:** The value of the inputs placeholder.
+
+### searchPlaceholderValue
+**Type:** `String` **Default:** `null`
+
+**Input types affected:** `select-one`
+
+**Usage:** The value of the search inputs placeholder.
 
 ### prependValue
 **Type:** `String` **Default:** `null`
@@ -532,7 +562,7 @@ example.passedElement.addEventListener('addItem', function(event) {
 ```
 
 ### addItem
-**Arguments:** `id, value, label, groupValue`
+**Arguments:** `id, value, label, groupValue, keyCode`
 
 **Input types affected:** `text`, `select-one`, `select-multiple`
 
@@ -560,7 +590,7 @@ example.passedElement.addEventListener('addItem', function(event) {
 **Usage:** Triggered each time an item is unhighlighted.
 
 ### choice
-**Arguments:** `value`
+**Arguments:** `value, keyCode`
 
 **Input types affected:** `select-one`, `select-multiple`
 
@@ -574,17 +604,23 @@ example.passedElement.addEventListener('addItem', function(event) {
 **Usage:** Triggered each time an item is added/removed **by a user**.
 
 ### search
-**Arguments:** `value` **Input types affected:** `select-one`, `select-multiple`
+**Arguments:** `value`, `resultCount`
+
+**Input types affected:** `select-one`, `select-multiple`
 
 **Usage:** Triggered when a user types into an input to search choices.
 
 ### showDropdown
-**Arguments:** - **Input types affected:** `select-one`, `select-multiple`
+**Arguments:** -
+
+**Input types affected:** `select-one`, `select-multiple`
 
 **Usage:** Triggered when the dropdown is shown.
 
 ### hideDropdown
-**Arguments:** - **Input types affected:** `select-one`, `select-multiple`
+**Arguments:** -
+
+**Input types affected:** `select-one`, `select-multiple`
 
 **Usage:** Triggered when the dropdown is hidden.
 
@@ -833,6 +869,7 @@ Choices is compiled using [Babel](https://babeljs.io/) to enable support for [ES
 * Array.prototype.some
 * Array.prototype.reduce
 * Array.prototype.indexOf
+* Object.assign
 * Element.prototype.classList
 * window.requestAnimationFrame
 

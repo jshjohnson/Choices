@@ -48,6 +48,7 @@ describe('Choices', () => {
       expect(this.choices.config.silent).toEqual(jasmine.any(Boolean));
       expect(this.choices.config.items).toEqual(jasmine.any(Array));
       expect(this.choices.config.choices).toEqual(jasmine.any(Array));
+      expect(this.choices.config.renderChoiceLimit).toEqual(jasmine.any(Number));
       expect(this.choices.config.maxItemCount).toEqual(jasmine.any(Number));
       expect(this.choices.config.addItems).toEqual(jasmine.any(Boolean));
       expect(this.choices.config.removeItems).toEqual(jasmine.any(Boolean));
@@ -68,6 +69,7 @@ describe('Choices', () => {
       expect(this.choices.config.shouldSortItems).toEqual(jasmine.any(Boolean));
       expect(this.choices.config.placeholder).toEqual(jasmine.any(Boolean));
       expect(this.choices.config.placeholderValue).toEqual(null);
+      expect(this.choices.config.searchPlaceholderValue).toEqual(null);
       expect(this.choices.config.prependValue).toEqual(null);
       expect(this.choices.config.appendValue).toEqual(null);
       expect(this.choices.config.renderSelectedChoices).toEqual(jasmine.any(String));
@@ -167,6 +169,16 @@ describe('Choices', () => {
 
     afterEach(function() {
       this.choices.destroy();
+    });
+
+    it('should apply placeholderValue to input', function() {
+      this.choices = new Choices(this.input);
+      expect(this.choices.input.placeholder).toEqual('Placeholder text');
+    });
+
+    it('should not apply searchPlaceholderValue to input', function() {
+      this.choices = new Choices(this.input);
+      expect(this.choices.input.placeholder).not.toEqual('Test');
     });
 
     it('should accept a user inputted value', function() {
@@ -281,6 +293,22 @@ describe('Choices', () => {
       this.choices.destroy();
     });
 
+    it('should not apply placeholderValue to input', function() {
+      this.choices = new Choices(this.input, {
+        placeholderValue: 'Placeholder'
+      });
+
+      expect(this.choices.input.placeholder).not.toEqual('Placeholder');
+    });
+
+    it('should apply searchPlaceholderValue to input', function() {
+      this.choices = new Choices(this.input, {
+        searchPlaceholderValue: 'Placeholder'
+      });
+
+      expect(this.choices.input.placeholder).toEqual('Placeholder');
+    });
+
     it('should open the choice list on focusing', function() {
       this.choices = new Choices(this.input);
       this.choices.input.focus();
@@ -293,7 +321,9 @@ describe('Choices', () => {
     });
 
     it('should highlight the choices on keydown', function() {
-      this.choices = new Choices(this.input);
+      this.choices = new Choices(this.input, {
+        renderChoiceLimit: -1
+      });
       this.choices.input.focus();
 
       for (let i = 0; i < 2; i++) {
@@ -380,8 +410,8 @@ describe('Choices', () => {
 
     it('should close the dropdown on double click', function() {
       this.choices = new Choices(this.input);
-      const container = this.choices.containerOuter,
-        openState = this.choices.config.classNames.openState;
+      const container = this.choices.containerOuter;
+      const openState = this.choices.config.classNames.openState;
 
       this.choices._onClick({
         target: container,
@@ -396,6 +426,33 @@ describe('Choices', () => {
       });
 
       expect(document.activeElement === this.choices.input && container.classList.contains(openState)).toBe(false);
+    });
+
+    it('should set scrolling flag and not hide dropdown when scrolling on IE', function() {
+      this.choices = new Choices(this.input);
+      this.choices.isIe11 = true;
+
+      spyOn(this.choices, 'hideDropdown');
+
+      const container = this.choices.containerOuter;
+      const choiceList = this.choices.choiceList;
+
+      // Click to open dropdown
+      this.choices._onClick({
+        target: container,
+        ctrlKey: false,
+        preventDefault: () => {}
+      });
+
+      // Hold mouse on scrollbar
+      this.choices._onMouseDown({
+        target: choiceList,
+        ctrlKey: false,
+        preventDefault: () => {}
+      });
+
+      expect(this.choices.isScrollingOnIe).toBe(true);
+      expect(this.choices.hideDropdown).not.toHaveBeenCalled();
     });
 
     it('should trigger showDropdown on dropdown opening', function() {
@@ -492,7 +549,7 @@ describe('Choices', () => {
         ctrlKey: false
       });
 
-      const activeOptions = this.choices.currentState.choices.filter(function (choice) {
+      const activeOptions = this.choices.currentState.choices.filter(function(choice) {
         return choice.active;
       });
 
@@ -535,6 +592,15 @@ describe('Choices', () => {
 
       expect(this.choices.currentState.choices[0].value).toEqual('Value 1');
     });
+
+    it('should set searchPlaceholderValue if set', function() {
+      const dummyPlaceholder = 'Test placeholder';
+      this.choices = new Choices(this.input, {
+        searchPlaceholderValue: dummyPlaceholder
+      });
+
+      expect(this.choices.input.placeholder).toEqual(dummyPlaceholder);
+    });
   });
 
   describe('should accept multiple select inputs', function() {
@@ -560,6 +626,7 @@ describe('Choices', () => {
 
       this.choices = new Choices(this.input, {
         placeholderValue: 'Placeholder text',
+        searchPlaceholderValue: 'Test',
         choices: [{
           value: 'One',
           label: 'Label One',
@@ -578,6 +645,14 @@ describe('Choices', () => {
 
     afterEach(function() {
       this.choices.destroy();
+    });
+
+    it('should apply placeholderValue to input', function() {
+      expect(this.choices.input.placeholder).toEqual('Placeholder text');
+    });
+
+    it('should not apply searchPlaceholderValue to input', function() {
+      expect(this.choices.input.placeholder).not.toEqual('Test');
     });
 
     it('should add any pre-defined values', function() {
@@ -930,7 +1005,7 @@ describe('Choices', () => {
 
     it('should flip the dropdown', function() {
       this.choices = new Choices(this.input, {
-        position: 'top'
+        position: 'top',
       });
 
       const container = this.choices.containerOuter;
@@ -950,7 +1025,8 @@ describe('Choices', () => {
 
     it('should render selected choices', function() {
       this.choices = new Choices(this.input, {
-        renderSelectedChoices: 'always'
+        renderSelectedChoices: 'always',
+        renderChoiceLimit: -1
       });
       const renderedChoices = this.choices.choiceList.querySelectorAll('.choices__item');
       expect(renderedChoices.length).toEqual(3);
@@ -958,10 +1034,48 @@ describe('Choices', () => {
 
     it('shouldn\'t render selected choices', function() {
       this.choices = new Choices(this.input, {
-        renderSelectedChoices: 'auto'
+        renderSelectedChoices: 'auto',
+        renderChoiceLimit: -1
       });
       const renderedChoices = this.choices.choiceList.querySelectorAll('.choices__item');
       expect(renderedChoices.length).toEqual(1);
+    });
+
+    it('shouldn\'t render choices up to a render limit', function() {
+      // Remove existing choices (to make test simpler)
+      while (this.input.firstChild) {
+        this.input.removeChild(this.input.firstChild);
+      }
+
+      this.choices = new Choices(this.input, {
+        choices: [
+          {
+            value: 'Option 1',
+            selected: false,
+          },
+          {
+            value: 'Option 2',
+            selected: false,
+          },
+          {
+            value: 'Option 3',
+            selected: false,
+          },
+          {
+            value: 'Option 4',
+            selected: false,
+          },
+          {
+            value: 'Option 5',
+            selected: false,
+          },
+        ],
+        renderSelectedChoices: 'auto',
+        renderChoiceLimit: 4
+      });
+
+      const renderedChoices = this.choices.choiceList.querySelectorAll('.choices__item');
+      expect(renderedChoices.length).toEqual(4);
     });
   });
 
@@ -975,7 +1089,9 @@ describe('Choices', () => {
         label: 'label',
         customProperties: {
           foo: 'bar'
-        }
+        },
+        placeholder: false,
+        keyCode: null
       };
 
       const expectedState = [{
@@ -986,7 +1102,9 @@ describe('Choices', () => {
         label: randomItem.label,
         active: true,
         highlighted: false,
-        customProperties: randomItem.customProperties
+        customProperties: randomItem.customProperties,
+        placeholder: false,
+        keyCode: randomItem.keyCode
       }];
 
       const action = addItemAction(
@@ -995,7 +1113,8 @@ describe('Choices', () => {
         randomItem.id,
         randomItem.choiceId,
         randomItem.groupId,
-        randomItem.customProperties
+        randomItem.customProperties,
+        randomItem.keyCode
       );
 
       expect(itemReducer([], action)).toEqual(expectedState);
@@ -1011,7 +1130,9 @@ describe('Choices', () => {
         disabled: false,
         customProperties: {
           foo: 'bar'
-        }
+        },
+        placeholder: false,
+        keyCode: null
       };
 
       const expectedState = [{
@@ -1024,7 +1145,9 @@ describe('Choices', () => {
         selected: false,
         active: true,
         score: 9999,
-        customProperties: randomChoice.customProperties
+        customProperties: randomChoice.customProperties,
+        placeholder: randomChoice.placeholder,
+        keyCode: randomChoice.keyCode
       }];
 
       const action = addChoiceAction(
@@ -1034,7 +1157,8 @@ describe('Choices', () => {
         randomChoice.groupId,
         randomChoice.disabled,
         randomChoice.elementId,
-        randomChoice.customProperties
+        randomChoice.customProperties,
+        randomChoice.keyCode
       );
 
       expect(choiceReducer([], action)).toEqual(expectedState);

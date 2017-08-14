@@ -49,7 +49,7 @@ p { margin-top: 0; }
 
 hr {
   display: block;
-  margin: $global-guttering*1.5 0;
+  margin: $global-guttering*1.25 0;
   border: 0;
   border-bottom: 1px solid #eaeaea;
   height: 1px;
@@ -120,5 +120,6 @@ h6, .h6 { font-size: $global-font-size-h6; }
 .visible-ie { display: none; }
 .zero-bottom {  margin-bottom: 0; }
 .zero-top {  margin-top: 0; }
+.text-center { text-align: center; }
 
 /*=====  End of Section comment block  ======*/
