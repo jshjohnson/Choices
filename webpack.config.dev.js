@@ -30,10 +30,10 @@ module.exports = {
     })
   ],
   module: {
-    loaders: [{
+    rules: [{
       test: /\.js$/,
       exclude: /(node_modules|bower_components)/,
-      loaders: ['babel', 'eslint-loader'],
+      use: ['babel-loader', 'eslint-loader'],
       include: path.join(__dirname, 'assets/scripts/src')
     }]
   }

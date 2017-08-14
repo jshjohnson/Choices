@@ -30,10 +30,13 @@ module.exports = function(config) {
     webpack: {
       module: {
         loaders: [{
-          test: /\.(js|jsx)$/,
-          exclude: /(bower_components|node_modules)/,
-          loader: 'babel-loader'
-        }],
+          test: /\.js$/,
+          exclude: /(node_modules|bower_components)/,
+          loader: 'babel',
+          query: {
+            presets: ['es2015']
+          }
+        }]
       }
     },
     colors: true,
