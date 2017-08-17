@@ -69,6 +69,7 @@ class Choices {
       searchFloor: 1,
       searchResultLimit: 4,
       searchFields: ['label', 'value'],
+      searchInputMoveToTop: false,
       position: 'auto',
       resetScrollPosition: true,
       regexFilter: null,
@@ -225,7 +226,6 @@ class Choices {
     }
 
     const canInit = isElement(this.passedElement) && this.isValidElementType;
-
     if (canInit) {
       // If element has already been initialised with Choices
       if (this.passedElement.getAttribute('data-choice') === 'active') {
@@ -510,9 +510,15 @@ class Choices {
           } else if (activeChoices.length >= 1) {
             choiceListFragment = this.renderChoices(activeChoices, choiceListFragment);
           }
-
           const activeItems = this.store.getItemsFilteredByActive();
           const canAddItem = this._canAddItem(activeItems, this.input.value);
+
+          if (this.isSelectOneElement && this.config.searchInputMoveToTop) {
+            if (!this.input.value && activeItems && !this.input.defaultValue) {
+              this.input.value = activeItems[0].label;
+              this.input.defaultValue = true;
+            }
+          }
 
           // If we have choices to show
           if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
@@ -572,6 +578,7 @@ class Choices {
 
       this.prevState = this.currentState;
     }
+
   }
 
   /**
@@ -1572,7 +1579,7 @@ class Choices {
 
     this.input.removeEventListener('input', this._onInput);
     this.input.removeEventListener('paste', this._onPaste);
-    this.input.removeEventListener('focus', this._onFocus);
+      this.input.removeEventListener('focus', this._onFocus);
     this.input.removeEventListener('blur', this._onBlur);
   }
 
@@ -1614,6 +1621,7 @@ class Choices {
     const backKey = 46;
     const deleteKey = 8;
     const enterKey = 13;
+    const tabKey = 9;
     const aKey = 65;
     const escapeKey = 27;
     const upKey = 38;
@@ -1740,10 +1748,55 @@ class Choices {
       }
     };
 
+    const onTabKey = () => {
+      // If enter key is pressed and the input has a value
+      if (this.isTextElement && target.value) {
+        const value = this.input.value;
+        const canAddItem = this._canAddItem(activeItems, value);
+
+        // All is good, add
+        if (canAddItem.response) {
+          if (hasActiveDropdown) {
+            this.hideDropdown();
+          }
+          this._addItem(value);
+          this._triggerChange(value);
+          this.clearInput();
+        }
+      }
+
+      if (target.hasAttribute('data-button')) {
+        this._handleButtonAction(activeItems, target);
+        e.preventDefault();
+      }
+
+      if (hasActiveDropdown) {
+        e.preventDefault();
+        const highlighted = this.dropdown.querySelector(`.${this.config.classNames.highlightedState}`);
+
+        // If we have a highlighted choice
+        if (highlighted) {
+          // add enter keyCode value
+          if (activeItems[0]) {
+            activeItems[0].keyCode = tabKey;
+          }
+          this._handleChoiceAction(activeItems, highlighted);
+        }
+
+      } else if (this.isSelectOneElement) {
+        // Open single select dropdown if it's not active
+        if (!hasActiveDropdown) {
+          this.showDropdown(true);
+          e.preventDefault();
+        }
+      }
+    };
+
     // Map keys to key actions
     const keyDownActions = {
       [aKey]: onAKey,
       [enterKey]: onEnterKey,
+      [tabKey]: onTabKey,
       [escapeKey]: onEscapeKey,
       [upKey]: onDirectionKey,
       [pageUpKey]: onDirectionKey,
@@ -2074,6 +2127,9 @@ class Choices {
           if (target === this.input && hasActiveDropdown) {
             // Hide dropdown if it is showing
             this.hideDropdown();
+          }
+          if (this.config.searchInputMoveToTop) {
+            this.input.value = activeItems[0].label;
           }
         },
         'select-multiple': () => {
@@ -2762,7 +2818,9 @@ class Choices {
 
     containerOuter.appendChild(containerInner);
     containerOuter.appendChild(dropdown);
-    containerInner.appendChild(itemList);
+    if (!this.config.searchInputMoveToTop) {
+      containerInner.appendChild(itemList);
+    }
 
     if (!this.isTextElement) {
       dropdown.appendChild(choiceList);
@@ -2771,7 +2829,11 @@ class Choices {
     if (this.isSelectMultipleElement || this.isTextElement) {
       containerInner.appendChild(input);
     } else if (this.canSearch) {
-      dropdown.insertBefore(input, dropdown.firstChild);
+      if (!this.config.searchInputMoveToTop) {
+        dropdown.insertBefore(input, dropdown.firstChild);
+      } else {
+        containerInner.appendChild(input);
+      }
     }
 
     if (this.isSelectElement) {

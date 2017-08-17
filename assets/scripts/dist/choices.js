@@ -132,6 +132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      searchFloor: 1,
 	      searchResultLimit: 4,
 	      searchFields: ['label', 'value'],
+	      searchInputMoveToTop: false,
 	      position: 'auto',
 	      resetScrollPosition: true,
 	      regexFilter: null,
@@ -286,7 +287,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    var canInit = (0, _utils.isElement)(this.passedElement) && this.isValidElementType;
-
 	    if (canInit) {
 	      // If element has already been initialised with Choices
 	      if (this.passedElement.getAttribute('data-choice') === 'active') {
@@ -603,9 +603,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            } else if (activeChoices.length >= 1) {
 	              choiceListFragment = this.renderChoices(activeChoices, choiceListFragment);
 	            }
-
 	            var activeItems = this.store.getItemsFilteredByActive();
 	            var canAddItem = this._canAddItem(activeItems, this.input.value);
+
+	            if (this.isSelectOneElement && this.config.searchInputMoveToTop) {
+	              if (!this.input.value && activeItems && !this.input.defaultValue) {
+	                this.input.value = activeItems[0].label;
+	                this.input.defaultValue = true;
+	              }
+	            }
 
 	            // If we have choices to show
 	            if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
@@ -1740,6 +1746,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var backKey = 46;
 	      var deleteKey = 8;
 	      var enterKey = 13;
+	      var tabKey = 9;
 	      var aKey = 65;
 	      var escapeKey = 27;
 	      var upKey = 38;
@@ -1868,8 +1875,51 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	      };
 
+	      var onTabKey = function onTabKey() {
+	        // If enter key is pressed and the input has a value
+	        if (_this16.isTextElement && target.value) {
+	          var value = _this16.input.value;
+	          var canAddItem = _this16._canAddItem(activeItems, value);
+
+	          // All is good, add
+	          if (canAddItem.response) {
+	            if (hasActiveDropdown) {
+	              _this16.hideDropdown();
+	            }
+	            _this16._addItem(value);
+	            _this16._triggerChange(value);
+	            _this16.clearInput();
+	          }
+	        }
+
+	        if (target.hasAttribute('data-button')) {
+	          _this16._handleButtonAction(activeItems, target);
+	          e.preventDefault();
+	        }
+
+	        if (hasActiveDropdown) {
+	          e.preventDefault();
+	          var highlighted = _this16.dropdown.querySelector('.' + _this16.config.classNames.highlightedState);
+
+	          // If we have a highlighted choice
+	          if (highlighted) {
+	            // add enter keyCode value
+	            if (activeItems[0]) {
+	              activeItems[0].keyCode = tabKey;
+	            }
+	            _this16._handleChoiceAction(activeItems, highlighted);
+	          }
+	        } else if (_this16.isSelectOneElement) {
+	          // Open single select dropdown if it's not active
+	          if (!hasActiveDropdown) {
+	            _this16.showDropdown(true);
+	            e.preventDefault();
+	          }
+	        }
+	      };
+
 	      // Map keys to key actions
-	      var keyDownActions = (_keyDownActions = {}, _defineProperty(_keyDownActions, aKey, onAKey), _defineProperty(_keyDownActions, enterKey, onEnterKey), _defineProperty(_keyDownActions, escapeKey, onEscapeKey), _defineProperty(_keyDownActions, upKey, onDirectionKey), _defineProperty(_keyDownActions, pageUpKey, onDirectionKey), _defineProperty(_keyDownActions, downKey, onDirectionKey), _defineProperty(_keyDownActions, pageDownKey, onDirectionKey), _defineProperty(_keyDownActions, deleteKey, onDeleteKey), _defineProperty(_keyDownActions, backKey, onDeleteKey), _keyDownActions);
+	      var keyDownActions = (_keyDownActions = {}, _defineProperty(_keyDownActions, aKey, onAKey), _defineProperty(_keyDownActions, enterKey, onEnterKey), _defineProperty(_keyDownActions, tabKey, onTabKey), _defineProperty(_keyDownActions, escapeKey, onEscapeKey), _defineProperty(_keyDownActions, upKey, onDirectionKey), _defineProperty(_keyDownActions, pageUpKey, onDirectionKey), _defineProperty(_keyDownActions, downKey, onDirectionKey), _defineProperty(_keyDownActions, pageDownKey, onDirectionKey), _defineProperty(_keyDownActions, deleteKey, onDeleteKey), _defineProperty(_keyDownActions, backKey, onDeleteKey), _keyDownActions);
 
 	      // If keycode has a function, run it
 	      if (keyDownActions[e.keyCode]) {
@@ -2216,6 +2266,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (target === _this18.input && hasActiveDropdown) {
 	              // Hide dropdown if it is showing
 	              _this18.hideDropdown();
+	            }
+	            if (_this18.config.searchInputMoveToTop) {
+	              _this18.input.value = activeItems[0].label;
 	            }
 	          },
 	          'select-multiple': function selectMultiple() {
@@ -2752,7 +2805,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      containerOuter.appendChild(containerInner);
 	      containerOuter.appendChild(dropdown);
-	      containerInner.appendChild(itemList);
+	      if (!this.config.searchInputMoveToTop) {
+	        containerInner.appendChild(itemList);
+	      }
 
 	      if (!this.isTextElement) {
 	        dropdown.appendChild(choiceList);
@@ -2761,7 +2816,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (this.isSelectMultipleElement || this.isTextElement) {
 	        containerInner.appendChild(input);
 	      } else if (this.canSearch) {
-	        dropdown.insertBefore(input, dropdown.firstChild);
+	        if (!this.config.searchInputMoveToTop) {
+	          dropdown.insertBefore(input, dropdown.firstChild);
+	        } else {
+	          containerInner.appendChild(input);
+	        }
 	      }
 
 	      if (this.isSelectElement) {
@@ -4065,34 +4124,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var ActionTypes = exports.ActionTypes = {
 	  INIT: '@@redux/INIT'
-	};
 
-	/**
-	 * Creates a Redux store that holds the state tree.
-	 * The only way to change the data in the store is to call `dispatch()` on it.
-	 *
-	 * There should only be a single store in your app. To specify how different
-	 * parts of the state tree respond to actions, you may combine several reducers
-	 * into a single reducer function by using `combineReducers`.
-	 *
-	 * @param {Function} reducer A function that returns the next state tree, given
-	 * the current state tree and the action to handle.
-	 *
-	 * @param {any} [preloadedState] The initial state. You may optionally specify it
-	 * to hydrate the state from the server in universal apps, or to restore a
-	 * previously serialized user session.
-	 * If you use `combineReducers` to produce the root reducer function, this must be
-	 * an object with the same shape as `combineReducers` keys.
-	 *
-	 * @param {Function} enhancer The store enhancer. You may optionally specify it
-	 * to enhance the store with third-party capabilities such as middleware,
-	 * time travel, persistence, etc. The only store enhancer that ships with Redux
-	 * is `applyMiddleware()`.
-	 *
-	 * @returns {Store} A Redux store that lets you read the state, dispatch actions
-	 * and subscribe to changes.
-	 */
-	function createStore(reducer, preloadedState, enhancer) {
+	  /**
+	   * Creates a Redux store that holds the state tree.
+	   * The only way to change the data in the store is to call `dispatch()` on it.
+	   *
+	   * There should only be a single store in your app. To specify how different
+	   * parts of the state tree respond to actions, you may combine several reducers
+	   * into a single reducer function by using `combineReducers`.
+	   *
+	   * @param {Function} reducer A function that returns the next state tree, given
+	   * the current state tree and the action to handle.
+	   *
+	   * @param {any} [preloadedState] The initial state. You may optionally specify it
+	   * to hydrate the state from the server in universal apps, or to restore a
+	   * previously serialized user session.
+	   * If you use `combineReducers` to produce the root reducer function, this must be
+	   * an object with the same shape as `combineReducers` keys.
+	   *
+	   * @param {Function} [enhancer] The store enhancer. You may optionally specify it
+	   * to enhance the store with third-party capabilities such as middleware,
+	   * time travel, persistence, etc. The only store enhancer that ships with Redux
+	   * is `applyMiddleware()`.
+	   *
+	   * @returns {Store} A Redux store that lets you read the state, dispatch actions
+	   * and subscribe to changes.
+	   */
+	};function createStore(reducer, preloadedState, enhancer) {
 	  var _ref2;
 
 	  if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
@@ -4226,7 +4284,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var listeners = currentListeners = nextListeners;
 	    for (var i = 0; i < listeners.length; i++) {
-	      listeners[i]();
+	      var listener = listeners[i];
+	      listener();
 	    }
 
 	    return action;
@@ -4255,7 +4314,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Interoperability point for observable/reactive libraries.
 	   * @returns {observable} A minimal observable of state changes.
 	   * For more information, see the observable proposal:
-	   * https://github.com/zenparsing/es-observable
+	   * https://github.com/tc39/proposal-observable
 	   */
 	  function observable() {
 	    var _ref;
@@ -4702,7 +4761,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var actionType = action && action.type;
 	  var actionName = actionType && '"' + actionType.toString() + '"' || 'an action';
 
-	  return 'Given action ' + actionName + ', reducer "' + key + '" returned undefined. ' + 'To ignore an action, you must explicitly return the previous state.';
+	  return 'Given action ' + actionName + ', reducer "' + key + '" returned undefined. ' + 'To ignore an action, you must explicitly return the previous state. ' + 'If you want this reducer to hold no value, you can return null instead of undefined.';
 	}
 
 	function getUnexpectedStateShapeWarningMessage(inputState, reducers, action, unexpectedKeyCache) {
@@ -4730,18 +4789,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	}
 
-	function assertReducerSanity(reducers) {
+	function assertReducerShape(reducers) {
 	  Object.keys(reducers).forEach(function (key) {
 	    var reducer = reducers[key];
 	    var initialState = reducer(undefined, { type: _createStore.ActionTypes.INIT });
 
 	    if (typeof initialState === 'undefined') {
-	      throw new Error('Reducer "' + key + '" returned undefined during initialization. ' + 'If the state passed to the reducer is undefined, you must ' + 'explicitly return the initial state. The initial state may ' + 'not be undefined.');
+	      throw new Error('Reducer "' + key + '" returned undefined during initialization. ' + 'If the state passed to the reducer is undefined, you must ' + 'explicitly return the initial state. The initial state may ' + 'not be undefined. If you don\'t want to set a value for this reducer, ' + 'you can use null instead of undefined.');
 	    }
 
 	    var type = '@@redux/PROBE_UNKNOWN_ACTION_' + Math.random().toString(36).substring(7).split('').join('.');
 	    if (typeof reducer(undefined, { type: type }) === 'undefined') {
-	      throw new Error('Reducer "' + key + '" returned undefined when probed with a random type. ' + ('Don\'t try to handle ' + _createStore.ActionTypes.INIT + ' or other actions in "redux/*" ') + 'namespace. They are considered private. Instead, you must return the ' + 'current state for any unknown actions, unless it is undefined, ' + 'in which case you must return the initial state, regardless of the ' + 'action type. The initial state may not be undefined.');
+	      throw new Error('Reducer "' + key + '" returned undefined when probed with a random type. ' + ('Don\'t try to handle ' + _createStore.ActionTypes.INIT + ' or other actions in "redux/*" ') + 'namespace. They are considered private. Instead, you must return the ' + 'current state for any unknown actions, unless it is undefined, ' + 'in which case you must return the initial state, regardless of the ' + 'action type. The initial state may not be undefined, but can be null.');
 	    }
 	  });
 	}
@@ -4780,23 +4839,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  var finalReducerKeys = Object.keys(finalReducers);
 
+	  var unexpectedKeyCache = void 0;
 	  if (false) {
-	    var unexpectedKeyCache = {};
+	    unexpectedKeyCache = {};
 	  }
 
-	  var sanityError;
+	  var shapeAssertionError = void 0;
 	  try {
-	    assertReducerSanity(finalReducers);
+	    assertReducerShape(finalReducers);
 	  } catch (e) {
-	    sanityError = e;
+	    shapeAssertionError = e;
 	  }
 
 	  return function combination() {
-	    var state = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 	    var action = arguments[1];
 
-	    if (sanityError) {
-	      throw sanityError;
+	    if (shapeAssertionError) {
+	      throw shapeAssertionError;
 	    }
 
 	    if (false) {
@@ -4808,16 +4868,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    var hasChanged = false;
 	    var nextState = {};
-	    for (var i = 0; i < finalReducerKeys.length; i++) {
-	      var key = finalReducerKeys[i];
-	      var reducer = finalReducers[key];
-	      var previousStateForKey = state[key];
+	    for (var _i = 0; _i < finalReducerKeys.length; _i++) {
+	      var _key = finalReducerKeys[_i];
+	      var reducer = finalReducers[_key];
+	      var previousStateForKey = state[_key];
 	      var nextStateForKey = reducer(previousStateForKey, action);
 	      if (typeof nextStateForKey === 'undefined') {
-	        var errorMessage = getUndefinedStateErrorMessage(key, action);
+	        var errorMessage = getUndefinedStateErrorMessage(_key, action);
 	        throw new Error(errorMessage);
 	      }
-	      nextState[key] = nextStateForKey;
+	      nextState[_key] = nextStateForKey;
 	      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
 	    }
 	    return hasChanged ? nextState : state;
@@ -5007,13 +5067,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return funcs[0];
 	  }
 
-	  var last = funcs[funcs.length - 1];
-	  var rest = funcs.slice(0, -1);
-	  return function () {
-	    return rest.reduceRight(function (composed, f) {
-	      return f(composed);
-	    }, last.apply(undefined, arguments));
-	  };
+	  return funcs.reduce(function (a, b) {
+	    return function () {
+	      return a(b.apply(undefined, arguments));
+	    };
+	  });
 	}
 
 /***/ }),
