@@ -75,8 +75,7 @@
       "basePath": "assets",
       "files": [
         "scripts/dist/*",
-        "styles/css/*",
-        "icons/*"
+        "styles/css/*"
       ]
     }
   ]

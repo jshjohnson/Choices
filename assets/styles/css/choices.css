@@ -46,9 +46,7 @@
 }
 
 .choices[data-type*="select-one"] .choices__button {
-  background-image: url("../../icons/cross-inverse.svg");
   padding: 0;
-  background-size: 8px;
   height: 100%;
   position: absolute;
   top: 50%;
@@ -67,6 +65,27 @@
 
 .choices[data-type*="select-one"] .choices__button:focus {
   box-shadow: 0px 0px 0px 2px #00BCD4;
+}
+
+.choices[data-type*="select-one"] .choices__button::before, .choices[data-type*="select-one"] .choices__button::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10.4px;
+  height: 0;
+  border-top: 2px solid black;
+}
+
+.choices[data-type*="select-one"] .choices__button::before {
+  -webkit-transform: translate(-50%, -50%) rotateZ(45deg);
+          transform: translate(-50%, -50%) rotateZ(45deg);
+}
+
+.choices[data-type*="select-one"] .choices__button::after {
+  -webkit-transform: translate(-50%, -50%) rotateZ(-45deg);
+          transform: translate(-50%, -50%) rotateZ(-45deg);
 }
 
 .choices[data-type*="select-one"]:after {
@@ -113,8 +132,6 @@
   margin-left: 8px;
   padding-left: 16px;
   border-left: 1px solid #008fa1;
-  background-image: url("../../icons/cross.svg");
-  background-size: 8px;
   width: 8px;
   line-height: 1;
   opacity: .75;
@@ -122,6 +139,27 @@
 
 .choices[data-type*="select-multiple"] .choices__button:hover, .choices[data-type*="select-multiple"] .choices__button:focus, .choices[data-type*="text"] .choices__button:hover, .choices[data-type*="text"] .choices__button:focus {
   opacity: 1;
+}
+
+.choices[data-type*="select-multiple"] .choices__button::before, .choices[data-type*="select-multiple"] .choices__button::after, .choices[data-type*="text"] .choices__button::before, .choices[data-type*="text"] .choices__button::after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10.4px;
+  height: 0;
+  border-top: 2px solid white;
+}
+
+.choices[data-type*="select-multiple"] .choices__button::before, .choices[data-type*="text"] .choices__button::before {
+  -webkit-transform: translate(-50%, -50%) rotateZ(45deg);
+          transform: translate(-50%, -50%) rotateZ(45deg);
+}
+
+.choices[data-type*="select-multiple"] .choices__button::after, .choices[data-type*="text"] .choices__button::after {
+  -webkit-transform: translate(-50%, -50%) rotateZ(-45deg);
+          transform: translate(-50%, -50%) rotateZ(-45deg);
 }
 
 .choices__inner {
