@@ -140,7 +140,7 @@ class Choices {
     }
 
     // Create data store
-    this.store = new Store(this.render);
+    this.store = new Store(this._scheduleRender.bind(this));
 
     // State tracking
     this.initialised = false;
@@ -175,6 +175,7 @@ class Choices {
 
     this.highlightPosition = 0;
     this.canSearch = this.config.searchEnabled;
+    this.renderScheduled = 0;
 
     this.placeholder = false;
     if (!this.isSelectOneElement) {
@@ -479,6 +480,9 @@ class Choices {
    * @private
    */
   render() {
+    // cancel any scheduled render
+    this._cancelScheduledRender();
+
     this.currentState = this.store.getState();
 
     // Only render if our state has actually changed
@@ -1135,6 +1139,31 @@ class Choices {
   /* =============================================
   =                Private functions            =
   ============================================= */
+
+  /**
+   * Cancel the scheduled render
+   */
+  _cancelScheduledRender() {
+    if (this.renderScheduled === 0) {
+      return;
+    }
+    window.cancelAnimationFrame(this.renderScheduled);
+    this.renderScheduled = 0;
+  }
+
+  /**
+   * Schedule a render on the next animation frame
+   */
+  _scheduleRender() {
+    // render was already scheduled so aborting
+    if (this.renderScheduled !== 0) {
+      return;
+    }
+    this.renderScheduled = window.requestAnimationFrame(() => {
+      this.renderScheduled = 0;
+      this.render();
+    });
+  }
 
   /**
    * Call change callback
