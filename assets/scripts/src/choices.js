@@ -140,7 +140,7 @@ class Choices {
     }
 
     // Create data store
-    this.store = new Store(this._scheduleRender.bind(this));
+    this.store = new Store();
 
     // State tracking
     this.initialised = false;
@@ -202,6 +202,7 @@ class Choices {
 
     // Bind methods
     this.render = this.render.bind(this);
+    this._scheduleRender = this._scheduleRender.bind(this);
 
     // Bind event handlers
     this._onFocus = this._onFocus.bind(this);
@@ -263,7 +264,7 @@ class Choices {
     // Generate input markup
     this._createInput();
     // Subscribe store to render method
-    this.store.subscribe(this.render);
+    this.store.subscribe(this._scheduleRender);
     // Render any items
     this.render();
     // Trigger event listeners
@@ -1950,11 +1951,6 @@ class Choices {
 
     // If target is something that concerns us
     if (this.containerOuter.contains(target)) {
-      // Handle button delete
-      if (target.hasAttribute('data-button')) {
-        this._handleButtonAction(activeItems, target);
-      }
-
       if (!hasActiveDropdown) {
         if (this.isTextElement) {
           if (document.activeElement !== this.input) {
