@@ -193,6 +193,8 @@ describe('Choices', () => {
         ctrlKey: false
       });
 
+      this.choices.render();
+
       expect(this.choices.currentState.items[0].value).toContain(this.choices.input.value);
     });
 
@@ -243,6 +245,8 @@ describe('Choices', () => {
         ctrlKey: false
       });
 
+      this.choices.render();
+
       const lastItem = this.choices.currentState.items[this.choices.currentState.items.length - 1];
 
       expect(lastItem.value).toEqual('josh@joshuajohnson.co.uk');
@@ -263,6 +267,8 @@ describe('Choices', () => {
         keyCode: 13,
         ctrlKey: false
       });
+
+      this.choices.render();
 
       const lastItem = this.choices.currentState.items[this.choices.currentState.items.length - 1];
 
@@ -358,6 +364,8 @@ describe('Choices', () => {
         ctrlKey: false,
         preventDefault: () => {}
       });
+
+      this.choices.render();
 
       expect(this.choices.currentState.items.length).toBe(2);
     });
@@ -840,6 +848,7 @@ describe('Choices', () => {
         }, ]
       }], 'value', 'label');
 
+      this.choices.render();
 
       const groups = this.choices.currentState.groups;
       const choices = this.choices.currentState.choices;
@@ -859,6 +868,7 @@ describe('Choices', () => {
         value: ''
       }], 'value', 'label', true);
 
+      this.choices.render();
 
       const choices = this.choices.currentState.choices;
       expect(choices[0].value).toEqual('one');
@@ -867,6 +877,8 @@ describe('Choices', () => {
 
     it('should handle clearStore()', function() {
       this.choices.clearStore();
+
+      this.choices.render();
 
       expect(this.choices.currentState.items).toEqual([]);
       expect(this.choices.currentState.choices).toEqual([]);
