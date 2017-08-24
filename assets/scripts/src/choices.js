@@ -321,6 +321,8 @@ class Choices {
     // Nullify instance-specific data
     this.config.templates = null;
 
+    this._cancelScheduledRender();
+
     // Uninitialise
     this.initialised = false;
   }
