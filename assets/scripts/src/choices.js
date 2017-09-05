@@ -33,10 +33,15 @@ import {
 from './lib/utils';
 import './lib/polyfills';
 
+let choicesUserDefaults = {};
+
 /**
  * Choices
  */
 class Choices {
+  static set userDefaults(data) { choicesUserDefaults = data; }
+  static get userDefaults() { return choicesUserDefaults; }
+
   constructor(element = '[data-choice]', userConfig = {}) {
     // If there are multiple elements, create a new instance
     // for each element besides the first one (as that already has an instance)
