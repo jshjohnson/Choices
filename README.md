@@ -1,4 +1,4 @@
-# Choices.js ![Build Status](https://travis-ci.org/jshjohnson/Choices.svg?branch=master)
+# Choices.js ![Build Status](https://travis-ci.org/jshjohnson/Choices.svg?branch=master) [![CDNJS](https://img.shields.io/cdnjs/v/choices.js.svg)](https://cdnjs.com/libraries/choices.js) [![npm](https://img.shields.io/npm/v/choices.js.svg)](https://www.npmjs.com/package/choices.js)
 A vanilla, lightweight (~15kb gzipped 🎉), configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.
 
 [Demo](https://joshuajohnson.co.uk/Choices/)
@@ -48,7 +48,7 @@ Or include Choices directly:
   const choices = new Choices(element);
 
   // Pass reference
-  const choices = new Choices('[data-trigger']);
+  const choices = new Choices('[data-trigger]');
   const choices = new Choices('.js-choice');
 
   // Pass jQuery element

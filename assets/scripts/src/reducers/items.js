@@ -12,10 +12,11 @@ const items = (state = [], action) => {
         highlighted: false,
         customProperties: action.customProperties,
         placeholder: (action.placeholder || false),
-        keyCode: null
+        keyCode: null,
       }];
 
-      return newState.map((item) => {
+      return newState.map((obj) => {
+        const item = obj;
         if (item.highlighted) {
           item.highlighted = false;
         }
@@ -25,7 +26,8 @@ const items = (state = [], action) => {
 
     case 'REMOVE_ITEM': {
       // Set item to inactive
-      return state.map((item) => {
+      return state.map((obj) => {
+        const item = obj;
         if (item.id === action.id) {
           item.active = false;
         }
@@ -34,7 +36,8 @@ const items = (state = [], action) => {
     }
 
     case 'HIGHLIGHT_ITEM': {
-      return state.map((item) => {
+      return state.map((obj) => {
+        const item = obj;
         if (item.id === action.id) {
           item.highlighted = action.highlighted;
         }

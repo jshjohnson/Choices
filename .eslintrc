@@ -1,4 +1,5 @@
 {
+  "extends": "airbnb",
   "ecmaFeatures": {
     "modules": true
   },
@@ -8,20 +9,9 @@
   },
   "parser": "babel-eslint",
   "rules": {
-    "quotes": [2, "single"],
-    "strict": [2, "never"],
-    "indent": ["error", 2, {"SwitchCase": 1}],
-    "eol-last": "off",
-    "arrow-body-style": "off",
-    "no-underscore-dangle": "off",
-    "no-new": 0,
-    "max-len": "off",
-    "no-console": "off",
-    "consistent-return": "off",
-    "no-param-reassign": ["error", { "props": false }],
-    "no-unused-vars": ["error", { "args": "none" }],
-    "no-lonely-if": "off",
-    "class-methods-use-this": "error",
-    "react/require-extension": "off",
-  },
+    "strict": 0,
+    "no-underscore-dangle": 0,
+    "no-console": ["warn", { allow: ["warn", "error"] }],
+    "space-before-function-paren": 0
+  }
 }

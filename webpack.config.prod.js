@@ -1,12 +1,12 @@
-var path = require('path');
-var pkg = require('./package.json');
-var webpack = require('webpack');
-var wrapperPlugin = require('wrapper-webpack-plugin');
-var banner = `/*! ${ pkg.name } v${ pkg.version } | (c) ${ new Date().getFullYear() } ${ pkg.author } | ${ pkg.homepage } */ \n`;
-var minimize = process.argv.indexOf('--minimize') !== -1;
+const path = require('path');
+const pkg = require('./package.json');
+const webpack = require('webpack');
+const wrapperPlugin = require('wrapper-webpack-plugin');
+const banner = `/*! ${ pkg.name } v${ pkg.version } | (c) ${ new Date().getFullYear() } ${ pkg.author } | ${ pkg.homepage } */ \n`;
+const minimize = process.argv.includes('--minimize');
 
-var config = {
-  devtool: 'cheap-module-source-map',
+const config = {
+  devtool: minimize ? false : 'cheap-module-source-map',
   entry: [
     './assets/scripts/src/choices'
   ],

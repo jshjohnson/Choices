@@ -1,11 +1,13 @@
 import { createStore } from 'redux';
-import rootReducer from './../reducers/index.js';
+import rootReducer from './../reducers/index';
 
 export default class Store {
   constructor() {
     this.store = createStore(
-      rootReducer
-      , window.devToolsExtension ? window.devToolsExtension() : undefined
+      rootReducer,
+      window.devToolsExtension ?
+        window.devToolsExtension() :
+        undefined,
     );
   }
 
@@ -50,9 +52,7 @@ export default class Store {
    */
   getItemsFilteredByActive() {
     const items = this.getItems();
-    const values = items.filter((item) => {
-      return item.active === true;
-    }, []);
+    const values = items.filter(item => item.active === true, []);
 
     return values;
   }
@@ -117,7 +117,7 @@ export default class Store {
   getChoiceById(id) {
     if (id) {
       const choices = this.getChoicesFilteredByActive();
-      const foundChoice = choices.find((choice) => choice.id === parseInt(id, 10));
+      const foundChoice = choices.find(choice => choice.id === parseInt(id, 10));
       return foundChoice;
     }
     return false;
@@ -142,9 +142,9 @@ export default class Store {
 
     const values = groups.filter((group) => {
       const isActive = group.active === true && group.disabled === false;
-      const hasActiveOptions = choices.some((choice) => {
-        return choice.active === true && choice.disabled === false;
-      });
+      const hasActiveOptions = choices.some(choice =>
+        choice.active === true && choice.disabled === false,
+      );
       return isActive && hasActiveOptions;
     }, []);
 
@@ -171,9 +171,7 @@ export default class Store {
     const choices = this.getChoices();
     const placeholderChoice = [...choices]
       .reverse()
-      .find((choice) => {
-        return choice.placeholder === true;
-      });
+      .find(choice => choice.placeholder === true);
 
     return placeholderChoice;
   }

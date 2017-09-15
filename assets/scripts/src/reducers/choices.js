@@ -18,7 +18,7 @@ const choices = (state = [], action) => {
         score: 9999,
         customProperties: action.customProperties,
         placeholder: (action.placeholder || false),
-        keyCode: null
+        keyCode: null,
       }];
     }
 
@@ -27,7 +27,8 @@ const choices = (state = [], action) => {
 
       // If all choices need to be activated
       if (action.activateOptions) {
-        newState = state.map((choice) => {
+        newState = state.map((obj) => {
+          const choice = obj;
           choice.active = action.active;
           return choice;
         });
@@ -35,7 +36,8 @@ const choices = (state = [], action) => {
       // When an item is added and it has an associated choice,
       // we want to disable it so it can't be chosen again
       if (action.choiceId > -1) {
-        newState = state.map((choice) => {
+        newState = state.map((obj) => {
+          const choice = obj;
           if (choice.id === parseInt(action.choiceId, 10)) {
             choice.selected = true;
           }
@@ -50,7 +52,8 @@ const choices = (state = [], action) => {
       // When an item is removed and it has an associated choice,
       // we want to re-enable it so it can be chosen again
       if (action.choiceId > -1) {
-        return state.map((choice) => {
+        return state.map((obj) => {
+          const choice = obj;
           if (choice.id === parseInt(action.choiceId, 10)) {
             choice.selected = false;
           }
@@ -63,10 +66,10 @@ const choices = (state = [], action) => {
 
     case 'FILTER_CHOICES': {
       const filteredResults = action.results;
-      const filteredState = state.map((choice) => {
+      const filteredState = state.map((obj) => {
+        const choice = obj;
         // Set active state based on whether choice is
         // within filtered results
-
         choice.active = filteredResults.some((result) => {
           if (result.item.id === choice.id) {
             choice.score = result.score;
@@ -82,14 +85,15 @@ const choices = (state = [], action) => {
     }
 
     case 'ACTIVATE_CHOICES': {
-      return state.map((choice) => {
+      return state.map((obj) => {
+        const choice = obj;
         choice.active = action.active;
         return choice;
       });
     }
 
     case 'CLEAR_CHOICES': {
-      return state.choices = [];
+      return [];
     }
 
     default: {

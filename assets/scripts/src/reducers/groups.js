@@ -10,7 +10,7 @@ const groups = (state = [], action) => {
     }
 
     case 'CLEAR_CHOICES': {
-      return state.groups = [];
+      return [];
     }
 
     default: {

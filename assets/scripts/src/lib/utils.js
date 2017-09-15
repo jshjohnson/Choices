@@ -1,13 +1,12 @@
 /* eslint-disable */
+
 /**
  * Capitalises the first letter of each word in a string
  * @param  {String} str String to capitalise
  * @return {String}     Capitalised string
  */
 export const capitalise = function(str) {
-  return str.replace(/\w\S*/g, function(txt) {
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-  });
+  return str.replace(/\w\S*/g, txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 };
 
 /**
@@ -15,11 +14,11 @@ export const capitalise = function(str) {
  * @param  {Number} length Length of the string to generate
  * @return {String} String of random chars
  */
-export const generateChars = function (length) {
-  var chars = '';
+export const generateChars = function(length) {
+  let chars = '';
 
-  for (var i = 0; i < length; i++) {
-    var randomChar = getRandomNumber(0, 36);
+  for (let i = 0; i < length; i++) {
+    const randomChar = getRandomNumber(0, 36);
     chars += randomChar.toString(36);
   }
 
@@ -32,8 +31,8 @@ export const generateChars = function (length) {
  * @param  {String} Prefix for the Id
  * @return {String} Unique Id
  */
-export const generateId = function (element, prefix) {
-  var id = element.id || (element.name && (element.name + '-' + generateChars(2))) || generateChars(4);
+export const generateId = function(element, prefix) {
+  let id = element.id || (element.name && (`${element.name}-${generateChars(2)}`)) || generateChars(4);
   id = id.replace(/(:|\.|\[|\]|,)/g, '');
   id = prefix + id;
 
@@ -58,7 +57,7 @@ export const getType = function(obj) {
  * @return {Boolean}
  */
 export const isType = function(type, obj) {
-  var clas = getType(obj);
+  const clas = getType(obj);
   return obj !== undefined && obj !== null && clas === type;
 };
 
@@ -67,24 +66,20 @@ export const isType = function(type, obj) {
  * @param  {Object}  obj  Object to be tested
  * @return {Boolean}
  */
-export const isNode = (o) => {
-  return (
-    typeof Node === "object" ? o instanceof Node :
-    o && typeof o === "object" && typeof o.nodeType === "number" && typeof o.nodeName === "string"
+export const isNode = o => (
+    typeof Node === 'object' ? o instanceof Node :
+    o && typeof o === 'object' && typeof o.nodeType === 'number' && typeof o.nodeName === 'string'
   );
-};
 
 /**
  * Tests to see if a passed object is an element
  * @param  {Object}  obj  Object to be tested
  * @return {Boolean}
  */
-export const isElement = (o) => {
-  return (
-    typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
-    o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName === "string"
+export const isElement = o => (
+    typeof HTMLElement === 'object' ? o instanceof HTMLElement : // DOM2
+    o && typeof o === 'object' && o !== null && o.nodeType === 1 && typeof o.nodeName === 'string'
   );
-};
 
 /**
  * Merges unspecified amount of objects into new object
@@ -92,30 +87,30 @@ export const isElement = (o) => {
  * @return {Object} Merged object of arguments
  */
 export const extend = function() {
-  let extended = {};
-  let length = arguments.length;
+  const extended = {};
+  const length = arguments.length;
 
   /**
    * Merge one object into another
    * @param  {Object} obj  Object to merge into extended object
    */
-   let merge = function(obj) {
-    for (let prop in obj) {
+  const merge = function(obj) {
+    for (const prop in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, prop)) {
         // If deep merge and property is an object, merge properties
-        if (isType('Object', obj[prop])) {
+         if (isType('Object', obj[prop])) {
           extended[prop] = extend(true, extended[prop], obj[prop]);
         } else {
           extended[prop] = obj[prop];
         }
-      }
+       }
     }
   };
 
   // Loop through each passed argument
   for (let i = 0; i < length; i++) {
     // store argument at position i
-    let obj = arguments[i];
+    const obj = arguments[i];
 
     // If we are in fact dealing with an object, merge it.
     if (isType('Object', obj)) {
@@ -131,15 +126,15 @@ export const extend = function() {
  * @return
  */
 export const whichTransitionEvent = function() {
-  var t,
-  el = document.createElement('fakeelement');
+  let t,
+    el = document.createElement('fakeelement');
 
-  var transitions = {
-    'transition': 'transitionend',
-    'OTransition': 'oTransitionEnd',
-    'MozTransition': 'transitionend',
-    'WebkitTransition': 'webkitTransitionEnd'
-  }
+  const transitions = {
+    transition: 'transitionend',
+    OTransition: 'oTransitionEnd',
+    MozTransition: 'transitionend',
+    WebkitTransition: 'webkitTransitionEnd',
+  };
 
   for (t in transitions) {
     if (el.style[t] !== undefined) {
@@ -153,14 +148,14 @@ export const whichTransitionEvent = function() {
  * @return
  */
 export const whichAnimationEvent = function() {
-  var t,
-  el = document.createElement('fakeelement');
+  let t,
+    el = document.createElement('fakeelement');
 
-  var animations = {
-    'animation': 'animationend',
-    'OAnimation': 'oAnimationEnd',
-    'MozAnimation': 'animationend',
-    'WebkitAnimation': 'webkitAnimationEnd'
+  const animations = {
+    animation: 'animationend',
+    OAnimation: 'oAnimationEnd',
+    MozAnimation: 'animationend',
+    WebkitAnimation: 'webkitAnimationEnd',
   };
 
   for (t in animations) {
@@ -179,14 +174,12 @@ export const whichAnimationEvent = function() {
  * @return {Array}          Array of parent elements
  */
 export const getParentsUntil = function(elem, parent, selector) {
-  var parents = [];
+  const parents = [];
   // Get matches
   for (; elem && elem !== document; elem = elem.parentNode) {
-
     // Check if parent has been reached
     if (parent) {
-
-      var parentType = parent.charAt(0);
+      const parentType = parent.charAt(0);
 
       // If parent is a class
       if (parentType === '.') {
@@ -213,10 +206,9 @@ export const getParentsUntil = function(elem, parent, selector) {
       if (elem.tagName.toLowerCase() === parent) {
         break;
       }
-
     }
     if (selector) {
-      var selectorType = selector.charAt(0);
+      const selectorType = selector.charAt(0);
 
       // If selector is a class
       if (selectorType === '.') {
@@ -243,7 +235,6 @@ export const getParentsUntil = function(elem, parent, selector) {
       if (elem.tagName.toLowerCase() === selector) {
         parents.push(elem);
       }
-
     } else {
       parents.push(elem);
     }
@@ -252,9 +243,8 @@ export const getParentsUntil = function(elem, parent, selector) {
   // Return parents if any exist
   if (parents.length === 0) {
     return null;
-  } else {
-    return parents;
   }
+  return parents;
 };
 
 export const wrap = function(element, wrapper) {
@@ -268,8 +258,8 @@ export const wrap = function(element, wrapper) {
 };
 
 export const getSiblings = function(elem) {
-  var siblings = [];
-  var sibling = elem.parentNode.firstChild;
+  const siblings = [];
+  let sibling = elem.parentNode.firstChild;
   for (; sibling; sibling = sibling.nextSibling) {
     if (sibling.nodeType === 1 && sibling !== elem) {
       siblings.push(sibling);
@@ -317,15 +307,15 @@ export const findAncestorByAttrName = function(el, attr) {
  * @return {Function}           A function will be called after it stops being called for a given delay
  */
 export const debounce = function(func, wait, immediate) {
-  var timeout;
+  let timeout;
   return function() {
-    var context = this,
-    args = arguments;
-    var later = function() {
+    let context = this,
+      args = arguments;
+    const later = function() {
       timeout = null;
       if (!immediate) func.apply(context, args);
     };
-    var callNow = immediate && !timeout;
+    const callNow = immediate && !timeout;
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
     if (callNow) func.apply(context, args);
@@ -339,7 +329,7 @@ export const debounce = function(func, wait, immediate) {
  * @return {Number} Elements Distance from top of page
  */
 export const getElemDistance = function(el) {
-  var location = 0;
+  let location = 0;
   if (el.offsetParent) {
     do {
       location += el.offsetTop;
@@ -356,7 +346,7 @@ export const getElemDistance = function(el) {
  * @return {Number}    Height of element
  */
 export const getElementOffset = function(el, offset) {
-  var elOffset = offset;
+  let elOffset = offset;
   if (elOffset > 1) elOffset = 1;
   if (elOffset > 0) elOffset = 0;
 
@@ -391,10 +381,9 @@ export const getScrollPosition = function(position) {
   if (position === 'bottom') {
     // Scroll position from the bottom of the viewport
     return Math.max((window.scrollY || window.pageYOffset) + (window.innerHeight || document.documentElement.clientHeight));
-  } else {
-    // Scroll position from the top of the viewport
-    return (window.scrollY || window.pageYOffset);
   }
+    // Scroll position from the top of the viewport
+  return (window.scrollY || window.pageYOffset);
 };
 
 /**
@@ -405,7 +394,7 @@ export const getScrollPosition = function(position) {
  */
 export const isInView = function(el, position, offset) {
   // If the user has scrolled further than the distance from the element to the top of its parent
-  return this.getScrollPosition(position) > (this.getElemDistance(el) + this.getElementOffset(el, offset)) ? true : false;
+  return this.getScrollPosition(position) > (this.getElemDistance(el) + this.getElementOffset(el, offset));
 };
 
 /**
@@ -437,9 +426,9 @@ export const isScrolledIntoView = (el, parent, direction = 1) => {
  * @return {String}  Sanitised string
  */
 export const stripHTML = function(html) {
-  let el = document.createElement("DIV");
+  const el = document.createElement('DIV');
   el.innerHTML = html;
-  return el.textContent || el.innerText || "";
+  return el.textContent || el.innerText || '';
 };
 
 /**
@@ -449,9 +438,9 @@ export const stripHTML = function(html) {
  * @return
  */
 export const addAnimation = (el, animation) => {
-  let animationEvent = whichAnimationEvent();
+  const animationEvent = whichAnimationEvent();
 
-  let removeAnimation = () => {
+  const removeAnimation = () => {
     el.classList.remove(animation);
     el.removeEventListener(animationEvent, removeAnimation, false);
   };
@@ -477,9 +466,9 @@ export const getRandomNumber = function(min, max) {
  * @return {HTMLElement}   Converted node element
  */
 export const strToEl = (function() {
-  let tmpEl = document.createElement('div');
+  const tmpEl = document.createElement('div');
   return function(str) {
-    let cleanedInput = str.trim();
+    const cleanedInput = str.trim();
     let r;
     tmpEl.innerHTML = cleanedInput;
     r = tmpEl.children[0];
@@ -501,7 +490,7 @@ export const getWidthOfInput = (input) => {
   let width = input.offsetWidth;
 
   if (value) {
-    const testEl = strToEl(`<span>${ value }</span>`);
+    const testEl = strToEl(`<span>${value}</span>`);
     testEl.style.position = 'absolute';
     testEl.style.padding = '0';
     testEl.style.top = '-9999px';
@@ -560,9 +549,7 @@ export const sortByAlpha = (a, b) => {
  *                    1 for before,
  *                    0 for same location
  */
-export const sortByScore = (a, b) => {
-  return a.score - b.score;
-};
+export const sortByScore = (a, b) => a.score - b.score;
 
 /**
  * Trigger native event
@@ -575,7 +562,7 @@ export const triggerEvent = (element, type, customArgs = null) => {
   const event = new CustomEvent(type, {
     detail: customArgs,
     bubbles: true,
-    cancelable: true
+    cancelable: true,
   });
 
   return element.dispatchEvent(event);
@@ -594,4 +581,4 @@ export const regexFilter = (value, regex) => {
 
   const expression = new RegExp(regex.source, 'i');
   return expression.test(value);
-}
+};
