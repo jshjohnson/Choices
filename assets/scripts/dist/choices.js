@@ -599,6 +599,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	            // If we have grouped options
 	            if (activeGroups.length >= 1 && this.isSearching !== true) {
+	              // If we have a placeholder choice along with groups
+	              var activePlaceholders = activeChoices.filter(function (activeChoice) {
+	                return activeChoice.placeholder === true && activeChoice.groupId === -1;
+	              });
+	              if (activePlaceholders.length > 0) {
+	                choiceListFragment = this.renderChoices(activePlaceholders, choiceListFragment);
+	              }
 	              choiceListFragment = this.renderGroups(activeGroups, activeChoices, choiceListFragment);
 	            } else if (activeChoices.length >= 1) {
 	              choiceListFragment = this.renderChoices(activeChoices, choiceListFragment);
@@ -2790,6 +2797,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.isSearching = false;
 
 	        if (passedGroups && passedGroups.length) {
+	          // If we have a placeholder option
+	          var placeholderChoice = this.passedElement.querySelector('option[placeholder]');
+	          if (placeholderChoice.parentNode.tagName === 'SELECT') {
+	            this._addChoice(placeholderChoice.value, placeholderChoice.innerHTML, placeholderChoice.selected, placeholderChoice.disabled, undefined, undefined, true);
+	          }
 	          passedGroups.forEach(function (group) {
 	            _this23._addGroup(group, group.id || null);
 	          });
@@ -2821,16 +2833,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	          // Add each choice
 	          allChoices.forEach(function (choice, index) {
-	            // Pre-select first choice if it's a single select
-	            if (_this23.isSelectOneElement) {
-	              // If there is a selected choice already or the choice is not
-	              // the first in the array, add each choice normally
-	              // Otherwise pre-select the first choice in the array
-	              var shouldPreselect = !hasSelectedChoice || hasSelectedChoice && index === 0;
-	              var isSelected = shouldPreselect ? true : choice.selected;
-	              var isDisabled = shouldPreselect ? false : choice.disabled;
+	            if (_this23.isSelectElement) {
+	              // If the choice is actually a group
+	              if (choice.choices) {
+	                _this23._addGroup(choice, choice.id || null);
+	              } else {
+	                // If there is a selected choice already or the choice is not
+	                // the first in the array, add each choice normally
+	                // Otherwise pre-select the first choice in the array if it's a single select
+	                var shouldPreselect = _this23.isSelectOneElement && !hasSelectedChoice && index === 0;
+	                var isSelected = shouldPreselect ? true : choice.selected;
+	                var isDisabled = shouldPreselect ? false : choice.disabled;
 
-	              _this23._addChoice(choice.value, choice.label, isSelected, isDisabled, undefined, choice.customProperties, choice.placeholder);
+	                _this23._addChoice(choice.value, choice.label, isSelected, isDisabled, undefined, choice.customProperties, choice.placeholder);
+	              }
 	            } else {
 	              _this23._addChoice(choice.value, choice.label, choice.selected, choice.disabled, undefined, choice.customProperties, choice.placeholder);
 	            }
