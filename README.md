@@ -408,7 +408,7 @@ const example = new Choices(element, {
 ### renderSelectedChoices
 **Type:** `String` **Default:** `auto`
 
-**Input types affected:** `select-one`, `select-multiple`
+**Input types affected:** `select-multiple`
 
 **Usage:** Whether selected choices should be removed from the list. By default choices are removed when they are selected in multiple select box. To always render choices pass `always`.
 

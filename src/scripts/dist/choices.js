@@ -45,7 +45,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.c = installedModules;
 
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/assets/scripts/dist/";
+/******/ 	__webpack_require__.p = "/src/scripts/dist/";
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
@@ -74,15 +74,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _classnames2 = _interopRequireDefault(_classnames);
 
-	var _index = __webpack_require__(4);
+	var _store = __webpack_require__(4);
 
-	var _index2 = _interopRequireDefault(_index);
+	var _store2 = _interopRequireDefault(_store);
 
-	var _index3 = __webpack_require__(30);
+	var _dropdown = __webpack_require__(30);
 
-	var _utils = __webpack_require__(31);
+	var _dropdown2 = _interopRequireDefault(_dropdown);
 
-	__webpack_require__(32);
+	var _container = __webpack_require__(31);
+
+	var _container2 = _interopRequireDefault(_container);
+
+	var _input = __webpack_require__(32);
+
+	var _input2 = _interopRequireDefault(_input);
+
+	var _list = __webpack_require__(34);
+
+	var _list2 = _interopRequireDefault(_list);
+
+	var _actions = __webpack_require__(35);
+
+	var _utils = __webpack_require__(33);
+
+	__webpack_require__(36);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -198,15 +214,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Merge options with user options
 	    this.config = (0, _utils.extend)(defaultConfig, Choices.userDefaults, userConfig);
 
-	    if (this.config.renderSelectedChoices !== 'auto' && this.config.renderSelectedChoices !== 'always') {
-	      if (!this.config.silent) {
-	        console.warn('renderSelectedChoices: Possible values are \'auto\' and \'always\'. Falling back to \'auto\'.');
-	      }
+	    if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
 	      this.config.renderSelectedChoices = 'auto';
 	    }
 
 	    // Create data store
-	    this.store = new _index2.default(this.render);
+	    this.store = new _store2.default(this.render);
 
 	    // State tracking
 	    this.initialised = false;
@@ -274,8 +287,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._onTouchEnd = this._onTouchEnd.bind(this);
 	    this._onMouseDown = this._onMouseDown.bind(this);
 	    this._onMouseOver = this._onMouseOver.bind(this);
-	    this._onPaste = this._onPaste.bind(this);
-	    this._onInput = this._onInput.bind(this);
 
 	    // Monitor touch taps/scrolls
 	    this.wasTap = true;
@@ -315,11 +326,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Choices, [{
 	    key: 'init',
 	    value: function init() {
-	      if (this.initialised === true) {
+	      if (this.initialised) {
 	        return;
 	      }
-
-	      var callback = this.config.callbackOnInit;
 
 	      // Set initialise flag
 	      this.initialised = true;
@@ -334,6 +343,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Trigger event listeners
 	      this._addEventListeners();
 
+	      var callback = this.config.callbackOnInit;
 	      // Run callback if it is a function
 	      if (callback && (0, _utils.isType)('Function', callback)) {
 	        callback.call(this);
@@ -349,7 +359,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'destroy',
 	    value: function destroy() {
-	      if (this.initialised === false) {
+	      if (!this.initialised) {
 	        return;
 	      }
 
@@ -375,9 +385,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.passedElement.value = this.passedElement.value;
 
 	      // Move passed element back to original position
-	      this.containerOuter.parentNode.insertBefore(this.passedElement, this.containerOuter);
+	      this.containerOuter.element.parentNode.insertBefore(this.passedElement, this.containerOuter.element);
+
 	      // Remove added elements
-	      this.containerOuter.parentNode.removeChild(this.containerOuter);
+	      this.containerOuter.element.parentNode.removeChild(this.containerOuter.element);
 
 	      // Clear data store
 	      this.clearStore();
@@ -417,7 +428,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          if (_this.isSelectOneElement) {
 	            return choice.groupId === group.id;
 	          }
-	          return choice.groupId === group.id && !choice.selected;
+	          return choice.groupId === group.id && (_this.config.renderSelectedChoices === 'always' || !choice.selected);
 	        });
 
 	        if (groupChoices.length >= 1) {
@@ -581,60 +592,58 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Only render if our state has actually changed
 	      if (this.currentState !== this.prevState) {
 	        // Choices
-	        if (this.currentState.choices !== this.prevState.choices || this.currentState.groups !== this.prevState.groups || this.currentState.items !== this.prevState.items) {
-	          if (this.isSelectElement) {
-	            // Get active groups/choices
-	            var activeGroups = this.store.getGroupsFilteredByActive();
-	            var activeChoices = this.store.getChoicesFilteredByActive();
+	        if ((this.currentState.choices !== this.prevState.choices || this.currentState.groups !== this.prevState.groups || this.currentState.items !== this.prevState.items) && this.isSelectElement) {
+	          // Get active groups/choices
+	          var activeGroups = this.store.getGroupsFilteredByActive();
+	          var activeChoices = this.store.getChoicesFilteredByActive();
 
-	            var choiceListFragment = document.createDocumentFragment();
+	          var choiceListFragment = document.createDocumentFragment();
 
-	            // Clear choices
-	            this.choiceList.innerHTML = '';
+	          // Clear choices
+	          this.choiceList.clear();
 
-	            // Scroll back to top of choices list
-	            if (this.config.resetScrollPosition) {
-	              this.choiceList.scrollTop = 0;
-	            }
+	          // Scroll back to top of choices list
+	          if (this.config.resetScrollPosition) {
+	            this.choiceList.scrollTo(0);
+	          }
 
-	            // If we have grouped options
-	            if (activeGroups.length >= 1 && this.isSearching !== true) {
-	              choiceListFragment = this.renderGroups(activeGroups, activeChoices, choiceListFragment);
-	            } else if (activeChoices.length >= 1) {
-	              choiceListFragment = this.renderChoices(activeChoices, choiceListFragment);
-	            }
+	          // If we have grouped options
+	          if (activeGroups.length >= 1 && this.isSearching !== true) {
+	            choiceListFragment = this.renderGroups(activeGroups, activeChoices, choiceListFragment);
+	          } else if (activeChoices.length >= 1) {
+	            choiceListFragment = this.renderChoices(activeChoices, choiceListFragment);
+	          }
 
-	            var activeItems = this.store.getItemsFilteredByActive();
-	            var canAddItem = this._canAddItem(activeItems, this.input.value);
+	          var activeItems = this.store.getItemsFilteredByActive();
+	          var canAddItem = this._canAddItem(activeItems, this.input.getValue());
 
-	            // If we have choices to show
-	            if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
-	              // ...and we can select them
-	              if (canAddItem.response) {
-	                // ...append them and highlight the first choice
-	                this.choiceList.appendChild(choiceListFragment);
-	                this._highlightChoice();
-	              } else {
-	                // ...otherwise show a notice
-	                this.choiceList.appendChild(this._getTemplate('notice', canAddItem.notice));
-	              }
+	          // If we have choices to show
+	          if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
+	            // ...and we can select them
+	            if (canAddItem.response) {
+	              // ...append them and highlight the first choice
+	              this.choiceList.append(choiceListFragment);
+	              this._highlightChoice();
 	            } else {
-	              // Otherwise show a notice
-	              var dropdownItem = void 0;
-	              var notice = void 0;
-
-	              if (this.isSearching) {
-	                notice = (0, _utils.isType)('Function', this.config.noResultsText) ? this.config.noResultsText() : this.config.noResultsText;
-
-	                dropdownItem = this._getTemplate('notice', notice, 'no-results');
-	              } else {
-	                notice = (0, _utils.isType)('Function', this.config.noChoicesText) ? this.config.noChoicesText() : this.config.noChoicesText;
-
-	                dropdownItem = this._getTemplate('notice', notice, 'no-choices');
-	              }
-
-	              this.choiceList.appendChild(dropdownItem);
+	              // ...otherwise show a notice
+	              this.choiceList.append(this._getTemplate('notice', canAddItem.notice));
 	            }
+	          } else {
+	            // Otherwise show a notice
+	            var dropdownItem = void 0;
+	            var notice = void 0;
+
+	            if (this.isSearching) {
+	              notice = (0, _utils.isType)('Function', this.config.noResultsText) ? this.config.noResultsText() : this.config.noResultsText;
+
+	              dropdownItem = this._getTemplate('notice', notice, 'no-results');
+	            } else {
+	              notice = (0, _utils.isType)('Function', this.config.noChoicesText) ? this.config.noChoicesText() : this.config.noChoicesText;
+
+	              dropdownItem = this._getTemplate('notice', notice, 'no-choices');
+	            }
+
+	            this.choiceList.append(dropdownItem);
 	          }
 	        }
 
@@ -644,9 +653,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var _activeItems = this.store.getItemsFilteredByActive();
 
 	          // Clear list
-	          this.itemList.innerHTML = '';
+	          this.itemList.clear();
 
-	          if (_activeItems && _activeItems) {
+	          if (_activeItems && _activeItems.length) {
 	            // Create a fragment to store our list items
 	            // (so we don't have to update the DOM for each item)
 	            var itemListFragment = this.renderItems(_activeItems);
@@ -654,7 +663,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            // If we have items to add
 	            if (itemListFragment.childNodes) {
 	              // Update list
-	              this.itemList.appendChild(itemListFragment);
+	              this.itemList.append(itemListFragment);
 	            }
 	          }
 	        }
@@ -684,23 +693,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var groupId = item.groupId;
 	      var group = groupId >= 0 ? this.store.getGroupById(groupId) : null;
 
-	      this.store.dispatch((0, _index3.highlightItem)(id, true));
+	      this.store.dispatch((0, _actions.highlightItem)(id, true));
 
 	      if (runEvent) {
+	        var eventResponse = {
+	          id: id,
+	          value: item.value,
+	          label: item.label
+	        };
+
 	        if (group && group.value) {
-	          (0, _utils.triggerEvent)(this.passedElement, 'highlightItem', {
-	            id: id,
-	            value: item.value,
-	            label: item.label,
-	            groupValue: group.value
-	          });
-	        } else {
-	          (0, _utils.triggerEvent)(this.passedElement, 'highlightItem', {
-	            id: id,
-	            value: item.value,
-	            label: item.label
-	          });
+	          eventResponse.groupValue = group.value;
 	        }
+
+	        (0, _utils.triggerEvent)(this.passedElement, 'highlightItem', eventResponse);
 	      }
 
 	      return this;
@@ -723,23 +729,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var id = item.id;
 	      var groupId = item.groupId;
 	      var group = groupId >= 0 ? this.store.getGroupById(groupId) : null;
-
-	      this.store.dispatch((0, _index3.highlightItem)(id, false));
+	      var eventResponse = {
+	        id: id,
+	        value: item.value,
+	        label: item.label
+	      };
 
 	      if (group && group.value) {
-	        (0, _utils.triggerEvent)(this.passedElement, 'unhighlightItem', {
-	          id: id,
-	          value: item.value,
-	          label: item.label,
-	          groupValue: group.value
-	        });
-	      } else {
-	        (0, _utils.triggerEvent)(this.passedElement, 'unhighlightItem', {
-	          id: id,
-	          value: item.value,
-	          label: item.label
-	        });
+	        eventResponse.groupValue = group.value;
 	      }
+
+	      this.store.dispatch((0, _actions.highlightItem)(id, false));
+
+	      (0, _utils.triggerEvent)(this.passedElement, 'highlightItem', eventResponse);
 
 	      return this;
 	    }
@@ -872,38 +874,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function showDropdown() {
 	      var focusInput = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-	      var body = document.body;
-	      var html = document.documentElement;
-	      var winHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-
-	      this.containerOuter.classList.add(this.config.classNames.openState);
-	      this.containerOuter.setAttribute('aria-expanded', 'true');
-	      this.dropdown.classList.add(this.config.classNames.activeState);
-	      this.dropdown.setAttribute('aria-expanded', 'true');
-
-	      var dimensions = this.dropdown.getBoundingClientRect();
-	      var dropdownPos = Math.ceil(dimensions.top + window.pageYOffset + this.dropdown.offsetHeight);
-
-	      // If flip is enabled and the dropdown bottom position is
-	      // greater than the window height flip the dropdown.
-	      var shouldFlip = false;
-	      if (this.config.position === 'auto') {
-	        shouldFlip = dropdownPos >= winHeight;
-	      } else if (this.config.position === 'top') {
-	        shouldFlip = true;
+	      if (this.dropdown.isActive) {
+	        return this;
 	      }
 
-	      if (shouldFlip) {
-	        this.containerOuter.classList.add(this.config.classNames.flippedState);
-	      }
-
-	      // Optionally focus the input if we have a search input
-	      if (focusInput && this.canSearch && document.activeElement !== this.input) {
-	        this.input.focus();
-	      }
+	      this.containerOuter.open(this.dropdown.getVerticalPos());
+	      this.dropdown.show();
+	      this.input.activate(focusInput);
 
 	      (0, _utils.triggerEvent)(this.passedElement, 'showDropdown', {});
-
 	      return this;
 	    }
 
@@ -918,29 +897,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function hideDropdown() {
 	      var blurInput = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-	      // A dropdown flips if it does not have space within the page
-	      var isFlipped = this.containerOuter.classList.contains(this.config.classNames.flippedState);
-
-	      this.containerOuter.classList.remove(this.config.classNames.openState);
-	      this.containerOuter.setAttribute('aria-expanded', 'false');
-	      this.dropdown.classList.remove(this.config.classNames.activeState);
-	      this.dropdown.setAttribute('aria-expanded', 'false');
-	      // IE11 ignores aria-label and blocks virtual keyboard
-	      // if aria-activedescendant is set without a dropdown
-	      this.input.removeAttribute('aria-activedescendant');
-	      this.containerOuter.removeAttribute('aria-activedescendant');
-
-	      if (isFlipped) {
-	        this.containerOuter.classList.remove(this.config.classNames.flippedState);
+	      if (!this.dropdown.isActive) {
+	        return this;
 	      }
 
-	      // Optionally blur the input if we have a search input
-	      if (blurInput && this.canSearch && document.activeElement === this.input) {
-	        this.input.blur();
-	      }
+	      this.containerOuter.close();
+	      this.dropdown.hide();
+	      this.input.deactivate(blurInput);
 
 	      (0, _utils.triggerEvent)(this.passedElement, 'hideDropdown', {});
-
 	      return this;
 	    }
 
@@ -953,8 +918,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'toggleDropdown',
 	    value: function toggleDropdown() {
-	      var hasActiveDropdown = this.dropdown.classList.contains(this.config.classNames.activeState);
-	      if (hasActiveDropdown) {
+	      if (this.dropdown.isActive) {
 	        this.hideDropdown();
 	      } else {
 	        this.showDropdown(true);
@@ -982,18 +946,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var selectedItems = [];
 
 	      items.forEach(function (item) {
-	        if (_this9.isTextElement) {
-	          selectedItems.push(valueOnly ? item.value : item);
-	        } else if (item.active) {
-	          selectedItems.push(valueOnly ? item.value : item);
+	        var itemValue = valueOnly ? item.value : item;
+	        if (_this9.isTextElement || item.active) {
+	          selectedItems.push(itemValue);
 	        }
 	      });
 
-	      if (this.isSelectOneElement) {
-	        return selectedItems[0];
-	      }
-
-	      return selectedItems;
+	      return this.isSelectOneElement ? selectedItems[0] : selectedItems;
 	    }
 
 	    /**
@@ -1016,35 +975,36 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Convert args to an iterable array
 	      var values = [].concat(_toConsumableArray(args));
 	      var handleValue = function handleValue(item) {
-	        var itemType = (0, _utils.getType)(item);
-	        if (itemType === 'Object') {
-	          if (!item.value) {
-	            return;
-	          }
+	        var itemType = (0, _utils.getType)(item).toLowerCase();
+	        var handleType = {
+	          object: function object() {
+	            if (!item.value) {
+	              return;
+	            }
 
-	          // If we are dealing with a select input, we need to create an option first
-	          // that is then selected. For text inputs we can just add items normally.
-	          if (!_this10.isTextElement) {
-	            _this10._addChoice(item.value, item.label, true, false, -1, item.customProperties, item.placeholder);
-	          } else {
-	            _this10._addItem(item.value, item.label, item.id, undefined, item.customProperties, item.placeholder);
+	            // If we are dealing with a select input, we need to create an option first
+	            // that is then selected. For text inputs we can just add items normally.
+	            if (!_this10.isTextElement) {
+	              _this10._addChoice(item.value, item.label, true, false, -1, item.customProperties, item.placeholder);
+	            } else {
+	              _this10._addItem(item.value, item.label, item.id, undefined, item.customProperties, item.placeholder);
+	            }
+	          },
+	          string: function string() {
+	            if (!_this10.isTextElement) {
+	              _this10._addChoice(item, item, true, false, -1, null);
+	            } else {
+	              _this10._addItem(item);
+	            }
 	          }
-	        } else if (itemType === 'String') {
-	          if (!_this10.isTextElement) {
-	            _this10._addChoice(item, item, true, false, -1, null);
-	          } else {
-	            _this10._addItem(item);
-	          }
-	        }
+	        };
+
+	        handleType[itemType]();
 	      };
 
-	      if (values.length > 1) {
-	        values.forEach(function (value) {
-	          return handleValue(value);
-	        });
-	      } else {
-	        handleValue(values[0]);
-	      }
+	      values.forEach(function (value) {
+	        return handleValue(value);
+	      });
 
 	      return this;
 	    }
@@ -1086,6 +1046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          console.warn('Attempting to select choice that does not exist');
 	        }
 	      });
+
 	      return this;
 	    }
 
@@ -1117,7 +1078,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      // Add choices if passed
 	      if (choices && choices.length) {
-	        this.containerOuter.classList.remove(this.config.classNames.loadingState);
+	        this.containerOuter.removeLoadingState();
+
 	        choices.forEach(function (result) {
 	          if (result.choices) {
 	            _this12._addGroup(result, result.id || null, value, label);
@@ -1140,7 +1102,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'clearStore',
 	    value: function clearStore() {
-	      this.store.dispatch((0, _index3.clearAll)());
+	      this.store.dispatch((0, _actions.clearAll)());
 	      return this;
 	    }
 
@@ -1153,17 +1115,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'clearInput',
 	    value: function clearInput() {
-	      if (this.input.value) {
-	        this.input.value = '';
-	      }
-
-	      if (!this.isSelectOneElement) {
-	        this._setInputWidth();
-	      }
+	      var shouldSetInputWidth = !this.isSelectOneElement;
+	      this.input.clear(shouldSetInputWidth);
 
 	      if (!this.isTextElement && this.config.searchEnabled) {
 	        this.isSearching = false;
-	        this.store.dispatch((0, _index3.activateChoices)(true));
+	        this.store.dispatch((0, _actions.activateChoices)(true));
 	      }
 
 	      return this;
@@ -1182,17 +1139,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      this.passedElement.disabled = false;
-	      var isDisabled = this.containerOuter.classList.contains(this.config.classNames.disabledState);
 
-	      if (isDisabled) {
+	      if (this.containerOuter.isDisabled) {
 	        this._addEventListeners();
 	        this.passedElement.removeAttribute('disabled');
-	        this.input.removeAttribute('disabled');
-	        this.containerOuter.classList.remove(this.config.classNames.disabledState);
-	        this.containerOuter.removeAttribute('aria-disabled');
-	        if (this.isSelectOneElement) {
-	          this.containerOuter.setAttribute('tabindex', '0');
-	        }
+	        this.input.enable();
+	        this.containerOuter.enable();
 	      }
 
 	      return this;
@@ -1212,17 +1164,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      this.passedElement.disabled = true;
-	      var isEnabled = !this.containerOuter.classList.contains(this.config.classNames.disabledState);
 
-	      if (isEnabled) {
+	      if (!this.containerOuter.isDisabled) {
 	        this._removeEventListeners();
 	        this.passedElement.setAttribute('disabled', '');
-	        this.input.setAttribute('disabled', '');
-	        this.containerOuter.classList.add(this.config.classNames.disabledState);
-	        this.containerOuter.setAttribute('aria-disabled', 'true');
-	        if (this.isSelectOneElement) {
-	          this.containerOuter.setAttribute('tabindex', '-1');
-	        }
+	        this.input.disable();
+	        this.containerOuter.disable();
 	      }
 
 	      return this;
@@ -1290,24 +1237,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_handleButtonAction',
 	    value: function _handleButtonAction(activeItems, element) {
-	      if (!activeItems || !element) {
+	      if (!activeItems || !element || !this.config.removeItems || !this.config.removeItemButton) {
 	        return;
 	      }
 
-	      // If we are clicking on a button
-	      if (this.config.removeItems && this.config.removeItemButton) {
-	        var itemId = element.parentNode.getAttribute('data-id');
-	        var itemToRemove = activeItems.find(function (item) {
-	          return item.id === parseInt(itemId, 10);
-	        });
+	      var itemId = element.parentNode.getAttribute('data-id');
+	      var itemToRemove = activeItems.find(function (item) {
+	        return item.id === parseInt(itemId, 10);
+	      });
 
-	        // Remove item associated with button
-	        this._removeItem(itemToRemove);
-	        this._triggerChange(itemToRemove.value);
+	      // Remove item associated with button
+	      this._removeItem(itemToRemove);
+	      this._triggerChange(itemToRemove.value);
 
-	        if (this.isSelectOneElement) {
-	          this._selectPlaceholderChoice();
-	        }
+	      if (this.isSelectOneElement) {
+	        this._selectPlaceholderChoice();
 	      }
 	    }
 
@@ -1342,33 +1286,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var hasShiftKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-	      if (!activeItems || !element) {
+	      if (!activeItems || !element || !this.config.removeItems || this.isSelectOneElement) {
 	        return;
 	      }
 
-	      // If we are clicking on an item
-	      if (this.config.removeItems && !this.isSelectOneElement) {
-	        var passedId = element.getAttribute('data-id');
+	      var passedId = element.getAttribute('data-id');
 
-	        // We only want to select one item with a click
-	        // so we deselect any items that aren't the target
-	        // unless shift is being pressed
-	        activeItems.forEach(function (item) {
-	          if (item.id === parseInt(passedId, 10) && !item.highlighted) {
-	            _this14.highlightItem(item);
-	          } else if (!hasShiftKey) {
-	            if (item.highlighted) {
-	              _this14.unhighlightItem(item);
-	            }
-	          }
-	        });
-
-	        // Focus input as without focus, a user cannot do anything with a
-	        // highlighted item
-	        if (document.activeElement !== this.input) {
-	          this.input.focus();
+	      // We only want to select one item with a click
+	      // so we deselect any items that aren't the target
+	      // unless shift is being pressed
+	      activeItems.forEach(function (item) {
+	        if (item.id === parseInt(passedId, 10) && !item.highlighted) {
+	          _this14.highlightItem(item);
+	        } else if (!hasShiftKey && item.highlighted) {
+	          _this14.unhighlightItem(item);
 	        }
-	      }
+	      });
+
+	      // Focus input as without focus, a user cannot do anything with a
+	      // highlighted item
+	      this.input.focus();
 	    }
 
 	    /**
@@ -1389,7 +1326,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var id = element.getAttribute('data-id');
 	      var choice = this.store.getChoiceById(id);
 	      var passedKeyCode = activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
-	      var hasActiveDropdown = this.dropdown.classList.contains(this.config.classNames.activeState);
+	      var hasActiveDropdown = this.dropdown.isActive;
 
 	      // Update choice keyCode
 	      choice.keyCode = passedKeyCode;
@@ -1426,25 +1363,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_handleBackspace',
 	    value: function _handleBackspace(activeItems) {
-	      if (this.config.removeItems && activeItems) {
-	        var lastItem = activeItems[activeItems.length - 1];
-	        var hasHighlightedItems = activeItems.some(function (item) {
-	          return item.highlighted;
-	        });
+	      if (!this.config.removeItems || !activeItems) {
+	        return;
+	      }
 
-	        // If editing the last item is allowed and there are not other selected items,
-	        // we can edit the item value. Otherwise if we can remove items, remove all selected items
-	        if (this.config.editItems && !hasHighlightedItems && lastItem) {
-	          this.input.value = lastItem.value;
-	          this._setInputWidth();
-	          this._removeItem(lastItem);
-	          this._triggerChange(lastItem.value);
-	        } else {
-	          if (!hasHighlightedItems) {
-	            this.highlightItem(lastItem, false);
-	          }
-	          this.removeHighlightedItems(true);
+	      var lastItem = activeItems[activeItems.length - 1];
+	      var hasHighlightedItems = activeItems.some(function (item) {
+	        return item.highlighted;
+	      });
+
+	      // If editing the last item is allowed and there are not other selected items,
+	      // we can edit the item value. Otherwise if we can remove items, remove all selected items
+	      if (this.config.editItems && !hasHighlightedItems && lastItem) {
+	        this.input.setValue(lastItem.value);
+	        this.input.setWidth();
+	        this._removeItem(lastItem);
+	        this._triggerChange(lastItem.value);
+	      } else {
+	        if (!hasHighlightedItems) {
+	          this.highlightItem(lastItem, false);
 	        }
+	        this.removeHighlightedItems(true);
 	      }
 	    }
 
@@ -1511,28 +1450,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function _handleLoadingState() {
 	      var isLoading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
-	      var placeholderItem = this.itemList.querySelector('.' + this.config.classNames.placeholder);
+	      var placeholderItem = this.itemList.getChild('.' + this.config.classNames.placeholder);
 	      if (isLoading) {
-	        this.containerOuter.classList.add(this.config.classNames.loadingState);
-	        this.containerOuter.setAttribute('aria-busy', 'true');
+	        this.containerOuter.addLoadingState();
 	        if (this.isSelectOneElement) {
 	          if (!placeholderItem) {
 	            placeholderItem = this._getTemplate('placeholder', this.config.loadingText);
-	            this.itemList.appendChild(placeholderItem);
+	            this.itemList.append(placeholderItem);
 	          } else {
 	            placeholderItem.innerHTML = this.config.loadingText;
 	          }
 	        } else {
-	          this.input.placeholder = this.config.loadingText;
+	          this.input.setPlaceholder(this.config.loadingText);
 	        }
 	      } else {
-	        // Remove loading states/text
-	        this.containerOuter.classList.remove(this.config.classNames.loadingState);
+	        this.containerOuter.removeLoadingState();
 
 	        if (this.isSelectOneElement) {
 	          placeholderItem.innerHTML = this.placeholder || '';
 	        } else {
-	          this.input.placeholder = this.placeholder || '';
+	          this.input.setPlaceholder(this.placeholder || '');
 	        }
 	      }
 	    }
@@ -1575,8 +1512,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	          // No results, remove loading state
 	          _this15._handleLoadingState(false);
 	        }
-
-	        _this15.containerOuter.removeAttribute('aria-busy');
 	      };
 	    }
 
@@ -1605,7 +1540,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.currentValue = newValue;
 	        this.highlightPosition = 0;
 	        this.isSearching = true;
-	        this.store.dispatch((0, _index3.filterChoices)(results));
+	        this.store.dispatch((0, _actions.filterChoices)(results));
 
 	        return results.length;
 	      }
@@ -1623,7 +1558,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_handleSearch',
 	    value: function _handleSearch(value) {
-	      if (!value) {
+	      if (!value || !this.input.isFocussed) {
 	        return;
 	      }
 
@@ -1632,26 +1567,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return !option.active;
 	      });
 
-	      // Run callback if it is a function
-	      if (this.input === document.activeElement) {
-	        // Check that we have a value to search and the input was an alphanumeric character
-	        if (value && value.length >= this.config.searchFloor) {
-	          var resultCount = 0;
-	          // Check flag to filter search input
-	          if (this.config.searchChoices) {
-	            // Filter available choices
-	            resultCount = this._searchChoices(value);
-	          }
-	          // Trigger search event
-	          (0, _utils.triggerEvent)(this.passedElement, 'search', {
-	            value: value,
-	            resultCount: resultCount
-	          });
-	        } else if (hasUnactiveChoices) {
-	          // Otherwise reset choices to active
-	          this.isSearching = false;
-	          this.store.dispatch((0, _index3.activateChoices)(true));
-	        }
+	      // Check that we have a value to search and the input was an alphanumeric character
+	      if (value && value.length >= this.config.searchFloor) {
+	        var resultCount = this.config.searchChoices ? this._searchChoices(value) : 0;
+	        // Trigger search event
+	        (0, _utils.triggerEvent)(this.passedElement, 'search', {
+	          value: value,
+	          resultCount: resultCount
+	        });
+	      } else if (hasUnactiveChoices) {
+	        // Otherwise reset choices to active
+	        this.isSearching = false;
+	        this.store.dispatch((0, _actions.activateChoices)(true));
 	      }
 	    }
 
@@ -1673,14 +1600,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      document.addEventListener('mouseover', this._onMouseOver);
 
 	      if (this.isSelectOneElement) {
-	        this.containerOuter.addEventListener('focus', this._onFocus);
-	        this.containerOuter.addEventListener('blur', this._onBlur);
+	        this.containerOuter.element.addEventListener('focus', this._onFocus);
+	        this.containerOuter.element.addEventListener('blur', this._onBlur);
 	      }
 
-	      this.input.addEventListener('input', this._onInput);
-	      this.input.addEventListener('paste', this._onPaste);
-	      this.input.addEventListener('focus', this._onFocus);
-	      this.input.addEventListener('blur', this._onBlur);
+	      this.input.element.addEventListener('focus', this._onFocus);
+	      this.input.element.addEventListener('blur', this._onBlur);
+
+	      this.input.addEventListeners();
 	    }
 
 	    /**
@@ -1701,35 +1628,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      document.removeEventListener('mouseover', this._onMouseOver);
 
 	      if (this.isSelectOneElement) {
-	        this.containerOuter.removeEventListener('focus', this._onFocus);
-	        this.containerOuter.removeEventListener('blur', this._onBlur);
+	        this.containerOuter.element.removeEventListener('focus', this._onFocus);
+	        this.containerOuter.element.removeEventListener('blur', this._onBlur);
 	      }
 
-	      this.input.removeEventListener('input', this._onInput);
-	      this.input.removeEventListener('paste', this._onPaste);
-	      this.input.removeEventListener('focus', this._onFocus);
-	      this.input.removeEventListener('blur', this._onBlur);
-	    }
+	      this.input.element.removeEventListener('focus', this._onFocus);
+	      this.input.element.removeEventListener('blur', this._onBlur);
 
-	    /**
-	     * Set the correct input width based on placeholder
-	     * value or input value
-	     * @return
-	     */
-
-	  }, {
-	    key: '_setInputWidth',
-	    value: function _setInputWidth() {
-	      if (this.placeholder) {
-	        // If there is a placeholder, we only want to set the width of the input when it is a greater
-	        // length than 75% of the placeholder. This stops the input jumping around.
-	        if (this.input.value && this.input.value.length >= this.placeholder.length / 1.25) {
-	          this.input.style.width = (0, _utils.getWidthOfInput)(this.input);
-	        }
-	      } else {
-	        // If there is no placeholder, resize input to contents
-	        this.input.style.width = (0, _utils.getWidthOfInput)(this.input);
-	      }
+	      this.input.removeEventListeners();
 	    }
 
 	    /**
@@ -1744,17 +1650,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this16 = this,
 	          _keyDownActions;
 
-	      if (e.target !== this.input && !this.containerOuter.contains(e.target)) {
+	      if (e.target !== this.input.element && !this.containerOuter.element.contains(e.target)) {
 	        return;
 	      }
 
 	      var target = e.target;
 	      var activeItems = this.store.getItemsFilteredByActive();
-	      var hasFocusedInput = this.input === document.activeElement;
-	      var hasActiveDropdown = this.dropdown.classList.contains(this.config.classNames.activeState);
-	      var hasItems = this.itemList && this.itemList.children;
+	      var hasFocusedInput = this.input.isFocussed;
+	      var hasActiveDropdown = this.dropdown.isActive;
+	      var hasItems = this.itemList.hasChildren;
 	      var keyString = String.fromCharCode(e.keyCode);
 
+	      // TO DO: Move into constants file
 	      var backKey = 46;
 	      var deleteKey = 8;
 	      var enterKey = 13;
@@ -1767,7 +1674,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var ctrlDownKey = e.ctrlKey || e.metaKey;
 
 	      // If a user is typing and the dropdown is not active
-	      if (!this.isTextElement && /[a-zA-Z0-9-_ ]/.test(keyString) && !hasActiveDropdown) {
+	      if (!this.isTextElement && /[a-zA-Z0-9-_ ]/.test(keyString)) {
 	        this.showDropdown(true);
 	      }
 
@@ -1777,7 +1684,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // If CTRL + A or CMD + A have been pressed and there are items to select
 	        if (ctrlDownKey && hasItems) {
 	          _this16.canSearch = false;
-	          if (_this16.config.removeItems && !_this16.input.value && _this16.input === document.activeElement) {
+	          if (_this16.config.removeItems && !_this16.input.element.value && _this16.input.element === document.activeElement) {
 	            // Highlight items
 	            _this16.highlightAll();
 	          }
@@ -1787,14 +1694,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var onEnterKey = function onEnterKey() {
 	        // If enter key is pressed and the input has a value
 	        if (_this16.isTextElement && target.value) {
-	          var value = _this16.input.value;
+	          var value = _this16.input.element.value;
 	          var canAddItem = _this16._canAddItem(activeItems, value);
 
 	          // All is good, add
 	          if (canAddItem.response) {
-	            if (hasActiveDropdown) {
-	              _this16.hideDropdown();
-	            }
+	            _this16.hideDropdown();
 	            _this16._addItem(value);
 	            _this16._triggerChange(value);
 	            _this16.clearInput();
@@ -1808,7 +1713,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        if (hasActiveDropdown) {
 	          e.preventDefault();
-	          var highlighted = _this16.dropdown.querySelector('.' + _this16.config.classNames.highlightedState);
+	          var highlighted = _this16.dropdown.getChild('.' + _this16.config.classNames.highlightedState);
 
 	          // If we have a highlighted choice
 	          if (highlighted) {
@@ -1818,7 +1723,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            _this16._handleChoiceAction(activeItems, highlighted);
 	          }
-	        } else if (_this16.isSelectOneElement && !hasActiveDropdown) {
+	        } else if (_this16.isSelectOneElement) {
 	          // Open single select dropdown if it's not active
 	          _this16.showDropdown(true);
 	          e.preventDefault();
@@ -1827,7 +1732,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var onEscapeKey = function onEscapeKey() {
 	        if (hasActiveDropdown) {
-	          _this16.toggleDropdown();
+	          _this16.hideDropdown();
 	          _this16.containerOuter.focus();
 	        }
 	      };
@@ -1836,9 +1741,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // If up or down key is pressed, traverse through options
 	        if (hasActiveDropdown || _this16.isSelectOneElement) {
 	          // Show dropdown if focus
-	          if (!hasActiveDropdown) {
-	            _this16.showDropdown(true);
-	          }
+	          _this16.showDropdown(true);
 
 	          _this16.canSearch = false;
 
@@ -1848,16 +1751,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var nextEl = void 0;
 	          if (skipKey) {
 	            if (directionInt > 0) {
-	              nextEl = Array.from(_this16.dropdown.querySelectorAll('[data-choice-selectable]')).pop();
+	              nextEl = Array.from(_this16.dropdown.element.querySelectorAll('[data-choice-selectable]')).pop();
 	            } else {
-	              nextEl = _this16.dropdown.querySelector('[data-choice-selectable]');
+	              nextEl = _this16.dropdown.element.querySelector('[data-choice-selectable]');
 	            }
 	          } else {
-	            var currentEl = _this16.dropdown.querySelector('.' + _this16.config.classNames.highlightedState);
+	            var currentEl = _this16.dropdown.element.querySelector('.' + _this16.config.classNames.highlightedState);
 	            if (currentEl) {
 	              nextEl = (0, _utils.getAdjacentEl)(currentEl, '[data-choice-selectable]', directionInt);
 	            } else {
-	              nextEl = _this16.dropdown.querySelector('[data-choice-selectable]');
+	              nextEl = _this16.dropdown.element.querySelector('[data-choice-selectable]');
 	            }
 	          }
 
@@ -1903,33 +1806,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_onKeyUp',
 	    value: function _onKeyUp(e) {
-	      if (e.target !== this.input) {
+	      if (e.target !== this.input.element) {
 	        return;
 	      }
 
-	      var value = this.input.value;
+	      var value = this.input.element.value;
 	      var activeItems = this.store.getItemsFilteredByActive();
 	      var canAddItem = this._canAddItem(activeItems, value);
 
 	      // We are typing into a text input and have a value, we want to show a dropdown
 	      // notice. Otherwise hide the dropdown
 	      if (this.isTextElement) {
-	        var hasActiveDropdown = this.dropdown.classList.contains(this.config.classNames.activeState);
-
 	        if (value) {
 	          if (canAddItem.notice) {
 	            var dropdownItem = this._getTemplate('notice', canAddItem.notice);
-	            this.dropdown.innerHTML = dropdownItem.outerHTML;
+	            this.dropdown.element.innerHTML = dropdownItem.outerHTML;
 	          }
 
 	          if (canAddItem.response === true) {
-	            if (!hasActiveDropdown) {
-	              this.showDropdown();
-	            }
-	          } else if (!canAddItem.notice && hasActiveDropdown) {
+	            this.showDropdown();
+	          } else if (!canAddItem.notice) {
 	            this.hideDropdown();
 	          }
-	        } else if (hasActiveDropdown) {
+	        } else {
 	          this.hideDropdown();
 	        }
 	      } else {
@@ -1941,28 +1840,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	          // ...and it is a multiple select input, activate choices (if searching)
 	          if (!this.isTextElement && this.isSearching) {
 	            this.isSearching = false;
-	            this.store.dispatch((0, _index3.activateChoices)(true));
+	            this.store.dispatch((0, _actions.activateChoices)(true));
 	          }
 	        } else if (this.canSearch && canAddItem.response) {
-	          this._handleSearch(this.input.value);
+	          this._handleSearch(this.input.element.value);
 	        }
 	      }
 	      // Re-establish canSearch value from changes in _onKeyDown
 	      this.canSearch = this.config.searchEnabled;
-	    }
-
-	    /**
-	     * Input event
-	     * @return
-	     * @private
-	     */
-
-	  }, {
-	    key: '_onInput',
-	    value: function _onInput() {
-	      if (!this.isSelectOneElement) {
-	        this._setInputWidth();
-	      }
 	    }
 
 	    /**
@@ -1990,18 +1875,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_onTouchEnd',
 	    value: function _onTouchEnd(e) {
 	      var target = e.target || e.touches[0].target;
-	      var hasActiveDropdown = this.dropdown.classList.contains(this.config.classNames.activeState);
 
 	      // If a user tapped within our container...
-	      if (this.wasTap === true && this.containerOuter.contains(target)) {
+	      if (this.wasTap === true && this.containerOuter.element.contains(target)) {
 	        // ...and we aren't dealing with a single select box, show dropdown/focus input
-	        if ((target === this.containerOuter || target === this.containerInner) && !this.isSelectOneElement) {
+	        if ((target === this.containerOuter.element || target === this.containerInner.element) && !this.isSelectOneElement) {
 	          if (this.isTextElement) {
-	            // If text element, we only want to focus the input (if it isn't already)
-	            if (document.activeElement !== this.input) {
-	              this.input.focus();
-	            }
-	          } else if (!hasActiveDropdown) {
+	            // If text element, we only want to focus the input
+	            this.input.focus();
+	          } else {
 	            // If a select box, we want to show the dropdown
 	            this.showDropdown(true);
 	          }
@@ -2030,7 +1912,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.isScrollingOnIe = true;
 	      }
 
-	      if (this.containerOuter.contains(target) && target !== this.input) {
+	      if (this.containerOuter.element.contains(target) && target !== this.input.element) {
 	        var activeItems = this.store.getItemsFilteredByActive();
 	        var hasShiftKey = e.shiftKey;
 
@@ -2061,19 +1943,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_onClick',
 	    value: function _onClick(e) {
 	      var target = e.target;
-	      var hasActiveDropdown = this.dropdown.classList.contains(this.config.classNames.activeState);
+	      var hasActiveDropdown = this.dropdown.isActive;
 	      var activeItems = this.store.getItemsFilteredByActive();
 
 	      // If target is something that concerns us
-	      if (this.containerOuter.contains(target)) {
-	        // Handle button delete
-	        if (target.hasAttribute('data-button')) {
-	          this._handleButtonAction(activeItems, target);
-	        }
-
+	      if (this.containerOuter.element.contains(target)) {
 	        if (!hasActiveDropdown) {
 	          if (this.isTextElement) {
-	            if (document.activeElement !== this.input) {
+	            if (document.activeElement !== this.input.element) {
 	              this.input.focus();
 	            }
 	          } else if (this.canSearch) {
@@ -2082,7 +1959,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.showDropdown();
 	            this.containerOuter.focus();
 	          }
-	        } else if (this.isSelectOneElement && target !== this.input && !this.dropdown.contains(target)) {
+	        } else if (this.isSelectOneElement && target !== this.input.element && !this.dropdown.element.contains(target)) {
 	          this.hideDropdown(true);
 	        }
 	      } else {
@@ -2096,12 +1973,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        // Remove focus state
-	        this.containerOuter.classList.remove(this.config.classNames.focusState);
+	        this.containerOuter.removeFocusState();
 
 	        // Close all other dropdowns
-	        if (hasActiveDropdown) {
-	          this.hideDropdown();
-	        }
+	        this.hideDropdown();
 	      }
 	    }
 
@@ -2116,24 +1991,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: '_onMouseOver',
 	    value: function _onMouseOver(e) {
 	      // If the dropdown is either the target or one of its children is the target
-	      if (e.target === this.dropdown || this.dropdown.contains(e.target)) {
-	        if (e.target.hasAttribute('data-choice')) this._highlightChoice(e.target);
-	      }
-	    }
-
-	    /**
-	     * Paste event
-	     * @param  {Object} e Event
-	     * @return
-	     * @private
-	     */
-
-	  }, {
-	    key: '_onPaste',
-	    value: function _onPaste(e) {
-	      // Disable pasting into the input if option has been set
-	      if (e.target === this.input && !this.config.paste) {
-	        e.preventDefault();
+	      if ((e.target === this.dropdown || this.dropdown.element.contains(e.target)) && e.target.hasAttribute('data-choice')) {
+	        this._highlightChoice(e.target);
 	      }
 	    }
 
@@ -2151,32 +2010,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var target = e.target;
 	      // If target is something that concerns us
-	      if (this.containerOuter.contains(target)) {
-	        var hasActiveDropdown = this.dropdown.classList.contains(this.config.classNames.activeState);
+	      if (this.containerOuter.element.contains(target)) {
 	        var focusActions = {
 	          text: function text() {
-	            if (target === _this17.input) {
-	              _this17.containerOuter.classList.add(_this17.config.classNames.focusState);
+	            if (target === _this17.input.element) {
+	              _this17.containerOuter.addFocusState();
 	            }
 	          },
 	          'select-one': function selectOne() {
-	            _this17.containerOuter.classList.add(_this17.config.classNames.focusState);
-	            if (target === _this17.input) {
+	            _this17.containerOuter.addFocusState();
+	            if (target === _this17.input.element) {
 	              // Show dropdown if it isn't already showing
-	              if (!hasActiveDropdown) {
-	                _this17.showDropdown();
-	              }
+	              _this17.showDropdown();
 	            }
 	          },
 	          'select-multiple': function selectMultiple() {
-	            if (target === _this17.input) {
+	            if (target === _this17.input.element) {
 	              // If element is a select box, the focused element is the container and the dropdown
 	              // isn't already open, focus and show dropdown
-	              _this17.containerOuter.classList.add(_this17.config.classNames.focusState);
-
-	              if (!hasActiveDropdown) {
-	                _this17.showDropdown(true);
-	              }
+	              _this17.containerOuter.addFocusState();
+	              _this17.showDropdown(true);
 	            }
 	          }
 	        };
@@ -2199,48 +2052,41 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      var target = e.target;
 	      // If target is something that concerns us
-	      if (this.containerOuter.contains(target) && !this.isScrollingOnIe) {
+	      if (this.containerOuter.element.contains(target) && !this.isScrollingOnIe) {
 	        var activeItems = this.store.getItemsFilteredByActive();
-	        var hasActiveDropdown = this.dropdown.classList.contains(this.config.classNames.activeState);
 	        var hasHighlightedItems = activeItems.some(function (item) {
 	          return item.highlighted;
 	        });
 	        var blurActions = {
 	          text: function text() {
-	            if (target === _this18.input) {
+	            if (target === _this18.input.element) {
 	              // Remove the focus state
-	              _this18.containerOuter.classList.remove(_this18.config.classNames.focusState);
+	              _this18.containerOuter.removeFocusState();
 	              // De-select any highlighted items
 	              if (hasHighlightedItems) {
 	                _this18.unhighlightAll();
 	              }
-	              // Hide dropdown if it is showing
-	              if (hasActiveDropdown) {
-	                _this18.hideDropdown();
-	              }
+	              _this18.hideDropdown();
 	            }
 	          },
 	          'select-one': function selectOne() {
-	            _this18.containerOuter.classList.remove(_this18.config.classNames.focusState);
-	            if (target === _this18.containerOuter) {
+	            _this18.containerOuter.removeFocusState();
+	            if (target === _this18.containerOuter.element) {
 	              // Hide dropdown if it is showing
-	              if (hasActiveDropdown && !_this18.canSearch) {
+	              if (!_this18.canSearch) {
 	                _this18.hideDropdown();
 	              }
 	            }
-	            if (target === _this18.input && hasActiveDropdown) {
+	            if (target === _this18.input.element) {
 	              // Hide dropdown if it is showing
 	              _this18.hideDropdown();
 	            }
 	          },
 	          'select-multiple': function selectMultiple() {
-	            if (target === _this18.input) {
+	            if (target === _this18.input.element) {
 	              // Remove the focus state
-	              _this18.containerOuter.classList.remove(_this18.config.classNames.focusState);
-	              // Hide dropdown if it is showing
-	              if (hasActiveDropdown) {
-	                _this18.hideDropdown();
-	              }
+	              _this18.containerOuter.removeFocusState();
+	              _this18.hideDropdown();
 	              // De-select any highlighted items
 	              if (hasHighlightedItems) {
 	                _this18.unhighlightAll();
@@ -2255,7 +2101,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // closes the dropdown. To stop this, we refocus our input
 	        // if we know we are on IE *and* are scrolling.
 	        this.isScrollingOnIe = false;
-	        this.input.focus();
+	        this.input.element.focus();
 	      }
 	    }
 
@@ -2276,18 +2122,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return;
 	      }
 
-	      var dropdownHeight = this.choiceList.offsetHeight;
+	      var dropdownHeight = this.choiceList.height;
 	      var choiceHeight = choice.offsetHeight;
 	      // Distance from bottom of element to top of parent
 	      var choicePos = choice.offsetTop + choiceHeight;
 	      // Scroll position of dropdown
-	      var containerScrollPos = this.choiceList.scrollTop + dropdownHeight;
+	      var containerScrollPos = this.choiceList.scrollPos + dropdownHeight;
 	      // Difference between the choice and scroll position
-	      var endPoint = direction > 0 ? this.choiceList.scrollTop + choicePos - containerScrollPos : choice.offsetTop;
+	      var endPoint = direction > 0 ? this.choiceList.scrollPos + choicePos - containerScrollPos : choice.offsetTop;
 
 	      var animateScroll = function animateScroll() {
 	        var strength = 4;
-	        var choiceListScrollTop = _this19.choiceList.scrollTop;
+	        var choiceListScrollTop = _this19.choiceList.scrollPos;
 	        var continueAnimation = false;
 	        var easing = void 0;
 	        var distance = void 0;
@@ -2296,7 +2142,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          easing = (endPoint - choiceListScrollTop) / strength;
 	          distance = easing > 1 ? easing : 1;
 
-	          _this19.choiceList.scrollTop = choiceListScrollTop + distance;
+	          _this19.choiceList.scrollTo(choiceListScrollTop + distance);
 	          if (choiceListScrollTop < endPoint) {
 	            continueAnimation = true;
 	          }
@@ -2304,7 +2150,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          easing = (choiceListScrollTop - endPoint) / strength;
 	          distance = easing > 1 ? easing : 1;
 
-	          _this19.choiceList.scrollTop = choiceListScrollTop - distance;
+	          _this19.choiceList.scrollTo(choiceListScrollTop - distance);
 	          if (choiceListScrollTop > endPoint) {
 	            continueAnimation = true;
 	          }
@@ -2337,11 +2183,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var el = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
 	      // Highlight first element in dropdown
-	      var choices = Array.from(this.dropdown.querySelectorAll('[data-choice-selectable]'));
+	      var choices = Array.from(this.dropdown.element.querySelectorAll('[data-choice-selectable]'));
 	      var passedEl = el;
 
 	      if (choices && choices.length) {
-	        var highlightedChoices = Array.from(this.dropdown.querySelectorAll('.' + this.config.classNames.highlightedState));
+	        var highlightedChoices = Array.from(this.dropdown.element.querySelectorAll('.' + this.config.classNames.highlightedState));
+	        var hasActiveDropdown = this.dropdown.isActive;
 
 	        // Remove any highlighted choices
 	        highlightedChoices.forEach(function (choice) {
@@ -2370,12 +2217,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	        passedEl.classList.add(this.config.classNames.highlightedState);
 	        passedEl.setAttribute('aria-selected', 'true');
 
-	        var hasActiveDropdown = this.dropdown.classList.contains(this.config.classNames.activeState);
 	        if (hasActiveDropdown) {
 	          // IE11 ignores aria-label and blocks virtual keyboard
 	          // if aria-activedescendant is set without a dropdown
-	          this.input.setAttribute('aria-activedescendant', passedEl.id);
-	          this.containerOuter.setAttribute('aria-activedescendant', passedEl.id);
+	          this.input.setActiveDescendant(passedEl.id);
+	          this.containerOuter.setActiveDescendant(passedEl.id);
 	        }
 	      }
 	    }
@@ -2423,7 +2269,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        passedValue += this.config.appendValue.toString();
 	      }
 
-	      this.store.dispatch((0, _index3.addItem)(passedValue, passedLabel, id, passedOptionId, groupId, customProperties, placeholder, passedKeyCode));
+	      this.store.dispatch((0, _actions.addItem)(passedValue, passedLabel, id, passedOptionId, groupId, customProperties, placeholder, passedKeyCode));
 
 	      if (this.isSelectOneElement) {
 	        this.removeActiveItems(id);
@@ -2471,7 +2317,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var groupId = item.groupId;
 	      var group = groupId >= 0 ? this.store.getGroupById(groupId) : null;
 
-	      this.store.dispatch((0, _index3.removeItem)(id, choiceId));
+	      this.store.dispatch((0, _actions.removeItem)(id, choiceId));
 
 	      if (group && group.value) {
 	        (0, _utils.triggerEvent)(this.passedElement, 'removeItem', {
@@ -2524,7 +2370,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var choiceId = choices ? choices.length + 1 : 1;
 	      var choiceElementId = this.baseId + '-' + this.idNames.itemChoice + '-' + choiceId;
 
-	      this.store.dispatch((0, _index3.addChoice)(value, choiceLabel, choiceId, groupId, isDisabled, choiceElementId, customProperties, placeholder, keyCode));
+	      this.store.dispatch((0, _actions.addChoice)(value, choiceLabel, choiceId, groupId, isDisabled, choiceElementId, customProperties, placeholder, keyCode));
 
 	      if (isSelected) {
 	        this._addItem(value, choiceLabel, choiceId, undefined, customProperties, placeholder, keyCode);
@@ -2540,7 +2386,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: '_clearChoices',
 	    value: function _clearChoices() {
-	      this.store.dispatch((0, _index3.clearChoices)());
+	      this.store.dispatch((0, _actions.clearChoices)());
 	    }
 
 	    /**
@@ -2566,14 +2412,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var isDisabled = group.disabled ? group.disabled : false;
 
 	      if (groupChoices) {
-	        this.store.dispatch((0, _index3.addGroup)(group.label, groupId, true, isDisabled));
+	        this.store.dispatch((0, _actions.addGroup)(group.label, groupId, true, isDisabled));
 
 	        groupChoices.forEach(function (option) {
 	          var isOptDisabled = option.disabled || option.parentNode && option.parentNode.disabled;
 	          _this21._addChoice(option[valueKey], (0, _utils.isType)('Object', option) ? option[labelKey] : option.innerHTML, option.selected, isOptDisabled, groupId, option.customProperties, option.placeholder);
 	        });
 	      } else {
-	        this.store.dispatch((0, _index3.addGroup)(group.label, group.id, false, group.disabled));
+	        this.store.dispatch((0, _actions.addGroup)(group.label, group.id, false, group.disabled));
 	      }
 	    }
 
@@ -2728,12 +2574,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var input = this._getTemplate('input');
 	      var dropdown = this._getTemplate('dropdown');
 
-	      this.containerOuter = containerOuter;
-	      this.containerInner = containerInner;
-	      this.input = input;
-	      this.choiceList = choiceList;
-	      this.itemList = itemList;
-	      this.dropdown = dropdown;
+	      this.containerOuter = new _container2.default(this, containerOuter);
+	      this.containerInner = new _container2.default(this, containerInner);
+	      this.input = new _input2.default(this, input);
+	      this.choiceList = new _list2.default(this, choiceList);
+	      this.itemList = new _list2.default(this, itemList);
+	      this.dropdown = new _dropdown2.default(this, dropdown, this.config.classNames);
 
 	      // Hide passed input
 	      this.passedElement.classList.add(this.config.classNames.input, this.config.classNames.hiddenState);
@@ -2753,32 +2599,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.passedElement.setAttribute('data-choice', 'active');
 
 	      // Wrap input in container preserving DOM ordering
-	      (0, _utils.wrap)(this.passedElement, containerInner);
+	      (0, _utils.wrap)(this.passedElement, this.containerInner.element);
 
 	      // Wrapper inner container with outer container
-	      (0, _utils.wrap)(containerInner, containerOuter);
+	      (0, _utils.wrap)(this.containerInner.element, this.containerOuter.element);
 
 	      if (this.isSelectOneElement) {
-	        input.placeholder = this.config.searchPlaceholderValue || '';
+	        this.input.setPlaceholder(this.config.searchPlaceholderValue || '');
 	      } else if (this.placeholder) {
-	        input.placeholder = this.placeholder;
-	        input.style.width = (0, _utils.getWidthOfInput)(input);
+	        this.input.setPlaceholder(this.placeholder);
+	        this.input.setWidth(true);
 	      }
 
 	      if (!this.config.addItems) {
 	        this.disable();
 	      }
 
-	      containerOuter.appendChild(containerInner);
-	      containerOuter.appendChild(dropdown);
-	      containerInner.appendChild(itemList);
+	      this.containerOuter.element.appendChild(this.containerInner.element);
+	      this.containerOuter.element.appendChild(this.dropdown.element);
+	      this.containerInner.element.appendChild(itemList);
 
 	      if (!this.isTextElement) {
 	        dropdown.appendChild(choiceList);
 	      }
 
 	      if (this.isSelectMultipleElement || this.isTextElement) {
-	        containerInner.appendChild(input);
+	        this.containerInner.element.appendChild(this.input.element);
 	      } else if (this.canSearch) {
 	        dropdown.insertBefore(input, dropdown.firstChild);
 	      }
@@ -5338,90 +5184,526 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	var addItem = exports.addItem = function addItem(value, label, id, choiceId, groupId, customProperties, placeholder, keyCode) {
-	  return {
-	    type: 'ADD_ITEM',
-	    value: value,
-	    label: label,
-	    id: id,
-	    choiceId: choiceId,
-	    groupId: groupId,
-	    customProperties: customProperties,
-	    placeholder: placeholder,
-	    keyCode: keyCode
-	  };
-	};
 
-	var removeItem = exports.removeItem = function removeItem(id, choiceId) {
-	  return {
-	    type: 'REMOVE_ITEM',
-	    id: id,
-	    choiceId: choiceId
-	  };
-	};
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var highlightItem = exports.highlightItem = function highlightItem(id, highlighted) {
-	  return {
-	    type: 'HIGHLIGHT_ITEM',
-	    id: id,
-	    highlighted: highlighted
-	  };
-	};
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var addChoice = exports.addChoice = function addChoice(value, label, id, groupId, disabled, elementId, customProperties, placeholder, keyCode) {
-	  return {
-	    type: 'ADD_CHOICE',
-	    value: value,
-	    label: label,
-	    id: id,
-	    groupId: groupId,
-	    disabled: disabled,
-	    elementId: elementId,
-	    customProperties: customProperties,
-	    placeholder: placeholder,
-	    keyCode: keyCode
-	  };
-	};
+	var Dropdown = function () {
+	  function Dropdown(instance, element, classNames) {
+	    _classCallCheck(this, Dropdown);
 
-	var filterChoices = exports.filterChoices = function filterChoices(results) {
-	  return {
-	    type: 'FILTER_CHOICES',
-	    results: results
-	  };
-	};
+	    this.instance = instance;
+	    this.element = element;
+	    this.classNames = classNames;
+	    this.dimensions = null;
+	    this.position = null;
+	    this.isActive = false;
+	  }
 
-	var activateChoices = exports.activateChoices = function activateChoices() {
-	  var active = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-	  return {
-	    type: 'ACTIVATE_CHOICES',
-	    active: active
-	  };
-	};
+	  /**
+	   * Determine how far the top of our element is from
+	   * the top of the window
+	   * @return {Number} Vertical position
+	   */
 
-	var clearChoices = exports.clearChoices = function clearChoices() {
-	  return {
-	    type: 'CLEAR_CHOICES'
-	  };
-	};
 
-	var addGroup = exports.addGroup = function addGroup(value, id, active, disabled) {
-	  return {
-	    type: 'ADD_GROUP',
-	    value: value,
-	    id: id,
-	    active: active,
-	    disabled: disabled
-	  };
-	};
+	  _createClass(Dropdown, [{
+	    key: 'getVerticalPos',
+	    value: function getVerticalPos() {
+	      this.dimensions = this.element.getBoundingClientRect();
+	      this.position = Math.ceil(this.dimensions.top + window.pageYOffset + this.element.offsetHeight);
+	      return this.position;
+	    }
 
-	var clearAll = exports.clearAll = function clearAll() {
-	  return {
-	    type: 'CLEAR_ALL'
-	  };
-		};
+	    /**
+	     * Find element that matches passed selector
+	     * @return {HTMLElement}
+	     */
+
+	  }, {
+	    key: 'getChild',
+	    value: function getChild(selector) {
+	      return this.element.querySelector(selector);
+	    }
+
+	    /**
+	     * Show dropdown to user by adding active state class
+	     * @return {Object} Class instance
+	     * @public
+	     */
+
+	  }, {
+	    key: 'show',
+	    value: function show() {
+	      this.element.classList.add(this.classNames.activeState);
+	      this.element.setAttribute('aria-expanded', 'true');
+	      this.isActive = true;
+	      return this.instance;
+	    }
+
+	    /**
+	     * Hide dropdown from user
+	     * @return {Object} Class instance
+	     * @public
+	     */
+
+	  }, {
+	    key: 'hide',
+	    value: function hide() {
+	      this.element.classList.remove(this.classNames.activeState);
+	      this.element.setAttribute('aria-expanded', 'false');
+	      this.isActive = false;
+	      return this.instance;
+	    }
+	  }]);
+
+	  return Dropdown;
+	}();
+
+		exports.default = Dropdown;
 
 /***/ }),
 /* 31 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Container = function () {
+	  function Container(instance, element) {
+	    _classCallCheck(this, Container);
+
+	    this.instance = instance;
+	    this.element = element;
+	    this.config = instance.config;
+	    this.classNames = instance.config.classNames;
+	    this.isOpen = false;
+	    this.isFlipped = false;
+	    this.isFocussed = false;
+	    this.isDisabled = false;
+	    this.isLoading = false;
+	    this.onFocus = this.onFocus.bind(this);
+	    this.onBlur = this.onBlur.bind(this);
+	  }
+
+	  /**
+	   * Add event listeners
+	  */
+
+
+	  _createClass(Container, [{
+	    key: 'addEventListeners',
+	    value: function addEventListeners() {
+	      this.element.addEventListener('focus', this.onFocus);
+	      this.element.addEventListener('blur', this.onBlur);
+	    }
+
+	    /**
+	     * Remove event listeners
+	    */
+
+	    /** */
+
+	  }, {
+	    key: 'removeEventListeners',
+	    value: function removeEventListeners() {
+	      this.element.removeEventListener('focus', this.onFocus);
+	      this.element.removeEventListener('blur', this.onBlur);
+	    }
+
+	    /**
+	     * Set focussed state
+	     */
+
+	  }, {
+	    key: 'onFocus',
+	    value: function onFocus() {
+	      this.isFocussed = true;
+	    }
+
+	    /**
+	     * Remove blurred state
+	     */
+
+	  }, {
+	    key: 'onBlur',
+	    value: function onBlur() {
+	      this.isFocussed = false;
+	    }
+
+	    /**
+	     * Determine whether container should be flipped
+	     * based on passed dropdown position
+	     * @param {Number} dropdownPos
+	     * @returns
+	     */
+
+	  }, {
+	    key: 'shouldFlip',
+	    value: function shouldFlip(dropdownPos) {
+	      if (!dropdownPos) {
+	        return false;
+	      }
+
+	      var body = document.body;
+	      var html = document.documentElement;
+	      var winHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+
+	      // If flip is enabled and the dropdown bottom position is
+	      // greater than the window height flip the dropdown.
+	      var shouldFlip = false;
+	      if (this.config.position === 'auto') {
+	        shouldFlip = dropdownPos >= winHeight;
+	      } else if (this.config.position === 'top') {
+	        shouldFlip = true;
+	      }
+
+	      return shouldFlip;
+	    }
+
+	    /**
+	     * Set active descendant attribute
+	     * @param {Number} activeDescendant ID of active descendant
+	     */
+
+	  }, {
+	    key: 'setActiveDescendant',
+	    value: function setActiveDescendant(activeDescendant) {
+	      this.element.setAttribute('aria-activedescendant', activeDescendant);
+	    }
+
+	    /**
+	     * Remove active descendant attribute
+	     */
+
+	  }, {
+	    key: 'removeActiveDescendant',
+	    value: function removeActiveDescendant() {
+	      this.element.removeAttribute('aria-activedescendant');
+	    }
+	  }, {
+	    key: 'open',
+	    value: function open(dropdownPos) {
+	      this.element.classList.add(this.classNames.openState);
+	      this.element.setAttribute('aria-expanded', 'true');
+	      this.isOpen = true;
+
+	      if (this.shouldFlip(dropdownPos)) {
+	        this.element.classList.add(this.classNames.flippedState);
+	        this.isFlipped = true;
+	      }
+	    }
+	  }, {
+	    key: 'close',
+	    value: function close() {
+	      this.element.classList.remove(this.classNames.openState);
+	      this.element.setAttribute('aria-expanded', 'false');
+	      this.removeActiveDescendant();
+	      this.isOpen = false;
+
+	      // A dropdown flips if it does not have space within the page
+	      if (this.isFlipped) {
+	        this.element.classList.remove(this.classNames.flippedState);
+	        this.isFlipped = false;
+	      }
+	    }
+	  }, {
+	    key: 'focus',
+	    value: function focus() {
+	      if (!this.isFocussed) {
+	        this.element.focus();
+	      }
+	    }
+	  }, {
+	    key: 'addFocusState',
+	    value: function addFocusState() {
+	      this.element.classList.add(this.classNames.focusState);
+	    }
+	  }, {
+	    key: 'removeFocusState',
+	    value: function removeFocusState() {
+	      this.element.classList.remove(this.classNames.focusState);
+	    }
+
+	    /**
+	     * Remove disabled state
+	     */
+
+	  }, {
+	    key: 'enable',
+	    value: function enable() {
+	      this.element.classList.remove(this.config.classNames.disabledState);
+	      this.element.removeAttribute('aria-disabled');
+	      if (this.instance.isSelectOneElement) {
+	        this.element.setAttribute('tabindex', '0');
+	      }
+	      this.isDisabled = false;
+	    }
+
+	    /**
+	     * Set disabled state
+	     */
+
+	  }, {
+	    key: 'disable',
+	    value: function disable() {
+	      this.element.classList.add(this.config.classNames.disabledState);
+	      this.element.setAttribute('aria-disabled', 'true');
+	      if (this.instance.isSelectOneElement) {
+	        this.element.setAttribute('tabindex', '-1');
+	      }
+	      this.isDisabled = true;
+	    }
+
+	    /**
+	     * Add loading state to element
+	     */
+
+	  }, {
+	    key: 'addLoadingState',
+	    value: function addLoadingState() {
+	      this.element.classList.add(this.classNames.loadingState);
+	      this.element.setAttribute('aria-busy', 'true');
+	      this.isLoading = true;
+	    }
+
+	    /**
+	     * Remove loading state from element
+	     */
+
+	  }, {
+	    key: 'removeLoadingState',
+	    value: function removeLoadingState() {
+	      this.element.classList.remove(this.classNames.loadingState);
+	      this.element.removeAttribute('aria-busy');
+	      this.isLoading = false;
+	    }
+	  }]);
+
+	  return Container;
+	}();
+
+		exports.default = Container;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _utils = __webpack_require__(33);
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Input = function () {
+	  function Input(instance, element) {
+	    _classCallCheck(this, Input);
+
+	    this.instance = instance;
+	    this.element = element;
+	    this.isFocussed = this.element === document.activeElement;
+	    this.isDisabled = false;
+
+	    // Bind event listeners
+	    this.onPaste = this.onPaste.bind(this);
+	    this.onInput = this.onInput.bind(this);
+	    this.onFocus = this.onFocus.bind(this);
+	    this.onBlur = this.onBlur.bind(this);
+	  }
+
+	  _createClass(Input, [{
+	    key: 'addEventListeners',
+	    value: function addEventListeners() {
+	      this.element.addEventListener('input', this.onInput);
+	      this.element.addEventListener('paste', this.onPaste);
+	      this.element.addEventListener('focus', this.onFocus);
+	      this.element.addEventListener('blur', this.onBlur);
+	    }
+	  }, {
+	    key: 'removeEventListeners',
+	    value: function removeEventListeners() {
+	      this.element.removeEventListener('input', this.onInput);
+	      this.element.removeEventListener('paste', this.onPaste);
+	      this.element.removeEventListener('focus', this.onFocus);
+	      this.element.removeEventListener('blur', this.onBlur);
+	    }
+
+	    /**
+	     * Input event
+	     * @return
+	     * @private
+	     */
+
+	  }, {
+	    key: 'onInput',
+	    value: function onInput() {
+	      if (!this.instance.isSelectOneElement) {
+	        this.setWidth();
+	      }
+	    }
+
+	    /**
+	     * Paste event
+	     * @param  {Object} e Event
+	     * @return
+	     * @private
+	     */
+
+	  }, {
+	    key: 'onPaste',
+	    value: function onPaste(e) {
+	      // Disable pasting into the input if option has been set
+	      if (e.target === this.element && !this.instance.config.paste) {
+	        e.preventDefault();
+	      }
+	    }
+
+	    /**
+	     * Set focussed state
+	     */
+
+	  }, {
+	    key: 'onFocus',
+	    value: function onFocus() {
+	      this.isFocussed = true;
+	    }
+
+	    /**
+	     * Remove focussed state
+	     */
+
+	  }, {
+	    key: 'onBlur',
+	    value: function onBlur() {
+	      this.isFocussed = false;
+	    }
+	  }, {
+	    key: 'activate',
+	    value: function activate(focusInput) {
+	      // Optionally focus the input if we have a search input
+	      if (focusInput && this.instance.canSearch && document.activeElement !== this.element) {
+	        this.element.focus();
+	      }
+	    }
+	  }, {
+	    key: 'deactivate',
+	    value: function deactivate(blurInput) {
+	      this.removeActiveDescendant();
+	      // Optionally blur the input if we have a search input
+	      if (blurInput && this.instance.canSearch && document.activeElement === this.element) {
+	        this.element.blur();
+	      }
+	    }
+	  }, {
+	    key: 'enable',
+	    value: function enable() {
+	      this.element.removeAttribute('disabled');
+	      this.isDisabled = false;
+	    }
+	  }, {
+	    key: 'disable',
+	    value: function disable() {
+	      this.element.setAttribute('disabled', '');
+	      this.isDisabled = true;
+	    }
+	  }, {
+	    key: 'focus',
+	    value: function focus() {
+	      if (!this.isFocussed) {
+	        this.element.focus();
+	      }
+	    }
+
+	    /**
+	     * Set value of input to blank
+	     * @return {Object} Class instance
+	     * @public
+	     */
+
+	  }, {
+	    key: 'clear',
+	    value: function clear() {
+	      var setWidth = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+	      if (this.element.value) {
+	        this.element.value = '';
+	      }
+
+	      if (setWidth) {
+	        this.setWidth();
+	      }
+
+	      return this.instance;
+	    }
+
+	    /**
+	     * Set the correct input width based on placeholder
+	     * value or input value
+	     * @return
+	     */
+
+	  }, {
+	    key: 'setWidth',
+	    value: function setWidth(enforceWidth) {
+	      if (this.instance.placeholder) {
+	        // If there is a placeholder, we only want to set the width of the input when it is a greater
+	        // length than 75% of the placeholder. This stops the input jumping around.
+	        if (this.element.value && this.element.value.length >= this.instance.placeholder.length / 1.25 || enforceWidth) {
+	          this.element.style.width = (0, _utils.getWidthOfInput)(this.element);
+	        }
+	      } else {
+	        // If there is no placeholder, resize input to contents
+	        this.element.style.width = (0, _utils.getWidthOfInput)(this.element);
+	      }
+	    }
+	  }, {
+	    key: 'setPlaceholder',
+	    value: function setPlaceholder(placeholder) {
+	      this.element.placeholder = placeholder;
+	    }
+	  }, {
+	    key: 'setValue',
+	    value: function setValue(value) {
+	      this.element.value = value;
+	    }
+	  }, {
+	    key: 'getValue',
+	    value: function getValue() {
+	      return this.element.value;
+	    }
+	  }, {
+	    key: 'setActiveDescendant',
+	    value: function setActiveDescendant(activeDescendant) {
+	      this.element.setAttribute('aria-activedescendant', activeDescendant);
+	    }
+	  }, {
+	    key: 'removeActiveDescendant',
+	    value: function removeActiveDescendant() {
+	      this.element.removeAttribute('aria-activedescendant');
+	    }
+	  }]);
+
+	  return Input;
+	}();
+
+		exports.default = Input;
+
+/***/ }),
+/* 33 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -6025,7 +6307,172 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 32 */
+/* 34 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var List = function () {
+	  function List(instance, element) {
+	    _classCallCheck(this, List);
+
+	    this.instance = instance;
+	    this.element = element;
+	    this.classNames = this.instance.config.classNames;
+	    this.scrollPos = this.element.scrollTop;
+	    this.height = this.element.offsetHeight;
+	    this.hasChildren = !!this.element.children;
+	  }
+
+	  /**
+	   * Clear List contents
+	   */
+
+
+	  _createClass(List, [{
+	    key: 'clear',
+	    value: function clear() {
+	      this.element.innerHTML = '';
+	    }
+
+	    /**
+	     * Scroll to passed position on Y axis
+	     */
+
+	  }, {
+	    key: 'scrollTo',
+	    value: function scrollTo(scrollPos) {
+	      this.element.scrollTop = scrollPos;
+	    }
+
+	    /**
+	     * Append node to element
+	     */
+
+	  }, {
+	    key: 'append',
+	    value: function append(node) {
+	      this.element.appendChild(node);
+	    }
+
+	    /**
+	     * Find element that matches passed selector
+	     * @return {HTMLElement}
+	    */
+
+	  }, {
+	    key: 'getChild',
+	    value: function getChild(selector) {
+	      return this.element.querySelector(selector);
+	    }
+	  }]);
+
+	  return List;
+	}();
+
+		exports.default = List;
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var addItem = exports.addItem = function addItem(value, label, id, choiceId, groupId, customProperties, placeholder, keyCode) {
+	  return {
+	    type: 'ADD_ITEM',
+	    value: value,
+	    label: label,
+	    id: id,
+	    choiceId: choiceId,
+	    groupId: groupId,
+	    customProperties: customProperties,
+	    placeholder: placeholder,
+	    keyCode: keyCode
+	  };
+	};
+
+	var removeItem = exports.removeItem = function removeItem(id, choiceId) {
+	  return {
+	    type: 'REMOVE_ITEM',
+	    id: id,
+	    choiceId: choiceId
+	  };
+	};
+
+	var highlightItem = exports.highlightItem = function highlightItem(id, highlighted) {
+	  return {
+	    type: 'HIGHLIGHT_ITEM',
+	    id: id,
+	    highlighted: highlighted
+	  };
+	};
+
+	var addChoice = exports.addChoice = function addChoice(value, label, id, groupId, disabled, elementId, customProperties, placeholder, keyCode) {
+	  return {
+	    type: 'ADD_CHOICE',
+	    value: value,
+	    label: label,
+	    id: id,
+	    groupId: groupId,
+	    disabled: disabled,
+	    elementId: elementId,
+	    customProperties: customProperties,
+	    placeholder: placeholder,
+	    keyCode: keyCode
+	  };
+	};
+
+	var filterChoices = exports.filterChoices = function filterChoices(results) {
+	  return {
+	    type: 'FILTER_CHOICES',
+	    results: results
+	  };
+	};
+
+	var activateChoices = exports.activateChoices = function activateChoices() {
+	  var active = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+	  return {
+	    type: 'ACTIVATE_CHOICES',
+	    active: active
+	  };
+	};
+
+	var clearChoices = exports.clearChoices = function clearChoices() {
+	  return {
+	    type: 'CLEAR_CHOICES'
+	  };
+	};
+
+	var addGroup = exports.addGroup = function addGroup(value, id, active, disabled) {
+	  return {
+	    type: 'ADD_GROUP',
+	    value: value,
+	    id: id,
+	    active: active,
+	    disabled: disabled
+	  };
+	};
+
+	var clearAll = exports.clearAll = function clearAll() {
+	  return {
+	    type: 'CLEAR_ALL'
+	  };
+		};
+
+/***/ }),
+/* 36 */
 /***/ (function(module, exports) {
 
 	'use strict';
