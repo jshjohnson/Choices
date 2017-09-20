@@ -2256,6 +2256,10 @@ class Choices {
       passedValue += this.config.appendValue.toString();
     }
 
+    if (this.placeholderElement) {
+      this.placeholderElement.style.visibility = 'hidden';
+    }
+
     this.store.dispatch(
       addItem(
         passedValue,
@@ -2315,6 +2319,10 @@ class Choices {
     this.store.dispatch(
       removeItem(id, choiceId),
     );
+
+    if (this.placeholderElement && !this.getValue(true)) {
+      this.placeholderElement.style.visibility = 'visible';
+    }
 
     if (group && group.value) {
       triggerEvent(this.passedElement, 'removeItem', {
@@ -2754,6 +2762,18 @@ class Choices {
     } else if (this.placeholder) {
       input.placeholder = this.placeholder;
       input.style.width = getWidthOfInput(input);
+    }
+
+    // Create a pseudo-placeholder element.
+    if (
+      this.config.placeholder &&
+      this.config.placeholderValue &&
+      this.isSelectOneElement
+    ) {
+      this.placeholderElement = document.createElement('span');
+      this.placeholderElement.setAttribute('style', 'position:absolute;color:#999;');
+      this.placeholderElement.appendChild(document.createTextNode(this.config.placeholderValue));
+      containerInner.insertBefore(this.placeholderElement, containerInner.firstChild);
     }
 
     if (!this.config.addItems) {
