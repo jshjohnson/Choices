@@ -526,13 +526,16 @@ export const getWidthOfInput = (input) => {
 
 /**
  * Sorting function for current and previous string
- * @param  {String} a Current value
- * @param  {String} b Next value
+ * @param  {Object} a Current value
+ * @param  {Object} b Next value
  * @return {Number}   -1 for after previous,
  *                    1 for before,
  *                    0 for same location
  */
 export const sortByAlpha = (a, b) => {
+  if (a.placeholder) return -1;
+  if (b.placeholder) return 1;
+
   const labelA = (a.label || a.value).toLowerCase();
   const labelB = (b.label || b.value).toLowerCase();
 
