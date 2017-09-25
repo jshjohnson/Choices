@@ -1656,6 +1656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      document.addEventListener('keydown', this._onKeyDown);
 	      document.addEventListener('click', this._onClick);
 	      document.addEventListener('touchmove', this._onTouchMove);
+	      document.addEventListener('touchstart', this._onMouseDown);
 	      document.addEventListener('touchend', this._onTouchEnd);
 	      document.addEventListener('mousedown', this._onMouseDown);
 	      document.addEventListener('mouseover', this._onMouseOver);
@@ -1684,6 +1685,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      document.removeEventListener('keydown', this._onKeyDown);
 	      document.removeEventListener('click', this._onClick);
 	      document.removeEventListener('touchmove', this._onTouchMove);
+	      document.removeEventListener('touchstart', this._onMouseDown);
 	      document.removeEventListener('touchend', this._onTouchEnd);
 	      document.removeEventListener('mousedown', this._onMouseDown);
 	      document.removeEventListener('mouseover', this._onMouseOver);
