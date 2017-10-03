@@ -366,17 +366,6 @@ const example = new Choices(element, {
 
 **Usage:** Whether the input should show a placeholder. Used in conjunction with `placeholderValue`. If `placeholder` is set to true and no value is passed to `placeholderValue`, the passed input's placeholder attribute will be used as the  placeholder value.
 
-**Note:** For single select boxes, the recommended way of adding a placeholder is as follows:
-
-```html
-<select>
-  <option placeholder>This is a placeholder</option>
-  <option>...</option>
-  <option>...</option>
-  <option>...</option>
-</select>
-```
-
 ### placeholderValue
 **Type:** `String` **Default:** `null`
 
