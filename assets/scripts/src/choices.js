@@ -2569,10 +2569,13 @@ class Choices {
           },
         );
 
+        const itemSelectText = this.config.itemSelectText ?
+          `data-select-text="${this.config.itemSelectText}"` : '';
+
         return strToEl(`
           <div
             class="${localClasses}"
-            data-select-text="${this.config.itemSelectText}"
+            ${itemSelectText}
             data-choice
             data-id="${data.id}"
             data-value="${data.value}"
