@@ -427,7 +427,7 @@ const example = new Choices(element, {
 
 **Input types affected:** `select-multiple`, `select-one`
 
-**Usage:** The text that is shown when a user hovers over a selectable choice.
+**Usage:** The text that is shown when a user hovers over a selectable choice. To display no hover set it to an empty string ''.
 
 ### addItemText
 **Type:** `String/Function` **Default:** `Press Enter to add "${value}"`

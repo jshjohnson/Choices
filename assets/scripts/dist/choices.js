@@ -2619,7 +2619,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
 	          var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.placeholder, data.placeholder), _classNames5));
 
-	          return (0, _utils.strToEl)('\n          <div\n            class="' + localClasses + '"\n            data-select-text="' + _this22.config.itemSelectText + '"\n            data-choice\n            data-id="' + data.id + '"\n            data-value="' + data.value + '"\n            ' + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\n            id="' + data.elementId + '"\n            ' + role + '\n            >\n            ' + data.label + '\n          </div>\n        ');
+	          var itemSelectText = _this22.config.itemSelectText ? 'data-select-text="' + _this22.config.itemSelectText + '"' : '';
+
+	          return (0, _utils.strToEl)('\n          <div\n            class="' + localClasses + '"\n            ' + itemSelectText + '\n            data-choice\n            data-id="' + data.id + '"\n            data-value="' + data.value + '"\n            ' + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\n            id="' + data.elementId + '"\n            ' + role + '\n            >\n            ' + data.label + '\n          </div>\n        ');
 	        },
 	        input: function input() {
 	          var localClasses = (0, _classnames2.default)(globalClasses.input, globalClasses.inputCloned);
