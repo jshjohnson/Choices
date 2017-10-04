@@ -173,6 +173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        group: 'choices__group',
 	        groupHeading: 'choices__heading',
 	        button: 'choices__button',
+	        selectableContent: 'selectable-content',
 	        activeState: 'is-active',
 	        focusState: 'is-focused',
 	        openState: 'is-open',
@@ -2590,12 +2591,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var ariaSelected = data.active ? 'aria-selected="true"' : '';
 	          var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
 
-	          var localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
+	          var localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.selectableContent, !!_this22.config.itemSelectText), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
 
 	          if (_this22.config.removeItemButton) {
 	            var _classNames3;
 
-	            localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
+	            localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.selectableContent, !!_this22.config.itemSelectText), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
 
 	            return (0, _utils.strToEl)('\n            <div\n              class="' + localClasses + '"\n              data-item\n              data-id="' + data.id + '"\n              data-value="' + data.value + '"\n              data-deletable\n              ' + ariaSelected + '\n              ' + ariaDisabled + '\n              >\n              ' + data.label + '<!--\n           --><button\n                type="button"\n                class="' + globalClasses.button + '"\n                data-button\n                aria-label="Remove item: \'' + data.value + '\'"\n                >\n                Remove item\n              </button>\n            </div>\n          ');
 	          }
@@ -2617,11 +2618,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	          var _classNames5;
 
 	          var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
-	          var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.placeholder, data.placeholder), _classNames5));
+	          var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.selectableContent, !!_this22.config.itemSelectText), _defineProperty(_classNames5, globalClasses.placeholder, data.placeholder), _classNames5));
 
-	          var itemSelectText = _this22.config.itemSelectText ? 'data-select-text="' + _this22.config.itemSelectText + '"' : '';
-
-	          return (0, _utils.strToEl)('\n          <div\n            class="' + localClasses + '"\n            ' + itemSelectText + '\n            data-choice\n            data-id="' + data.id + '"\n            data-value="' + data.value + '"\n            ' + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\n            id="' + data.elementId + '"\n            ' + role + '\n            >\n            ' + data.label + '\n          </div>\n        ');
+	          return (0, _utils.strToEl)('\n          <div\n            class="' + localClasses + '"\n            data-select-text="' + _this22.config.itemSelectText + '"\n            data-choice\n            data-id="' + data.id + '"\n            data-value="' + data.value + '"\n            ' + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\n            id="' + data.elementId + '"\n            ' + role + '\n            >\n            ' + data.label + '\n          </div>\n        ');
 	        },
 	        input: function input() {
 	          var localClasses = (0, _classnames2.default)(globalClasses.input, globalClasses.inputCloned);

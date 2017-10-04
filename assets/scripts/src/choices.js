@@ -105,6 +105,7 @@ class Choices {
         group: 'choices__group',
         groupHeading: 'choices__heading',
         button: 'choices__button',
+        selectableContent: 'selectable-content',
         activeState: 'is-active',
         focusState: 'is-focused',
         openState: 'is-open',
@@ -2473,6 +2474,7 @@ class Choices {
           globalClasses.item, {
             [globalClasses.highlightedState]: data.highlighted,
             [globalClasses.itemSelectable]: !data.highlighted,
+            [globalClasses.selectableContent]: !!this.config.itemSelectText,
             [globalClasses.placeholder]: data.placeholder,
           },
         );
@@ -2482,6 +2484,7 @@ class Choices {
             globalClasses.item, {
               [globalClasses.highlightedState]: data.highlighted,
               [globalClasses.itemSelectable]: !data.disabled,
+              [globalClasses.selectableContent]: !!this.config.itemSelectText,
               [globalClasses.placeholder]: data.placeholder,
             },
           );
@@ -2565,17 +2568,15 @@ class Choices {
           globalClasses.itemChoice, {
             [globalClasses.itemDisabled]: data.disabled,
             [globalClasses.itemSelectable]: !data.disabled,
+            [globalClasses.selectableContent]: !!this.config.itemSelectText,
             [globalClasses.placeholder]: data.placeholder,
           },
         );
 
-        const itemSelectText = this.config.itemSelectText ?
-          `data-select-text="${this.config.itemSelectText}"` : '';
-
         return strToEl(`
           <div
             class="${localClasses}"
-            ${itemSelectText}
+            data-select-text="${this.config.itemSelectText}"
             data-choice
             data-id="${data.id}"
             data-value="${data.value}"
