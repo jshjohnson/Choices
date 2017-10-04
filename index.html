@@ -170,6 +170,9 @@
           <option value="No Hover 3">No Hover 3</option>
         </select>
       </div>
+      <button type="button" onclick="removeSingleNoHoverItems()">Remove Items</button>
+      <br />
+      <br />
 
       <p><small>If the following two examples do not load, the Discogs rate limit has probably been reached. Try again later!</small></p>
 
@@ -290,6 +293,11 @@
     </div>
   </div>
   <script>
+    var noHover = {setValue: function() {}};
+    function removeSingleNoHoverItems() {
+      noHover.setValue(null);
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
       var textRemove = new Choices(document.getElementById('choices-text-remove-button'), {
         delimiter: ',',
@@ -387,7 +395,7 @@
         document.getElementById('message').innerHTML = 'You just removed "' + event.detail.label + '"';
       });
 
-      var noHover = new Choices('#choices-single-no-hover', {
+      noHover = new Choices('#choices-single-no-hover', {
         placeholder: true,
         placeholderValue: 'Select...',
         searchPlaceholderValue: 'Search...',

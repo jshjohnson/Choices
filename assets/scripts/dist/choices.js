@@ -990,7 +990,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      // Convert args to an iterable array
-	      var values = [].concat(_toConsumableArray(args));
+	      var values = args ? [].concat(_toConsumableArray(args)) : [];
 	      var handleValue = function handleValue(item) {
 	        var itemType = (0, _utils.getType)(item);
 	        if (itemType === 'Object') {
@@ -1018,8 +1018,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        values.forEach(function (value) {
 	          return handleValue(value);
 	        });
-	      } else {
+	      } else if (values.length === 1) {
 	        handleValue(values[0]);
+	      } else {
+	        this.removeActiveItems();
 	      }
 
 	      return this;
@@ -2792,7 +2794,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          });
 	        }
 	      } else if (this.isTextElement) {
-	        // Add any preset values seperated by delimiter
+	        // Add any preset values separated by delimiter
 	        this.presetItems.forEach(function (item) {
 	          var itemType = (0, _utils.getType)(item);
 	          if (itemType === 'Object') {

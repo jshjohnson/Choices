@@ -853,7 +853,7 @@ class Choices {
     }
 
     // Convert args to an iterable array
-    const values = [...args];
+    const values = args ? [...args] : [];
     const handleValue = (item) => {
       const itemType = getType(item);
       if (itemType === 'Object') {
@@ -899,8 +899,10 @@ class Choices {
 
     if (values.length > 1) {
       values.forEach(value => handleValue(value));
-    } else {
+    } else if (values.length === 1) {
       handleValue(values[0]);
+    } else {
+      this.removeActiveItems();
     }
 
     return this;
@@ -2803,7 +2805,7 @@ class Choices {
         });
       }
     } else if (this.isTextElement) {
-      // Add any preset values seperated by delimiter
+      // Add any preset values separated by delimiter
       this.presetItems.forEach((item) => {
         const itemType = getType(item);
         if (itemType === 'Object') {
