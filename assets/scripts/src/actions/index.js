@@ -79,3 +79,8 @@ export const addGroup = (value, id, active, disabled) => ({
 export const clearAll = () => ({
   type: 'CLEAR_ALL',
 });
+
+export const resetTo = state => ({
+  type: 'RESET_TO',
+  state,
+});

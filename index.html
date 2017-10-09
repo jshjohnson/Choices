@@ -278,6 +278,31 @@
         <option value="Queens">Queens</option>
         <option value="Staten Island">Staten Island</option>
       </select>
+
+      <hr>
+      <h2>Form interaction</h2>
+      <p>Change the values and press reset (The select must be in a form element)</p>
+      <form>
+        <label for="reset-simple">Change me!</label>
+        <select class="form-control" name="reset-simple" id="reset-simple" placeholder="Choose an option">
+          <option value="Option 1">Option 1</option>
+          <option value="Option 2" selected>Option 2</option>
+          <option value="Option 3">Option 3</option>
+          <option value="Option 4">Option 4</option>
+          <option value="Option 5">Option 5</option>
+        </select>
+
+        <label for="reset-multiple">And me!</label>
+        <select class="form-control" data-trigger name="reset-multiple" id="reset-multiple" placeholder="This is a placeholder"
+          multiple>
+          <option value="Dropdown item 1" selected>Dropdown item 1</option>
+          <option value="Dropdown item 2">Dropdown item 2</option>
+          <option value="Dropdown item 3">Dropdown item 3</option>
+          <option value="Dropdown item 4" disabled>Dropdown item 4</option>
+        </select>
+
+        <button type="reset">Reset</button>
+      </form>
     </div>
   </div>
   <script>
@@ -524,6 +549,13 @@
       });
 
       var boroughs = new Choices(document.getElementById('boroughs')).disable();
+
+      var resetSimple = new Choices(document.getElementById('reset-simple'));
+
+      var resetMultiple = new Choices('#reset-multiple', {
+        removeItemButton: true,
+      });
+
     });
   </script>
 

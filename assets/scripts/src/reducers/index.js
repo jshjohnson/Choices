@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import items from './items';
 import groups from './groups';
 import choices from './choices';
+import { cloneObject } from '../lib/utils';
 
 const appReducer = combineReducers({
   items,
@@ -17,6 +18,8 @@ const rootReducer = (passedState, action) => {
   // See: http://stackoverflow.com/a/35641992
   if (action.type === 'CLEAR_ALL') {
     state = undefined;
+  } else if (action.type === 'RESET_TO') {
+    return cloneObject(action.state);
   }
 
   return appReducer(state, action);

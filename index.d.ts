@@ -205,6 +205,13 @@ declare module "choices.js" {
 		 * @public
 		 */
 		ajax(fn: (values: any) => any): this;
+
+		/**
+		 * Reset to inital state
+		 * @return {Object} Class instance
+		 * @public
+		 */
+		reset(): this;
 	}
 
 	namespace Choices {
