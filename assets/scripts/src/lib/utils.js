@@ -582,3 +582,13 @@ export const regexFilter = (value, regex) => {
   const expression = new RegExp(regex.source, 'i');
   return expression.test(value);
 };
+
+/**
+ * Deep clone an object
+ * @param  {Object} obj Object to clone    
+ * @return {Object}     Clone of the object
+ * @private
+ */
+export const cloneObject = obj => {
+  return JSON.parse(JSON.stringify(obj));
+}

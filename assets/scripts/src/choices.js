@@ -11,6 +11,7 @@ import {
   addGroup,
   clearAll,
   clearChoices,
+  resetTo,
 }
 from './actions/index';
 import {
@@ -29,6 +30,7 @@ import {
   triggerEvent,
   findAncestorByAttrName,
   regexFilter,
+  cloneObject,
 }
 from './lib/utils';
 import './lib/polyfills';
@@ -146,6 +148,7 @@ class Choices {
     this.initialised = false;
     this.currentState = {};
     this.prevState = {};
+    this.initialState = {};
     this.currentValue = '';
 
     // Retrieve triggering element (i.e. element with 'data-choice' trigger)
@@ -214,6 +217,7 @@ class Choices {
     this._onMouseOver = this._onMouseOver.bind(this);
     this._onPaste = this._onPaste.bind(this);
     this._onInput = this._onInput.bind(this);
+    this._onFormReset = this._onFormReset.bind(this);
 
     // Monitor touch taps/scrolls
     this.wasTap = true;
@@ -261,6 +265,9 @@ class Choices {
     this._createTemplates();
     // Generate input markup
     this._createInput();
+    // Set initial state (We need to clone the state because some reducers
+    // modify the inner objects properties in the state)
+    this.initialState = cloneObject(this.store.getState());
     // Subscribe store to render method
     this.store.subscribe(this.render);
     // Render any items
@@ -1130,6 +1137,16 @@ class Choices {
     return this;
   }
 
+  /**
+   * Reset to inital state
+   * @return {Object} Class instance
+   * @public
+   */
+  reset() {
+    this.store.dispatch(resetTo(this.initialState));
+    return this;
+  }
+
   /* =====  End of Public functions  ====== */
 
   /* =============================================
@@ -1549,6 +1566,10 @@ class Choices {
     this.input.addEventListener('paste', this._onPaste);
     this.input.addEventListener('focus', this._onFocus);
     this.input.addEventListener('blur', this._onBlur);
+
+    if (this.input.form) {
+      this.input.form.addEventListener('reset', this._onFormReset);
+    }
   }
 
   /**
@@ -1574,6 +1595,10 @@ class Choices {
     this.input.removeEventListener('paste', this._onPaste);
     this.input.removeEventListener('focus', this._onFocus);
     this.input.removeEventListener('blur', this._onBlur);
+
+    if (this.input.form) {
+      this.input.form.removeEventListener('reset', this._onFormReset);
+    }
   }
 
   /**
@@ -2100,6 +2125,10 @@ class Choices {
       this.isScrollingOnIe = false;
       this.input.focus();
     }
+  }
+
+  _onFormReset() {
+    this.reset();
   }
 
   /**
