@@ -394,6 +394,9 @@ export const getScrollPosition = function(position) {
   if(!canUseDOM){
      return false
   }
+  if(!canUseDOM){
+     return false
+  }
   if (position === 'bottom') {
     // Scroll position from the bottom of the viewport
     return Math.max((window.scrollY || window.pageYOffset) + (window.innerHeight || document.documentElement.clientHeight));

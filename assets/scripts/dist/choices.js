@@ -1,4 +1,4 @@
-/*! choices.js v3.0.2 | (c) 2017 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
+/*! choices.js v3.0.3 | (c) 2017 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -3832,6 +3832,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _redux = __webpack_require__(6);
 
+	var _ExecutionEnvironment = __webpack_require__(4);
+
 	var _index = __webpack_require__(27);
 
 	var _index2 = _interopRequireDefault(_index);
@@ -3846,6 +3848,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Store() {
 	    _classCallCheck(this, Store);
 
+	    if (!_ExecutionEnvironment.canUseDOM) {
+	      return false;
+	    }
 	    this.store = (0, _redux.createStore)(_index2.default, window.devToolsExtension ? window.devToolsExtension() : undefined);
 	  }
 
@@ -5905,6 +5910,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (!_ExecutionEnvironment.canUseDOM) {
 	    return false;
 	  }
+	  if (!_ExecutionEnvironment.canUseDOM) {
+	    return false;
+	  }
 	  if (position === 'bottom') {
 	    // Scroll position from the bottom of the viewport
 	    return Math.max((window.scrollY || window.pageYOffset) + (window.innerHeight || document.documentElement.clientHeight));
@@ -6126,12 +6134,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 33 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
+	var _ExecutionEnvironment = __webpack_require__(4);
+
 	/* eslint-disable */
 	(function () {
+	  if (!_ExecutionEnvironment.canUseDOM) {
+	    return false;
+	  }
 	  // Production steps of ECMA-262, Edition 6, 22.1.2.1
 	  // Reference: https://people.mozilla.org/~jorendorff/es6-draft.html#sec-array.from
 	  if (!Array.from) {

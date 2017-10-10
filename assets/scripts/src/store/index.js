@@ -1,8 +1,12 @@
 import { createStore } from 'redux';
+import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment'
 import rootReducer from './../reducers/index';
 
 export default class Store {
   constructor() {
+    if(!canUseDOM){
+       return false
+    }
     this.store = createStore(
       rootReducer,
       window.devToolsExtension ?
