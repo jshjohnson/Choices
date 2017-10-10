@@ -1,5 +1,6 @@
 import Fuse from 'fuse.js';
 import classNames from 'classnames';
+import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment'
 import Store from './store/index';
 import {
   addItem,
@@ -38,6 +39,9 @@ import './lib/polyfills';
  */
 class Choices {
   constructor(element = '[data-choice]', userConfig = {}) {
+    if(!canUseDOM){
+      return false
+    }
     // If there are multiple elements, create a new instance
     // for each element besides the first one (as that already has an instance)
     if (isType('String', element)) {
@@ -249,7 +253,7 @@ class Choices {
    * @public
    */
   init() {
-    if (this.initialised === true) {
+    if (!canUseDOM || this.initialised === true) {
       return;
     }
 
@@ -280,7 +284,7 @@ class Choices {
    * @public
    */
   destroy() {
-    if (this.initialised === false) {
+    if (!canUseDOM || this.initialised === false) {
       return;
     }
 
@@ -332,6 +336,9 @@ class Choices {
    * @private
    */
   renderGroups(groups, choices, fragment) {
+    if(!canUseDOM){
+       return false
+    }
     const groupFragment = fragment || document.createDocumentFragment();
     const filter = this.config.sortFilter;
 
@@ -367,6 +374,9 @@ class Choices {
    * @private
    */
   renderChoices(choices, fragment, withinGroup = false) {
+    if(!canUseDOM){
+       return false
+    }
     // Create a fragment to store our list items (so we don't have to update the DOM for each item)
     const choicesFragment = fragment || document.createDocumentFragment();
     const { renderSelectedChoices, searchResultLimit, renderChoiceLimit } = this.config;
@@ -431,6 +441,9 @@ class Choices {
    * @private
    */
   renderItems(items, fragment = null) {
+    if(!canUseDOM){
+       return false
+    }
     // Create fragment to add elements to
     const itemListFragment = fragment || document.createDocumentFragment();
 
@@ -479,6 +492,9 @@ class Choices {
    * @private
    */
   render() {
+    if(!canUseDOM){
+       return false
+    }
     this.currentState = this.store.getState();
 
     // Only render if our state has actually changed
@@ -743,6 +759,9 @@ class Choices {
    * @public
    */
   showDropdown(focusInput = false) {
+    if(!canUseDOM){
+       return false
+    }
     const body = document.body;
     const html = document.documentElement;
     const winHeight = Math.max(
@@ -790,6 +809,9 @@ class Choices {
    * @public
    */
   hideDropdown(blurInput = false) {
+    if(!canUseDOM){
+       return false
+    }
     // A dropdown flips if it does not have space within the page
     const isFlipped = this.containerOuter.classList.contains(this.config.classNames.flippedState);
 
@@ -1207,6 +1229,9 @@ class Choices {
    * @private
    */
   _handleItemAction(activeItems, element, hasShiftKey = false) {
+    if(!canUseDOM){
+       return false
+    }
     if (!activeItems || !element) {
       return;
     }
@@ -1532,6 +1557,9 @@ class Choices {
    * @private
    */
   _addEventListeners() {
+    if(!canUseDOM){
+       return false
+    }
     document.addEventListener('keyup', this._onKeyUp);
     document.addEventListener('keydown', this._onKeyDown);
     document.addEventListener('click', this._onClick);
@@ -1557,6 +1585,9 @@ class Choices {
    * @private
    */
   _removeEventListeners() {
+    if(!canUseDOM){
+       return false
+    }
     document.removeEventListener('keyup', this._onKeyUp);
     document.removeEventListener('keydown', this._onKeyDown);
     document.removeEventListener('click', this._onClick);
@@ -1600,6 +1631,9 @@ class Choices {
    * @return
    */
   _onKeyDown(e) {
+    if(!canUseDOM){
+       return false
+    }
     if (e.target !== this.input && !this.containerOuter.contains(e.target)) {
       return;
     }
