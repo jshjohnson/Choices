@@ -1,3 +1,4 @@
+import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment'
 /* eslint-disable */
 
 /**
@@ -126,6 +127,9 @@ export const extend = function() {
  * @return
  */
 export const whichTransitionEvent = function() {
+  if(!canUseDOM){
+     return false
+  }
   let t,
     el = document.createElement('fakeelement');
 
@@ -148,6 +152,9 @@ export const whichTransitionEvent = function() {
  * @return
  */
 export const whichAnimationEvent = function() {
+  if(!canUseDOM){
+     return false
+  }
   let t,
     el = document.createElement('fakeelement');
 
@@ -174,6 +181,9 @@ export const whichAnimationEvent = function() {
  * @return {Array}          Array of parent elements
  */
 export const getParentsUntil = function(elem, parent, selector) {
+  if(!canUseDOM){
+     return false
+  }
   const parents = [];
   // Get matches
   for (; elem && elem !== document; elem = elem.parentNode) {
@@ -248,6 +258,9 @@ export const getParentsUntil = function(elem, parent, selector) {
 };
 
 export const wrap = function(element, wrapper) {
+  if(!canUseDOM){
+     return false
+  }
   wrapper = wrapper || document.createElement('div');
   if (element.nextSibling) {
     element.parentNode.insertBefore(wrapper, element.nextSibling);
@@ -378,6 +391,12 @@ export const getAdjacentEl = (startEl, className, direction = 1) => {
  * @return {String} Position of scroll
  */
 export const getScrollPosition = function(position) {
+  if(!canUseDOM){
+     return false
+  }
+  if(!canUseDOM){
+     return false
+  }
   if (position === 'bottom') {
     // Scroll position from the bottom of the viewport
     return Math.max((window.scrollY || window.pageYOffset) + (window.innerHeight || document.documentElement.clientHeight));
@@ -426,6 +445,9 @@ export const isScrolledIntoView = (el, parent, direction = 1) => {
  * @return {String}  Sanitised string
  */
 export const stripHTML = function(html) {
+  if(!canUseDOM){
+     return false
+  }
   const el = document.createElement('DIV');
   el.innerHTML = html;
   return el.textContent || el.innerText || '';
@@ -466,6 +488,9 @@ export const getRandomNumber = function(min, max) {
  * @return {HTMLElement}   Converted node element
  */
 export const strToEl = (function() {
+  if(!canUseDOM){
+     return false
+  }
   const tmpEl = document.createElement('div');
   return function(str) {
     const cleanedInput = str.trim();
@@ -486,6 +511,9 @@ export const strToEl = (function() {
  * @return {Number} Width of input
  */
 export const getWidthOfInput = (input) => {
+  if(!canUseDOM){
+     return false
+  }
   const value = input.value || input.placeholder;
   let width = input.offsetWidth;
 

@@ -1,6 +1,6 @@
 {
   "name": "choices.js",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "A vanilla JS customisable text input/select box plugin",
   "main": "./assets/scripts/dist/choices.min.js",
   "types": "./index.d.ts",
@@ -66,6 +66,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "fbjs": "^0.8.16",
     "fuse.js": "^2.2.2",
     "redux": "^3.3.1"
   },
