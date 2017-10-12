@@ -309,14 +309,14 @@ class Choices {
       }
     };
 
-    let rendererableChoices = choices;
+    let renderableChoices = choices;
 
     if (renderSelectedChoices === 'auto' && !this.isSelectOneElement) {
-      rendererableChoices = choices.filter(choice => !choice.selected);
+      renderableChoices = choices.filter(choice => !choice.selected);
     }
 
     // Split array into placeholders and "normal" choices
-    const { placeholderChoices, normalChoices } = rendererableChoices.reduce((acc, choice) => {
+    const { placeholderChoices, normalChoices } = renderableChoices.reduce((acc, choice) => {
       if (choice.placeholder) {
         acc.placeholderChoices.push(choice);
       } else {
@@ -330,9 +330,9 @@ class Choices {
       normalChoices.sort(filter);
     }
 
-    let choiceLimit = rendererableChoices.length;
+    let choiceLimit = renderableChoices.length;
 
-    // Prepend placeholeder
+    // Prepend placeholder
     const sortedChoices = [...placeholderChoices, ...normalChoices];
 
     if (this.isSearching) {
@@ -413,102 +413,126 @@ class Choices {
     this.currentState = this.store.getState();
 
     // Only render if our state has actually changed
-    if (this.currentState !== this.prevState) {
-      // Choices
-      if (
-        (this.currentState.choices !== this.prevState.choices ||
-        this.currentState.groups !== this.prevState.groups ||
-        this.currentState.items !== this.prevState.items) &&
-        this.isSelectElement
-      ) {
-          // Get active groups/choices
-        const activeGroups = this.store.getGroupsFilteredByActive();
-        const activeChoices = this.store.getChoicesFilteredByActive();
-
-        let choiceListFragment = document.createDocumentFragment();
-
-          // Clear choices
-        this.choiceList.clear();
-
-          // Scroll back to top of choices list
-        if (this.config.resetScrollPosition) {
-          this.choiceList.scrollTo(0);
-        }
-
-          // If we have grouped options
-        if (activeGroups.length >= 1 && this.isSearching !== true) {
-          // If we have a placeholder choice along with groups
-          const activePlaceholders = activeChoices.filter(
-            activeChoice => activeChoice.placeholder === true && activeChoice.groupId === -1,
-          );
-          if (activePlaceholders.length >= 1) {
-            choiceListFragment = this.renderChoices(activePlaceholders, choiceListFragment);
-          }
-          choiceListFragment = this.renderGroups(activeGroups, activeChoices, choiceListFragment);
-        } else if (activeChoices.length >= 1) {
-          choiceListFragment = this.renderChoices(activeChoices, choiceListFragment);
-        }
-
-        const activeItems = this.store.getItemsFilteredByActive();
-        const canAddItem = this._canAddItem(activeItems, this.input.getValue());
-
-          // If we have choices to show
-        if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
-            // ...and we can select them
-          if (canAddItem.response) {
-              // ...append them and highlight the first choice
-            this.choiceList.append(choiceListFragment);
-            this._highlightChoice();
-          } else {
-              // ...otherwise show a notice
-            this.choiceList.append(this._getTemplate('notice', canAddItem.notice));
-          }
-        } else {
-            // Otherwise show a notice
-          let dropdownItem;
-          let notice;
-
-          if (this.isSearching) {
-            notice = isType('Function', this.config.noResultsText) ?
-                this.config.noResultsText() :
-                this.config.noResultsText;
-
-            dropdownItem = this._getTemplate('notice', notice, 'no-results');
-          } else {
-            notice = isType('Function', this.config.noChoicesText) ?
-                this.config.noChoicesText() :
-                this.config.noChoicesText;
-
-            dropdownItem = this._getTemplate('notice', notice, 'no-choices');
-          }
-
-          this.choiceList.append(dropdownItem);
-        }
-      }
-
-      // Items
-      if (this.currentState.items !== this.prevState.items) {
-        // Get active items (items that can be selected)
-        const activeItems = this.store.getItemsFilteredByActive();
-
-        // Clear list
-        this.itemList.clear();
-
-        if (activeItems && activeItems.length) {
-          // Create a fragment to store our list items
-          // (so we don't have to update the DOM for each item)
-          const itemListFragment = this.renderItems(activeItems);
-
-          // If we have items to add
-          if (itemListFragment.childNodes) {
-            // Update list
-            this.itemList.append(itemListFragment);
-          }
-        }
-      }
-
-      this.prevState = this.currentState;
+    if (this.currentState === this.prevState) {
+      return;
     }
+    // Choices
+    if (
+      (this.currentState.choices !== this.prevState.choices ||
+      this.currentState.groups !== this.prevState.groups ||
+      this.currentState.items !== this.prevState.items) &&
+      this.isSelectElement
+    ) {
+        // Get active groups/choices
+      const activeGroups = this.store.getGroupsFilteredByActive();
+      const activeChoices = this.store.getChoicesFilteredByActive();
+
+      let choiceListFragment = document.createDocumentFragment();
+
+        // Clear choices
+      this.choiceList.clear();
+
+        // Scroll back to top of choices list
+      if (this.config.resetScrollPosition) {
+        this.choiceList.scrollTo(0);
+      }
+
+      let groupsToRender = [];
+      let choicesToRender = [];
+      let lastGroupId = null;
+      activeChoices.forEach((choice) => {
+        const currentGroupId = choice.groupId;
+        // first iteration
+        if (lastGroupId === null) {
+          lastGroupId = currentGroupId;
+          if (currentGroupId !== -1) {
+            groupsToRender.push(activeGroups.find(g => g.id === currentGroupId));
+          }
+        }
+        if (lastGroupId !== currentGroupId) {
+          if (lastGroupId === -1) {
+            // render buffered nongrouped choices
+            choiceListFragment = this.renderChoices(choicesToRender, choiceListFragment);
+            choicesToRender = [];
+            groupsToRender.push(activeGroups.find(g => g.id === currentGroupId));
+          } else if (currentGroupId === -1) {
+            // render buffered groups and their choices
+            choiceListFragment =
+              this.renderGroups(groupsToRender, choicesToRender, choiceListFragment);
+            groupsToRender = [];
+            choicesToRender = [];
+          } else {
+            groupsToRender.push(activeGroups.find(g => g.id === currentGroupId));
+          }
+        }
+        choicesToRender.push(choice);
+        lastGroupId = currentGroupId;
+      });
+      if (groupsToRender.length > 0) {
+        choiceListFragment = this.renderGroups(groupsToRender, choicesToRender, choiceListFragment);
+      } else if (choicesToRender.length > 0) {
+        choiceListFragment = this.renderChoices(choicesToRender, choiceListFragment);
+      }
+
+      const activeItems = this.store.getItemsFilteredByActive();
+      const canAddItem = this._canAddItem(activeItems, this.input.getValue());
+
+        // If we have choices to show
+      if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
+          // ...and we can select them
+        if (canAddItem.response) {
+            // ...append them and highlight the first choice
+          this.choiceList.append(choiceListFragment);
+          this._highlightChoice();
+        } else {
+            // ...otherwise show a notice
+          this.choiceList.append(this._getTemplate('notice', canAddItem.notice));
+        }
+      } else {
+          // Otherwise show a notice
+        let dropdownItem;
+        let notice;
+
+        if (this.isSearching) {
+          notice = isType('Function', this.config.noResultsText) ?
+              this.config.noResultsText() :
+              this.config.noResultsText;
+
+          dropdownItem = this._getTemplate('notice', notice, 'no-results');
+        } else {
+          notice = isType('Function', this.config.noChoicesText) ?
+              this.config.noChoicesText() :
+              this.config.noChoicesText;
+
+          dropdownItem = this._getTemplate('notice', notice, 'no-choices');
+        }
+
+        this.choiceList.append(dropdownItem);
+      }
+    }
+
+    // Items
+    if (this.currentState.items !== this.prevState.items) {
+      // Get active items (items that can be selected)
+      const activeItems = this.store.getItemsFilteredByActive();
+
+      // Clear list
+      this.itemList.clear();
+
+      if (activeItems && activeItems.length) {
+        // Create a fragment to store our list items
+        // (so we don't have to update the DOM for each item)
+        const itemListFragment = this.renderItems(activeItems);
+
+        // If we have items to add
+        if (itemListFragment.childNodes) {
+          // Update list
+          this.itemList.append(itemListFragment);
+        }
+      }
+    }
+
+    this.prevState = this.currentState;
   }
 
   /**
@@ -2195,15 +2219,17 @@ class Choices {
    * @param {Number} id Group ID
    * @param {String} [valueKey] name of the value property on the object
    * @param {String} [labelKey] name of the label property on the object
+   * @param {String} [labelKey] name of the label property on the object
+   * @param {Boolean} [preselectFirstChoice] preselect the choice of the group
    * @return
    * @private
    */
-  _addGroup(group, id, valueKey = 'value', labelKey = 'label') {
+  _addGroup(group, id, valueKey = 'value', labelKey = 'label', preselectFirstChoice = false) {
     const groupChoices = isType('Object', group) ?
       group.choices :
       Array.from(group.getElementsByTagName('OPTION'));
     const groupId = id || Math.floor(new Date().valueOf() * Math.random());
-    const isDisabled = group.disabled ? group.disabled : false;
+    const isGrDisabled = group.disabled ? group.disabled : false;
 
     if (groupChoices) {
       this.store.dispatch(
@@ -2211,16 +2237,17 @@ class Choices {
           group.label,
           groupId,
           true,
-          isDisabled,
+          isGrDisabled,
         ),
       );
 
-      groupChoices.forEach((option) => {
-        const isOptDisabled = option.disabled || (option.parentNode && option.parentNode.disabled);
+      groupChoices.forEach((option, index) => {
+        const isOptSelected = preselectFirstChoice && index === 0 ? true : option.selected;
+        const isOptDisabled = option.disabled || isGrDisabled;
         this._addChoice(
           option[valueKey],
           (isType('Object', option)) ? option[labelKey] : option.innerHTML,
-          option.selected,
+          isOptSelected,
           isOptDisabled,
           groupId,
           option.customProperties,
@@ -2344,89 +2371,55 @@ class Choices {
     }
 
     if (this.isSelectElement) {
-      const passedGroups = Array.from(this.passedElement.getElementsByTagName('OPTGROUP'));
+      const filter = this.config.sortFilter;
+      const allChoices = this.presetChoices;
+      const passedElementChildren = Array.prototype.slice.call(this.passedElement.children);
 
       this.highlightPosition = 0;
       this.isSearching = false;
 
-      if (passedGroups && passedGroups.length) {
-        // If we have a placeholder option
-        const placeholderChoice = this.passedElement.querySelector('option[placeholder]');
-        if (placeholderChoice && placeholderChoice.parentNode.tagName === 'SELECT') {
+      passedElementChildren.forEach((child) => {
+        if (child.tagName === 'OPTGROUP') {
+          const groupOptions = Array.prototype.slice.call(child.children);
+          allChoices.push({
+            label: child.label,
+            disabled: child.disabled,
+            choices: groupOptions.map(Choices._optionToChoice),
+          });
+        } else {
+          allChoices.push(Choices._optionToChoice(child));
+        }
+      });
+
+      // If sorting is enabled or the user is searching, filter choices
+      if (this.config.shouldSort) {
+        allChoices.sort(filter);
+      }
+
+      // Determine whether there is a selected choice
+      const hasSelectedChoice = allChoices.some(choice => choice.selected);
+      // Add each choice
+      allChoices.forEach((choice, index) => {
+        const shouldPreselect = this.isSelectOneElement && !hasSelectedChoice && index === 0;
+        // If the choice is actually a group
+        if (choice.choices) {
+          this._addGroup(choice, choice.id || null, 'value', 'label', shouldPreselect);
+        } else {
+          // If there is a selected choice already or the choice is not
+          // the first in the array, add each choice normally
+          // Otherwise pre-select the first choice in the array if it's a single select
+          const isSelected = shouldPreselect ? true : choice.selected;
           this._addChoice(
-            placeholderChoice.value,
-            placeholderChoice.innerHTML,
-            placeholderChoice.selected,
-            placeholderChoice.disabled,
+            choice.value,
+            choice.label,
+            isSelected,
+            choice.disabled,
             undefined,
-            undefined,
-            /* placeholder */ true,
+            choice.customProperties,
+            choice.placeholder,
           );
         }
-        passedGroups.forEach((group) => {
-          this._addGroup(group, (group.id || null));
-        });
-      } else {
-        const passedOptions = Array.from(this.passedElement.options);
-        const filter = this.config.sortFilter;
-        const allChoices = this.presetChoices;
-
-        // Create array of options from option elements
-        passedOptions.forEach((o) => {
-          allChoices.push({
-            value: o.value,
-            label: o.innerHTML,
-            selected: o.selected,
-            disabled: o.disabled || o.parentNode.disabled,
-            placeholder: o.hasAttribute('placeholder'),
-          });
-        });
-
-        // If sorting is enabled or the user is searching, filter choices
-        if (this.config.shouldSort) {
-          allChoices.sort(filter);
-        }
-
-        // Determine whether there is a selected choice
-        const hasSelectedChoice = allChoices.some(choice => choice.selected);
-
-        // Add each choice
-        allChoices.forEach((choice, index) => {
-          if (this.isSelectElement) {
-            // If the choice is actually a group
-            if (choice.choices) {
-              this._addGroup(choice, choice.id || null);
-            } else {
-              // If there is a selected choice already or the choice is not
-              // the first in the array, add each choice normally
-              // Otherwise pre-select the first choice in the array if it's a single select
-              const shouldPreselect = this.isSelectOneElement && !hasSelectedChoice && index === 0;
-              const isSelected = shouldPreselect ? true : choice.selected;
-              const isDisabled = shouldPreselect ? false : choice.disabled;
-
-              this._addChoice(
-                choice.value,
-                choice.label,
-                isSelected,
-                isDisabled,
-                undefined,
-                choice.customProperties,
-                choice.placeholder,
-              );
-            }
-          } else {
-            this._addChoice(
-              choice.value,
-              choice.label,
-              choice.selected,
-              choice.disabled,
-              undefined,
-              choice.customProperties,
-              choice.placeholder,
-            );
-          }
-        });
-      }
+      });
     } else if (this.isTextElement) {
       // Add any preset values seperated by delimiter
       this.presetItems.forEach((item) => {
@@ -2448,6 +2441,22 @@ class Choices {
         }
       });
     }
+  }
+
+  /**
+   * Convert option element to choice
+   * @param {HTMLElement} option Option element
+   * @return {Object} Choice
+   * @private
+   */
+  static _optionToChoice(option) {
+    return {
+      value: option.value,
+      label: option.innerHTML,
+      selected: option.selected,
+      disabled: option.disabled || option.parentNode.disabled,
+      placeholder: option.hasAttribute('placeholder'),
+    };
   }
 
   /* =====  End of Private functions  ====== */
