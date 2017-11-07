@@ -1423,8 +1423,8 @@ class Choices {
     const pageDownKey = KEY_CODES.PAGE_DOWN_KEY;
     const ctrlDownKey = (e.ctrlKey || e.metaKey);
 
-    // If a user is typing and the dropdown is not active
-    if (!this.isTextElement && /[a-zA-Z0-9-_ ]/.test(keyString)) {
+    // If a search is enabled, a user is typing and the dropdown is not active
+    if (!this.isTextElement && this.config.searchEnabled && /[a-zA-Z0-9-_ ]/.test(keyString)) {
       this.showDropdown(true);
     }
 
