@@ -157,7 +157,7 @@ declare module "choices.js" {
 		 * @return {Object} Class instance
 		 * @public
 		 */
-		setValueByChoice(value: string | string[]): this;
+		setChoiceByValue(value: string | string[]): this;
 
 		/**
 		 * Direct populate choices

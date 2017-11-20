@@ -5,7 +5,22 @@
   },
   "env": {
     "browser": true,
-    "node": true
+    "node": true,
+    "mocha": true,
+    "jasmine": true
+  },
+  "globals": {
+    "__DEV__": true,
+    "describe": true,
+    "it": true,
+    "before": true,
+    "after": true,
+    "beforeEach": true,
+    "afterEach": true,
+    "expect": true,
+    "browser": true,
+    "by": true,
+    "element": true
   },
   "parser": "babel-eslint",
   "rules": {

@@ -1,56 +1,78 @@
 const path = require('path');
 const pkg = require('./package.json');
 const webpack = require('webpack');
-const wrapperPlugin = require('wrapper-webpack-plugin');
-const banner = `/*! ${ pkg.name } v${ pkg.version } | (c) ${ new Date().getFullYear() } ${ pkg.author } | ${ pkg.homepage } */ \n`;
-const minimize = process.argv.includes('--minimize');
+const WrapperPlugin = require('wrapper-webpack-plugin');
 
-const config = {
-  devtool: minimize ? false : 'cheap-module-source-map',
-  entry: [
-    './assets/scripts/src/choices'
-  ],
-  output: {
-    path: path.join(__dirname, '/assets/scripts/dist'),
-    filename: minimize ? 'choices.min.js' : 'choices.js',
-    publicPath: '/assets/scripts/dist/',
-    library: 'Choices',
-    libraryTarget: 'umd',
-  },
-  libraryTarget: 'umd',
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        // This has effect on the react lib size
-        'NODE_ENV': JSON.stringify('production'),
-      }
-    }),
-    new wrapperPlugin({
-      header: banner,
-    }),
-  ],
-  module: {
-    loaders: [{
-      test: /\.js$/,
-      exclude: /(node_modules|bower_components)/,
-      loaders: ['babel'],
-      include: path.join(__dirname, 'assets/scripts/src')
-    }]
-  }
-};
+const banner = `/*! ${pkg.name} v${pkg.version} | (c) ${new Date().getFullYear()} ${pkg.author} | ${pkg.homepage} */ \n`;
 
-if (minimize) {
-  config.plugins.unshift(new webpack.optimize.UglifyJsPlugin({
-    sourceMap: false,
-    mangle: true,
+module.exports = (env) => {
+  const minimize = !!(env && env.minimize);
+
+  const config = {
+    devtool: minimize ? false : 'cheap-module-source-map',
+    entry: [
+      './src/scripts/src/choices',
+    ],
     output: {
-      comments: false
+      path: path.join(__dirname, '/src/scripts/dist'),
+      filename: minimize ? 'choices.min.js' : 'choices.js',
+      publicPath: '/src/scripts/dist/',
+      library: 'Choices',
+      libraryTarget: 'umd',
+      auxiliaryComment: {
+        root: 'Window',
+        commonjs: 'CommonJS',
+        commonjs2: 'CommonJS2',
+        amd: 'AMD',
+      },
     },
-    compress: {
-      warnings: false,
-      screw_ie8: true
-    }
-  }));
-}
+    plugins: [
+      new webpack.optimize.ModuleConcatenationPlugin(),
+      new webpack.DefinePlugin({
+        'process.env': {
+          // This has effect on the react lib size
+          NODE_ENV: JSON.stringify('production'),
+        },
+      }),
+      new WrapperPlugin({
+        header: banner,
+      }),
+    ],
+    module: {
+      rules: [
+        {
+          enforce: 'pre',
+          test: /\.js?$/,
+          include: path.join(__dirname, 'src/scripts/src'),
+          exclude: /(node_modules|bower_components)/,
+          loader: 'eslint-loader',
+          query: {
+            configFile: '.eslintrc',
+          },
+        },
+        {
+          test: /\.js?$/,
+          include: path.join(__dirname, 'src/scripts/src'),
+          exclude: /(node_modules|bower_components)/,
+          loader: 'babel-loader',
+        },
+      ],
+    },
+  };
 
-module.exports = config;
+  if (minimize) {
+    config.plugins.unshift(new webpack.optimize.UglifyJsPlugin({
+      sourceMap: false,
+      mangle: true,
+      output: {
+        comments: false,
+      },
+      compress: {
+        warnings: false,
+        screw_ie8: true,
+      },
+    }));
+  }
+
+  return config;
+};

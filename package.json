@@ -2,19 +2,19 @@
   "name": "choices.js",
   "version": "3.0.2",
   "description": "A vanilla JS customisable text input/select box plugin",
-  "main": "./assets/scripts/dist/choices.min.js",
+  "main": "./src/scripts/dist/choices.min.js",
   "types": "./index.d.ts",
   "scripts": {
     "start": "node server.js",
     "lint": "eslint assets/**/*.js",
-    "test": "karma start --single-run --no-auto-watch tests/karma.config.js",
-    "test:watch": "karma start --auto-watch --no-single-run tests/karma.config.js",
+    "test": "nyc mocha --require ./config/test.js --compilers js:babel-core/register \"./src/**/**/**/**/*.test.js\"",
+    "test:watch": "npm run test -- --watch",
     "css:watch": "nodemon -e scss -x \"npm run css:build\"",
     "css:build": "npm run css:sass -s && npm run css:prefix -s && npm run css:min -s",
-    "css:sass": "node-sass --output-style expanded --include-path  scss assets/styles/scss/base.scss assets/styles/css/base.css && node-sass --output-style expanded --include-path scss assets/styles/scss/choices.scss assets/styles/css/choices.css",
-    "css:prefix": "postcss --use autoprefixer -b 'last 2 versions' assets/styles/css/*.css -d assets/styles/css/",
-    "css:min": "csso assets/styles/css/base.css assets/styles/css/base.min.css && csso assets/styles/css/choices.css assets/styles/css/choices.min.css",
-    "js:build": "concurrently --prefix-colors yellow,green \"webpack --minimize --config webpack.config.prod.js\" \"webpack --config webpack.config.prod.js\"",
+    "css:sass": "node-sass --output-style expanded --include-path  scss src/styles/scss/base.scss src/styles/css/base.css && node-sass --output-style expanded --include-path scss src/styles/scss/choices.scss src/styles/css/choices.css",
+    "css:prefix": "postcss --use autoprefixer -b 'last 2 versions' src/styles/css/*.css -d src/styles/css/",
+    "css:min": "csso src/styles/css/base.css src/styles/css/base.min.css && csso src/styles/css/choices.css src/styles/css/choices.min.css",
+    "js:build": "concurrently --prefix-colors yellow,green \"webpack --env.minimize --config webpack.config.prod.js\" \"webpack --config webpack.config.prod.js\"",
     "version": "node version.js --current $npm_package_version --new $npm_config_newVersion",
     "postversion": "npm run js:build",
     "dev": "dev"
@@ -31,13 +31,16 @@
   "homepage": "https://github.com/jshjohnson/Choices#readme",
   "devDependencies": {
     "autoprefixer": "^6.3.3",
-    "babel-core": "^6.7.2",
+    "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
-    "babel-loader": "^6.2.4",
+    "babel-loader": "^7.1.2",
     "babel-preset-es2015": "^6.6.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "chai": "^4.1.0",
     "concurrently": "^3.1.0",
     "core-js": "^2.4.1",
     "csso": "^1.8.2",
+    "custom-event-autopolyfill": "^0.1.3",
     "es6-promise": "^3.2.1",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.1.0",
@@ -46,19 +49,16 @@
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.2.1",
     "jasmine-core": "2.4.1",
-    "karma": "^1.1.0",
-    "karma-coverage": "^1.0.0",
-    "karma-es6-shim": "^1.0.0",
-    "karma-htmlfile-reporter": "^0.3.4",
-    "karma-jasmine": "^1.0.2",
-    "karma-phantomjs-launcher": "^1.0.1",
-    "karma-spec-reporter": "0.0.26",
-    "karma-webpack": "^1.7.0",
+    "jsdom": "^11.3.0",
+    "mocha": "^3.4.2",
     "node-sass": "^3.4.2",
     "nodemon": "^1.9.1",
+    "nyc": "^11.0.3",
+    "open": "0.0.5",
     "opn-cli": "^3.1.0",
     "postcss-cli": "^2.5.1",
-    "webpack": "^1.12.14",
+    "sinon": "^2.4.0",
+    "webpack": "^3.8.1",
     "webpack-dashboard": "^0.1.8",
     "webpack-dev-server": "^1.14.1",
     "whatwg-fetch": "^1.0.0",
@@ -66,18 +66,27 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "fuse.js": "^2.2.2",
+    "fuse.js": "^3.1.0",
+    "opn": "^5.1.0",
     "redux": "^3.3.1"
   },
   "npmName": "choices.js",
   "npmFileMap": [
     {
-      "basePath": "assets",
+      "basePath": "src",
       "files": [
         "scripts/dist/*",
         "styles/css/*",
         "icons/*"
       ]
     }
-  ]
+  ],
+  "nyc": {
+    "include": [
+      "src/**/**/**/**/**/*.js"
+    ],
+    "exclude": [
+      "src/**/**/**/**/**/*.test.js"
+    ]
+  }
 }

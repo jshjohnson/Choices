@@ -9,3 +9,5 @@ package-lock.json
 # Test
 tests/reports
 tests/results
+.nyc_output
+coverage

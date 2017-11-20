@@ -1,5 +1,5 @@
 # Choices.js ![Build Status](https://travis-ci.org/jshjohnson/Choices.svg?branch=master) [![CDNJS](https://img.shields.io/cdnjs/v/choices.js.svg)](https://cdnjs.com/libraries/choices.js) [![npm](https://img.shields.io/npm/v/choices.js.svg)](https://www.npmjs.com/package/choices.js)
-A vanilla, lightweight (~15kb gzipped 🎉), configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.
+A vanilla, lightweight (~20kb gzipped 🎉), configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.
 
 [Demo](https://joshuajohnson.co.uk/Choices/)
 
@@ -408,7 +408,7 @@ const example = new Choices(element, {
 ### renderSelectedChoices
 **Type:** `String` **Default:** `auto`
 
-**Input types affected:** `select-one`, `select-multiple`
+**Input types affected:** `select-multiple`
 
 **Usage:** Whether selected choices should be removed from the list. By default choices are removed when they are selected in multiple select box. To always render choices pass `always`.
 
@@ -786,7 +786,7 @@ example.setValue([
 example.setValue(['Four','Five','Six']);
 ```
 
-### setValueByChoice(value);
+### setChoiceByValue(value);
 **Input types affected:** `select-one`, `select-multiple`
 
 **Usage:** Set value of input based on existing Choice. `value` can be either a single string or an array of strings
@@ -802,7 +802,7 @@ const example = new Choices(element, {
   ],
 });
 
-example.setValueByChoice('Two'); // Choice with value of 'Two' has now been selected.
+example.setChoiceByValue('Two'); // Choice with value of 'Two' has now been selected.
 ```
 
 ### clearStore();

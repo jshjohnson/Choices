@@ -6,17 +6,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
   <title>Choices</title>
   <meta name=description itemprop=description content="A lightweight, configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="assets/images/favicon-32x32.png" sizes="32x32">
-  <link rel="icon" type="image/png" href="assets/images/favicon-16x16.png" sizes="16x16">
-  <link rel="manifest" href="assets/images/manifest.json">
-  <link rel="mask-icon" href="assets/images/safari-pinned-tab.svg" color="#00bcd4">
-  <link rel="shortcut icon" href="assets/images/favicon.ico">
-  <meta name="msapplication-config" content="/assets/images/browserconfig.xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="src/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="src/images/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="src/images/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="src/images/manifest.json">
+  <link rel="mask-icon" href="src/images/safari-pinned-tab.svg" color="#00bcd4">
+  <link rel="shortcut icon" href="src/images/favicon.ico">
+  <meta name="msapplication-config" content="/src/images/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
 
   <!-- Ignore these -->
-  <link rel="stylesheet" href="assets/styles/css/base.min.css?version=3.0.2">
+  <link rel="stylesheet" href="src/styles/css/base.min.css?version=3.0.2">
   <!-- End ignore these -->
 
   <!-- Optional includes -->
@@ -24,8 +24,8 @@
   <!-- End optional includes -->
 
   <!-- Choices includes -->
-  <link rel="stylesheet" href="assets/styles/css/choices.min.css?version=3.0.2">
-  <script src="assets/scripts/dist/choices.min.js?version=2.8.8"></script>
+  <link rel="stylesheet" href="src/styles/css/choices.min.css?version=3.0.2">
+  <script src="src/scripts/dist/choices.min.js?version=2.8.8"></script>
   <!-- End Choices includes -->
 
   <!--[if lt IE 9]>
@@ -40,7 +40,7 @@
   <div class="container">
     <div class="section">
       <a href="https://github.com/jshjohnson/Choices" class="logo">
-        <img src="assets/images/logo.svg" alt="Choices.js logo" class="logo__img hidden-ie">
+        <img src="src/images/logo.svg" alt="Choices.js logo" class="logo__img hidden-ie">
         <h1 class="visible-ie">Choices.js</h1>
       </a>
       <p>Choices.js is a lightweight, configurable select box/text input plugin. Similar to Select2 and Selectize but without
@@ -370,11 +370,11 @@
         { value: 'Six', label: 'Label Six', selected: true },
       ], 'value', 'label', false);
 
-      choicesSelect.passedElement.addEventListener('addItem', function(event) {
+      choicesSelect.passedElement.element.addEventListener('addItem', function(event) {
         document.getElementById('message').innerHTML = 'You just added "' + event.detail.label + '"';
       });
 
-      choicesSelect.passedElement.addEventListener('removeItem', function(event) {
+      choicesSelect.passedElement.element.addEventListener('removeItem', function(event) {
         document.getElementById('message').innerHTML = 'You just removed "' + event.detail.label + '"';
       });
 
@@ -385,7 +385,7 @@
           .then(function(response) {
             response.json().then(function(data) {
               callback(data.releases, 'title', 'title');
-              singleFetch.setValueByChoice('Fake Tales Of San Francisco');
+              singleFetch.setChoiceByValue('Fake Tales Of San Francisco');
             });
           })
           .catch(function(error) {
@@ -407,7 +407,7 @@
             if (status === 200) {
               data = JSON.parse(request.responseText);
               callback(data.releases, 'title', 'title');
-              singleXhrRemove.setValueByChoice('How Soon Is Now?');
+              singleXhrRemove.setChoiceByValue('How Soon Is Now?');
             } else {
               console.error(status);
             }
@@ -469,7 +469,7 @@
             }
           },
         ],
-      }).setValueByChoice('Two');
+      }).setChoiceByValue('Two');
 
       var singleNoSorting = new Choices('#choices-single-no-sorting', {
         shouldSort: false,
@@ -477,7 +477,7 @@
 
       var states = new Choices(document.getElementById('states'));
 
-      states.passedElement.addEventListener('change', function(e) {
+      states.passedElement.element.addEventListener('change', function(e) {
         if (e.detail.value === 'New York') {
           boroughs.enable();
         } else {
@@ -490,7 +490,7 @@
           var classNames = this.config.classNames;
           var itemSelectText = this.config.itemSelectText;
           return {
-            item: function(data) {
+            item: function(classNames, data) {
               return strToEl('\
                 <div\
                   class="'+ String(classNames.item) + ' ' + String(data.highlighted ? classNames.highlightedState : classNames.itemSelectable) + '"\
@@ -504,7 +504,7 @@
                 </div>\
               ');
             },
-            choice: function(data) {
+            choice: function(classNames, data) {
               return strToEl('\
                 <div\
                   class="'+ String(classNames.item) + ' ' + String(classNames.itemChoice) + ' ' + String(data.disabled ? classNames.itemDisabled : classNames.itemSelectable) + '"\
