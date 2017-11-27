@@ -710,6 +710,7 @@ var DEFAULT_CLASSNAMES = exports.DEFAULT_CLASSNAMES = {
   group: 'choices__group',
   groupHeading: 'choices__heading',
   button: 'choices__button',
+  selectableContent: 'selectable-content',
   activeState: 'is-active',
   focusState: 'is-focused',
   openState: 'is-open',
@@ -1893,19 +1894,10 @@ var Choices = function () {
     this.isIe11 = !!(navigator.userAgent.match(/Trident/) && navigator.userAgent.match(/rv[ :]11/));
     this.isScrollingOnIe = false;
 
-    if (this.config.shouldSortItems === true && this.isSelectOneElement) {
-      if (!this.config.silent) {
-        console.warn('shouldSortElements: Type of passed element is \'select-one\', falling back to false.');
-      }
-    }
-
     this.highlightPosition = 0;
     this.canSearch = this.config.searchEnabled;
 
-    this.placeholder = false;
-    if (!this.isSelectOneElement) {
-      this.placeholder = this.config.placeholder ? this.config.placeholderValue || this.passedElement.element.getAttribute('placeholder') : false;
-    }
+    this.placeholder = this.config.placeholder ? this.config.placeholderValue || this.passedElement.element.getAttribute('placeholder') : false;
 
     // Assign preset choices from passed object
     this.presetChoices = this.config.choices;
@@ -1913,7 +1905,10 @@ var Choices = function () {
     this.presetItems = this.config.items;
 
     // Then add any values passed from attribute
-    if (this.passedElement.getValue()) {
+    if (this.passedElement.getValue()
+    // NOTE: html select-ones automatically selects an item, if we have a
+    // placeholder don't select this item
+    && (!this.isSelectOneElement || !this.placeholder)) {
       this.presetItems = this.presetItems.concat(this.passedElement.getValue().split(this.config.delimiter));
     }
 
@@ -2157,30 +2152,12 @@ var Choices = function () {
         });
       }
 
-      // Split array into placeholders and "normal" choices
-
-      var _rendererableChoices$ = rendererableChoices.reduce(function (acc, choice) {
-        if (choice.placeholder) {
-          acc.placeholderChoices.push(choice);
-        } else {
-          acc.normalChoices.push(choice);
-        }
-        return acc;
-      }, { placeholderChoices: [], normalChoices: [] }),
-          placeholderChoices = _rendererableChoices$.placeholderChoices,
-          normalChoices = _rendererableChoices$.normalChoices;
-
       // If sorting is enabled or the user is searching, filter choices
-
-
       if (this.config.shouldSort || this.isSearching) {
-        normalChoices.sort(filter);
+        rendererableChoices.sort(filter);
       }
 
       var choiceLimit = rendererableChoices.length;
-
-      // Prepend placeholeder
-      var sortedChoices = [].concat(_toConsumableArray(placeholderChoices), _toConsumableArray(normalChoices));
 
       if (this.isSearching) {
         choiceLimit = searchResultLimit;
@@ -2190,8 +2167,8 @@ var Choices = function () {
 
       // Add each choice to dropdown within range
       for (var i = 0; i < choiceLimit; i += 1) {
-        if (sortedChoices[i]) {
-          appendChoice(sortedChoices[i]);
+        if (rendererableChoices[i]) {
+          appendChoice(rendererableChoices[i]);
         }
       }
 
@@ -2217,7 +2194,7 @@ var Choices = function () {
       var itemListFragment = fragment || document.createDocumentFragment();
 
       // If sorting is enabled, filter items
-      if (this.config.shouldSortItems && !this.isSelectOneElement) {
+      if (this.config.shouldSortItems) {
         items.sort(this.config.sortFilter);
       }
 
@@ -2247,7 +2224,8 @@ var Choices = function () {
 
       var addItemToFragment = function addItemToFragment(item) {
         // Create new list element
-        var listItem = _this3._getTemplate('item', item, _this3.config.removeItemButton);
+        var listItem = _this3._getTemplate('item', item, _this3.config.removeItemButton, _this3.config.itemSelectText);
+
         // Append it to list
         itemListFragment.appendChild(listItem);
       };
@@ -2295,23 +2273,16 @@ var Choices = function () {
 
         // If we have grouped options
         if (activeGroups.length >= 1 && !this.isSearching) {
-          // If we have a placeholder choice along with groups
-          var activePlaceholders = activeChoices.filter(function (activeChoice) {
-            return activeChoice.placeholder === true && activeChoice.groupId === -1;
-          });
-          if (activePlaceholders.length >= 1) {
-            choiceListFragment = this.renderChoices(activePlaceholders, choiceListFragment);
-          }
           choiceListFragment = this.renderGroups(activeGroups, activeChoices, choiceListFragment);
         } else if (activeChoices.length >= 1) {
           choiceListFragment = this.renderChoices(activeChoices, choiceListFragment);
         }
 
-        var _activeItems = this.store.getItemsFilteredByActive();
-        var canAddItem = this._canAddItem(_activeItems, this.input.getValue());
-
         // If we have choices to show
         if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
+          var _activeItems = this.store.getItemsFilteredByActive();
+          var canAddItem = this._canAddItem(_activeItems, this.input.getValue());
+
           // ...and we can select them
           if (canAddItem.response) {
             // ...append them and highlight the first choice
@@ -2344,6 +2315,7 @@ var Choices = function () {
 
       // Get active items (items that can be selected)
       var activeItems = this.store.getItemsFilteredByActive() || [];
+
       // Clear list
       this.itemList.clear();
 
@@ -2352,11 +2324,13 @@ var Choices = function () {
         // (so we don't have to update the DOM for each item)
         var itemListFragment = this.renderItems(activeItems);
 
-        // If we have items to add
-        if (itemListFragment.childNodes) {
-          // Update list
+        // If we have items to add, append them
+        if (itemListFragment.childNodes && itemListFragment.childNodes.length !== 0) {
           this.itemList.append(itemListFragment);
         }
+      } else if (this.isSelectOneElement && this.placeholder) {
+        // Nothing selected and is a select one with a place holder, set placeholder
+        this.itemList.append(this._getTemplate('placeholder', this.placeholder));
       }
 
       this.prevState = this.currentState;
@@ -2486,7 +2460,7 @@ var Choices = function () {
     value: function removeActiveItemsByValue(value) {
       var _this6 = this;
 
-      if (!value || !(0, _utils.isType)('String', value)) {
+      if (!value) {
         return this;
       }
 
@@ -2517,7 +2491,7 @@ var Choices = function () {
       var items = this.store.getItemsFilteredByActive();
 
       items.forEach(function (item) {
-        if (item.active && excludedId !== item.id) {
+        if (excludedId !== item.id) {
           _this7._removeItem(item);
         }
       });
@@ -2542,13 +2516,15 @@ var Choices = function () {
       var items = this.store.getItemsFilteredByActive();
 
       items.forEach(function (item) {
-        if (item.highlighted && item.active) {
-          _this8._removeItem(item);
-          // If this action was performed by the user
-          // trigger the event
-          if (runEvent) {
-            _this8._triggerChange(item.value);
-          }
+        if (!item.highlighted) {
+          return;
+        }
+
+        _this8._removeItem(item);
+        // If this action was performed by the user
+        // trigger the event
+        if (runEvent) {
+          _this8._triggerChange(item.value);
         }
       });
 
@@ -2633,7 +2609,6 @@ var Choices = function () {
       var valueOnly = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
       var items = this.store.getItemsFilteredByActive();
-
       var values = items.reduce(function (selectedItems, item) {
         var itemValue = valueOnly ? item.value : item;
         selectedItems.push(itemValue);
@@ -2661,10 +2636,15 @@ var Choices = function () {
       }
 
       // Convert args to an iterable array
-      var values = [].concat(_toConsumableArray(args));
-      values.forEach(function (value) {
-        return _this9._setChoiceOrItem(value);
-      });
+      var values = args ? [].concat(_toConsumableArray(args)) : [];
+
+      if (values.length >= 1) {
+        values.forEach(function (value) {
+          return _this9._setChoiceOrItem(value);
+        });
+      } else {
+        this.removeActiveItems();
+      }
 
       return this;
     }
@@ -2717,7 +2697,7 @@ var Choices = function () {
       var label = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
       var replaceChoices = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
-      if (!this.initialised || !this.isSelectElement || !(0, _utils.isType)('Array', choices) || !value) {
+      if (!this.initialised || !this.isSelectElement || !(0, _utils.isType)('Array', choices) || !choices.length || !value) {
         return this;
       }
 
@@ -2726,19 +2706,16 @@ var Choices = function () {
         this._clearChoices();
       }
 
-      // Add choices if passed
-      if (choices.length) {
-        this.containerOuter.removeLoadingState();
-        var addGroupsAndChoices = function addGroupsAndChoices(groupOrChoice) {
-          if (groupOrChoice.choices) {
-            _this11._addGroup(groupOrChoice, groupOrChoice.id || null, value, label);
-          } else {
-            _this11._addChoice(groupOrChoice[value], groupOrChoice[label], groupOrChoice.selected, groupOrChoice.disabled, undefined, groupOrChoice.customProperties, groupOrChoice.placeholder);
-          }
-        };
+      this.containerOuter.removeLoadingState();
+      var addGroupsAndChoices = function addGroupsAndChoices(groupOrChoice) {
+        if (groupOrChoice.choices) {
+          _this11._addGroup(groupOrChoice, groupOrChoice.id || null, true, value, label);
+        } else {
+          _this11._addChoice(groupOrChoice[value], groupOrChoice[label], groupOrChoice.selected, groupOrChoice.disabled, undefined, groupOrChoice.customProperties);
+        }
+      };
 
-        choices.forEach(addGroupsAndChoices);
-      }
+      choices.forEach(addGroupsAndChoices);
 
       return this;
     }
@@ -2827,21 +2804,6 @@ var Choices = function () {
     }
 
     /**
-    * Select placeholder choice
-    */
-
-  }, {
-    key: '_selectPlaceholderChoice',
-    value: function _selectPlaceholderChoice() {
-      var placeholderChoice = this.store.getPlaceholderChoice();
-
-      if (placeholderChoice) {
-        this._addItem(placeholderChoice.value, placeholderChoice.label, placeholderChoice.id, placeholderChoice.groupId, null, placeholderChoice.placeholder);
-        this._triggerChange(placeholderChoice.value);
-      }
-    }
-
-    /**
      * Process enter/click of an item button
      * @param {Array} activeItems The currently active items
      * @param  {Element} element Button being interacted with
@@ -2864,10 +2826,6 @@ var Choices = function () {
       // Remove item associated with button
       this._removeItem(itemToRemove);
       this._triggerChange(itemToRemove.value);
-
-      if (this.isSelectOneElement) {
-        this._selectPlaceholderChoice();
-      }
     }
 
     /**
@@ -2939,14 +2897,14 @@ var Choices = function () {
         var canAddItem = this._canAddItem(activeItems, choice.value);
 
         if (canAddItem.response) {
-          this._addItem(choice.value, choice.label, choice.id, choice.groupId, choice.customProperties, choice.placeholder, choice.keyCode);
+          this._addItem(choice.value, choice.label, choice.id, choice.groupId, choice.customProperties, choice.keyCode);
           this._triggerChange(choice.value);
         }
       }
 
       this.clearInput();
 
-      // We wont to close the dropdown if we are dealing with a single select box
+      // We want to close the dropdown if we are dealing with a single select box
       if (hasActiveDropdown && this.isSelectOneElement) {
         this.hideDropdown();
         this.containerOuter.focus();
@@ -3000,27 +2958,14 @@ var Choices = function () {
     value: function _handleLoadingState() {
       var isLoading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
-      var placeholderItem = this.itemList.getChild('.' + this.config.classNames.placeholder);
       if (isLoading) {
         this.containerOuter.addLoadingState();
-        if (this.isSelectOneElement) {
-          if (!placeholderItem) {
-            placeholderItem = this._getTemplate('placeholder', this.config.loadingText);
-            this.itemList.append(placeholderItem);
-          } else {
-            placeholderItem.innerHTML = this.config.loadingText;
-          }
-        } else {
-          this.input.setPlaceholder(this.config.loadingText);
-        }
+
+        this.input.setPlaceholder(this.config.loadingText);
       } else {
         this.containerOuter.removeLoadingState();
 
-        if (this.isSelectOneElement) {
-          placeholderItem.innerHTML = this.placeholder || '';
-        } else {
-          this.input.setPlaceholder(this.placeholder || '');
-        }
+        this.input.setPlaceholder(this.placeholder || '');
       }
     }
 
@@ -3047,7 +2992,7 @@ var Choices = function () {
         }
       }
 
-      if (this.isTextElement && this.config.addItems && canAddItem && this.config.regexFilter) {
+      if (this.config.regexFilter && this.isTextElement && this.config.addItems && canAddItem) {
         // If a user has supplied a regular expression filter
         // determine whether we can update based on whether
         // our regular expression passes
@@ -3064,7 +3009,7 @@ var Choices = function () {
         return item.value === value;
       });
 
-      if (!isUnique && !this.config.duplicateItems && !this.isSelectOneElement && canAddItem) {
+      if (!isUnique && !this.config.duplicateItems && canAddItem) {
         canAddItem = false;
         notice = (0, _utils.isType)('Function', this.config.uniqueItemText) ? this.config.uniqueItemText(value) : this.config.uniqueItemText;
       }
@@ -3100,15 +3045,11 @@ var Choices = function () {
           parsedResults.forEach(function (result) {
             if (result.choices) {
               var groupId = result.id || null;
-              _this14._addGroup(result, groupId, value, label);
+              _this14._addGroup(result, groupId, true, value, label);
             } else {
-              _this14._addChoice(result[value], result[label], result.selected, result.disabled, undefined, result.customProperties, result.placeholder);
+              _this14._addChoice(result[value], result[label], result.selected, result.disabled, undefined, result.customProperties);
             }
           });
-
-          if (_this14.isSelectOneElement) {
-            _this14._selectPlaceholderChoice();
-          }
         } else {
           // No results, remove loading state
           _this14._handleLoadingState(false);
@@ -3675,14 +3616,7 @@ var Choices = function () {
           },
           'select-one': function selectOne() {
             _this17.containerOuter.removeFocusState();
-            if (target === _this17.containerOuter.element) {
-              // Hide dropdown if it is showing
-              if (!_this17.canSearch) {
-                _this17.hideDropdown();
-              }
-            }
-            if (target === _this17.input.element) {
-              // Hide dropdown if it is showing
+            if (target === _this17.input.element || target === _this17.containerOuter.element && !_this17.canSearch) {
               _this17.hideDropdown();
             }
           },
@@ -3788,45 +3722,47 @@ var Choices = function () {
 
       // Highlight first element in dropdown
       var choices = Array.from(this.dropdown.element.querySelectorAll('[data-choice-selectable]'));
+
+      if (!choices.length) {
+        return;
+      }
+
       var passedEl = el;
+      var highlightedChoices = Array.from(this.dropdown.element.querySelectorAll('.' + this.config.classNames.highlightedState));
+      var hasActiveDropdown = this.dropdown.isActive;
 
-      if (choices && choices.length) {
-        var highlightedChoices = Array.from(this.dropdown.element.querySelectorAll('.' + this.config.classNames.highlightedState));
-        var hasActiveDropdown = this.dropdown.isActive;
+      // Remove any highlighted choices
+      highlightedChoices.forEach(function (choice) {
+        choice.classList.remove(_this19.config.classNames.highlightedState);
+        choice.setAttribute('aria-selected', 'false');
+      });
 
-        // Remove any highlighted choices
-        highlightedChoices.forEach(function (choice) {
-          choice.classList.remove(_this19.config.classNames.highlightedState);
-          choice.setAttribute('aria-selected', 'false');
-        });
-
-        if (passedEl) {
-          this.highlightPosition = choices.indexOf(passedEl);
+      if (passedEl) {
+        this.highlightPosition = choices.indexOf(passedEl);
+      } else {
+        // Highlight choice based on last known highlight location
+        if (choices.length > this.highlightPosition) {
+          // If we have an option to highlight
+          passedEl = choices[this.highlightPosition];
         } else {
-          // Highlight choice based on last known highlight location
-          if (choices.length > this.highlightPosition) {
-            // If we have an option to highlight
-            passedEl = choices[this.highlightPosition];
-          } else {
-            // Otherwise highlight the option before
-            passedEl = choices[choices.length - 1];
-          }
-
-          if (!passedEl) {
-            passedEl = choices[0];
-          }
+          // Otherwise highlight the option before
+          passedEl = choices[choices.length - 1];
         }
 
-        // Highlight given option, and set accessiblity attributes
-        passedEl.classList.add(this.config.classNames.highlightedState);
-        passedEl.setAttribute('aria-selected', 'true');
-
-        if (hasActiveDropdown) {
-          // IE11 ignores aria-label and blocks virtual keyboard
-          // if aria-activedescendant is set without a dropdown
-          this.input.setActiveDescendant(passedEl.id);
-          this.containerOuter.setActiveDescendant(passedEl.id);
+        if (!passedEl) {
+          passedEl = choices[0];
         }
+      }
+
+      // Highlight given option, and set accessiblity attributes
+      passedEl.classList.add(this.config.classNames.highlightedState);
+      passedEl.setAttribute('aria-selected', 'true');
+
+      if (hasActiveDropdown) {
+        // IE11 ignores aria-label and blocks virtual keyboard
+        // if aria-activedescendant is set without a dropdown
+        this.input.setActiveDescendant(passedEl.id);
+        this.containerOuter.setActiveDescendant(passedEl.id);
       }
     }
 
@@ -3848,8 +3784,7 @@ var Choices = function () {
       var choiceId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -1;
       var groupId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : -1;
       var customProperties = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
-      var placeholder = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
-      var keyCode = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
+      var keyCode = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
 
       var passedValue = (0, _utils.isType)('String', value) ? value.trim() : value;
       var passedKeyCode = keyCode;
@@ -3873,7 +3808,7 @@ var Choices = function () {
         passedValue += this.config.appendValue.toString();
       }
 
-      this.store.dispatch((0, _items.addItem)(passedValue, passedLabel, id, passedOptionId, groupId, customProperties, placeholder, passedKeyCode));
+      this.store.dispatch((0, _items.addItem)(passedValue, passedLabel, id, passedOptionId, groupId, customProperties, passedKeyCode));
 
       if (this.isSelectOneElement) {
         this.removeActiveItems(id);
@@ -3914,11 +3849,12 @@ var Choices = function () {
         return this;
       }
 
-      var id = item.id;
-      var value = item.value;
-      var label = item.label;
-      var choiceId = item.choiceId;
-      var groupId = item.groupId;
+      var id = item.id,
+          value = item.value,
+          label = item.label,
+          choiceId = item.choiceId,
+          groupId = item.groupId;
+
       var group = groupId >= 0 ? this.store.getGroupById(groupId) : null;
 
       this.store.dispatch((0, _items.removeItem)(id, choiceId));
@@ -3961,8 +3897,7 @@ var Choices = function () {
       var isDisabled = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
       var groupId = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : -1;
       var customProperties = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
-      var placeholder = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : false;
-      var keyCode = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : null;
+      var keyCode = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
 
       if (typeof value === 'undefined' || value === null) {
         return;
@@ -3974,10 +3909,10 @@ var Choices = function () {
       var choiceId = choices ? choices.length + 1 : 1;
       var choiceElementId = this.baseId + '-' + this.idNames.itemChoice + '-' + choiceId;
 
-      this.store.dispatch((0, _choices.addChoice)(value, choiceLabel, choiceId, groupId, isDisabled, choiceElementId, customProperties, placeholder, keyCode));
+      this.store.dispatch((0, _choices.addChoice)(value, choiceLabel, choiceId, groupId, isDisabled, choiceElementId, customProperties, keyCode));
 
       if (isSelected) {
-        this._addItem(value, choiceLabel, choiceId, undefined, customProperties, placeholder, keyCode);
+        this._addItem(value, choiceLabel, choiceId, undefined, customProperties, false, keyCode);
       }
     }
 
@@ -3997,6 +3932,7 @@ var Choices = function () {
      * Add group to dropdown
      * @param {Object} group Group to add
      * @param {Number} id Group ID
+     * @param {Boolean} allowPreSelected Allows having preselected values
      * @param {String} [valueKey] name of the value property on the object
      * @param {String} [labelKey] name of the label property on the object
      * @return
@@ -4006,10 +3942,12 @@ var Choices = function () {
   }, {
     key: '_addGroup',
     value: function _addGroup(group, id) {
+      var allowPreSelected = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+
       var _this20 = this;
 
-      var valueKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'value';
-      var labelKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'label';
+      var valueKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'value';
+      var labelKey = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'label';
 
       var groupChoices = (0, _utils.isType)('Object', group) ? group.choices : Array.from(group.getElementsByTagName('OPTION'));
       var groupId = id || Math.floor(new Date().valueOf() * Math.random());
@@ -4020,7 +3958,7 @@ var Choices = function () {
 
         var addGroupChoices = function addGroupChoices(choice) {
           var isOptDisabled = choice.disabled || choice.parentNode && choice.parentNode.disabled;
-          _this20._addChoice(choice[valueKey], (0, _utils.isType)('Object', choice) ? choice[labelKey] : choice.innerHTML, choice.selected, isOptDisabled, groupId, choice.customProperties, choice.placeholder);
+          _this20._addChoice(choice[valueKey], (0, _utils.isType)('Object', choice) ? choice[labelKey] : choice.innerHTML, allowPreSelected && choice.selected, isOptDisabled, groupId, choice.customProperties);
         };
 
         groupChoices.forEach(addGroupChoices);
@@ -4147,13 +4085,6 @@ var Choices = function () {
       this.isSearching = false;
 
       if (passedGroups && passedGroups.length) {
-        // If we have a placeholder option
-        var placeholderChoice = this.passedElement.getPlaceholderOption();
-        if (placeholderChoice && placeholderChoice.parentNode.tagName === 'SELECT') {
-          this._addChoice(placeholderChoice.value, placeholderChoice.innerHTML, placeholderChoice.selected, placeholderChoice.disabled, undefined, undefined,
-          /* placeholder */true);
-        }
-
         passedGroups.forEach(function (group) {
           _this21._addGroup(group, group.id || null);
         });
@@ -4168,8 +4099,7 @@ var Choices = function () {
             value: o.value,
             label: o.innerHTML,
             selected: o.selected,
-            disabled: o.disabled || o.parentNode.disabled,
-            placeholder: o.hasAttribute('placeholder')
+            disabled: o.disabled || o.parentNode.disabled
           });
         });
 
@@ -4186,19 +4116,23 @@ var Choices = function () {
           if (_this21.isSelectElement) {
             // If the choice is actually a group
             if (choice.choices) {
-              _this21._addGroup(choice, choice.id || null);
+              _this21._addGroup(choice, choice.id || null,
+              // html select-ones automatically selects an item, don't allow addgroup
+              // to set selected item
+              !_this21.isSelectOneElement || _this21.presetItems.length !== 0);
             } else {
+              // If the select doesn't have a placeholder and
               // If there is a selected choice already or the choice is not
               // the first in the array, add each choice normally
-              // Otherwise pre-select the first choice in the array if it's a single select
-              var shouldPreselect = _this21.isSelectOneElement && !hasSelectedChoice && index === 0;
+              // Otherwise pre-select the first choice in the array
+              var shouldPreselect = !_this21.placeholder && (!hasSelectedChoice || hasSelectedChoice && index === 0);
               var isSelected = shouldPreselect ? true : choice.selected;
               var isDisabled = shouldPreselect ? false : choice.disabled;
 
-              _this21._addChoice(choice.value, choice.label, isSelected, isDisabled, undefined, choice.customProperties, choice.placeholder);
+              _this21._addChoice(choice.value, choice.label, isSelected, isDisabled, undefined, choice.customProperties);
             }
           } else {
-            _this21._addChoice(choice.value, choice.label, choice.selected, choice.disabled, undefined, choice.customProperties, choice.placeholder);
+            _this21._addChoice(choice.value, choice.label, choice.selected, choice.disabled, undefined, choice.customProperties);
           }
         };
 
@@ -4219,7 +4153,7 @@ var Choices = function () {
           if (!item.value) {
             return;
           }
-          _this22._addItem(item.value, item.label, item.id, undefined, item.customProperties, item.placeholder);
+          _this22._addItem(item.value, item.label, item.id, undefined, item.customProperties);
         } else if (itemType === 'String') {
           _this22._addItem(item);
         }
@@ -4244,9 +4178,9 @@ var Choices = function () {
           // If we are dealing with a select input, we need to create an option first
           // that is then selected. For text inputs we can just add items normally.
           if (!_this23.isTextElement) {
-            _this23._addChoice(item.value, item.label, true, false, -1, item.customProperties, item.placeholder);
+            _this23._addChoice(item.value, item.label, true, false, -1, item.customProperties);
           } else {
-            _this23._addItem(item.value, item.label, item.id, undefined, item.customProperties, item.placeholder);
+            _this23._addItem(item.value, item.label, item.id, undefined, item.customProperties);
           }
         },
         string: function string() {
@@ -4270,7 +4204,7 @@ var Choices = function () {
       });
 
       if (foundChoice && !foundChoice.selected) {
-        this._addItem(foundChoice.value, foundChoice.label, foundChoice.id, foundChoice.groupId, foundChoice.customProperties, foundChoice.placeholder, foundChoice.keyCode);
+        this._addItem(foundChoice.value, foundChoice.label, foundChoice.id, foundChoice.groupId, foundChoice.customProperties, foundChoice.keyCode);
       }
     }
 
@@ -4291,7 +4225,7 @@ module.exports = Choices;
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
- * Fuse.js v3.1.0 - Lightweight fuzzy-search (http://fusejs.io)
+ * Fuse.js v3.2.0 - Lightweight fuzzy-search (http://fusejs.io)
  * 
  * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
  * All Rights Reserved. Apache Software License 2.0
@@ -5176,8 +5110,8 @@ var Fuse = function () {
         var bestScore = 1;
 
         for (var j = 0; j < scoreLen; j += 1) {
-          var score = output[j].score;
           var weight = weights ? weights[output[j].key].weight : 1;
+          var score = weight === 1 ? output[j].score : output[j].score || 0.001;
           var nScore = score * weight;
 
           if (weight !== 1) {
@@ -5307,8 +5241,6 @@ var _index = __webpack_require__(14);
 var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -5446,17 +5378,14 @@ var Store = function () {
     }
 
     /**
-     * Get choices that can be searched (excluding placeholders)
+     * Get choices that can be searched
      * @return {Array} Option objects
      */
 
   }, {
     key: 'getSearchableChoices',
     value: function getSearchableChoices() {
-      var filtered = this.getChoicesFilteredBySelectable();
-      return filtered.filter(function (choice) {
-        return choice.placeholder !== true;
-      });
+      return this.getChoicesFilteredBySelectable();
     }
 
     /**
@@ -5475,22 +5404,6 @@ var Store = function () {
         return foundChoice;
       }
       return false;
-    }
-
-    /**
-     * Get placeholder choice from store
-     * @return {Object} Found placeholder
-     */
-
-  }, {
-    key: 'getPlaceholderChoice',
-    value: function getPlaceholderChoice() {
-      var choices = this.getChoices();
-      var placeholderChoice = [].concat(_toConsumableArray(choices)).reverse().find(function (choice) {
-        return choice.placeholder === true;
-      });
-
-      return placeholderChoice;
     }
 
     /**
@@ -5743,7 +5656,6 @@ function items() {
           active: true,
           highlighted: false,
           customProperties: action.customProperties,
-          placeholder: action.placeholder || false,
           keyCode: null
         }]);
 
@@ -5868,7 +5780,6 @@ function choices() {
           active: true,
           score: 9999,
           customProperties: action.customProperties,
-          placeholder: action.placeholder || false,
           keyCode: null
         }]);
       }
@@ -6750,11 +6661,6 @@ var WrappedSelect = function (_WrappedElement) {
       this.element.appendChild(options);
     }
   }, {
-    key: 'getPlaceholderOption',
-    value: function getPlaceholderOption() {
-      return this.element.querySelector('option[placeholder]');
-    }
-  }, {
     key: 'getOptions',
     value: function getOptions() {
       return Array.from(this.element.options);
@@ -6819,18 +6725,18 @@ var TEMPLATES = exports.TEMPLATES = {
   placeholder: function placeholder(globalClasses, value) {
     return (0, _utils.strToEl)('\n      <div class="' + globalClasses.placeholder + '">\n        ' + value + '\n      </div>\n    ');
   },
-  item: function item(globalClasses, data, removeItemButton) {
+  item: function item(globalClasses, data, removeItemButton, itemSelectText) {
     var _classNames2;
 
     var ariaSelected = data.active ? 'aria-selected="true"' : '';
     var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
 
-    var localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
+    var localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.selectableContent, !!itemSelectText), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
 
     if (removeItemButton) {
       var _classNames3;
 
-      localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
+      localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.selectableContent, !!itemSelectText), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
 
       return (0, _utils.strToEl)('\n        <div\n          class="' + localClasses + '"\n          data-item\n          data-id="' + data.id + '"\n          data-value="' + data.value + '"\n          data-deletable\n          ' + ariaSelected + '\n          ' + ariaDisabled + '\n          >\n          ' + data.label + '<!--\n       --><button\n            type="button"\n            class="' + globalClasses.button + '"\n            data-button\n            aria-label="Remove item: \'' + data.value + '\'"\n            >\n            Remove item\n          </button>\n        </div>\n      ');
     }
@@ -6852,7 +6758,7 @@ var TEMPLATES = exports.TEMPLATES = {
     var _classNames5;
 
     var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
-    var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.placeholder, data.placeholder), _classNames5));
+    var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.selectableContent, itemSelectText), _classNames5));
 
     return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-select-text="' + itemSelectText + '"\n        data-choice\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        ' + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\n        id="' + data.elementId + '"\n        ' + role + '\n        >\n        ' + data.label + '\n      </div>\n    ');
   },
@@ -6951,7 +6857,7 @@ exports.clearChoices = exports.activateChoices = exports.filterChoices = exports
 
 var _constants = __webpack_require__(1);
 
-var addChoice = exports.addChoice = function addChoice(value, label, id, groupId, disabled, elementId, customProperties, placeholder, keyCode) {
+var addChoice = exports.addChoice = function addChoice(value, label, id, groupId, disabled, elementId, customProperties, keyCode) {
   return {
     type: _constants.ACTION_TYPES.ADD_CHOICE,
     value: value,
@@ -6961,7 +6867,6 @@ var addChoice = exports.addChoice = function addChoice(value, label, id, groupId
     disabled: disabled,
     elementId: elementId,
     customProperties: customProperties,
-    placeholder: placeholder,
     keyCode: keyCode
   };
 };
@@ -7001,7 +6906,7 @@ exports.highlightItem = exports.removeItem = exports.addItem = undefined;
 
 var _constants = __webpack_require__(1);
 
-var addItem = exports.addItem = function addItem(value, label, id, choiceId, groupId, customProperties, placeholder, keyCode) {
+var addItem = exports.addItem = function addItem(value, label, id, choiceId, groupId, customProperties, keyCode) {
   return {
     type: _constants.ACTION_TYPES.ADD_ITEM,
     value: value,
@@ -7010,7 +6915,6 @@ var addItem = exports.addItem = function addItem(value, label, id, choiceId, gro
     choiceId: choiceId,
     groupId: groupId,
     customProperties: customProperties,
-    placeholder: placeholder,
     keyCode: keyCode
   };
 };

@@ -217,24 +217,26 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
     [dir="rtl"] & { text-align: right; }
   }
   .#{$choices-selector}__item--selectable {
-    @media (min-width: 640px) {
-      padding-right: 100px;
-      &:after {
-        content: attr(data-select-text);
-        font-size: $choices-font-size-sm;
-        opacity: 0;
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-      [dir="rtl"] & {
-        text-align: right;
-        padding-left: 100px;
-        padding-right: 10px;
+    &.selectable-content {
+      @media (min-width: 640px) {
+        padding-right: 100px;
         &:after {
-          right: auto;
-          left: 10px;
+          content: attr(data-select-text);
+          font-size: $choices-font-size-sm;
+          opacity: 0;
+          position: absolute;
+          right: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        [dir="rtl"] & {
+          text-align: right;
+          padding-left: 100px;
+          padding-right: 10px;
+          &:after {
+            right: auto;
+            left: 10px;
+          }
         }
       }
     }

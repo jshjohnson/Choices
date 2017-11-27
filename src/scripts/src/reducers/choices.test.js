@@ -16,7 +16,6 @@ describe('reducers/choices', () => {
         const disabled = false;
         const elementId = 'test';
         const customProperties = 'test';
-        const placeholder = 'test';
 
         const expectedResponse = [
           {
@@ -27,7 +26,6 @@ describe('reducers/choices', () => {
             disabled,
             elementId,
             customProperties,
-            placeholder,
             selected: false,
             active: true,
             score: 9999,
@@ -44,7 +42,6 @@ describe('reducers/choices', () => {
           disabled,
           elementId,
           customProperties,
-          placeholder,
         });
 
         expect(actualResponse).to.eql(expectedResponse);
@@ -68,7 +65,6 @@ describe('reducers/choices', () => {
           active: false,
           score: 9999,
           customProperties: null,
-          placeholder: false,
           keyCode: null,
         },
         {
@@ -82,7 +78,6 @@ describe('reducers/choices', () => {
           active: false,
           score: 9999,
           customProperties: null,
-          placeholder: false,
           keyCode: null,
         },
       ];

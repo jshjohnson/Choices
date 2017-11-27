@@ -7,7 +7,6 @@ export const addItem = (
   choiceId,
   groupId,
   customProperties,
-  placeholder,
   keyCode,
 ) => ({
   type: ACTION_TYPES.ADD_ITEM,
@@ -17,7 +16,6 @@ export const addItem = (
   choiceId,
   groupId,
   customProperties,
-  placeholder,
   keyCode,
 });
 

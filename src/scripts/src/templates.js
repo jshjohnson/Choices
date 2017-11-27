@@ -57,7 +57,7 @@ export const TEMPLATES = {
       </div>
     `);
   },
-  item(globalClasses, data, removeItemButton) {
+  item(globalClasses, data, removeItemButton, itemSelectText) {
     const ariaSelected = data.active ? 'aria-selected="true"' : '';
     const ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
 
@@ -65,6 +65,7 @@ export const TEMPLATES = {
       globalClasses.item, {
         [globalClasses.highlightedState]: data.highlighted,
         [globalClasses.itemSelectable]: !data.highlighted,
+        [globalClasses.selectableContent]: !!itemSelectText,
         [globalClasses.placeholder]: data.placeholder,
       },
     );
@@ -74,6 +75,7 @@ export const TEMPLATES = {
         globalClasses.item, {
           [globalClasses.highlightedState]: data.highlighted,
           [globalClasses.itemSelectable]: !data.disabled,
+          [globalClasses.selectableContent]: !!itemSelectText,
           [globalClasses.placeholder]: data.placeholder,
         },
       );
@@ -157,7 +159,7 @@ export const TEMPLATES = {
       globalClasses.itemChoice, {
         [globalClasses.itemDisabled]: data.disabled,
         [globalClasses.itemSelectable]: !data.disabled,
-        [globalClasses.placeholder]: data.placeholder,
+        [globalClasses.selectableContent]: itemSelectText,
       },
     );
 

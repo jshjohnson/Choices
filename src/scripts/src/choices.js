@@ -96,23 +96,13 @@ class Choices {
     this.isIe11 = !!(navigator.userAgent.match(/Trident/) && navigator.userAgent.match(/rv[ :]11/));
     this.isScrollingOnIe = false;
 
-    if (this.config.shouldSortItems === true && this.isSelectOneElement) {
-      if (!this.config.silent) {
-        console.warn(
-          'shouldSortElements: Type of passed element is \'select-one\', falling back to false.',
-        );
-      }
-    }
 
     this.highlightPosition = 0;
     this.canSearch = this.config.searchEnabled;
 
-    this.placeholder = false;
-    if (!this.isSelectOneElement) {
-      this.placeholder = this.config.placeholder ?
-        (this.config.placeholderValue || this.passedElement.element.getAttribute('placeholder')) :
-        false;
-    }
+    this.placeholder = this.config.placeholder ?
+      (this.config.placeholderValue || this.passedElement.element.getAttribute('placeholder')) :
+      false;
 
     // Assign preset choices from passed object
     this.presetChoices = this.config.choices;
@@ -120,7 +110,10 @@ class Choices {
     this.presetItems = this.config.items;
 
     // Then add any values passed from attribute
-    if (this.passedElement.getValue()) {
+    if (this.passedElement.getValue()
+      // NOTE: html select-ones automatically selects an item, if we have a
+      // placeholder don't select this item
+      && (!this.isSelectOneElement || !this.placeholder)) {
       this.presetItems = this.presetItems.concat(
         this.passedElement.getValue().split(this.config.delimiter),
       );
@@ -335,25 +328,12 @@ class Choices {
       rendererableChoices = choices.filter(choice => !choice.selected);
     }
 
-    // Split array into placeholders and "normal" choices
-    const { placeholderChoices, normalChoices } = rendererableChoices.reduce((acc, choice) => {
-      if (choice.placeholder) {
-        acc.placeholderChoices.push(choice);
-      } else {
-        acc.normalChoices.push(choice);
-      }
-      return acc;
-    }, { placeholderChoices: [], normalChoices: [] });
-
     // If sorting is enabled or the user is searching, filter choices
     if (this.config.shouldSort || this.isSearching) {
-      normalChoices.sort(filter);
+      rendererableChoices.sort(filter);
     }
 
     let choiceLimit = rendererableChoices.length;
-
-    // Prepend placeholeder
-    const sortedChoices = [...placeholderChoices, ...normalChoices];
 
     if (this.isSearching) {
       choiceLimit = searchResultLimit;
@@ -363,8 +343,8 @@ class Choices {
 
     // Add each choice to dropdown within range
     for (let i = 0; i < choiceLimit; i += 1) {
-      if (sortedChoices[i]) {
-        appendChoice(sortedChoices[i]);
+      if (rendererableChoices[i]) {
+        appendChoice(rendererableChoices[i]);
       }
     }
 
@@ -383,7 +363,7 @@ class Choices {
     const itemListFragment = fragment || document.createDocumentFragment();
 
     // If sorting is enabled, filter items
-    if (this.config.shouldSortItems && !this.isSelectOneElement) {
+    if (this.config.shouldSortItems) {
       items.sort(this.config.sortFilter);
     }
 
@@ -411,7 +391,11 @@ class Choices {
 
     const addItemToFragment = (item) => {
       // Create new list element
-      const listItem = this._getTemplate('item', item, this.config.removeItemButton);
+      const listItem = this._getTemplate('item',
+        item,
+        this.config.removeItemButton,
+        this.config.itemSelectText);
+
       // Append it to list
       itemListFragment.appendChild(listItem);
     };
@@ -458,13 +442,6 @@ class Choices {
 
       // If we have grouped options
       if (activeGroups.length >= 1 && !this.isSearching) {
-        // If we have a placeholder choice along with groups
-        const activePlaceholders = activeChoices.filter(
-          activeChoice => activeChoice.placeholder === true && activeChoice.groupId === -1,
-        );
-        if (activePlaceholders.length >= 1) {
-          choiceListFragment = this.renderChoices(activePlaceholders, choiceListFragment);
-        }
         choiceListFragment = this.renderGroups(activeGroups, activeChoices, choiceListFragment);
       } else if (activeChoices.length >= 1) {
         choiceListFragment = this.renderChoices(activeChoices, choiceListFragment);
@@ -511,17 +488,23 @@ class Choices {
 
     // Get active items (items that can be selected)
     const activeItems = this.store.getItemsFilteredByActive() || [];
+
+    // Clear list
+    this.itemList.clear();
+
     if (activeItems.length) {
-      // Clear list
-      this.itemList.clear();
       // Create a fragment to store our list items
       // (so we don't have to update the DOM for each item)
       const itemListFragment = this.renderItems(activeItems);
 
       // If we have items to add, append them
-      if (itemListFragment.childNodes) {
+      if (itemListFragment.childNodes && itemListFragment.childNodes.length !== 0) {
         this.itemList.append(itemListFragment);
       }
+    } else if (this.isSelectOneElement && this.placeholder) {
+      // Nothing selected and is a select one with a place holder, set placeholder
+      this.itemList.append(
+        this._getTemplate('placeholder', this.placeholder));
     }
 
     this.prevState = this.currentState;
@@ -725,7 +708,6 @@ class Choices {
    */
   getValue(valueOnly = false) {
     const items = this.store.getItemsFilteredByActive();
-
     const values = items.reduce((selectedItems, item) => {
       const itemValue = valueOnly ? item.value : item;
       selectedItems.push(itemValue);
@@ -748,8 +730,13 @@ class Choices {
     }
 
     // Convert args to an iterable array
-    const values = [...args];
-    values.forEach(value => this._setChoiceOrItem(value));
+    const values = args ? [...args] : [];
+
+    if (values.length >= 1) {
+      values.forEach(value => this._setChoiceOrItem(value));
+    } else {
+      this.removeActiveItems();
+    }
 
     return this;
   }
@@ -803,6 +790,7 @@ class Choices {
         this._addGroup(
           groupOrChoice,
           (groupOrChoice.id || null),
+          true,
           value,
           label,
         );
@@ -814,7 +802,6 @@ class Choices {
           groupOrChoice.disabled,
           undefined,
           groupOrChoice.customProperties,
-          groupOrChoice.placeholder,
         );
       }
     };
@@ -891,26 +878,6 @@ class Choices {
     });
   }
 
-    /**
-   * Select placeholder choice
-   */
-  _selectPlaceholderChoice() {
-    const placeholderChoice = this.store.getPlaceholderChoice();
-
-    if (placeholderChoice) {
-      this._addItem(
-        placeholderChoice.value,
-        placeholderChoice.label,
-        placeholderChoice.id,
-        placeholderChoice.groupId,
-        null,
-        placeholderChoice.placeholder,
-      );
-      this._triggerChange(placeholderChoice.value);
-    }
-  }
-
-
   /**
    * Process enter/click of an item button
    * @param {Array} activeItems The currently active items
@@ -934,10 +901,6 @@ class Choices {
    // Remove item associated with button
     this._removeItem(itemToRemove);
     this._triggerChange(itemToRemove.value);
-
-    if (this.isSelectOneElement) {
-      this._selectPlaceholderChoice();
-    }
   }
 
   /**
@@ -1010,7 +973,6 @@ class Choices {
           choice.id,
           choice.groupId,
           choice.customProperties,
-          choice.placeholder,
           choice.keyCode,
         );
         this._triggerChange(choice.value);
@@ -1019,7 +981,7 @@ class Choices {
 
     this.clearInput();
 
-    // We wont to close the dropdown if we are dealing with a single select box
+    // We want to close the dropdown if we are dealing with a single select box
     if (hasActiveDropdown && this.isSelectOneElement) {
       this.hideDropdown();
       this.containerOuter.focus();
@@ -1063,27 +1025,14 @@ class Choices {
    * @private
    */
   _handleLoadingState(isLoading = true) {
-    let placeholderItem = this.itemList.getChild(`.${this.config.classNames.placeholder}`);
     if (isLoading) {
       this.containerOuter.addLoadingState();
-      if (this.isSelectOneElement) {
-        if (!placeholderItem) {
-          placeholderItem = this._getTemplate('placeholder', this.config.loadingText);
-          this.itemList.append(placeholderItem);
-        } else {
-          placeholderItem.innerHTML = this.config.loadingText;
-        }
-      } else {
-        this.input.setPlaceholder(this.config.loadingText);
-      }
+
+      this.input.setPlaceholder(this.config.loadingText);
     } else {
       this.containerOuter.removeLoadingState();
 
-      if (this.isSelectOneElement) {
-        placeholderItem.innerHTML = (this.placeholder || '');
-      } else {
-        this.input.setPlaceholder(this.placeholder || '');
-      }
+      this.input.setPlaceholder(this.placeholder || '');
     }
   }
 
@@ -1131,7 +1080,6 @@ class Choices {
 
     if (!isUnique &&
       !this.config.duplicateItems &&
-      !this.isSelectOneElement &&
       canAddItem
     ) {
       canAddItem = false;
@@ -1169,6 +1117,7 @@ class Choices {
             this._addGroup(
               result,
               groupId,
+              true,
               value,
               label,
             );
@@ -1180,14 +1129,9 @@ class Choices {
               result.disabled,
               undefined,
               result.customProperties,
-              result.placeholder,
             );
           }
         });
-
-        if (this.isSelectOneElement) {
-          this._selectPlaceholderChoice();
-        }
       } else {
         // No results, remove loading state
         this._handleLoadingState(false);
@@ -1892,7 +1836,6 @@ class Choices {
     choiceId = -1,
     groupId = -1,
     customProperties = null,
-    placeholder = false,
     keyCode = null,
   ) {
     let passedValue = isType('String', value) ? value.trim() : value;
@@ -1925,7 +1868,6 @@ class Choices {
         passedOptionId,
         groupId,
         customProperties,
-        placeholder,
         passedKeyCode,
       ),
     );
@@ -2007,7 +1949,6 @@ class Choices {
     isDisabled = false,
     groupId = -1,
     customProperties = null,
-    placeholder = false,
     keyCode = null,
   ) {
     if (typeof value === 'undefined' || value === null) {
@@ -2029,7 +1970,6 @@ class Choices {
         isDisabled,
         choiceElementId,
         customProperties,
-        placeholder,
         keyCode,
       ),
     );
@@ -2041,7 +1981,7 @@ class Choices {
         choiceId,
         undefined,
         customProperties,
-        placeholder,
+        false,
         keyCode,
       );
     }
@@ -2062,12 +2002,13 @@ class Choices {
    * Add group to dropdown
    * @param {Object} group Group to add
    * @param {Number} id Group ID
+   * @param {Boolean} allowPreSelected Allows having preselected values
    * @param {String} [valueKey] name of the value property on the object
    * @param {String} [labelKey] name of the label property on the object
    * @return
    * @private
    */
-  _addGroup(group, id, valueKey = 'value', labelKey = 'label') {
+  _addGroup(group, id, allowPreSelected = true, valueKey = 'value', labelKey = 'label') {
     const groupChoices = isType('Object', group) ?
       group.choices :
       Array.from(group.getElementsByTagName('OPTION'));
@@ -2089,11 +2030,10 @@ class Choices {
         this._addChoice(
           choice[valueKey],
           (isType('Object', choice)) ? choice[labelKey] : choice.innerHTML,
-          choice.selected,
+          allowPreSelected && choice.selected,
           isOptDisabled,
           groupId,
           choice.customProperties,
-          choice.placeholder,
         );
       };
 
@@ -2215,20 +2155,6 @@ class Choices {
     this.isSearching = false;
 
     if (passedGroups && passedGroups.length) {
-      // If we have a placeholder option
-      const placeholderChoice = this.passedElement.getPlaceholderOption();
-      if (placeholderChoice && placeholderChoice.parentNode.tagName === 'SELECT') {
-        this._addChoice(
-          placeholderChoice.value,
-          placeholderChoice.innerHTML,
-          placeholderChoice.selected,
-          placeholderChoice.disabled,
-          undefined,
-          undefined,
-            /* placeholder */ true,
-        );
-      }
-
       passedGroups.forEach((group) => {
         this._addGroup(group, (group.id || null));
       });
@@ -2244,7 +2170,6 @@ class Choices {
           label: o.innerHTML,
           selected: o.selected,
           disabled: o.disabled || o.parentNode.disabled,
-          placeholder: o.hasAttribute('placeholder'),
         });
       });
 
@@ -2259,12 +2184,17 @@ class Choices {
         if (this.isSelectElement) {
           // If the choice is actually a group
           if (choice.choices) {
-            this._addGroup(choice, choice.id || null);
+            this._addGroup(choice, choice.id || null,
+              // html select-ones automatically selects an item, don't allow addgroup
+              // to set selected item
+              !this.isSelectOneElement || this.presetItems.length !== 0);
           } else {
+            // If the select doesn't have a placeholder and
             // If there is a selected choice already or the choice is not
             // the first in the array, add each choice normally
-            // Otherwise pre-select the first choice in the array if it's a single select
-            const shouldPreselect = this.isSelectOneElement && !hasSelectedChoice && index === 0;
+            // Otherwise pre-select the first choice in the array
+            const shouldPreselect = !this.placeholder &&
+              (!hasSelectedChoice || (hasSelectedChoice && index === 0));
             const isSelected = shouldPreselect ? true : choice.selected;
             const isDisabled = shouldPreselect ? false : choice.disabled;
 
@@ -2275,7 +2205,6 @@ class Choices {
               isDisabled,
               undefined,
               choice.customProperties,
-              choice.placeholder,
             );
           }
         } else {
@@ -2286,7 +2215,6 @@ class Choices {
             choice.disabled,
             undefined,
             choice.customProperties,
-            choice.placeholder,
           );
         }
       };
@@ -2309,7 +2237,6 @@ class Choices {
           item.id,
           undefined,
           item.customProperties,
-          item.placeholder,
         );
       } else if (itemType === 'String') {
         this._addItem(item);
@@ -2336,7 +2263,6 @@ class Choices {
             true,
             false, -1,
             item.customProperties,
-            item.placeholder,
           );
         } else {
           this._addItem(
@@ -2345,7 +2271,6 @@ class Choices {
             item.id,
             undefined,
             item.customProperties,
-            item.placeholder,
           );
         }
       },
@@ -2379,7 +2304,6 @@ class Choices {
         foundChoice.id,
         foundChoice.groupId,
         foundChoice.customProperties,
-        foundChoice.placeholder,
         foundChoice.keyCode,
       );
     }

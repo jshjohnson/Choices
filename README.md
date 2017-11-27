@@ -362,25 +362,14 @@ const example = new Choices(element, {
 ### placeholder
 **Type:** `Boolean` **Default:** `true`
 
-**Input types affected:** `text`, `select-multiple`
+**Input types affected:** `text`, `select-one`, `select-multiple`
 
-**Usage:** Whether the input should show a placeholder. Used in conjunction with `placeholderValue`. If `placeholder` is set to true and no value is passed to `placeholderValue`, the passed input's placeholder attribute will be used as the  placeholder value.
-
-**Note:** For single select boxes, the recommended way of adding a placeholder is as follows:
-
-```html
-<select>
-  <option placeholder>This is a placeholder</option>
-  <option>...</option>
-  <option>...</option>
-  <option>...</option>
-</select>
-```
+**Usage:** Whether the input should show a placeholder. Used in conjunction with `placeholderValue`. If `placeholder` is set to true and no value is passed to `placeholderValue`, the passed input's placeholder attribute will be used as the placeholder value.
 
 ### placeholderValue
 **Type:** `String` **Default:** `null`
 
-**Input types affected:** `text`, `select-multiple`
+**Input types affected:** `text`, `select-one`, `select-multiple`
 
 **Usage:** The value of the inputs placeholder.
 
@@ -438,7 +427,7 @@ const example = new Choices(element, {
 
 **Input types affected:** `select-multiple`, `select-one`
 
-**Usage:** The text that is shown when a user hovers over a selectable choice.
+**Usage:** The text that is shown when a user hovers over a selectable choice. To show no text set it to an empty string ''.
 
 ### addItemText
 **Type:** `String/Function` **Default:** `Press Enter to add "${value}"`
@@ -474,6 +463,7 @@ classNames: {
   group: 'choices__group',
   groupHeading : 'choices__heading',
   button: 'choices__button',
+  selectableContent: 'selectable-content',
   activeState: 'is-active',
   focusState: 'is-focused',
   openState: 'is-open',
@@ -768,7 +758,7 @@ const valueArray = example.getValue(); // returns [{ active: true, choiceId: 1, 
 ### setValue(args);
 **Input types affected:** `text`
 
-**Usage:** Set value of input based on an array of objects or strings. This behaves exactly the same as passing items via the `items` option but can be called after initialising Choices.
+**Usage:** Set value of input based on an array of objects or strings. This behaves exactly the same as passing items via the `items` option but can be called after initialising Choices. Setting with "null" removes all items.
 
 **Example:**
 

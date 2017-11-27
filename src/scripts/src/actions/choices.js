@@ -8,7 +8,6 @@ export const addChoice = (
   disabled,
   elementId,
   customProperties,
-  placeholder,
   keyCode,
 ) => ({
   type: ACTION_TYPES.ADD_CHOICE,
@@ -19,7 +18,6 @@ export const addChoice = (
   disabled,
   elementId,
   customProperties,
-  placeholder,
   keyCode,
 });
 

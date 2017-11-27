@@ -113,12 +113,11 @@ export default class Store {
   }
 
   /**
-   * Get choices that can be searched (excluding placeholders)
+   * Get choices that can be searched
    * @return {Array} Option objects
    */
   getSearchableChoices() {
-    const filtered = this.getChoicesFilteredBySelectable();
-    return filtered.filter(choice => choice.placeholder !== true);
+    return this.getChoicesFilteredBySelectable();
   }
 
   /**
@@ -132,19 +131,6 @@ export default class Store {
       return foundChoice;
     }
     return false;
-  }
-
-  /**
-   * Get placeholder choice from store
-   * @return {Object} Found placeholder
-   */
-  getPlaceholderChoice() {
-    const choices = this.getChoices();
-    const placeholderChoice = [...choices]
-      .reverse()
-      .find(choice => choice.placeholder === true);
-
-    return placeholderChoice;
   }
 
   /**

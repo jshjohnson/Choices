@@ -1495,7 +1495,6 @@ describe('choices', () => {
 
   describe.skip('private methods', () => {
     describe('_triggerChange', () => {});
-    describe('_selectPlaceholderChoice', () => {});
     describe('_handleButtonAction', () => {});
     describe('_handleItemAction', () => {});
     describe('_handleChoiceAction', () => {});
