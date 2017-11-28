@@ -10,7 +10,6 @@ describe('actions/items', () => {
       const choiceId = '1234';
       const groupId = 'test';
       const customProperties = 'test';
-      const placeholder = 'test';
       const keyCode = 10;
 
       const expectedAction = {
@@ -21,7 +20,6 @@ describe('actions/items', () => {
         choiceId,
         groupId,
         customProperties,
-        placeholder,
         keyCode,
       };
 
@@ -32,7 +30,6 @@ describe('actions/items', () => {
         choiceId,
         groupId,
         customProperties,
-        placeholder,
         keyCode,
       )).to.eql(expectedAction);
     });

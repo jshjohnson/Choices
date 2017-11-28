@@ -16,7 +16,6 @@ describe('reducers/items', () => {
       const customProperties = {
         property: 'value',
       };
-      const placeholder = 'This is a placeholder';
       const keyCode = 10;
 
       const expectedResponse = [
@@ -29,7 +28,6 @@ describe('reducers/items', () => {
           active: true,
           highlighted: false,
           customProperties,
-          placeholder,
           keyCode: null,
         },
       ];
@@ -42,7 +40,6 @@ describe('reducers/items', () => {
         choiceId,
         groupId,
         customProperties,
-        placeholder,
         keyCode,
       });
 
@@ -64,7 +61,6 @@ describe('reducers/items', () => {
           active: false,
           highlighted: false,
           customProperties: null,
-          placeholder: false,
           keyCode: null,
         },
         {
@@ -76,7 +72,6 @@ describe('reducers/items', () => {
           active: true,
           highlighted: false,
           customProperties: null,
-          placeholder: false,
           keyCode: null,
         },
       ];
