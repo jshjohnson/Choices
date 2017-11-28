@@ -393,8 +393,7 @@ class Choices {
       // Create new list element
       const listItem = this._getTemplate('item',
         item,
-        this.config.removeItemButton,
-        this.config.itemSelectText);
+        this.config.removeItemButton);
 
       // Append it to list
       itemListFragment.appendChild(listItem);
