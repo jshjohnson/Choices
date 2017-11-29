@@ -727,7 +727,7 @@ export default class Choices {
    *
    * **Input types affected:** text, select-multiple
    */
-  removeActiveItemsByValueremoveItemsByValue(value: string): this;
+  removeActiveItemsByValue(value: string): this;
 
   /**
    * Remove each selectable item.
