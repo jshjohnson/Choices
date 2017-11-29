@@ -173,6 +173,13 @@ declare namespace Choices {
     noChoices?: string;
   }
 
+  interface passedElement {
+    classNames: Choices.ClassNames,
+    element: HTMLElement,
+    isDisabled: boolean,
+    parentInstance: Choices;
+  }
+
   /**
    * Choices options interface
    *
@@ -660,8 +667,7 @@ export default class Choices {
   currentValue: string;
 
   // Element
-  element: HTMLElement
-  passedElement: HTMLElement;
+  passedElement: Choices.passedElement;
 
   // Checks
   isTextElement: boolean;
