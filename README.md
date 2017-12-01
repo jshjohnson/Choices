@@ -52,7 +52,7 @@ Or include Choices directly:
   const choices = new Choices(element);
 
   // Pass reference
-  const choices = new Choices('[data-trigger']);
+  const choices = new Choices('[data-trigger]');
   const choices = new Choices('.js-choice');
 
   // Pass jQuery element
