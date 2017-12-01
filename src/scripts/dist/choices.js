@@ -2224,7 +2224,7 @@ var Choices = function () {
 
       var addItemToFragment = function addItemToFragment(item) {
         // Create new list element
-        var listItem = _this3._getTemplate('item', item, _this3.config.removeItemButton, _this3.config.itemSelectText);
+        var listItem = _this3._getTemplate('item', item, _this3.config.removeItemButton);
 
         // Append it to list
         itemListFragment.appendChild(listItem);
@@ -2513,13 +2513,9 @@ var Choices = function () {
 
       var runEvent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-      var items = this.store.getItemsFilteredByActive();
+      var items = this.store.getItemsFilteredByHighlighted();
 
       items.forEach(function (item) {
-        if (!item.highlighted) {
-          return;
-        }
-
         _this8._removeItem(item);
         // If this action was performed by the user
         // trigger the event
@@ -2697,7 +2693,7 @@ var Choices = function () {
       var label = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
       var replaceChoices = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
-      if (!this.initialised || !this.isSelectElement || !(0, _utils.isType)('Array', choices) || !choices.length || !value) {
+      if (!this.isSelectElement || !choices.length || !value) {
         return this;
       }
 
@@ -2709,7 +2705,7 @@ var Choices = function () {
       this.containerOuter.removeLoadingState();
       var addGroupsAndChoices = function addGroupsAndChoices(groupOrChoice) {
         if (groupOrChoice.choices) {
-          _this11._addGroup(groupOrChoice, groupOrChoice.id || null, true, value, label);
+          _this11._addGroup(groupOrChoice, groupOrChoice.id || null, value, label);
         } else {
           _this11._addChoice(groupOrChoice[value], groupOrChoice[label], groupOrChoice.selected, groupOrChoice.disabled, undefined, groupOrChoice.customProperties);
         }
@@ -3045,7 +3041,7 @@ var Choices = function () {
           parsedResults.forEach(function (result) {
             if (result.choices) {
               var groupId = result.id || null;
-              _this14._addGroup(result, groupId, true, value, label);
+              _this14._addGroup(result, groupId, value, label);
             } else {
               _this14._addChoice(result[value], result[label], result.selected, result.disabled, undefined, result.customProperties);
             }
@@ -3932,7 +3928,6 @@ var Choices = function () {
      * Add group to dropdown
      * @param {Object} group Group to add
      * @param {Number} id Group ID
-     * @param {Boolean} allowPreSelected Allows having preselected values
      * @param {String} [valueKey] name of the value property on the object
      * @param {String} [labelKey] name of the label property on the object
      * @return
@@ -3942,12 +3937,10 @@ var Choices = function () {
   }, {
     key: '_addGroup',
     value: function _addGroup(group, id) {
-      var allowPreSelected = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
-
       var _this20 = this;
 
-      var valueKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'value';
-      var labelKey = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : 'label';
+      var valueKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'value';
+      var labelKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'label';
 
       var groupChoices = (0, _utils.isType)('Object', group) ? group.choices : Array.from(group.getElementsByTagName('OPTION'));
       var groupId = id || Math.floor(new Date().valueOf() * Math.random());
@@ -3958,7 +3951,7 @@ var Choices = function () {
 
         var addGroupChoices = function addGroupChoices(choice) {
           var isOptDisabled = choice.disabled || choice.parentNode && choice.parentNode.disabled;
-          _this20._addChoice(choice[valueKey], (0, _utils.isType)('Object', choice) ? choice[labelKey] : choice.innerHTML, allowPreSelected && choice.selected, isOptDisabled, groupId, choice.customProperties);
+          _this20._addChoice(choice[valueKey], (0, _utils.isType)('Object', choice) ? choice[labelKey] : choice.innerHTML, choice.selected, isOptDisabled, groupId, choice.customProperties);
         };
 
         groupChoices.forEach(addGroupChoices);
@@ -5310,7 +5303,23 @@ var Store = function () {
       var items = this.getItems();
       var values = items.filter(function (item) {
         return item.active === true;
-      }, []);
+      });
+
+      return values;
+    }
+
+    /**
+    * Get highlighted items from store
+    * @return {Array} Item objects
+    */
+
+  }, {
+    key: 'getItemsFilteredByHighlighted',
+    value: function getItemsFilteredByHighlighted() {
+      var items = this.getItems();
+      var values = items.filter(function (item) {
+        return item.active && item.highlighted;
+      });
 
       return values;
     }
@@ -6725,18 +6734,18 @@ var TEMPLATES = exports.TEMPLATES = {
   placeholder: function placeholder(globalClasses, value) {
     return (0, _utils.strToEl)('\n      <div class="' + globalClasses.placeholder + '">\n        ' + value + '\n      </div>\n    ');
   },
-  item: function item(globalClasses, data, removeItemButton, itemSelectText) {
+  item: function item(globalClasses, data, removeItemButton) {
     var _classNames2;
 
     var ariaSelected = data.active ? 'aria-selected="true"' : '';
     var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
 
-    var localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.selectableContent, !!itemSelectText), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
+    var localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
 
     if (removeItemButton) {
       var _classNames3;
 
-      localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.selectableContent, !!itemSelectText), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
+      localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
 
       return (0, _utils.strToEl)('\n        <div\n          class="' + localClasses + '"\n          data-item\n          data-id="' + data.id + '"\n          data-value="' + data.value + '"\n          data-deletable\n          ' + ariaSelected + '\n          ' + ariaDisabled + '\n          >\n          ' + data.label + '<!--\n       --><button\n            type="button"\n            class="' + globalClasses.button + '"\n            data-button\n            aria-label="Remove item: \'' + data.value + '\'"\n            >\n            Remove item\n          </button>\n        </div>\n      ');
     }
@@ -6758,7 +6767,7 @@ var TEMPLATES = exports.TEMPLATES = {
     var _classNames5;
 
     var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
-    var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.selectableContent, itemSelectText), _classNames5));
+    var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.selectableContent, !!itemSelectText), _classNames5));
 
     return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-select-text="' + itemSelectText + '"\n        data-choice\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        ' + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\n        id="' + data.elementId + '"\n        ' + role + '\n        >\n        ' + data.label + '\n      </div>\n    ');
   },

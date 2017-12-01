@@ -789,7 +789,6 @@ class Choices {
         this._addGroup(
           groupOrChoice,
           (groupOrChoice.id || null),
-          true,
           value,
           label,
         );
@@ -1116,7 +1115,6 @@ class Choices {
             this._addGroup(
               result,
               groupId,
-              true,
               value,
               label,
             );
@@ -2001,13 +1999,12 @@ class Choices {
    * Add group to dropdown
    * @param {Object} group Group to add
    * @param {Number} id Group ID
-   * @param {Boolean} allowPreSelected Allows having preselected values
    * @param {String} [valueKey] name of the value property on the object
    * @param {String} [labelKey] name of the label property on the object
    * @return
    * @private
    */
-  _addGroup(group, id, allowPreSelected = true, valueKey = 'value', labelKey = 'label') {
+  _addGroup(group, id, valueKey = 'value', labelKey = 'label') {
     const groupChoices = isType('Object', group) ?
       group.choices :
       Array.from(group.getElementsByTagName('OPTION'));
@@ -2029,7 +2026,7 @@ class Choices {
         this._addChoice(
           choice[valueKey],
           (isType('Object', choice)) ? choice[labelKey] : choice.innerHTML,
-          allowPreSelected && choice.selected,
+          choice.selected,
           isOptDisabled,
           groupId,
           choice.customProperties,
