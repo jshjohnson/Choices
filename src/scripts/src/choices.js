@@ -70,6 +70,7 @@ class Choices {
     this.currentState = {};
     this.prevState = {};
     this.currentValue = '';
+    this.renderDebounce = null;
 
     // Retrieve triggering element (i.e. element with 'data-choice' trigger)
     const passedElement = isType('String', element) ? document.querySelector(element) : element;
@@ -423,11 +424,22 @@ class Choices {
   }
 
   /**
+   * Render DOM with values.
+   */
+  render() {
+    if (this.renderDebounce) {
+      clearTimeout(this.renderDebounce);
+    }
+
+    this.renderDebounce = setTimeout(() => this._render(), 100);
+  }
+
+  /**
    * Render DOM with values
    * @return
    * @private
    */
-  render() {
+  _render() {
     this.currentState = this.store.getState();
     const stateChanged = (
       this.currentState.choices !== this.prevState.choices ||
