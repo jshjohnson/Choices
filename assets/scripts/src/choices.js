@@ -149,6 +149,7 @@ class Choices {
     this.currentState = {};
     this.prevState = {};
     this.currentValue = '';
+    this.renderDebounce = null;
 
     // Retrieve triggering element (i.e. element with 'data-choice' trigger)
     this.element = element;
@@ -475,11 +476,22 @@ class Choices {
   }
 
   /**
+   * Render DOM with values.
+   */
+  render() {
+    if (this.renderDebounce) {
+      clearTimeout(this.renderDebounce);
+    }
+
+    this.renderDebounce = setTimeout(() => this._render(), 100);
+  }
+
+  /**
    * Render DOM with values
    * @return
    * @private
    */
-  render() {
+  _render() {
     this.currentState = this.store.getState();
 
     // Only render if our state has actually changed
