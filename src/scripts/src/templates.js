@@ -157,7 +157,7 @@ export const TEMPLATES = {
       globalClasses.itemChoice, {
         [globalClasses.itemDisabled]: data.disabled,
         [globalClasses.itemSelectable]: !data.disabled,
-        [globalClasses.placeholder]: data.placeholder,
+        [globalClasses.selectableContent]: !!itemSelectText,
       },
     );
 

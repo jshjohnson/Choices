@@ -33,10 +33,6 @@ export default class WrappedSelect extends WrappedElement {
     this.element.appendChild(options);
   }
 
-  getPlaceholderOption() {
-    return this.element.querySelector('option[placeholder]');
-  }
-
   getOptions() {
     return Array.from(this.element.options);
   }

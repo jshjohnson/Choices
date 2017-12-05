@@ -13,7 +13,6 @@ export default function items(state = defaultState, action) {
         active: true,
         highlighted: false,
         customProperties: action.customProperties,
-        placeholder: (action.placeholder || false),
         keyCode: null,
       }];
 

@@ -19,7 +19,6 @@ export default function choices(state = defaultState, action) {
         active: true,
         score: 9999,
         customProperties: action.customProperties,
-        placeholder: (action.placeholder || false),
         keyCode: null,
       }];
     }

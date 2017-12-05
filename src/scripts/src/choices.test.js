@@ -966,6 +966,8 @@ describe('choices', () => {
 
     describe('setValue', () => {
       let setChoiceOrItemStub;
+      let getItemsFilteredByActiveStub;
+      let removeActiveItemsSpy;
       const values = [
         'Value 1',
         {
@@ -975,10 +977,15 @@ describe('choices', () => {
 
       beforeEach(() => {
         setChoiceOrItemStub = stub();
+        getItemsFilteredByActiveStub = stub().returns([]);
+        instance.store.getItemsFilteredByActive = getItemsFilteredByActiveStub;
+        removeActiveItemsSpy = spy(instance, 'removeActiveItems');
         instance._setChoiceOrItem = setChoiceOrItemStub;
       });
 
       afterEach(() => {
+        instance.store.getItemsFilteredByActive.reset();
+        removeActiveItemsSpy.restore();
         instance._setChoiceOrItem.reset();
       });
 
@@ -1008,6 +1015,20 @@ describe('choices', () => {
           expect(setChoiceOrItemStub.firstCall.args[0]).to.equal(values[0]);
           expect(setChoiceOrItemStub.secondCall.args[0]).to.equal(values[1]);
         });
+      });
+
+      describe('when null and initialised', () => {
+        beforeEach(() => {
+          instance.initialised = true;
+          output = instance.setValue(null);
+        });
+
+        returnsInstance(output);
+
+        it('removes active items', () => {
+          expect(setChoiceOrItemStub.called).to.equal(false);
+          expect(removeActiveItemsSpy.called).to.equal(true);
+        })
       });
     });
 
@@ -1495,7 +1516,6 @@ describe('choices', () => {
 
   describe.skip('private methods', () => {
     describe('_triggerChange', () => {});
-    describe('_selectPlaceholderChoice', () => {});
     describe('_handleButtonAction', () => {});
     describe('_handleItemAction', () => {});
     describe('_handleChoiceAction', () => {});

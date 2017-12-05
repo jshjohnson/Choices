@@ -100,7 +100,6 @@ describe('reducers/store', () => {
             active: true,
             score: 9999,
             customProperties: null,
-            placeholder: false,
             keyCode: null,
           },
           {
@@ -114,7 +113,6 @@ describe('reducers/store', () => {
             active: false,
             score: 9999,
             customProperties: null,
-            placeholder: false,
             keyCode: null,
           },
         ],
@@ -189,8 +187,8 @@ describe('reducers/store', () => {
     });
 
     describe('getSearchableChoices', () => {
-      it('returns choices that are not placeholders and are selectable', () => {
-        const expectedResponse = state.choices.filter((choice => !choice.disabled && !choice.placeholder));
+      it('returns choices that are selectable', () => {
+        const expectedResponse = state.choices.filter((choice => !choice.disabled));
         const actualResponse = instance.getSearchableChoices();
         expect(actualResponse).to.eql(expectedResponse);
       });
@@ -201,14 +199,6 @@ describe('reducers/store', () => {
         const id = '1';
         const expectedResponse = state.choices.find((choice => choice.id === parseInt(id, 10)));
         const actualResponse = instance.getChoiceById(id);
-        expect(actualResponse).to.eql(expectedResponse);
-      });
-    });
-
-    describe('getPlaceholderChoice', () => {
-      it('returns placeholder choice', () => {
-        const expectedResponse = state.choices.reverse().find(choice => choice.placeholder);
-        const actualResponse = instance.getPlaceholderChoice();
         expect(actualResponse).to.eql(expectedResponse);
       });
     });

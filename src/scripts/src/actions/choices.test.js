@@ -11,7 +11,6 @@ describe('actions/choices', () => {
       const disabled = false;
       const elementId = 'test';
       const customProperties = 'test';
-      const placeholder = 'test';
       const keyCode = 10;
 
       const expectedAction = {
@@ -23,7 +22,6 @@ describe('actions/choices', () => {
         disabled,
         elementId,
         customProperties,
-        placeholder,
         keyCode,
       };
 
@@ -35,7 +33,6 @@ describe('actions/choices', () => {
         disabled,
         elementId,
         customProperties,
-        placeholder,
         keyCode,
       )).to.eql(expectedAction);
     });

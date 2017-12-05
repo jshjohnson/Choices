@@ -16,6 +16,7 @@ export const DEFAULT_CLASSNAMES = {
   group: 'choices__group',
   groupHeading: 'choices__heading',
   button: 'choices__button',
+  selectableContent: 'selectable-content',
   activeState: 'is-active',
   focusState: 'is-focused',
   openState: 'is-open',
