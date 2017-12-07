@@ -33,7 +33,6 @@ export default class WrappedElement {
       this.element.setAttribute('data-choice-orig-style', origStyle);
     }
 
-    this.element.setAttribute('style', 'display:none;');
     this.element.setAttribute('aria-hidden', 'true');
     this.element.setAttribute('data-choice', 'active');
   }

@@ -356,4 +356,8 @@
   opacity: .5;
 }
 
+.is-hidden {
+  display: none;
+}
+
 /*=====  End of Choices  ======*/

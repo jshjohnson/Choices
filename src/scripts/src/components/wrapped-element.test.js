@@ -60,7 +60,6 @@ describe('components/wrappedElement', () => {
       expect(instance.element.tabIndex).to.equal(-1);
       expect(instance.element.classList.contains(instance.classNames.input)).to.equal(true);
       expect(instance.element.classList.contains(instance.classNames.hiddenState)).to.equal(true);
-      expect(instance.element.getAttribute('style')).to.equal('display:none;');
       expect(instance.element.getAttribute('aria-hidden')).to.equal('true');
       expect(instance.element.getAttribute('data-choice')).to.equal('active');
       expect(instance.element.getAttribute('data-choice-orig-style')).to.equal(originalStyling);
