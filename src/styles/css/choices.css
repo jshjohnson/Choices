@@ -356,7 +356,8 @@
   opacity: .5;
 }
 
-.is-hidden {
+.choices[data-type*="select-one"] .choices__input.is-hidden,
+.choices[data-type*="select-multiple"] .choices__input.is-hidden {
   display: none;
 }
 
