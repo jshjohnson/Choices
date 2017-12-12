@@ -150,4 +150,8 @@ h6, .h6 {
   text-align: center;
 }
 
+.is-hidden {
+  display: none;
+}
+
 /*=====  End of Section comment block  ======*/
