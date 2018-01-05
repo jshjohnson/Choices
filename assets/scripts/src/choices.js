@@ -1814,6 +1814,7 @@ class Choices {
         // ...and it is a multiple select input, activate choices (if searching)
         if (!this.isTextElement && this.isSearching) {
           this.isSearching = false;
+          triggerEvent(this.passedElement, 'stopSearch', {});
           this.store.dispatch(
             activateChoices(true)
           );
