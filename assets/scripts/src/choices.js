@@ -90,6 +90,9 @@ class Choices {
       maxItemText: (maxItemCount) => {
         return `Only ${maxItemCount} values can be added.`;
       },
+      itemComparer: (choice, item) => {
+        return choice === item;
+      },
       uniqueItemText: 'Only unique values can be added.',
       classNames: {
         containerOuter: 'choices',
@@ -947,7 +950,7 @@ class Choices {
       choiceValue.forEach((val) => {
         const foundChoice = choices.find((choice) => {
           // Check 'value' property exists and the choice isn't already selected
-          return choice.value === val;
+          return this.config.itemComparer(choice.value, val);
         });
 
         if (foundChoice) {
@@ -1053,10 +1056,7 @@ class Choices {
       this._setInputWidth();
     }
     if (!this.isTextElement && this.config.searchEnabled) {
-      this.isSearching = false;
-      this.store.dispatch(
-        activateChoices(true)
-      );
+      this._stopSearch();
     }
     return this;
   }
@@ -1508,7 +1508,7 @@ class Choices {
     // Run callback if it is a function
     if (this.input === document.activeElement) {
       // Check that we have a value to search and the input was an alphanumeric character
-      if (value && value.length >= this.config.searchFloor) {
+      if (value.length >= this.config.searchFloor) {
         let resultCount = 0;
         // Check flag to filter search input
         if (this.config.searchChoices) {
@@ -1522,10 +1522,7 @@ class Choices {
         });
       } else if (hasUnactiveChoices) {
         // Otherwise reset choices to active
-        this.isSearching = false;
-        this.store.dispatch(
-          activateChoices(true)
-        );
+        this._stopSearch();
       }
     }
   }
@@ -1809,11 +1806,8 @@ class Choices {
       // If user has removed value...
       if ((e.keyCode === backKey || e.keyCode === deleteKey) && !e.target.value) {
         // ...and it is a multiple select input, activate choices (if searching)
-        if (!this.isTextElement && this.isSearching) {
-          this.isSearching = false;
-          this.store.dispatch(
-            activateChoices(true)
-          );
+        if (this.isSearching) {
+          this._stopSearch();
         }
       } else if (this.canSearch && canAddItem.response) {
         this._handleSearch(this.input.value);
@@ -2874,6 +2868,19 @@ class Choices {
         }
       });
     }
+  }
+
+  /**
+   * Stop search
+   * @return
+   * @private
+   */
+  _stopSearch() {
+    this.isSearching = false;
+    triggerEvent(this.passedElement, 'stopSearch', {});
+    this.store.dispatch(
+      activateChoices(true)
+    );
   }
 
   /*=====  End of Private functions  ======*/

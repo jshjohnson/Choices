@@ -78,6 +78,7 @@ describe('Choices', () => {
       expect(this.choices.config.noChoicesText).toEqual(jasmine.any(String));
       expect(this.choices.config.itemSelectText).toEqual(jasmine.any(String));
       expect(this.choices.config.classNames).toEqual(jasmine.any(Object));
+      expect(this.choices.config.itemComparer).toEqual(jasmine.any(Function));
       expect(this.choices.config.callbackOnInit).toEqual(null);
       expect(this.choices.config.callbackOnCreateTemplates).toEqual(null);
     });
@@ -505,9 +506,11 @@ describe('Choices', () => {
       this.choices = new Choices(this.input);
 
       const searchSpy = jasmine.createSpy('searchSpy');
+      const stopSearchSpy = jasmine.createSpy('stopSearchSpy');
       const passedElement = this.choices.passedElement;
 
       passedElement.addEventListener('search', searchSpy);
+      passedElement.addEventListener('stopSearch', stopSearchSpy);
 
       this.choices.input.focus();
       this.choices.input.value = '3 ';
@@ -525,6 +528,17 @@ describe('Choices', () => {
 
       expect(this.choices.isSearching && mostAccurateResult[0].value === 'Value 3').toBe(true);
       expect(searchSpy).toHaveBeenCalled();
+
+      this.choices.input.value = '';
+
+      this.choices._onKeyUp({
+        target: this.choices.input,
+        keyCode: 46, // Backspace
+        ctrlKey: false
+      });
+
+      expect(this.choices.isSearching).toBe(false);
+      expect(stopSearchSpy).toHaveBeenCalled();
     });
 
     it('shouldn\'t filter choices when searching', function() {
@@ -1215,6 +1229,58 @@ describe('Choices', () => {
 
       expect(selectedItems.length).toBe(1);
       expect(selectedItems[0].customProperties).toBe(expectedCustomProperties);
+    });
+  });
+
+  describe('should allow to use object in value', function() {
+    beforeEach(function() {
+      this.input = document.createElement('select');
+      this.input.className = 'js-choices';
+      this.input.setAttribute('multiple', '');
+
+      document.body.appendChild(this.input);
+
+      this.choicesArray = [
+        {
+          label: 'One',
+          value: {
+            id: 1
+          }
+        },
+        {
+          label: 'Two',
+          value: {
+            id: 2
+          }
+        },
+        {
+          label: 'Three',
+          value: {
+            id: 3
+          }
+        }
+      ];
+    });
+
+    afterEach(function() {
+      this.choices.destroy();
+    });
+
+    it('should allow the user to supply itemComparer via options', function() {
+      function comparer(choice, item) {
+        return choice.id === item.id;
+      }
+
+      this.choices = new Choices(this.input, {
+        itemComparer: comparer,
+        choices: this.choicesArray
+      });
+
+      this.choices.setValueByChoice({
+        id: 1
+      });
+
+      expect(this.choices.currentState.items[0].label).toBe(this.choicesArray[0].label);
     });
   });
 });
