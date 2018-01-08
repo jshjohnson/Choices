@@ -1807,7 +1807,7 @@ class Choices {
       // If user has removed value...
       if ((e.keyCode === backKey || e.keyCode === deleteKey) && !e.target.value) {
         // ...and it is a multiple select input, activate choices (if searching)
-        if (!this.isTextElement && this.isSearching) {
+        if (this.isSearching) {
           this._stopSearch();
         }
       } else if (this.canSearch && canAddItem.response) {
