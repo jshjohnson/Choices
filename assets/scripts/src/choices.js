@@ -1056,10 +1056,8 @@ class Choices {
       this._setInputWidth();
     }
     if (!this.isTextElement && this.config.searchEnabled) {
-      this.isSearching = false;
-      this.store.dispatch(
-        activateChoices(true)
-      );
+      this._stopSearch();
+
     }
     return this;
   }
@@ -1525,10 +1523,7 @@ class Choices {
         });
       } else if (hasUnactiveChoices) {
         // Otherwise reset choices to active
-        this.isSearching = false;
-        this.store.dispatch(
-          activateChoices(true)
-        );
+        this._stopSearch();
       }
     }
   }
@@ -1813,11 +1808,7 @@ class Choices {
       if ((e.keyCode === backKey || e.keyCode === deleteKey) && !e.target.value) {
         // ...and it is a multiple select input, activate choices (if searching)
         if (!this.isTextElement && this.isSearching) {
-          this.isSearching = false;
-          triggerEvent(this.passedElement, 'stopSearch', {});
-          this.store.dispatch(
-            activateChoices(true)
-          );
+          this._stopSearch();
         }
       } else if (this.canSearch && canAddItem.response) {
         this._handleSearch(this.input.value);
@@ -2878,6 +2869,19 @@ class Choices {
         }
       });
     }
+  }
+
+  /**
+   * Stop search
+   * @return
+   * @private
+   */
+  _stopSearch() {
+    this.isSearching = false;
+    triggerEvent(this.passedElement, 'stopSearch', {});
+    this.store.dispatch(
+      activateChoices(true)
+    );
   }
 
   /*=====  End of Private functions  ======*/
