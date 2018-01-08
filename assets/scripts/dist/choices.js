@@ -1634,7 +1634,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      // Run callback if it is a function
 	      if (this.input === document.activeElement) {
 	        // Check that we have a value to search and the input was an alphanumeric character
-	        if (value && value.length >= this.config.searchFloor) {
+	        if (value.length >= this.config.searchFloor) {
 	          var resultCount = 0;
 	          // Check flag to filter search input
 	          if (this.config.searchChoices) {
@@ -1939,7 +1939,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // If user has removed value...
 	        if ((e.keyCode === backKey || e.keyCode === deleteKey) && !e.target.value) {
 	          // ...and it is a multiple select input, activate choices (if searching)
-	          if (!this.isTextElement && this.isSearching) {
+	          if (this.isSearching) {
 	            this._stopSearch();
 	          }
 	        } else if (this.canSearch && canAddItem.response) {
