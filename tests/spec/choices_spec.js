@@ -506,9 +506,11 @@ describe('Choices', () => {
       this.choices = new Choices(this.input);
 
       const searchSpy = jasmine.createSpy('searchSpy');
+      const stopSearchSpy = jasmine.createSpy('stopSearchSpy');
       const passedElement = this.choices.passedElement;
 
       passedElement.addEventListener('search', searchSpy);
+      passedElement.addEventListener('stopSearch', stopSearchSpy);
 
       this.choices.input.focus();
       this.choices.input.value = '3 ';
@@ -526,6 +528,17 @@ describe('Choices', () => {
 
       expect(this.choices.isSearching && mostAccurateResult[0].value === 'Value 3').toBe(true);
       expect(searchSpy).toHaveBeenCalled();
+
+      this.choices.input.value = '';
+
+      this.choices._onKeyUp({
+        target: this.choices.input,
+        keyCode: 46, // Backspace
+        ctrlKey: false
+      });
+
+      expect(this.choices.isSearching).toBe(false);
+      expect(stopSearchSpy).toHaveBeenCalled();
     });
 
     it('shouldn\'t filter choices when searching', function() {
