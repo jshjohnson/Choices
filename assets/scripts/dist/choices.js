@@ -936,7 +936,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 
 	      // Optionally blur the input if we have a search input
-	      if (blurInput && this.canSearch && document.activeElement === this.input) {
+	      if (blurInput && this.canSearch) {
+	        this.input.removeAttribute('aria-activedescendant');
 	        this.input.blur();
 	      }
 
@@ -2388,6 +2389,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Highlight given option, and set accessiblity attributes
 	        passedEl.classList.add(this.config.classNames.highlightedState);
 	        passedEl.setAttribute('aria-selected', 'true');
+	        this.input.setAttribute('aria-activedescendant', passedEl.id);
 	        this.containerOuter.setAttribute('aria-activedescendant', passedEl.id);
 	      }
 	    }
