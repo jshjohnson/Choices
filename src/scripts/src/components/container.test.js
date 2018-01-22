@@ -103,7 +103,7 @@ describe('components/container', () => {
   describe('shouldFlip', () => {
     describe('not passing dropdownPos', () => {
       it('returns false', () => {
-        expect(instance.shouldFlip()).to.equal(false);
+        expect(instance.shouldFlip()).to.equal(true);
       });
     });
 
