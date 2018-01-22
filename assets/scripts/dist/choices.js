@@ -2447,6 +2447,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          id: id,
 	          value: passedValue,
 	          label: passedLabel,
+	          customProperties: customProperties,
 	          groupValue: group.value,
 	          keyCode: passedKeyCode
 	        });
@@ -2455,6 +2456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	          id: id,
 	          value: passedValue,
 	          label: passedLabel,
+	          customProperties: customProperties,
 	          keyCode: passedKeyCode
 	        });
 	      }
