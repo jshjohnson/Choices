@@ -59,7 +59,7 @@ export default class Container {
    */
   shouldFlip(dropdownPos, windowHeight = getWindowHeight()) {
     if (dropdownPos === undefined) {
-      return false;
+      return true;
     }
     // If flip is enabled and the dropdown bottom position is
     // greater than the window height flip the dropdown.

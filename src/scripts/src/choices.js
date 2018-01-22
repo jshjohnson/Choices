@@ -453,7 +453,8 @@ class Choices {
         if (activePlaceholders.length >= 1) {
           choiceListFragment = this.createChoicesFragment(activePlaceholders, choiceListFragment);
         }
-        choiceListFragment = this.createGroupsFragment(activeGroups, activeChoices, choiceListFragment);
+        choiceListFragment =
+        this.createGroupsFragment(activeGroups, activeChoices, choiceListFragment);
       } else if (activeChoices.length >= 1) {
         choiceListFragment = this.createChoicesFragment(activeChoices, choiceListFragment);
       }
