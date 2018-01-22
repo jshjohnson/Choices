@@ -2271,6 +2271,7 @@ class Choices {
         id,
         value: passedValue,
         label: passedLabel,
+        customProperties: customProperties,
         groupValue: group.value,
         keyCode: passedKeyCode
       });
@@ -2279,6 +2280,7 @@ class Choices {
         id,
         value: passedValue,
         label: passedLabel,
+        customProperties: customProperties,
         keyCode: passedKeyCode
       });
     }
