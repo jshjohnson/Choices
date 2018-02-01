@@ -99,6 +99,9 @@ Or include Choices directly:
     maxItemText: (maxItemCount) => {
       return `Only ${maxItemCount} values can be added.`;
     },
+    itemComparer: (choice, item) => {
+      return choice === item;
+    },
     classNames: {
       containerOuter: 'choices',
       containerInner: 'choices__inner',
@@ -457,6 +460,13 @@ const example = new Choices(element, {
 **Input types affected:** `text`
 
 **Usage:** The text that is shown when a user has focus on the input but has already reached the [max item count](https://github.com/jshjohnson/Choices#maxitemcount). To access the max item count, pass a function with a `maxItemCount` argument (see the [default config](https://github.com/jshjohnson/Choices#setup) for an example), otherwise pass a string.
+
+### itemComparer
+**Type:** `Function` **Default:** `strict equality`
+
+**Input types affected:** `select-one`, `select-multiple`
+
+**Usage:** Compare choice and value in appropriate way (e.g. deep equality for objects). To compare choice and value, pass a function with a `itemComparer` argument (see the [default config](https://github.com/jshjohnson/Choices#setup) for an example).
 
 ### classNames
 **Type:** `Object` **Default:**

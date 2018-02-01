@@ -64,6 +64,7 @@ export const DEFAULT_CONFIG = {
   uniqueItemText: 'Only unique values can be added.',
   addItemText: value => `Press Enter to add <b>"${value}"</b>`,
   maxItemText: maxItemCount => `Only ${maxItemCount} values can be added.`,
+  itemComparer: (choice, item) => (choice === item),
   fuseOptions: {
     includeScore: true,
   },
