@@ -90,6 +90,9 @@ class Choices {
       maxItemText: (maxItemCount) => {
         return `Only ${maxItemCount} values can be added.`;
       },
+      itemComparer: (choice, item) => {
+        return choice === item;
+      },
       uniqueItemText: 'Only unique values can be added.',
       classNames: {
         containerOuter: 'choices',
@@ -947,7 +950,7 @@ class Choices {
       choiceValue.forEach((val) => {
         const foundChoice = choices.find((choice) => {
           // Check 'value' property exists and the choice isn't already selected
-          return choice.value === val;
+          return this.config.itemComparer(choice.value, val);
         });
 
         if (foundChoice) {
