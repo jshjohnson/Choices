@@ -1896,6 +1896,7 @@ class Choices {
   ) {
     let passedValue = isType('String', value) ? value.trim() : value;
     const passedKeyCode = keyCode;
+    const passedCustomProperties = customProperties;
     const items = this.store.getItems();
     const passedLabel = label || passedValue;
     const passedOptionId = parseInt(choiceId, 10) || -1;
@@ -1939,6 +1940,7 @@ class Choices {
         id,
         value: passedValue,
         label: passedLabel,
+        customProperties: passedCustomProperties,
         groupValue: group.value,
         keyCode: passedKeyCode,
       });
@@ -1947,6 +1949,7 @@ class Choices {
         id,
         value: passedValue,
         label: passedLabel,
+        customProperties: passedCustomProperties,
         keyCode: passedKeyCode,
       });
     }
