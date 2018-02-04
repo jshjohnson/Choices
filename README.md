@@ -119,7 +119,7 @@ Or include Choices directly:
       activeState: 'is-active',
       focusState: 'is-focused',
       openState: 'is-open',
-      disabledState: 'is-disaqbled',
+      disabledState: 'is-disabled',
       highlightedState: 'is-highlighted',
       hiddenState: 'is-hidden',
       flippedState: 'is-flipped',
