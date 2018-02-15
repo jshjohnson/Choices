@@ -276,7 +276,7 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
 .#{$choices-selector}__input {
   display: inline-block;
   vertical-align: baseline;
-  background-color: mix(#000000, #FFFFFF, 2.5%);
+  background-color: $choices-bg-color;
   font-size: $choices-font-size-md;
   margin-bottom: 5px;
   border: 0;
