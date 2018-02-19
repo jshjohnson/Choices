@@ -1536,13 +1536,13 @@ class Choices {
    * @private
    */
   _addEventListeners() {
-    document.addEventListener('keyup', this._onKeyUp);
-    document.addEventListener('keydown', this._onKeyDown);
-    document.addEventListener('click', this._onClick);
-    document.addEventListener('touchmove', this._onTouchMove);
-    document.addEventListener('touchend', this._onTouchEnd);
-    document.addEventListener('mousedown', this._onMouseDown);
-    document.addEventListener('mouseover', this._onMouseOver);
+    this.containerOuter.addEventListener('keyup', this._onKeyUp);
+    this.containerOuter.addEventListener('keydown', this._onKeyDown);
+    this.containerOuter.addEventListener('click', this._onClick);
+    this.containerOuter.addEventListener('touchmove', this._onTouchMove);
+    this.containerOuter.addEventListener('touchend', this._onTouchEnd);
+    this.containerOuter.addEventListener('mousedown', this._onMouseDown);
+    this.containerOuter.addEventListener('mouseover', this._onMouseOver);
 
     if (this.isSelectOneElement) {
       this.containerOuter.addEventListener('focus', this._onFocus);
@@ -1561,13 +1561,13 @@ class Choices {
    * @private
    */
   _removeEventListeners() {
-    document.removeEventListener('keyup', this._onKeyUp);
-    document.removeEventListener('keydown', this._onKeyDown);
-    document.removeEventListener('click', this._onClick);
-    document.removeEventListener('touchmove', this._onTouchMove);
-    document.removeEventListener('touchend', this._onTouchEnd);
-    document.removeEventListener('mousedown', this._onMouseDown);
-    document.removeEventListener('mouseover', this._onMouseOver);
+    this.containerOuter.removeEventListener('keyup', this._onKeyUp);
+    this.containerOuter.removeEventListener('keydown', this._onKeyDown);
+    this.containerOuter.removeEventListener('click', this._onClick);
+    this.containerOuter.removeEventListener('touchmove', this._onTouchMove);
+    this.containerOuter.removeEventListener('touchend', this._onTouchEnd);
+    this.containerOuter.removeEventListener('mousedown', this._onMouseDown);
+    this.containerOuter.removeEventListener('mouseover', this._onMouseOver);
 
     if (this.isSelectOneElement) {
       this.containerOuter.removeEventListener('focus', this._onFocus);
