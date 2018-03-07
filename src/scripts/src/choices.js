@@ -881,7 +881,7 @@ class Choices {
    * @private
    */
   _triggerChange(value) {
-    if (value == 'undefined') {
+    if ((typeof value == 'undefined') || value == null) {
       return;
     }
 
