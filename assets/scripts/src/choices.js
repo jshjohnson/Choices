@@ -28,7 +28,8 @@ import {
   sortByScore,
   generateId,
   triggerEvent,
-  findAncestorByAttrName
+  findAncestorByAttrName,
+  fetchFromObject,
 }
 from './lib/utils.js';
 import './lib/polyfills.js';
@@ -1434,8 +1435,8 @@ class Choices {
             );
           } else {
             this._addChoice(
-              result[value],
-              result[label],
+              fetchFromObject(result, value),
+              fetchFromObject(result, label),
               result.selected,
               result.disabled,
               undefined,

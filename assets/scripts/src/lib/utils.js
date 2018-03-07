@@ -580,3 +580,18 @@ export const triggerEvent = (element, type, customArgs = null) => {
 
   return element.dispatchEvent(event);
 };
+
+/**
+ * Fetch properties from object
+ * @param {Object} object     Related object
+ * @param {String} properties Properties from object
+ */
+export const fetchFromObject = function (object, properties){
+  const index = properties.indexOf('.');
+
+  if(index > -1){
+    return fetchFromObject(object[properties.substring(0, index)], properties.substr(index + 1));
+  }
+
+  return object[properties];
+};
