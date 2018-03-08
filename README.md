@@ -560,6 +560,7 @@ element.addEventListener('addItem', function(event) {
   console.log(event.detail.id);
   console.log(event.detail.value);
   console.log(event.detail.label);
+  console.log(event.detail.customProperties);
   console.log(event.detail.groupValue);
 }, false);
 
@@ -571,6 +572,7 @@ example.passedElement.addEventListener('addItem', function(event) {
   console.log(event.detail.id);
   console.log(event.detail.value);
   console.log(event.detail.label);
+  console.log(event.detail.customProperties);
   console.log(event.detail.groupValue);
 }, false);
 ```
