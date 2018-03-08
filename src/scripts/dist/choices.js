@@ -1,4 +1,4 @@
-/*! choices.js v3.0.2 | (c) 2017 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
+/*! choices.js v3.0.2 | (c) 2018 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
 (function webpackUniversalModuleDefinition(root, factory) {
    //CommonJS2
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -12,7 +12,7 @@
    //Window
 	else
 		root["Choices"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -75,7 +75,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/src/scripts/dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -683,6 +683,23 @@ var regexFilter = exports.regexFilter = function regexFilter(value, regex) {
   return expression.test(value);
 };
 
+var getWindowHeight = exports.getWindowHeight = function getWindowHeight() {
+  var body = document.body;
+  var html = document.documentElement;
+  return Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+};
+
+var reduceToValues = exports.reduceToValues = function reduceToValues(items) {
+  var key = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'value';
+
+  var values = items.reduce(function (prev, current) {
+    prev.push(current[key]);
+    return prev;
+  }, []);
+
+  return values;
+};
+
 /***/ }),
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -723,6 +740,8 @@ var DEFAULT_CLASSNAMES = exports.DEFAULT_CLASSNAMES = {
 };
 
 var DEFAULT_CONFIG = exports.DEFAULT_CONFIG = {
+  items: [],
+  choices: [],
   silent: false,
   renderChoiceLimit: -1,
   maxItemCount: -1,
@@ -753,13 +772,13 @@ var DEFAULT_CONFIG = exports.DEFAULT_CONFIG = {
   noResultsText: 'No results found',
   noChoicesText: 'No choices to choose from',
   itemSelectText: 'Press to select',
+  uniqueItemText: 'Only unique values can be added.',
   addItemText: function addItemText(value) {
     return 'Press Enter to add <b>"' + value + '"</b>';
   },
   maxItemText: function maxItemText(maxItemCount) {
     return 'Only ' + maxItemCount + ' values can be added.';
   },
-  uniqueItemText: 'Only unique values can be added.',
   fuseOptions: {
     includeScore: true
   },
@@ -812,7 +831,7 @@ var SCROLLING_SPEED = exports.SCROLLING_SPEED = 4;
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 // EXTERNAL MODULE: ./node_modules/lodash-es/_freeGlobal.js
-var _freeGlobal = __webpack_require__(9);
+var _freeGlobal = __webpack_require__(10);
 
 // CONCATENATED MODULE: ./node_modules/lodash-es/_root.js
 
@@ -1056,7 +1075,7 @@ function isPlainObject(value) {
 /* harmony default export */ var lodash_es_isPlainObject = (isPlainObject);
 
 // EXTERNAL MODULE: ./node_modules/symbol-observable/index.js
-var symbol_observable = __webpack_require__(10);
+var symbol_observable = __webpack_require__(11);
 var symbol_observable_default = /*#__PURE__*/__webpack_require__.n(symbol_observable);
 
 // CONCATENATED MODULE: ./node_modules/redux/es/createStore.js
@@ -1752,11 +1771,122 @@ exports.default = WrappedElement;
 /* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(6);
+"use strict";
 
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.TEMPLATES = undefined;
+
+var _classnames = __webpack_require__(25);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+var _utils = __webpack_require__(0);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var TEMPLATES = exports.TEMPLATES = {
+  containerOuter: function containerOuter(globalClasses, direction, isSelectElement, isSelectOneElement, searchEnabled, passedElementType) {
+    var tabIndex = isSelectOneElement ? 'tabindex="0"' : '';
+    var role = isSelectElement ? 'role="listbox"' : '';
+    var ariaAutoComplete = '';
+
+    if (isSelectElement && searchEnabled) {
+      role = 'role="combobox"';
+      ariaAutoComplete = 'aria-autocomplete="list"';
+    }
+
+    return (0, _utils.strToEl)('\n      <div\n        class="' + globalClasses.containerOuter + '"\n        data-type="' + passedElementType + '"\n        ' + role + '\n        ' + tabIndex + '\n        ' + ariaAutoComplete + '\n        aria-haspopup="true"\n        aria-expanded="false"\n        dir="' + direction + '"\n        >\n      </div>\n    ');
+  },
+  containerInner: function containerInner(globalClasses) {
+    return (0, _utils.strToEl)('\n      <div class="' + globalClasses.containerInner + '"></div>\n    ');
+  },
+  itemList: function itemList(globalClasses, isSelectOneElement) {
+    var _classNames;
+
+    var localClasses = (0, _classnames2.default)(globalClasses.list, (_classNames = {}, _defineProperty(_classNames, globalClasses.listSingle, isSelectOneElement), _defineProperty(_classNames, globalClasses.listItems, !isSelectOneElement), _classNames));
+
+    return (0, _utils.strToEl)('\n      <div class="' + localClasses + '"></div>\n    ');
+  },
+  placeholder: function placeholder(globalClasses, value) {
+    return (0, _utils.strToEl)('\n      <div class="' + globalClasses.placeholder + '">\n        ' + value + '\n      </div>\n    ');
+  },
+  item: function item(globalClasses, data, removeItemButton) {
+    var _classNames2;
+
+    var ariaSelected = data.active ? 'aria-selected="true"' : '';
+    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
+
+    var localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
+
+    if (removeItemButton) {
+      var _classNames3;
+
+      localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
+
+      return (0, _utils.strToEl)('\n        <div\n          class="' + localClasses + '"\n          data-item\n          data-id="' + data.id + '"\n          data-value="' + data.value + '"\n          data-deletable\n          ' + ariaSelected + '\n          ' + ariaDisabled + '\n          >\n          ' + data.label + '<!--\n       --><button\n            type="button"\n            class="' + globalClasses.button + '"\n            data-button\n            aria-label="Remove item: \'' + data.value + '\'"\n            >\n            Remove item\n          </button>\n        </div>\n      ');
+    }
+
+    return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-item\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        ' + ariaSelected + '\n        ' + ariaDisabled + '\n        >\n        ' + data.label + '\n      </div>\n    ');
+  },
+  choiceList: function choiceList(globalClasses, isSelectOneElement) {
+    var ariaMultiSelectable = !isSelectOneElement ? 'aria-multiselectable="true"' : '';
+
+    return (0, _utils.strToEl)('\n      <div\n        class="' + globalClasses.list + '"\n        dir="ltr"\n        role="listbox"\n        ' + ariaMultiSelectable + '\n        >\n      </div>\n    ');
+  },
+  choiceGroup: function choiceGroup(globalClasses, data) {
+    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
+    var localClasses = (0, _classnames2.default)(globalClasses.group, _defineProperty({}, globalClasses.itemDisabled, data.disabled));
+
+    return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-group\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        role="group"\n        ' + ariaDisabled + '\n        >\n        <div class="' + globalClasses.groupHeading + '">' + data.value + '</div>\n      </div>\n    ');
+  },
+  choice: function choice(globalClasses, data, itemSelectText) {
+    var _classNames5;
+
+    var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
+    var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.placeholder, data.placeholder), _classNames5));
+
+    return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-select-text="' + itemSelectText + '"\n        data-choice\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        ' + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\n        id="' + data.elementId + '"\n        ' + role + '\n        >\n        ' + data.label + '\n      </div>\n    ');
+  },
+  input: function input(globalClasses) {
+    var localClasses = (0, _classnames2.default)(globalClasses.input, globalClasses.inputCloned);
+
+    return (0, _utils.strToEl)('\n      <input\n        type="text"\n        class="' + localClasses + '"\n        autocomplete="off"\n        autocapitalize="off"\n        spellcheck="false"\n        role="textbox"\n        aria-autocomplete="list"\n        >\n    ');
+  },
+  dropdown: function dropdown(globalClasses) {
+    var localClasses = (0, _classnames2.default)(globalClasses.list, globalClasses.listDropdown);
+
+    return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        aria-expanded="false"\n        >\n      </div>\n    ');
+  },
+  notice: function notice(globalClasses, label) {
+    var _classNames6;
+
+    var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+
+    var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames6 = {}, _defineProperty(_classNames6, globalClasses.noResults, type === 'no-results'), _defineProperty(_classNames6, globalClasses.noChoices, type === 'no-choices'), _classNames6));
+
+    return (0, _utils.strToEl)('\n      <div class="' + localClasses + '">\n        ' + label + '\n      </div>\n    ');
+  },
+  option: function option(data) {
+    return (0, _utils.strToEl)('\n      <option value="' + data.value + '" ' + (data.selected ? 'selected' : '') + ' ' + (data.disabled ? 'disabled' : '') + '>' + data.label + '</option>\n    ');
+  }
+};
+
+exports.default = TEMPLATES;
 
 /***/ }),
 /* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(7);
+
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1766,41 +1896,41 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _fuse = __webpack_require__(7);
+var _fuse = __webpack_require__(8);
 
 var _fuse2 = _interopRequireDefault(_fuse);
 
-var _store = __webpack_require__(8);
+var _store = __webpack_require__(9);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _dropdown = __webpack_require__(18);
+var _dropdown = __webpack_require__(19);
 
 var _dropdown2 = _interopRequireDefault(_dropdown);
 
-var _container = __webpack_require__(19);
+var _container = __webpack_require__(20);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _input = __webpack_require__(20);
+var _input = __webpack_require__(21);
 
 var _input2 = _interopRequireDefault(_input);
 
-var _list = __webpack_require__(21);
+var _list = __webpack_require__(22);
 
 var _list2 = _interopRequireDefault(_list);
 
-var _wrappedInput = __webpack_require__(22);
+var _wrappedInput = __webpack_require__(23);
 
 var _wrappedInput2 = _interopRequireDefault(_wrappedInput);
 
-var _wrappedSelect = __webpack_require__(23);
+var _wrappedSelect = __webpack_require__(24);
 
 var _wrappedSelect2 = _interopRequireDefault(_wrappedSelect);
 
 var _constants = __webpack_require__(1);
 
-var _templates = __webpack_require__(24);
+var _templates = __webpack_require__(5);
 
 var _choices = __webpack_require__(26);
 
@@ -1849,7 +1979,7 @@ var Choices = function () {
       items: [],
       choices: [],
       classNames: _constants.DEFAULT_CLASSNAMES,
-      sortFilter: _utils.sortByAlpha
+      sortFn: _utils.sortByAlpha
     });
 
     // Merge options with user options
@@ -2016,7 +2146,11 @@ var Choices = function () {
       // Remove all event listeners
       this._removeEventListeners();
       this.passedElement.reveal();
-      this.containerOuter.revert(this.passedElement.element);
+      this.containerOuter.unwrap(this.passedElement.element);
+
+      if (this.isSelectElement) {
+        this.passedElement.setOptions(this.presetChoices);
+      }
 
       // Clear data store
       this.clearStore();
@@ -2090,7 +2224,6 @@ var Choices = function () {
       var _this = this;
 
       var groupFragment = fragment || document.createDocumentFragment();
-      var filter = this.config.sortFilter;
       var getGroupChoices = function getGroupChoices(group) {
         return choices.filter(function (choice) {
           if (_this.isSelectOneElement) {
@@ -2102,12 +2235,11 @@ var Choices = function () {
 
       // If sorting is enabled, filter groups
       if (this.config.shouldSort) {
-        groups.sort(filter);
+        groups.sort(this.config.sortFn);
       }
 
       groups.forEach(function (group) {
         var groupChoices = getGroupChoices(group);
-
         if (groupChoices.length >= 1) {
           var dropdownGroup = _this._getTemplate('choiceGroup', group);
           groupFragment.appendChild(dropdownGroup);
@@ -2140,7 +2272,7 @@ var Choices = function () {
           searchResultLimit = _config.searchResultLimit,
           renderChoiceLimit = _config.renderChoiceLimit;
 
-      var filter = this.isSearching ? _utils.sortByScore : this.config.sortFilter;
+      var filter = this.isSearching ? _utils.sortByScore : this.config.sortFn;
       var appendChoice = function appendChoice(choice) {
         var shouldRender = renderSelectedChoices === 'auto' ? _this2.isSelectOneElement || !choice.selected : true;
         if (shouldRender) {
@@ -2218,31 +2350,15 @@ var Choices = function () {
 
       // If sorting is enabled, filter items
       if (this.config.shouldSortItems && !this.isSelectOneElement) {
-        items.sort(this.config.sortFilter);
+        items.sort(this.config.sortFn);
       }
 
       if (this.isTextElement) {
-        // Simplify store data to just values
-        var itemsFiltered = this.store.getItemsReducedToValues(items);
-        var itemsFilteredString = itemsFiltered.join(this.config.delimiter);
-
         // Update the value of the hidden input
-        this.passedElement.setValue(itemsFilteredString);
+        this.passedElement.setValue(items);
       } else {
-        var selectedOptionsFragment = document.createDocumentFragment();
-        var addOptionToFragment = function addOptionToFragment(item) {
-          // Create a standard select option
-          var option = _this3._getTemplate('option', item);
-          // Append it to fragment
-          selectedOptionsFragment.appendChild(option);
-        };
-
-        // Add each list item to list
-        items.forEach(function (item) {
-          return addOptionToFragment(item);
-        });
         // Update the options of the hidden input
-        this.passedElement.setOptions(selectedOptionsFragment);
+        this.passedElement.setOptions(items);
       }
 
       var addItemToFragment = function addItemToFragment(item) {
@@ -2307,11 +2423,11 @@ var Choices = function () {
           choiceListFragment = this.createChoicesFragment(activeChoices, choiceListFragment);
         }
 
-        var _activeItems = this.store.getItemsFilteredByActive();
-        var canAddItem = this._canAddItem(_activeItems, this.input.getValue());
-
         // If we have choices to show
         if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
+          var activeItems = this.store.getItemsFilteredByActive();
+          var canAddItem = this._canAddItem(activeItems, this.input.getValue());
+
           // ...and we can select them
           if (canAddItem.response) {
             // ...append them and highlight the first choice
@@ -2341,21 +2457,21 @@ var Choices = function () {
       }
 
       /* Items */
+      if (this.currentState.items !== this.prevState.items) {
+        // Get active items (items that can be selected)
+        var _activeItems = this.store.getItemsFilteredByActive() || [];
+        // Clear list
+        this.itemList.clear();
 
-      // Get active items (items that can be selected)
-      var activeItems = this.store.getItemsFilteredByActive() || [];
-      // Clear list
-      this.itemList.clear();
+        if (_activeItems.length) {
+          // Create a fragment to store our list items
+          // (so we don't have to update the DOM for each item)
+          var itemListFragment = this.createItemsFragment(_activeItems);
 
-      if (activeItems.length) {
-        // Create a fragment to store our list items
-        // (so we don't have to update the DOM for each item)
-        var itemListFragment = this.createItemsFragment(activeItems);
-
-        // If we have items to add
-        if (itemListFragment.childNodes) {
-          // Update list
-          this.itemList.append(itemListFragment);
+          // If we have items to add, append them
+          if (itemListFragment.childNodes) {
+            this.itemList.append(itemListFragment);
+          }
         }
       }
 
@@ -2486,7 +2602,7 @@ var Choices = function () {
     value: function removeActiveItemsByValue(value) {
       var _this6 = this;
 
-      if (!value || !(0, _utils.isType)('String', value)) {
+      if (!value) {
         return this;
       }
 
@@ -2517,7 +2633,7 @@ var Choices = function () {
       var items = this.store.getItemsFilteredByActive();
 
       items.forEach(function (item) {
-        if (item.active && excludedId !== item.id) {
+        if (excludedId !== item.id) {
           _this7._removeItem(item);
         }
       });
@@ -2539,16 +2655,14 @@ var Choices = function () {
 
       var runEvent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
-      var items = this.store.getItemsFilteredByActive();
+      var items = this.store.getItemsFilteredByHighlighted();
 
       items.forEach(function (item) {
-        if (item.highlighted && item.active) {
-          _this8._removeItem(item);
-          // If this action was performed by the user
-          // trigger the event
-          if (runEvent) {
-            _this8._triggerChange(item.value);
-          }
+        _this8._removeItem(item);
+        // If this action was performed by the user
+        // trigger the event
+        if (runEvent) {
+          _this8._triggerChange(item.value);
         }
       });
 
@@ -2563,16 +2677,18 @@ var Choices = function () {
 
   }, {
     key: 'showDropdown',
-    value: function showDropdown() {
-      var focusInput = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
+    value: function showDropdown(focusInput) {
       if (this.dropdown.isActive) {
         return this;
       }
 
-      this.containerOuter.open(this.dropdown.getVerticalPos());
       this.dropdown.show();
-      this.input.activate(focusInput);
+      this.containerOuter.open(this.dropdown.getVerticalPos());
+
+      if (focusInput && this.canSearch) {
+        this.input.focus();
+      }
+
       this.passedElement.triggerEvent(_constants.EVENTS.showDropdown, {});
 
       return this;
@@ -2586,16 +2702,19 @@ var Choices = function () {
 
   }, {
     key: 'hideDropdown',
-    value: function hideDropdown() {
-      var blurInput = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
+    value: function hideDropdown(blurInput) {
       if (!this.dropdown.isActive) {
         return this;
       }
 
-      this.containerOuter.close();
       this.dropdown.hide();
-      this.input.deactivate(blurInput);
+      this.containerOuter.close();
+
+      if (blurInput && this.canSearch) {
+        this.input.removeActiveDescendant();
+        this.input.blur();
+      }
+
       this.passedElement.triggerEvent(_constants.EVENTS.hideDropdown, {});
 
       return this;
@@ -2681,7 +2800,7 @@ var Choices = function () {
     value: function setChoiceByValue(value) {
       var _this10 = this;
 
-      if (this.isTextElement || !this.initialised) {
+      if (!this.initialised || this.isTextElement) {
         return this;
       }
 
@@ -2717,7 +2836,7 @@ var Choices = function () {
       var label = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
       var replaceChoices = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
-      if (!this.initialised || !this.isSelectElement || !(0, _utils.isType)('Array', choices) || !value) {
+      if (!this.isSelectElement || !choices.length || !value) {
         return this;
       }
 
@@ -2726,19 +2845,16 @@ var Choices = function () {
         this._clearChoices();
       }
 
-      // Add choices if passed
-      if (choices.length) {
-        this.containerOuter.removeLoadingState();
-        var addGroupsAndChoices = function addGroupsAndChoices(groupOrChoice) {
-          if (groupOrChoice.choices) {
-            _this11._addGroup(groupOrChoice, groupOrChoice.id || null, value, label);
-          } else {
-            _this11._addChoice(groupOrChoice[value], groupOrChoice[label], groupOrChoice.selected, groupOrChoice.disabled, undefined, groupOrChoice.customProperties, groupOrChoice.placeholder);
-          }
-        };
+      this.containerOuter.removeLoadingState();
+      var addGroupsAndChoices = function addGroupsAndChoices(groupOrChoice) {
+        if (groupOrChoice.choices) {
+          _this11._addGroup(groupOrChoice, groupOrChoice.id || null, value, label);
+        } else {
+          _this11._addChoice(groupOrChoice[value], groupOrChoice[label], groupOrChoice.selected, groupOrChoice.disabled, undefined, groupOrChoice.customProperties, groupOrChoice.placeholder);
+        }
+      };
 
-        choices.forEach(addGroupsAndChoices);
-      }
+      choices.forEach(addGroupsAndChoices);
 
       return this;
     }
@@ -3047,7 +3163,7 @@ var Choices = function () {
         }
       }
 
-      if (this.isTextElement && this.config.addItems && canAddItem && this.config.regexFilter) {
+      if (this.config.regexFilter && this.isTextElement && this.config.addItems && canAddItem) {
         // If a user has supplied a regular expression filter
         // determine whether we can update based on whether
         // our regular expression passes
@@ -3366,7 +3482,7 @@ var Choices = function () {
           if (nextEl) {
             // We prevent default to stop the cursor moving
             // when pressing the arrow
-            if (!(0, _utils.isScrolledIntoView)(nextEl, _this15.choiceList, directionInt)) {
+            if (!(0, _utils.isScrolledIntoView)(nextEl, _this15.choiceList.element, directionInt)) {
               _this15._scrollToChoice(nextEl, directionInt);
             }
             _this15._highlightChoice(nextEl);
@@ -3675,14 +3791,7 @@ var Choices = function () {
           },
           'select-one': function selectOne() {
             _this17.containerOuter.removeFocusState();
-            if (target === _this17.containerOuter.element) {
-              // Hide dropdown if it is showing
-              if (!_this17.canSearch) {
-                _this17.hideDropdown();
-              }
-            }
-            if (target === _this17.input.element) {
-              // Hide dropdown if it is showing
+            if (target === _this17.input.element || target === _this17.containerOuter.element && !_this17.canSearch) {
               _this17.hideDropdown();
             }
           },
@@ -3726,18 +3835,18 @@ var Choices = function () {
         return;
       }
 
-      var dropdownHeight = this.choiceList.height;
+      var dropdownHeight = this.choiceList.element.offsetHeight;
       var choiceHeight = choice.offsetHeight;
       // Distance from bottom of element to top of parent
       var choicePos = choice.offsetTop + choiceHeight;
       // Scroll position of dropdown
-      var containerScrollPos = this.choiceList.scrollPos + dropdownHeight;
+      var containerScrollPos = this.choiceList.element.scrollTop + dropdownHeight;
       // Difference between the choice and scroll position
-      var endPoint = direction > 0 ? this.choiceList.scrollPos + choicePos - containerScrollPos : choice.offsetTop;
+      var endPoint = direction > 0 ? this.choiceList.element.scrollTop + choicePos - containerScrollPos : choice.offsetTop;
 
       var animateScroll = function animateScroll() {
         var strength = _constants.SCROLLING_SPEED;
-        var choiceListScrollTop = _this18.choiceList.scrollPos;
+        var choiceListScrollTop = _this18.choiceList.element.scrollTop;
         var continueAnimation = false;
         var easing = void 0;
         var distance = void 0;
@@ -3788,45 +3897,47 @@ var Choices = function () {
 
       // Highlight first element in dropdown
       var choices = Array.from(this.dropdown.element.querySelectorAll('[data-choice-selectable]'));
+
+      if (!choices.length) {
+        return;
+      }
+
       var passedEl = el;
+      var highlightedChoices = Array.from(this.dropdown.element.querySelectorAll('.' + this.config.classNames.highlightedState));
+      var hasActiveDropdown = this.dropdown.isActive;
 
-      if (choices && choices.length) {
-        var highlightedChoices = Array.from(this.dropdown.element.querySelectorAll('.' + this.config.classNames.highlightedState));
-        var hasActiveDropdown = this.dropdown.isActive;
+      // Remove any highlighted choices
+      highlightedChoices.forEach(function (choice) {
+        choice.classList.remove(_this19.config.classNames.highlightedState);
+        choice.setAttribute('aria-selected', 'false');
+      });
 
-        // Remove any highlighted choices
-        highlightedChoices.forEach(function (choice) {
-          choice.classList.remove(_this19.config.classNames.highlightedState);
-          choice.setAttribute('aria-selected', 'false');
-        });
-
-        if (passedEl) {
-          this.highlightPosition = choices.indexOf(passedEl);
+      if (passedEl) {
+        this.highlightPosition = choices.indexOf(passedEl);
+      } else {
+        // Highlight choice based on last known highlight location
+        if (choices.length > this.highlightPosition) {
+          // If we have an option to highlight
+          passedEl = choices[this.highlightPosition];
         } else {
-          // Highlight choice based on last known highlight location
-          if (choices.length > this.highlightPosition) {
-            // If we have an option to highlight
-            passedEl = choices[this.highlightPosition];
-          } else {
-            // Otherwise highlight the option before
-            passedEl = choices[choices.length - 1];
-          }
-
-          if (!passedEl) {
-            passedEl = choices[0];
-          }
+          // Otherwise highlight the option before
+          passedEl = choices[choices.length - 1];
         }
 
-        // Highlight given option, and set accessiblity attributes
-        passedEl.classList.add(this.config.classNames.highlightedState);
-        passedEl.setAttribute('aria-selected', 'true');
-
-        if (hasActiveDropdown) {
-          // IE11 ignores aria-label and blocks virtual keyboard
-          // if aria-activedescendant is set without a dropdown
-          this.input.setActiveDescendant(passedEl.id);
-          this.containerOuter.setActiveDescendant(passedEl.id);
+        if (!passedEl) {
+          passedEl = choices[0];
         }
+      }
+
+      // Highlight given option, and set accessiblity attributes
+      passedEl.classList.add(this.config.classNames.highlightedState);
+      passedEl.setAttribute('aria-selected', 'true');
+
+      if (hasActiveDropdown) {
+        // IE11 ignores aria-label and blocks virtual keyboard
+        // if aria-activedescendant is set without a dropdown
+        this.input.setActiveDescendant(passedEl.id);
+        this.containerOuter.setActiveDescendant(passedEl.id);
       }
     }
 
@@ -3914,11 +4025,12 @@ var Choices = function () {
         return this;
       }
 
-      var id = item.id;
-      var value = item.value;
-      var label = item.label;
-      var choiceId = item.choiceId;
-      var groupId = item.groupId;
+      var id = item.id,
+          value = item.value,
+          label = item.label,
+          choiceId = item.choiceId,
+          groupId = item.groupId;
+
       var group = groupId >= 0 ? this.store.getGroupById(groupId) : null;
 
       this.store.dispatch((0, _items.removeItem)(id, choiceId));
@@ -4101,9 +4213,9 @@ var Choices = function () {
       this.passedElement.conceal();
 
       // Wrap input in container preserving DOM ordering
-      (0, _utils.wrap)(this.passedElement.element, this.containerInner.element);
+      this.containerInner.wrap(this.passedElement.element);
       // Wrapper inner container with outer container
-      (0, _utils.wrap)(this.containerInner.element, this.containerOuter.element);
+      this.containerOuter.wrap(this.containerInner.element);
 
       if (this.isSelectOneElement) {
         this.input.setPlaceholder(this.config.searchPlaceholderValue || '');
@@ -4159,7 +4271,7 @@ var Choices = function () {
         });
       } else {
         var passedOptions = this.passedElement.getOptions();
-        var filter = this.config.sortFilter;
+        var filter = this.config.sortFn;
         var allChoices = this.presetChoices;
 
         // Create array of options from option elements
@@ -4287,11 +4399,11 @@ Choices.userDefaults = {};
 module.exports = Choices;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
- * Fuse.js v3.1.0 - Lightweight fuzzy-search (http://fusejs.io)
+ * Fuse.js v3.2.0 - Lightweight fuzzy-search (http://fusejs.io)
  * 
  * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
  * All Rights Reserved. Apache Software License 2.0
@@ -5176,8 +5288,8 @@ var Fuse = function () {
         var bestScore = 1;
 
         for (var j = 0; j < scoreLen; j += 1) {
-          var score = output[j].score;
           var weight = weights ? weights[output[j].key].weight : 1;
+          var score = weight === 1 ? output[j].score : output[j].score || 0.001;
           var nScore = score * weight;
 
           if (weight !== 1) {
@@ -5288,7 +5400,7 @@ module.exports = Fuse;
 //# sourceMappingURL=fuse.js.map
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5302,7 +5414,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _redux = __webpack_require__(2);
 
-var _index = __webpack_require__(14);
+var _index = __webpack_require__(15);
 
 var _index2 = _interopRequireDefault(_index);
 
@@ -5378,25 +5490,23 @@ var Store = function () {
       var items = this.getItems();
       var values = items.filter(function (item) {
         return item.active === true;
-      }, []);
+      });
 
       return values;
     }
 
     /**
-     * Get items from store reduced to just their values
-     * @return {Array} Item objects
-     */
+    * Get highlighted items from store
+    * @return {Array} Item objects
+    */
 
   }, {
-    key: 'getItemsReducedToValues',
-    value: function getItemsReducedToValues() {
-      var items = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getItems();
-
-      var values = items.reduce(function (prev, current) {
-        prev.push(current.value);
-        return prev;
-      }, []);
+    key: 'getItemsFilteredByHighlighted',
+    value: function getItemsFilteredByHighlighted() {
+      var items = this.getItems();
+      var values = items.filter(function (item) {
+        return item.active && item.highlighted;
+      });
 
       return values;
     }
@@ -5551,7 +5661,7 @@ var Store = function () {
 exports.default = Store;
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5563,14 +5673,14 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(11);
+module.exports = __webpack_require__(12);
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5580,7 +5690,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _ponyfill = __webpack_require__(13);
+var _ponyfill = __webpack_require__(14);
 
 var _ponyfill2 = _interopRequireDefault(_ponyfill);
 
@@ -5603,10 +5713,10 @@ if (typeof self !== 'undefined') {
 
 var result = (0, _ponyfill2['default'])(root);
 exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(12)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3), __webpack_require__(13)(module)))
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -5634,7 +5744,7 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5663,7 +5773,7 @@ function symbolObservablePonyfill(root) {
 };
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5675,15 +5785,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _redux = __webpack_require__(2);
 
-var _items = __webpack_require__(15);
+var _items = __webpack_require__(16);
 
 var _items2 = _interopRequireDefault(_items);
 
-var _groups = __webpack_require__(16);
+var _groups = __webpack_require__(17);
 
 var _groups2 = _interopRequireDefault(_groups);
 
-var _choices = __webpack_require__(17);
+var _choices = __webpack_require__(18);
 
 var _choices2 = _interopRequireDefault(_choices);
 
@@ -5711,7 +5821,7 @@ var rootReducer = function rootReducer(passedState, action) {
 exports.default = rootReducer;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5749,9 +5859,7 @@ function items() {
 
         return newState.map(function (obj) {
           var item = obj;
-          if (item.highlighted) {
-            item.highlighted = false;
-          }
+          item.highlighted = false;
           return item;
         });
       }
@@ -5787,7 +5895,7 @@ function items() {
 }
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5830,7 +5938,7 @@ function groups() {
 }
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5959,7 +6067,7 @@ function choices() {
 }
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6053,7 +6161,7 @@ var Dropdown = function () {
 exports.default = Dropdown;
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6064,6 +6172,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _utils = __webpack_require__(0);
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -6144,19 +6254,16 @@ var Container = function () {
   }, {
     key: 'shouldFlip',
     value: function shouldFlip(dropdownPos) {
+      var windowHeight = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : (0, _utils.getWindowHeight)();
+
       if (dropdownPos === undefined) {
-        return false;
+        return true;
       }
-
-      var body = document.body;
-      var html = document.documentElement;
-      var winHeight = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-
       // If flip is enabled and the dropdown bottom position is
       // greater than the window height flip the dropdown.
       var shouldFlip = false;
       if (this.config.position === 'auto') {
-        shouldFlip = dropdownPos >= winHeight;
+        shouldFlip = dropdownPos >= windowHeight;
       } else if (this.config.position === 'top') {
         shouldFlip = true;
       }
@@ -6235,7 +6342,7 @@ var Container = function () {
   }, {
     key: 'enable',
     value: function enable() {
-      this.element.classList.remove(this.config.classNames.disabledState);
+      this.element.classList.remove(this.classNames.disabledState);
       this.element.removeAttribute('aria-disabled');
       if (this.parentInstance.isSelectOneElement) {
         this.element.setAttribute('tabindex', '0');
@@ -6250,7 +6357,7 @@ var Container = function () {
   }, {
     key: 'disable',
     value: function disable() {
-      this.element.classList.add(this.config.classNames.disabledState);
+      this.element.classList.add(this.classNames.disabledState);
       this.element.setAttribute('aria-disabled', 'true');
       if (this.parentInstance.isSelectOneElement) {
         this.element.setAttribute('tabindex', '-1');
@@ -6258,11 +6365,16 @@ var Container = function () {
       this.isDisabled = true;
     }
   }, {
-    key: 'revert',
-    value: function revert(originalElement) {
-      // Move passed element back to original position
-      this.element.parentNode.insertBefore(originalElement, this.element);
-      // Remove container
+    key: 'wrap',
+    value: function wrap(element) {
+      (0, _utils.wrap)(element, this.element);
+    }
+  }, {
+    key: 'unwrap',
+    value: function unwrap(element) {
+      // Move passed element outside this element
+      this.element.parentNode.insertBefore(element, this.element);
+      // Remove this element
       this.element.parentNode.removeChild(this.element);
     }
 
@@ -6297,7 +6409,7 @@ var Container = function () {
 exports.default = Container;
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6402,23 +6514,6 @@ var Input = function () {
       this.isFocussed = false;
     }
   }, {
-    key: 'activate',
-    value: function activate(focusInput) {
-      // Optionally focus the input if we have a search input
-      if (focusInput && this.parentInstance.canSearch && document.activeElement !== this.element) {
-        this.element.focus();
-      }
-    }
-  }, {
-    key: 'deactivate',
-    value: function deactivate(blurInput) {
-      this.removeActiveDescendant();
-      // Optionally blur the input if we have a search input
-      if (blurInput && this.parentInstance.canSearch && document.activeElement === this.element) {
-        this.element.blur();
-      }
-    }
-  }, {
     key: 'enable',
     value: function enable() {
       this.element.removeAttribute('disabled');
@@ -6435,6 +6530,13 @@ var Input = function () {
     value: function focus() {
       if (!this.isFocussed) {
         this.element.focus();
+      }
+    }
+  }, {
+    key: 'blur',
+    value: function blur() {
+      if (this.isFocussed) {
+        this.element.blur();
       }
     }
 
@@ -6518,7 +6620,7 @@ var Input = function () {
 exports.default = Input;
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6599,7 +6701,7 @@ var List = function () {
 exports.default = List;
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6616,6 +6718,8 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 var _wrappedElement = __webpack_require__(4);
 
 var _wrappedElement2 = _interopRequireDefault(_wrappedElement);
+
+var _utils = __webpack_require__(0);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6662,13 +6766,16 @@ var WrappedInput = function (_WrappedElement) {
   }, {
     key: 'disable',
     value: function disable() {
-      _get(WrappedInput.prototype.__proto__ || Object.getPrototypeOf(WrappedInput.prototype), 'enable', this).call(this);
+      _get(WrappedInput.prototype.__proto__ || Object.getPrototypeOf(WrappedInput.prototype), 'disable', this).call(this);
     }
   }, {
     key: 'setValue',
-    value: function setValue(value) {
-      this.element.setAttribute('value', value);
-      this.element.value = value;
+    value: function setValue(items) {
+      var itemsFiltered = (0, _utils.reduceToValues)(items);
+      var itemsFilteredString = itemsFiltered.join(this.parentInstance.config.delimiter);
+
+      this.element.setAttribute('value', itemsFilteredString);
+      this.element.value = itemsFilteredString;
     }
   }]);
 
@@ -6678,7 +6785,7 @@ var WrappedInput = function (_WrappedElement) {
 exports.default = WrappedInput;
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6695,6 +6802,10 @@ var _get = function get(object, property, receiver) { if (object === null) objec
 var _wrappedElement = __webpack_require__(4);
 
 var _wrappedElement2 = _interopRequireDefault(_wrappedElement);
+
+var _templates = __webpack_require__(5);
+
+var _templates2 = _interopRequireDefault(_templates);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6741,13 +6852,7 @@ var WrappedSelect = function (_WrappedElement) {
   }, {
     key: 'disable',
     value: function disable() {
-      _get(WrappedSelect.prototype.__proto__ || Object.getPrototypeOf(WrappedSelect.prototype), 'enable', this).call(this);
-    }
-  }, {
-    key: 'setOptions',
-    value: function setOptions(options) {
-      this.element.innerHTML = '';
-      this.element.appendChild(options);
+      _get(WrappedSelect.prototype.__proto__ || Object.getPrototypeOf(WrappedSelect.prototype), 'disable', this).call(this);
     }
   }, {
     key: 'getPlaceholderOption',
@@ -6764,123 +6869,36 @@ var WrappedSelect = function (_WrappedElement) {
     value: function getOptionGroups() {
       return Array.from(this.element.getElementsByTagName('OPTGROUP'));
     }
+  }, {
+    key: 'setOptions',
+    value: function setOptions(options) {
+      var fragment = document.createDocumentFragment();
+      var addOptionToFragment = function addOptionToFragment(data) {
+        // Create a standard select option
+        var template = _templates2.default.option(data);
+        // Append it to fragment
+        fragment.appendChild(template);
+      };
+
+      // Add each list item to list
+      options.forEach(function (optionData) {
+        return addOptionToFragment(optionData);
+      });
+
+      this.appendDocFragment(fragment);
+    }
+  }, {
+    key: 'appendDocFragment',
+    value: function appendDocFragment(fragment) {
+      this.element.innerHTML = '';
+      this.element.appendChild(fragment);
+    }
   }]);
 
   return WrappedSelect;
 }(_wrappedElement2.default);
 
 exports.default = WrappedSelect;
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.TEMPLATES = undefined;
-
-var _classnames = __webpack_require__(25);
-
-var _classnames2 = _interopRequireDefault(_classnames);
-
-var _utils = __webpack_require__(0);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var TEMPLATES = exports.TEMPLATES = {
-  containerOuter: function containerOuter(globalClasses, direction, isSelectElement, isSelectOneElement, searchEnabled, passedElementType) {
-    var tabIndex = isSelectOneElement ? 'tabindex="0"' : '';
-    var role = isSelectElement ? 'role="listbox"' : '';
-    var ariaAutoComplete = '';
-
-    if (isSelectElement && searchEnabled) {
-      role = 'role="combobox"';
-      ariaAutoComplete = 'aria-autocomplete="list"';
-    }
-
-    return (0, _utils.strToEl)('\n      <div\n        class="' + globalClasses.containerOuter + '"\n        data-type="' + passedElementType + '"\n        ' + role + '\n        ' + tabIndex + '\n        ' + ariaAutoComplete + '\n        aria-haspopup="true"\n        aria-expanded="false"\n        dir="' + direction + '"\n        >\n      </div>\n    ');
-  },
-  containerInner: function containerInner(globalClasses) {
-    return (0, _utils.strToEl)('\n      <div class="' + globalClasses.containerInner + '"></div>\n    ');
-  },
-  itemList: function itemList(globalClasses, isSelectOneElement) {
-    var _classNames;
-
-    var localClasses = (0, _classnames2.default)(globalClasses.list, (_classNames = {}, _defineProperty(_classNames, globalClasses.listSingle, isSelectOneElement), _defineProperty(_classNames, globalClasses.listItems, !isSelectOneElement), _classNames));
-
-    return (0, _utils.strToEl)('\n      <div class="' + localClasses + '"></div>\n    ');
-  },
-  placeholder: function placeholder(globalClasses, value) {
-    return (0, _utils.strToEl)('\n      <div class="' + globalClasses.placeholder + '">\n        ' + value + '\n      </div>\n    ');
-  },
-  item: function item(globalClasses, data, removeItemButton) {
-    var _classNames2;
-
-    var ariaSelected = data.active ? 'aria-selected="true"' : '';
-    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
-
-    var localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
-
-    if (removeItemButton) {
-      var _classNames3;
-
-      localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
-
-      return (0, _utils.strToEl)('\n        <div\n          class="' + localClasses + '"\n          data-item\n          data-id="' + data.id + '"\n          data-value="' + data.value + '"\n          data-deletable\n          ' + ariaSelected + '\n          ' + ariaDisabled + '\n          >\n          ' + data.label + '<!--\n       --><button\n            type="button"\n            class="' + globalClasses.button + '"\n            data-button\n            aria-label="Remove item: \'' + data.value + '\'"\n            >\n            Remove item\n          </button>\n        </div>\n      ');
-    }
-
-    return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-item\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        ' + ariaSelected + '\n        ' + ariaDisabled + '\n        >\n        ' + data.label + '\n      </div>\n    ');
-  },
-  choiceList: function choiceList(globalClasses, isSelectOneElement) {
-    var ariaMultiSelectable = !isSelectOneElement ? 'aria-multiselectable="true"' : '';
-
-    return (0, _utils.strToEl)('\n      <div\n        class="' + globalClasses.list + '"\n        dir="ltr"\n        role="listbox"\n        ' + ariaMultiSelectable + '\n        >\n      </div>\n    ');
-  },
-  choiceGroup: function choiceGroup(globalClasses, data) {
-    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
-    var localClasses = (0, _classnames2.default)(globalClasses.group, _defineProperty({}, globalClasses.itemDisabled, data.disabled));
-
-    return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-group\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        role="group"\n        ' + ariaDisabled + '\n        >\n        <div class="' + globalClasses.groupHeading + '">' + data.value + '</div>\n      </div>\n    ');
-  },
-  choice: function choice(globalClasses, data, itemSelectText) {
-    var _classNames5;
-
-    var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
-    var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.placeholder, data.placeholder), _classNames5));
-
-    return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-select-text="' + itemSelectText + '"\n        data-choice\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        ' + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\n        id="' + data.elementId + '"\n        ' + role + '\n        >\n        ' + data.label + '\n      </div>\n    ');
-  },
-  input: function input(globalClasses) {
-    var localClasses = (0, _classnames2.default)(globalClasses.input, globalClasses.inputCloned);
-
-    return (0, _utils.strToEl)('\n      <input\n        type="text"\n        class="' + localClasses + '"\n        autocomplete="off"\n        autocapitalize="off"\n        spellcheck="false"\n        role="textbox"\n        aria-autocomplete="list"\n        >\n    ');
-  },
-  dropdown: function dropdown(globalClasses) {
-    var localClasses = (0, _classnames2.default)(globalClasses.list, globalClasses.listDropdown);
-
-    return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        aria-expanded="false"\n        >\n      </div>\n    ');
-  },
-  notice: function notice(globalClasses, label) {
-    var _classNames6;
-
-    var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-
-    var localClasses = (0, _classnames2.default)(globalClasses.item, globalClasses.itemChoice, (_classNames6 = {}, _defineProperty(_classNames6, globalClasses.noResults, type === 'no-results'), _defineProperty(_classNames6, globalClasses.noChoices, type === 'no-choices'), _classNames6));
-
-    return (0, _utils.strToEl)('\n      <div class="' + localClasses + '">\n        ' + label + '\n      </div>\n    ');
-  },
-  option: function option(globalClasses, data) {
-    return (0, _utils.strToEl)('\n      <option value="' + data.value + '" selected>' + data.label + '</option>\n    ');
-  }
-};
-
-exports.default = TEMPLATES;
 
 /***/ }),
 /* 25 */
@@ -6927,9 +6945,9 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 		module.exports = classNames;
 	} else if (true) {
 		// register as 'classnames', consistent with npm package name
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
 			return classNames;
-		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	} else {
 		window.classNames = classNames;
