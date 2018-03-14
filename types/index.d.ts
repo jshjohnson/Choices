@@ -157,7 +157,7 @@ declare module "choices.js" {
 		 * @return {Object} Class instance
 		 * @public
 		 */
-    setChoiceByValue(value: string | string[]): this;
+  setValueByChoice(value: string | string[]): this;
 
 		/**
 		 * Direct populate choices
@@ -207,7 +207,7 @@ declare module "choices.js" {
     ajax(fn: (values: any) => any): this;
   }
 
-  namespace Choices {
+declare  namespace Choices {
     interface Options {
       /**
        * Optionally suppress console errors and warnings.
