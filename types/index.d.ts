@@ -207,7 +207,7 @@ declare module "choices.js" {
     ajax(fn: (values: any) => any): this;
   }
 
-declare  namespace Choices {
+  namespace Choices {
     interface Options {
       /**
        * Optionally suppress console errors and warnings.
