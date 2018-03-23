@@ -22,6 +22,7 @@ import {
   isType,
   isElement,
   strToEl,
+  stripHTML,
   extend,
   getWidthOfInput,
   sortByAlpha,
@@ -85,7 +86,7 @@ class Choices {
       noChoicesText: 'No choices to choose from',
       itemSelectText: 'Press to select',
       addItemText: (value) => {
-        return `Press Enter to add <b>"${value}"</b>`;
+        return `Press Enter to add <b>"${stripHTML(value)}"</b>`;
       },
       maxItemText: (maxItemCount) => {
         return `Only ${maxItemCount} values can be added.`;
