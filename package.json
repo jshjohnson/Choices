@@ -18,6 +18,7 @@
     "js:build": "concurrently --prefix-colors yellow,green \"webpack --env.minimize --config webpack.config.prod.js\" \"webpack --config webpack.config.prod.js\"",
     "version": "node version.js --current $npm_package_version --new $npm_config_newVersion",
     "postversion": "npm run js:build",
+    "prepush": "npm run lint && npm run test",
     "dev": "dev"
   },
   "repository": {
@@ -49,6 +50,7 @@
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.2.1",
+    "husky": "^0.14.3",
     "jasmine-core": "2.4.1",
     "jsdom": "^11.5.1",
     "mocha": "^3.4.2",
