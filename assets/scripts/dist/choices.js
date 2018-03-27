@@ -1,4 +1,4 @@
-/*! choices.js v3.0.3 | (c) 2018 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
+/*! choices.js v3.0.4 | (c) 2018 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -149,10 +149,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      noChoicesText: 'No choices to choose from',
 	      itemSelectText: 'Press to select',
 	      addItemText: function addItemText(value) {
-	        return 'Press Enter to add <b>"' + value + '"</b>';
+	        return 'Press Enter to add <b>"' + (0, _utils.stripHTML)(value) + '"</b>';
 	      },
 	      maxItemText: function maxItemText(maxItemCount) {
 	        return 'Only ' + maxItemCount + ' values can be added.';
+	      },
+	      itemComparer: function itemComparer(choice, item) {
+	        return choice === item;
 	      },
 	      uniqueItemText: 'Only unique values can be added.',
 	      classNames: {
@@ -1067,7 +1070,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        choiceValue.forEach(function (val) {
 	          var foundChoice = choices.find(function (choice) {
 	            // Check 'value' property exists and the choice isn't already selected
-	            return choice.value === val;
+	            return _this11.config.itemComparer(choice.value, val);
 	          });
 
 	          if (foundChoice) {
@@ -5910,14 +5913,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
-	 * Remove html tags from a string
-	 * @param  {String}  Initial string/html
+	 * Escape html in a string
+	 * @param  {String} html  Initial string/html
 	 * @return {String}  Sanitised string
 	 */
 	var stripHTML = exports.stripHTML = function stripHTML(html) {
-	  var el = document.createElement("DIV");
-	  el.innerHTML = html;
-	  return el.textContent || el.innerText || "";
+	  return html.replace(/&/g, '&amp;').replace(/>/g, '&rt;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 	};
 
 	/**
@@ -5978,7 +5979,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var width = input.offsetWidth;
 
 	  if (value) {
-	    var testEl = strToEl('<span>' + value + '</span>');
+	    var testEl = strToEl('<span>' + stripHTML(value) + '</span>');
 	    testEl.style.position = 'absolute';
 	    testEl.style.padding = '0';
 	    testEl.style.top = '-9999px';
