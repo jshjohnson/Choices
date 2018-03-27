@@ -78,6 +78,7 @@ describe('Choices', () => {
       expect(this.choices.config.noChoicesText).toEqual(jasmine.any(String));
       expect(this.choices.config.itemSelectText).toEqual(jasmine.any(String));
       expect(this.choices.config.classNames).toEqual(jasmine.any(Object));
+      expect(this.choices.config.itemComparer).toEqual(jasmine.any(Function));
       expect(this.choices.config.callbackOnInit).toEqual(null);
       expect(this.choices.config.callbackOnCreateTemplates).toEqual(null);
     });
@@ -1215,6 +1216,58 @@ describe('Choices', () => {
 
       expect(selectedItems.length).toBe(1);
       expect(selectedItems[0].customProperties).toBe(expectedCustomProperties);
+    });
+  });
+
+  describe('should allow to use object in value', function() {
+    beforeEach(function() {
+      this.input = document.createElement('select');
+      this.input.className = 'js-choices';
+      this.input.setAttribute('multiple', '');
+
+      document.body.appendChild(this.input);
+
+      this.choicesArray = [
+        {
+          label: 'One',
+          value: {
+            id: 1
+          }
+        },
+        {
+          label: 'Two',
+          value: {
+            id: 2
+          }
+        },
+        {
+          label: 'Three',
+          value: {
+            id: 3
+          }
+        }
+      ];
+    });
+
+    afterEach(function() {
+      this.choices.destroy();
+    });
+
+    it('should allow the user to supply itemComparer via options', function() {
+      function comparer(choice, item) {
+        return choice.id === item.id;
+      }
+
+      this.choices = new Choices(this.input, {
+        itemComparer: comparer,
+        choices: this.choicesArray
+      });
+
+      this.choices.setValueByChoice({
+        id: 1
+      });
+
+      expect(this.choices.currentState.items[0].label).toBe(this.choicesArray[0].label);
     });
   });
 });
