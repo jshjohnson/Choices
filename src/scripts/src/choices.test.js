@@ -1747,38 +1747,4 @@ describe('choices', () => {
       });
     });
   });
-
-  describe.skip('private methods', () => {
-    describe('_triggerChange', () => {});
-    describe('_selectPlaceholderChoice', () => {});
-    describe('_handleButtonAction', () => {});
-    describe('_handleItemAction', () => {});
-    describe('_handleChoiceAction', () => {});
-    describe('_handleBackspace', () => {});
-    describe('_handleLoadingState', () => {});
-    describe('_canAddItem', () => {});
-    describe('_ajaxCallback', () => {});
-    describe('_searchChoices', () => {});
-    describe('_handleSearch', () => {});
-    describe('_addEventListeners', () => {});
-    describe('_removeEventListeners', () => {});
-    describe('_onKeyDown', () => {});
-    describe('_onTouchMove', () => {});
-    describe('_onTouchEnd', () => {});
-    describe('_onMouseDown', () => {});
-    describe('_onMouseOver', () => {});
-    describe('_onClick', () => {});
-    describe('_onFocus', () => {});
-    describe('_onBlur', () => {});
-    describe('_scrollToChoice', () => {});
-    describe('_highlightChoice', () => {});
-    describe('_addItem', () => {});
-    describe('_removeItem', () => {});
-    describe('_addChoice', () => {});
-    describe('_clearChoices', () => {});
-    describe('_addGroup', () => {});
-    describe('_getTemplate', () => {});
-    describe('_createTemplates', () => {});
-    describe('_createStructure', () => {});
-  });
 });
