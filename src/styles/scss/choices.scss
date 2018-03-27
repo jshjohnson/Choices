@@ -292,6 +292,7 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
 
 .#{$choices-selector}__placeholder { opacity: .5; }
 
+.#{$choices-selector}__input.is-hidden,
 .#{$choices-selector}[data-type*="select-one"] .#{$choices-selector}__input.is-hidden,
 .#{$choices-selector}[data-type*="select-multiple"] .#{$choices-selector}__input.is-hidden {
   display: none;
