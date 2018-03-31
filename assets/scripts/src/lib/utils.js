@@ -497,10 +497,21 @@ export const strToEl = (function() {
  * @return {Number} Width of input
  */
 export const getWidthOfInput = (input) => {
-  const value = input.value || input.placeholder;
+  let value = input.value || input.placeholder;
   let width = input.offsetWidth;
 
   if (value) {
+    if (typeof value !== 'string') {
+      if (typeof value.value === 'string') {
+        value = value.value.toString();
+      }
+      else if (typeof value.toString === 'function') {
+        value = value.toString();
+      }
+      else {
+        value = '      ';
+      }
+    }
     const testEl = strToEl(`<span>${ stripHTML(value) }</span>`);
     testEl.style.position = 'absolute';
     testEl.style.padding = '0';
