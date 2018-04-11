@@ -1,5 +1,6 @@
 import WrappedElement from './wrapped-element';
 import templates from './../templates';
+import { arrayFrom } from '../lib/utils';
 
 export default class WrappedSelect extends WrappedElement {
   constructor(instance, element, classNames) {
@@ -34,11 +35,11 @@ export default class WrappedSelect extends WrappedElement {
   }
 
   getOptions() {
-    return Array.from(this.element.options);
+    return arrayFrom(this.element.options);
   }
 
   getOptionGroups() {
-    return Array.from(this.element.getElementsByTagName('OPTGROUP'));
+    return arrayFrom(this.element.getElementsByTagName('OPTGROUP'));
   }
 
   setOptions(options) {
