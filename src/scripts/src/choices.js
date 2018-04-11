@@ -25,6 +25,7 @@ import {
   generateId,
   findAncestorByAttrName,
   regexFilter,
+  arrayFrom,
 } from './lib/utils';
 import './lib/polyfills';
 
@@ -1420,7 +1421,7 @@ class Choices {
         let nextEl;
         if (skipKey) {
           if (directionInt > 0) {
-            nextEl = Array.from(
+            nextEl = arrayFrom(
               this.dropdown.element.querySelectorAll('[data-choice-selectable]'),
             ).pop();
           } else {
@@ -1832,14 +1833,14 @@ class Choices {
    */
   _highlightChoice(el = null) {
     // Highlight first element in dropdown
-    const choices = Array.from(this.dropdown.element.querySelectorAll('[data-choice-selectable]'));
+    const choices = arrayFrom(this.dropdown.element.querySelectorAll('[data-choice-selectable]'));
 
     if (!choices.length) {
       return;
     }
 
     let passedEl = el;
-    const highlightedChoices = Array.from(
+    const highlightedChoices = arrayFrom(
       this.dropdown.element.querySelectorAll(`.${this.config.classNames.highlightedState}`),
     );
     const hasActiveDropdown = this.dropdown.isActive;
@@ -2076,7 +2077,7 @@ class Choices {
   _addGroup(group, id, valueKey = 'value', labelKey = 'label') {
     const groupChoices = isType('Object', group) ?
       group.choices :
-      Array.from(group.getElementsByTagName('OPTION'));
+      arrayFrom(group.getElementsByTagName('OPTION'));
     const groupId = id || Math.floor(new Date().valueOf() * Math.random());
     const isDisabled = group.disabled ? group.disabled : false;
 
