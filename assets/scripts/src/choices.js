@@ -24,7 +24,7 @@ import {
   strToEl,
   stripHTML,
   extend,
-  getWidthOfInput,
+  updateWidthOfInput,
   sortByAlpha,
   sortByScore,
   generateId,
@@ -511,7 +511,9 @@ class Choices {
 
           // Scroll back to top of choices list
           if (this.config.resetScrollPosition) {
-            this.choiceList.scrollTop = 0;
+            requestAnimationFrame(() => {
+              this.choiceList.scrollTop = 0;
+            });
           }
 
           // If we have grouped options
@@ -1594,11 +1596,11 @@ class Choices {
       // If there is a placeholder, we only want to set the width of the input when it is a greater
       // length than 75% of the placeholder. This stops the input jumping around.
       if (this.input.value && this.input.value.length >= (this.placeholder.length / 1.25)) {
-        this.input.style.width = getWidthOfInput(this.input);
+        updateWidthOfInput(this.input);
       }
     } else {
       // If there is no placeholder, resize input to contents
-      this.input.style.width = getWidthOfInput(this.input);
+      updateWidthOfInput(this.input);
     }
   }
 
@@ -2767,7 +2769,7 @@ class Choices {
       input.placeholder = this.config.searchPlaceholderValue || '';
     } else if (this.placeholder) {
       input.placeholder = this.placeholder;
-      input.style.width = getWidthOfInput(input);
+      updateWidthOfInput(input);
     }
 
     if (!this.config.addItems) {
