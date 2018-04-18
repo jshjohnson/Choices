@@ -1651,7 +1651,7 @@ class Choices {
     const onEnterKey = () => {
       // If enter key is pressed and the input has a value
       if (this.isTextElement && target.value) {
-        const value = this.input.value;
+        const value = stripHTML(this.input.value);
         const canAddItem = this._canAddItem(activeItems, value);
 
         // All is good, add
@@ -1781,7 +1781,7 @@ class Choices {
       return;
     }
 
-    const value = this.input.value;
+    const value = stripHTML(this.input.value);
     const activeItems = this.store.getItemsFilteredByActive();
     const canAddItem = this._canAddItem(activeItems, value);
 
