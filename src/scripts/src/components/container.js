@@ -15,10 +15,6 @@ export default class Container {
     this.onBlur = this.onBlur.bind(this);
   }
 
-  getElement() {
-    return this.element;
-  }
-
   /**
    * Add event listeners
   */

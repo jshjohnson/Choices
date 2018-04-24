@@ -8,16 +8,12 @@ export default class Dropdown {
     this.isActive = false;
   }
 
-  getElement() {
-    return this.element;
-  }
-
   /**
    * Determine how far the top of our element is from
    * the top of the window
    * @return {Number} Vertical position
    */
-  getVerticalPos() {
+  distanceFromTopWindow() {
     this.dimensions = this.element.getBoundingClientRect();
     this.position = Math.ceil(this.dimensions.top + window.pageYOffset + this.element.offsetHeight);
     return this.position;

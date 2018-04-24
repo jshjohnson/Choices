@@ -39,13 +39,7 @@ describe('components/dropdown', () => {
     });
   });
 
-  describe('getElement', () => {
-    it('returns DOM reference of element', () => {
-      expect(instance.getElement()).to.eql(choicesElement);
-    });
-  });
-
-  describe('getVerticalPos', () => {
+  describe('distanceFromTopWindow', () => {
     let top;
     let offset;
     let dimensions;
@@ -74,18 +68,18 @@ describe('components/dropdown', () => {
 
     it('determines how far the top of our element is from the top of the window', () => {
       const expectedResponse = top + offset;
-      const actualResponse = instance.getVerticalPos();
+      const actualResponse = instance.distanceFromTopWindow();
       expect(actualResponse).to.equal(expectedResponse);
     });
 
     it('assigns dimensions to instance', () => {
-      instance.getVerticalPos();
+      instance.distanceFromTopWindow();
       const expectedResponse = dimensions;
       expect(instance.dimensions).to.equal(expectedResponse);
     });
 
     it('assigns posisiton to instance', () => {
-      instance.getVerticalPos();
+      instance.distanceFromTopWindow();
       const expectedResponse = top + offset;
       expect(instance.position).to.equal(expectedResponse);
     });

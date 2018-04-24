@@ -36,12 +36,6 @@ describe('components/list', () => {
     });
   });
 
-  describe('getElement', () => {
-    it('returns DOM reference of element', () => {
-      expect(instance.getElement()).to.eql(choicesElement);
-    });
-  });
-
   describe('clear', () => {
     it('clears element\'s inner HTML', () => {
       const innerHTML = 'test';

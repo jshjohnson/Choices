@@ -1,4 +1,4 @@
-import { getWidthOfInput } from '../lib/utils';
+import { calcWidthOfInput } from '../lib/utils';
 
 export default class Input {
   constructor(instance, element, classNames) {
@@ -15,8 +15,16 @@ export default class Input {
     this.onBlur = this.onBlur.bind(this);
   }
 
-  getElement() {
-    return this.element;
+  set placeholder(placeholder) {
+    this.element.placeholder = placeholder;
+  }
+
+  set value(value) {
+    this.element.value = value;
+  }
+
+  get value() {
+    return this.element.value;
   }
 
   addEventListeners() {
@@ -124,28 +132,16 @@ export default class Input {
         this.element.value.length >= (this.parentInstance.placeholder.length / 1.25)) ||
         enforceWidth
       ) {
-        this.element.style.width = this.getWidth();
+        this.element.style.width = this.calcWidth();
       }
     } else {
       // If there is no placeholder, resize input to contents
-      this.element.style.width = this.getWidth();
+      this.element.style.width = this.calcWidth();
     }
   }
 
-  getWidth() {
-    return getWidthOfInput(this.element);
-  }
-
-  setPlaceholder(placeholder) {
-    this.element.placeholder = placeholder;
-  }
-
-  setValue(value) {
-    this.element.value = value;
-  }
-
-  getValue() {
-    return this.element.value;
+  calcWidth() {
+    return calcWidthOfInput(this.element);
   }
 
   setActiveDescendant(activeDescendantID) {

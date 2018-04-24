@@ -33,7 +33,7 @@ export default class Store {
    * Get store object (wrapping Redux method)
    * @return {Object} State
    */
-  getState() {
+  get state() {
     return this.store.getState();
   }
 
@@ -41,48 +41,40 @@ export default class Store {
    * Get items from store
    * @return {Array} Item objects
    */
-  getItems() {
-    const state = this.store.getState();
-    return state.items;
+  get items() {
+    return this.state.items;
   }
 
   /**
    * Get active items from store
    * @return {Array} Item objects
    */
-  getItemsFilteredByActive() {
-    const items = this.getItems();
-    const values = items.filter(item => item.active === true);
-
-    return values;
+  get activeItems() {
+    return this.items.filter(item => item.active === true);
   }
 
   /**
   * Get highlighted items from store
   * @return {Array} Item objects
   */
-  getItemsFilteredByHighlighted() {
-    const items = this.getItems();
-    const values = items.filter(item => item.active && item.highlighted);
-
-    return values;
+  get highlightedActiveItems() {
+    return this.items.filter(item => item.active && item.highlighted);
   }
 
   /**
    * Get choices from store
    * @return {Array} Option objects
    */
-  getChoices() {
-    const state = this.store.getState();
-    return state.choices;
+  get choices() {
+    return this.state.choices;
   }
 
   /**
    * Get active choices from store
    * @return {Array} Option objects
    */
-  getChoicesFilteredByActive() {
-    const choices = this.getChoices();
+  get activeChoices() {
+    const choices = this.choices;
     const values = choices.filter(choice => choice.active === true);
 
     return values;
@@ -92,20 +84,51 @@ export default class Store {
    * Get selectable choices from store
    * @return {Array} Option objects
    */
-  getChoicesFilteredBySelectable() {
-    const choices = this.getChoices();
-    const values = choices.filter(choice => choice.disabled !== true);
-
-    return values;
+  get selectableChoices() {
+    return this.choices.filter(choice => choice.disabled !== true);
   }
 
   /**
    * Get choices that can be searched (excluding placeholders)
    * @return {Array} Option objects
    */
-  getSearchableChoices() {
-    const filtered = this.getChoicesFilteredBySelectable();
-    return filtered.filter(choice => choice.placeholder !== true);
+  get searchableChoices() {
+    return this.selectableChoices.filter(choice => choice.placeholder !== true);
+  }
+
+  /**
+   * Get placeholder choice from store
+   * @return {Object} Found placeholder
+   */
+  get placeholderChoice() {
+    return [...this.choices]
+      .reverse()
+      .find(choice => choice.placeholder === true);
+  }
+
+  /**
+   * Get groups from store
+   * @return {Array} Group objects
+   */
+  get groups() {
+    return this.state.groups;
+  }
+
+  /**
+   * Get active groups from store
+   * @return {Array} Group objects
+   */
+  get activeGroups() {
+    const groups = this.groups;
+    const choices = this.choices;
+
+    return groups.filter((group) => {
+      const isActive = group.active === true && group.disabled === false;
+      const hasActiveOptions = choices.some(choice =>
+        choice.active === true && choice.disabled === false,
+      );
+      return isActive && hasActiveOptions;
+    }, []);
   }
 
   /**
@@ -114,52 +137,11 @@ export default class Store {
    */
   getChoiceById(id) {
     if (id) {
-      const choices = this.getChoicesFilteredByActive();
+      const choices = this.activeChoices;
       const foundChoice = choices.find(choice => choice.id === parseInt(id, 10));
       return foundChoice;
     }
     return false;
-  }
-
-  /**
-   * Get placeholder choice from store
-   * @return {Object} Found placeholder
-   */
-  getPlaceholderChoice() {
-    const choices = this.getChoices();
-    const placeholderChoice = [...choices]
-      .reverse()
-      .find(choice => choice.placeholder === true);
-
-    return placeholderChoice;
-  }
-
-  /**
-   * Get groups from store
-   * @return {Array} Group objects
-   */
-  getGroups() {
-    const state = this.store.getState();
-    return state.groups;
-  }
-
-  /**
-   * Get active groups from store
-   * @return {Array} Group objects
-   */
-  getGroupsFilteredByActive() {
-    const groups = this.getGroups();
-    const choices = this.getChoices();
-
-    const values = groups.filter((group) => {
-      const isActive = group.active === true && group.disabled === false;
-      const hasActiveOptions = choices.some(choice =>
-        choice.active === true && choice.disabled === false,
-      );
-      return isActive && hasActiveOptions;
-    }, []);
-
-    return values;
   }
 
   /**
@@ -168,9 +150,6 @@ export default class Store {
    * @return {Object}    Group data
    */
   getGroupById(id) {
-    const groups = this.getGroups();
-    const foundGroup = groups.find(group => group.id === parseInt(id, 10));
-
-    return foundGroup;
+    return this.groups.find(group => group.id === parseInt(id, 10));
   }
 }

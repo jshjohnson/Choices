@@ -37,12 +37,6 @@ describe('components/input', () => {
     });
   });
 
-  describe('getElement', () => {
-    it('returns DOM reference of element', () => {
-      expect(instance.getElement()).to.eql(choicesElement);
-    });
-  });
-
   describe('addEventListeners', () => {
     let addEventListenerStub;
 
@@ -278,15 +272,15 @@ describe('components/input', () => {
   });
 
   describe('setWidth', () => {
-    let getWidthStub;
+    let calcWidthStub;
     const inputWidth = '200px';
 
     beforeEach(() => {
-      getWidthStub = stub(instance, 'getWidth').returns(inputWidth);
+      calcWidthStub = stub(instance, 'calcWidth').returns(inputWidth);
     });
 
     afterEach(() => {
-      getWidthStub.restore();
+      calcWidthStub.restore();
     });
 
     describe('with a placeholder', () => {
@@ -296,7 +290,7 @@ describe('components/input', () => {
           instance.element.value = 'This is a test';
           expect(instance.element.style.width).to.not.equal(inputWidth);
           instance.setWidth();
-          expect(getWidthStub.callCount).to.equal(1);
+          expect(calcWidthStub.callCount).to.equal(1);
           expect(instance.element.style.width).to.equal(inputWidth);
         });
       });
@@ -307,7 +301,7 @@ describe('components/input', () => {
           instance.element.value = '';
           expect(instance.element.style.width).to.not.equal(inputWidth);
           instance.setWidth(true);
-          expect(getWidthStub.callCount).to.equal(1);
+          expect(calcWidthStub.callCount).to.equal(1);
           expect(instance.element.style.width).to.equal(inputWidth);
         });
       });
@@ -317,7 +311,7 @@ describe('components/input', () => {
           instance.parentInstance.placeholder = 'This is a test';
           instance.element.value = 'Test';
           instance.setWidth();
-          expect(getWidthStub.callCount).to.equal(0);
+          expect(calcWidthStub.callCount).to.equal(0);
         });
       });
     });
@@ -327,35 +321,35 @@ describe('components/input', () => {
         instance.placeholder = null;
         expect(instance.element.style.width).to.not.equal(inputWidth);
         instance.setWidth();
-        expect(getWidthStub.callCount).to.equal(1);
+        expect(calcWidthStub.callCount).to.equal(1);
         expect(instance.element.style.width).to.equal(inputWidth);
       });
     });
   });
 
-  describe('setPlaceholder', () => {
+  describe('placeholder setter', () => {
     it('sets value of element to passed placeholder', () => {
       const placeholder = 'test';
       expect(instance.element.placeholder).to.equal('');
-      instance.setPlaceholder(placeholder);
+      instance.placeholder = placeholder;
       expect(instance.element.placeholder).to.equal(placeholder);
     });
   });
 
-  describe('setValue', () => {
+  describe('value setter', () => {
     it('sets value of element to passed value', () => {
       const value = 'test';
       expect(instance.element.value).to.equal('');
-      instance.setValue(value);
+      instance.value = value;
       expect(instance.element.value).to.equal(value);
     });
   });
 
-  describe('getValue', () => {
+  describe('value getter', () => {
     it('sets value of element to passed value', () => {
       const value = 'test';
       instance.element.value = value;
-      const actualResponse = instance.getValue();
+      const actualResponse = instance.value;
       expect(actualResponse).to.equal(value);
     });
   });

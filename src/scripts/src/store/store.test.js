@@ -53,11 +53,12 @@ describe('reducers/store', () => {
     });
   });
 
-  describe('getState', () => {
-    it('wraps redux getState method', () => {
-      expect(getStateStub.callCount).to.equal(0);
-      instance.getState();
-      expect(getStateStub.callCount).to.equal(1);
+  describe('state getter', () => {
+    it('returns state', () => {
+      const state = { items: [] };
+      getStateStub.returns(state);
+
+      expect(instance.state).to.equal(state);
     });
   });
 
@@ -153,59 +154,52 @@ describe('reducers/store', () => {
       getStateStub.returns(state);
     });
 
-    describe('getItems', () => {
+    describe('items getter', () => {
       it('returns items', () => {
         const expectedResponse = state.items;
-        const actualResponse = instance.getItems();
-        expect(actualResponse).to.eql(expectedResponse);
+        expect(instance.items).to.eql(expectedResponse);
       });
     });
 
-    describe('getItemsFilteredByActive', () => {
+    describe('activeItems getter', () => {
       it('returns items that are active', () => {
         const expectedResponse = state.items.filter((item => item.active));
-        const actualResponse = instance.getItemsFilteredByActive();
-        expect(actualResponse).to.eql(expectedResponse);
+        expect(instance.activeItems).to.eql(expectedResponse);
       });
     });
 
-    describe('getItemsFilteredByHighlighted', () => {
+    describe('highlightedActiveItems getter', () => {
       it('returns items that are active and highlighted', () => {
         const expectedResponse = state.items.filter((item => item.highlighted && item.active));
-        const actualResponse = instance.getItemsFilteredByHighlighted();
-        expect(actualResponse).to.eql(expectedResponse);
+        expect(instance.highlightedActiveItems).to.eql(expectedResponse);
       });
     });
 
-    describe('getChoices', () => {
+    describe('choices getter', () => {
       it('returns choices', () => {
         const expectedResponse = state.choices;
-        const actualResponse = instance.getChoices();
-        expect(actualResponse).to.eql(expectedResponse);
+        expect(instance.choices).to.eql(expectedResponse);
       });
     });
 
-    describe('getChoicesFilteredByActive', () => {
+    describe('activeChoices getter', () => {
       it('returns choices that are active', () => {
         const expectedResponse = state.choices.filter((choice => choice.active));
-        const actualResponse = instance.getChoicesFilteredByActive();
-        expect(actualResponse).to.eql(expectedResponse);
+        expect(instance.activeChoices).to.eql(expectedResponse);
       });
     });
 
-    describe('getChoicesFilteredBySelectable', () => {
+    describe('selectableChoices getter', () => {
       it('returns choices that are not disabled', () => {
         const expectedResponse = state.choices.filter((choice => !choice.disabled));
-        const actualResponse = instance.getChoicesFilteredBySelectable();
-        expect(actualResponse).to.eql(expectedResponse);
+        expect(instance.selectableChoices).to.eql(expectedResponse);
       });
     });
 
-    describe('getSearchableChoices', () => {
+    describe('searchableChoices getter', () => {
       it('returns choices that are not placeholders and are selectable', () => {
         const expectedResponse = state.choices.filter((choice => !choice.disabled && !choice.placeholder));
-        const actualResponse = instance.getSearchableChoices();
-        expect(actualResponse).to.eql(expectedResponse);
+        expect(instance.searchableChoices).to.eql(expectedResponse);
       });
     });
 
@@ -227,27 +221,24 @@ describe('reducers/store', () => {
       });
     });
 
-    describe('getPlaceholderChoice', () => {
+    describe('placeholderChoice getter', () => {
       it('returns placeholder choice', () => {
         const expectedResponse = state.choices.reverse().find(choice => choice.placeholder);
-        const actualResponse = instance.getPlaceholderChoice();
-        expect(actualResponse).to.eql(expectedResponse);
+        expect(instance.getPlaceholderChoice).to.eql(expectedResponse);
       });
     });
 
-    describe('getGroups', () => {
+    describe('groups getter', () => {
       it('returns groups', () => {
         const expectedResponse = state.groups;
-        const actualResponse = instance.getGroups();
-        expect(actualResponse).to.eql(expectedResponse);
+        expect(instance.groups).to.eql(expectedResponse);
       });
     });
 
-    describe('getGroupsFilteredByActive', () => {
+    describe('activeGroups getter', () => {
       it('returns active groups', () => {
         const expectedResponse = state.groups.filter(group => group.active);
-        const actualResponse = instance.getGroupsFilteredByActive();
-        expect(actualResponse).to.eql(expectedResponse);
+        expect(instance.activeGroups).to.eql(expectedResponse);
       });
     });
 

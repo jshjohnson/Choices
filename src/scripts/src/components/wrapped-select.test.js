@@ -55,7 +55,7 @@ describe('components/wrappedSelect', () => {
   });
 
   describe('inherited methods', () => {
-    ['getElement', 'conceal', 'reveal', 'enable', 'disable'].forEach((method) => {
+    ['conceal', 'reveal', 'enable', 'disable'].forEach((method) => {
       beforeEach(() => {
         stub(WrappedElement.prototype, method);
       });
@@ -74,39 +74,38 @@ describe('components/wrappedSelect', () => {
     });
   });
 
-  describe('getPlaceholderOption', () => {
+  describe('placeholderOption getter', () => {
     it('returns option element with placeholder attribute', () => {
-      const output = instance.getPlaceholderOption();
-      expect(output).to.be.instanceOf(HTMLOptionElement);
+      expect(instance.placeholderOption).to.be.instanceOf(HTMLOptionElement);
     });
   });
 
-  describe('getOptions', () => {
+  describe('options getter', () => {
     it('returns all option elements', () => {
-      const output = instance.getOptions();
-      expect(output).to.be.an('array');
-      output.forEach((option) => {
+      const { options } = instance;
+      expect(options).to.be.an('array');
+      options.forEach((option) => {
         expect(option).to.be.instanceOf(HTMLOptionElement);
       });
     });
   });
 
-  describe('getOptionGroups', () => {
+  describe('optionGroups getter', () => {
     it('returns an array of all option groups', () => {
       for (let i = 1; i <= 3; i++) {
         const group = document.createElement('optgroup');
         instance.element.appendChild(group);
       }
 
-      const output = instance.getOptionGroups();
-      expect(output.length).to.equal(3);
-      output.forEach((option) => {
+      const { optionGroups } = instance;
+      expect(optionGroups.length).to.equal(3);
+      optionGroups.forEach((option) => {
         expect(option).to.be.instanceOf(HTMLOptGroupElement);
       });
     });
   });
 
-  describe('setOptions', () => {
+  describe('options setter', () => {
     let appendDocFragmentStub;
     const options = [
       {
@@ -134,7 +133,7 @@ describe('components/wrappedSelect', () => {
 
     it('creates an option element for each passed object, adds it to a fragment and calls appendDocFragment with created fragment', () => {
       expect(appendDocFragmentStub.called).to.equal(false);
-      instance.setOptions(options);
+      instance.options = options;
       expect(appendDocFragmentStub.called).to.equal(true);
 
       const fragment = appendDocFragmentStub.firstCall.args[0];

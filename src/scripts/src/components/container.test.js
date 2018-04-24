@@ -40,12 +40,6 @@ describe('components/container', () => {
     });
   });
 
-  describe('getElement', () => {
-    it('returns DOM reference of element', () => {
-      expect(instance.getElement()).to.eql(element);
-    });
-  });
-
   describe('addEventListeners', () => {
     let addEventListenerStub;
 

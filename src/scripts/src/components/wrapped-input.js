@@ -9,8 +9,16 @@ export default class WrappedInput extends WrappedElement {
     this.classNames = classNames;
   }
 
-  getElement() {
-    super.getElement();
+  set value(items) {
+    const itemsFiltered = reduceToValues(items);
+    const itemsFilteredString = itemsFiltered.join(this.parentInstance.config.delimiter);
+
+    this.element.setAttribute('value', itemsFilteredString);
+    this.element.value = itemsFilteredString;
+  }
+
+  get value() {
+    return super.value;
   }
 
   conceal() {
@@ -27,13 +35,5 @@ export default class WrappedInput extends WrappedElement {
 
   disable() {
     super.disable();
-  }
-
-  setValue(items) {
-    const itemsFiltered = reduceToValues(items);
-    const itemsFilteredString = itemsFiltered.join(this.parentInstance.config.delimiter);
-
-    this.element.setAttribute('value', itemsFilteredString);
-    this.element.value = itemsFilteredString;
   }
 }

@@ -39,7 +39,7 @@ describe('components/wrappedInput', () => {
   });
 
   describe('inherited methods', () => {
-    ['getElement', 'conceal', 'reveal', 'enable', 'disable'].forEach((method) => {
+    ['conceal', 'reveal', 'enable', 'disable'].forEach((method) => {
       describe(method, () => {
         beforeEach(() => {
           stub(WrappedElement.prototype, method);
@@ -58,7 +58,7 @@ describe('components/wrappedInput', () => {
     });
   });
 
-  describe('setValue', () => {
+  describe('value setter', () => {
     const data = [
       {
         id: 'ID 1',
@@ -76,8 +76,8 @@ describe('components/wrappedInput', () => {
 
     it('sets delimited value of element based on passed data', () => {
       expect(instance.element.value).to.equal('');
-      instance.setValue(data);
-      expect(instance.element.value).to.equal('Value 1,Value 2,Value 3');
+      instance.value = data;
+      expect(instance.value).to.equal('Value 1,Value 2,Value 3');
     });
   });
 });

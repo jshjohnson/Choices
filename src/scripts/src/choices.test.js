@@ -767,18 +767,17 @@ describe('choices', () => {
       ];
 
       beforeEach(() => {
-        storeGetItemsStub = stub().returns(items);
+        storeGetItemsStub = stub(instance.store, 'items').get(() => items);
         highlightItemStub = stub();
 
         instance.highlightItem = highlightItemStub;
-        instance.store.getItems = storeGetItemsStub;
 
         output = instance.highlightAll();
       });
 
       afterEach(() => {
         highlightItemStub.reset();
-        instance.store.getItems.reset();
+        storeGetItemsStub.reset();
       });
 
       returnsInstance(output);
@@ -806,18 +805,17 @@ describe('choices', () => {
       ];
 
       beforeEach(() => {
-        storeGetItemsStub = stub().returns(items);
+        storeGetItemsStub = stub(instance.store, 'items').get(() => items);
         unhighlightItemStub = stub();
 
         instance.unhighlightItem = unhighlightItemStub;
-        instance.store.getItems = storeGetItemsStub;
 
         output = instance.unhighlightAll();
       });
 
       afterEach(() => {
         instance.unhighlightItem.reset();
-        instance.store.getItems.reset();
+        storeGetItemsStub.reset();
       });
 
       returnsInstance(output);
@@ -1109,7 +1107,7 @@ describe('choices', () => {
     });
 
     describe('getValue', () => {
-      let getItemsFilteredByActiveStub;
+      let activeItemsStub;
       const items = [
         {
           id: '1',
@@ -1122,12 +1120,11 @@ describe('choices', () => {
       ];
 
       beforeEach(() => {
-        getItemsFilteredByActiveStub = stub().returns(items);
-        instance.store.getItemsFilteredByActive = getItemsFilteredByActiveStub;
+        activeItemsStub = stub(instance.store, 'activeItems').get(() => items);
       });
 
       afterEach(() => {
-        instance.store.getItemsFilteredByActive.reset();
+        activeItemsStub.reset();
       });
 
       describe('passing true valueOnly flag', () => {
@@ -1189,7 +1186,7 @@ describe('choices', () => {
       });
 
       describe('passing valid value', () => {
-        let getItemsFilteredByActiveStub;
+        let activeItemsStub;
         let removeItemStub;
         const value = 'Removed';
         const items = [
@@ -1209,15 +1206,14 @@ describe('choices', () => {
 
         beforeEach(() => {
           removeItemStub = stub();
-          getItemsFilteredByActiveStub = stub().returns(items);
-          instance.store.getItemsFilteredByActive = getItemsFilteredByActiveStub;
+          activeItemsStub = stub(instance.store, 'activeItems').get(() => items);
           instance._removeItem = removeItemStub;
 
           output = instance.removeActiveItemsByValue(value);
         });
 
         afterEach(() => {
-          instance.store.getItemsFilteredByActive.reset();
+          activeItemsStub.reset();
           instance._removeItem.reset();
         });
 
@@ -1230,7 +1226,7 @@ describe('choices', () => {
     });
 
     describe('removeActiveItems', () => {
-      let getItemsFilteredByActiveStub;
+      let activeItemsStub;
       let removeItemStub;
       const items = [
         {
@@ -1249,13 +1245,12 @@ describe('choices', () => {
 
       beforeEach(() => {
         removeItemStub = stub();
-        getItemsFilteredByActiveStub = stub().returns(items);
-        instance.store.getItemsFilteredByActive = getItemsFilteredByActiveStub;
+        activeItemsStub = stub(instance.store, 'activeItems').get(() => items);
         instance._removeItem = removeItemStub;
       });
 
       afterEach(() => {
-        instance.store.getItemsFilteredByActive.reset();
+        activeItemsStub.reset();
         instance._removeItem.reset();
       });
 
@@ -1288,7 +1283,7 @@ describe('choices', () => {
     });
 
     describe('removeHighlightedItems', () => {
-      let getItemsFilteredByHighlightedStub;
+      let highlightedActiveItemsStub;
       let removeItemStub;
       let triggerChangeStub;
 
@@ -1305,17 +1300,16 @@ describe('choices', () => {
 
 
       beforeEach(() => {
-        getItemsFilteredByHighlightedStub = stub().returns(items);
+        highlightedActiveItemsStub = stub(instance.store, 'highlightedActiveItems').get(() => items);
         removeItemStub = stub();
         triggerChangeStub = stub();
 
-        instance.store.getItemsFilteredByHighlighted = getItemsFilteredByHighlightedStub;
         instance._removeItem = removeItemStub;
         instance._triggerChange = triggerChangeStub;
       });
 
       afterEach(() => {
-        instance.store.getItemsFilteredByHighlighted.reset();
+        highlightedActiveItemsStub.reset();
         instance._removeItem.reset();
         instance._triggerChange.reset();
       });
