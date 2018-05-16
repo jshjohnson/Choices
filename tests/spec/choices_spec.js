@@ -1269,5 +1269,26 @@ describe('Choices', () => {
 
       expect(this.choices.currentState.items[0].label).toBe(this.choicesArray[0].label);
     });
+
+    it('should select choice on enter key press', function() {
+      this.choices = new Choices(this.input, {
+        choices: this.choicesArray
+      });
+
+      this.choices._onKeyDown({
+        target: this.choices.input,
+        keyCode: 79,  // 'o' letter
+        ctrlKey: false,
+        preventDefault: () => {}
+      });
+      this.choices._onKeyDown({
+        target: this.choices.input,
+        keyCode: 13,
+        ctrlKey: false,
+        preventDefault: () => {}
+      });
+
+      expect(this.choices.currentState.items[0].label).toBe(this.choicesArray[0].label);
+    });
   });
 });
