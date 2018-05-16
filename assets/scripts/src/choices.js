@@ -1261,7 +1261,7 @@ class Choices {
     });
 
     if (choice && !choice.selected && !choice.disabled) {
-      const canAddItem = this._canAddItem(activeItems, choice.value);
+      const canAddItem = this._canAddItem(activeItems, choice.label);
 
       if (canAddItem.response) {
         this._addItem(
