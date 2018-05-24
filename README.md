@@ -484,7 +484,7 @@ classNames: {
   item: 'choices__item',
   itemSelectable: 'choices__item--selectable',
   itemDisabled: 'choices__item--disabled',
-  itemOption: 'choices__item--choice',
+  itemChoice: 'choices__item--choice',
   group: 'choices__group',
   groupHeading : 'choices__heading',
   button: 'choices__button',

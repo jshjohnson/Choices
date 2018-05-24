@@ -615,7 +615,7 @@ declare module "choices.js" {
 				/**
 				 * @default 'choices__item--choice'
 				 */
-        itemOption?: string;
+        itemChoice?: string;
 
 				/**
 				 * @default 'choices__group'
