@@ -523,7 +523,7 @@ if (typeof __g == 'number') __g = global; // eslint-disable-line no-undef
 /* 3 */
 /***/ (function(module, exports) {
 
-var core = module.exports = { version: '2.5.6' };
+var core = module.exports = { version: '2.5.7' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
@@ -1282,9 +1282,8 @@ function isPlainObject(value) {
 
 /* harmony default export */ var lodash_es_isPlainObject = (isPlainObject);
 
-// EXTERNAL MODULE: ./node_modules/symbol-observable/index.js
-var symbol_observable = __webpack_require__(65);
-var symbol_observable_default = /*#__PURE__*/__webpack_require__.n(symbol_observable);
+// EXTERNAL MODULE: ./node_modules/symbol-observable/es/index.js
+var es = __webpack_require__(65);
 
 // CONCATENATED MODULE: ./node_modules/redux/es/createStore.js
 
@@ -1518,7 +1517,7 @@ var ActionTypes = {
         var unsubscribe = outerSubscribe(observeState);
         return { unsubscribe: unsubscribe };
       }
-    }, _ref[symbol_observable_default.a] = function () {
+    }, _ref[es["a" /* default */]] = function () {
       return this;
     }, _ref;
   }
@@ -1533,7 +1532,7 @@ var ActionTypes = {
     subscribe: subscribe,
     getState: getState,
     replaceReducer: replaceReducer
-  }, _ref2[symbol_observable_default.a] = observable, _ref2;
+  }, _ref2[es["a" /* default */]] = observable, _ref2;
 }
 // CONCATENATED MODULE: ./node_modules/redux/es/utils/warning.js
 /**
@@ -1987,7 +1986,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.TEMPLATES = undefined;
 
-var _classnames = __webpack_require__(80);
+var _classnames = __webpack_require__(79);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -2027,6 +2026,7 @@ var TEMPLATES = exports.TEMPLATES = {
     var _classNames2;
 
     var ariaSelected = data.active ? 'aria-selected="true"' : '';
+    var ariaLive = data.active ? 'aria-live="assertive"' : 'aria-live="off"';
     var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
 
     var localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
@@ -2036,7 +2036,7 @@ var TEMPLATES = exports.TEMPLATES = {
 
       localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
 
-      return (0, _utils.strToEl)('\n        <div\n          class="' + localClasses + '"\n          data-item\n          data-id="' + data.id + '"\n          data-value="' + data.value + '"\n          data-deletable\n          ' + ariaSelected + '\n          ' + ariaDisabled + '\n          >\n          ' + data.label + '<!--\n       --><button\n            type="button"\n            class="' + globalClasses.button + '"\n            data-button\n            aria-label="Remove item: \'' + data.value + '\'"\n            >\n            Remove item\n          </button>\n        </div>\n      ');
+      return (0, _utils.strToEl)('\n        <div\n          class="' + localClasses + '"\n          data-item\n          data-id="' + data.id + '"\n          data-value="' + data.value + '"\n          data-deletable\n          ' + ariaSelected + '\n          ' + ariaDisabled + '\n          ' + ariaLive + '\n          >\n          ' + data.label + '<!--\n       --><button\n            type="button"\n            class="' + globalClasses.button + '"\n            data-button\n            aria-label="Remove item: \'' + data.value + '\'"\n            >\n            Remove item\n          </button>\n        </div>\n      ');
     }
 
     return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-item\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        ' + ariaSelected + '\n        ' + ariaDisabled + '\n        >\n        ' + data.label + '\n      </div>\n    ');
@@ -2114,19 +2114,19 @@ var _store2 = __webpack_require__(63);
 
 var _store3 = _interopRequireDefault(_store2);
 
-var _components = __webpack_require__(73);
+var _components = __webpack_require__(72);
 
 var _constants = __webpack_require__(4);
 
 var _templates = __webpack_require__(33);
 
-var _choices = __webpack_require__(81);
+var _choices = __webpack_require__(80);
 
-var _items = __webpack_require__(82);
+var _items = __webpack_require__(81);
 
-var _groups = __webpack_require__(83);
+var _groups = __webpack_require__(82);
 
-var _misc = __webpack_require__(84);
+var _misc = __webpack_require__(83);
 
 var _utils = __webpack_require__(0);
 
@@ -2207,6 +2207,7 @@ var Choices = function () {
     this._wasTap = true;
     this._placeholderValue = this._generatePlaceholderValue();
     this._baseId = (0, _utils.generateId)(this.passedElement.element, 'choices-');
+    this._direction = this.passedElement.element.getAttribute('dir') || 'ltr';
     this._idNames = {
       itemChoice: 'item-choice'
     };
@@ -2589,9 +2590,21 @@ var Choices = function () {
       this.containerOuter.removeLoadingState();
       var addGroupsAndChoices = function addGroupsAndChoices(groupOrChoice) {
         if (groupOrChoice.choices) {
-          _this10._addGroup(groupOrChoice, groupOrChoice.id || null, value, label);
+          _this10._addGroup({
+            group: groupOrChoice,
+            id: groupOrChoice.id || null,
+            valueKey: value,
+            labelKey: label
+          });
         } else {
-          _this10._addChoice(groupOrChoice[value], groupOrChoice[label], groupOrChoice.selected, groupOrChoice.disabled, undefined, groupOrChoice.customProperties, groupOrChoice.placeholder);
+          _this10._addChoice({
+            value: groupOrChoice[value],
+            label: groupOrChoice[label],
+            isSelected: groupOrChoice.selected,
+            isDisabled: groupOrChoice.disabled,
+            customProperties: groupOrChoice.customProperties,
+            placeholder: groupOrChoice.placeholder
+          });
         }
       };
 
@@ -2802,7 +2815,14 @@ var Choices = function () {
       var placeholderChoice = this._store.placeholderChoice;
 
       if (placeholderChoice) {
-        this._addItem(placeholderChoice.value, placeholderChoice.label, placeholderChoice.id, placeholderChoice.groupId, null, placeholderChoice.placeholder);
+        this._addItem({
+          value: placeholderChoice.value,
+          label: placeholderChoice.label,
+          choiceId: placeholderChoice.id,
+          groupId: placeholderChoice.groupId,
+          placeholder: placeholderChoice.placeholder
+        });
+
         this._triggerChange(placeholderChoice.value);
       }
     }
@@ -2878,7 +2898,16 @@ var Choices = function () {
         var canAddItem = this._canAddItem(activeItems, choice.value);
 
         if (canAddItem.response) {
-          this._addItem(choice.value, choice.label, choice.id, choice.groupId, choice.customProperties, choice.placeholder, choice.keyCode);
+          this._addItem({
+            value: choice.value,
+            label: choice.label,
+            choiceId: choice.id,
+            groupId: choice.groupId,
+            customProperties: choice.customProperties,
+            placeholder: choice.placeholder,
+            keyCode: choice.keyCode
+          });
+
           this._triggerChange(choice.value);
         }
       }
@@ -2998,10 +3027,21 @@ var Choices = function () {
           // Add each result as a choice
           parsedResults.forEach(function (result) {
             if (result.choices) {
-              var groupId = result.id || null;
-              _this16._addGroup(result, groupId, value, label);
+              _this16._addGroup({
+                group: result,
+                id: result.id || null,
+                valueKey: value,
+                labelKey: label
+              });
             } else {
-              _this16._addChoice((0, _utils.fetchFromObject)(result, value), (0, _utils.fetchFromObject)(result, label), result.selected, result.disabled, undefined, result.customProperties, result.placeholder);
+              _this16._addChoice({
+                value: (0, _utils.fetchFromObject)(result, value),
+                label: (0, _utils.fetchFromObject)(result, label),
+                isSelected: result.selected,
+                isDisabled: result.disabled,
+                customProperties: result.customProperties,
+                placeholder: result.placeholder
+              });
             }
           });
 
@@ -3027,7 +3067,7 @@ var Choices = function () {
       // If new value matches the desired length and is not the same as the current value with a space
       var haystack = this._store.searchableChoices;
       var needle = newValue;
-      var keys = (0, _utils.isType)('Array', this.config.searchFields) ? this.config.searchFields : [this.config.searchFields];
+      var keys = [].concat(_toConsumableArray(this.config.searchFields));
       var options = Object.assign(this.config.fuseOptions, { keys: keys });
       var fuse = new _fuse2.default(haystack, options);
       var results = fuse.search(needle);
@@ -3176,7 +3216,7 @@ var Choices = function () {
           // All is good, add
           if (canAddItem.response) {
             _this17.hideDropdown(true);
-            _this17._addItem(value);
+            _this17._addItem({ value: value });
             _this17._triggerChange(value);
             _this17.clearInput();
           }
@@ -3533,6 +3573,7 @@ var Choices = function () {
       highlightedChoices.forEach(function (choice) {
         choice.classList.remove(_this20.config.classNames.highlightedState);
         choice.setAttribute('aria-selected', 'false');
+        choice.setAttribute('aria-live', 'off');
       });
 
       if (passedEl) {
@@ -3554,6 +3595,7 @@ var Choices = function () {
 
       passedEl.classList.add(this.config.classNames.highlightedState);
       passedEl.setAttribute('aria-selected', 'true');
+      passedEl.setAttribute('aria-live', 'assertive');
 
       if (this.dropdown.isActive) {
         // IE11 ignores aria-label and blocks virtual keyboard
@@ -3564,13 +3606,20 @@ var Choices = function () {
     }
   }, {
     key: '_addItem',
-    value: function _addItem(value) {
-      var label = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      var choiceId = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -1;
-      var groupId = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : -1;
-      var customProperties = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
-      var placeholder = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
-      var keyCode = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : null;
+    value: function _addItem(_ref7) {
+      var value = _ref7.value,
+          _ref7$label = _ref7.label,
+          label = _ref7$label === undefined ? null : _ref7$label,
+          _ref7$choiceId = _ref7.choiceId,
+          choiceId = _ref7$choiceId === undefined ? -1 : _ref7$choiceId,
+          _ref7$groupId = _ref7.groupId,
+          groupId = _ref7$groupId === undefined ? -1 : _ref7$groupId,
+          _ref7$customPropertie = _ref7.customProperties,
+          customProperties = _ref7$customPropertie === undefined ? null : _ref7$customPropertie,
+          _ref7$placeholder = _ref7.placeholder,
+          placeholder = _ref7$placeholder === undefined ? false : _ref7$placeholder,
+          _ref7$keyCode = _ref7.keyCode,
+          keyCode = _ref7$keyCode === undefined ? null : _ref7$keyCode;
 
       var passedValue = (0, _utils.isType)('String', value) ? value.trim() : value;
 
@@ -3592,7 +3641,16 @@ var Choices = function () {
         passedValue += this.config.appendValue.toString();
       }
 
-      this._store.dispatch((0, _items.addItem)(passedValue, passedLabel, id, passedOptionId, groupId, customProperties, placeholder, passedKeyCode));
+      this._store.dispatch((0, _items.addItem)({
+        value: passedValue,
+        label: passedLabel,
+        id: id,
+        choiceId: passedOptionId,
+        groupId: groupId,
+        customProperties: customProperties,
+        placeholder: placeholder,
+        keyCode: passedKeyCode
+      }));
 
       if (this._isSelectOneElement) {
         this.removeActiveItems(id);
@@ -3656,14 +3714,22 @@ var Choices = function () {
     }
   }, {
     key: '_addChoice',
-    value: function _addChoice(value) {
-      var label = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-      var isSelected = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-      var isDisabled = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-      var groupId = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : -1;
-      var customProperties = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : null;
-      var placeholder = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : false;
-      var keyCode = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : null;
+    value: function _addChoice(_ref8) {
+      var value = _ref8.value,
+          _ref8$label = _ref8.label,
+          label = _ref8$label === undefined ? null : _ref8$label,
+          _ref8$isSelected = _ref8.isSelected,
+          isSelected = _ref8$isSelected === undefined ? false : _ref8$isSelected,
+          _ref8$isDisabled = _ref8.isDisabled,
+          isDisabled = _ref8$isDisabled === undefined ? false : _ref8$isDisabled,
+          _ref8$groupId = _ref8.groupId,
+          groupId = _ref8$groupId === undefined ? -1 : _ref8$groupId,
+          _ref8$customPropertie = _ref8.customProperties,
+          customProperties = _ref8$customPropertie === undefined ? null : _ref8$customPropertie,
+          _ref8$placeholder = _ref8.placeholder,
+          placeholder = _ref8$placeholder === undefined ? false : _ref8$placeholder,
+          _ref8$keyCode = _ref8.keyCode,
+          keyCode = _ref8$keyCode === undefined ? null : _ref8$keyCode;
 
       if (typeof value === 'undefined' || value === null) {
         return;
@@ -3675,10 +3741,27 @@ var Choices = function () {
       var choiceId = choices ? choices.length + 1 : 1;
       var choiceElementId = this._baseId + '-' + this._idNames.itemChoice + '-' + choiceId;
 
-      this._store.dispatch((0, _choices.addChoice)(value, choiceLabel, choiceId, groupId, isDisabled, choiceElementId, customProperties, placeholder, keyCode));
+      this._store.dispatch((0, _choices.addChoice)({
+        value: value,
+        label: choiceLabel,
+        id: choiceId,
+        groupId: groupId,
+        disabled: isDisabled,
+        elementId: choiceElementId,
+        customProperties: customProperties,
+        placeholder: placeholder,
+        keyCode: keyCode
+      }));
 
       if (isSelected) {
-        this._addItem(value, choiceLabel, choiceId, undefined, customProperties, placeholder, keyCode);
+        this._addItem({
+          value: value,
+          label: choiceLabel,
+          choiceId: choiceId,
+          customProperties: customProperties,
+          placeholder: placeholder,
+          keyCode: keyCode
+        });
       }
     }
   }, {
@@ -3688,11 +3771,15 @@ var Choices = function () {
     }
   }, {
     key: '_addGroup',
-    value: function _addGroup(group, id) {
+    value: function _addGroup(_ref9) {
       var _this21 = this;
 
-      var valueKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'value';
-      var labelKey = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'label';
+      var group = _ref9.group,
+          id = _ref9.id,
+          _ref9$valueKey = _ref9.valueKey,
+          valueKey = _ref9$valueKey === undefined ? 'value' : _ref9$valueKey,
+          _ref9$labelKey = _ref9.labelKey,
+          labelKey = _ref9$labelKey === undefined ? 'label' : _ref9$labelKey;
 
       var groupChoices = (0, _utils.isType)('Object', group) ? group.choices : Array.from(group.getElementsByTagName('OPTION'));
       var groupId = id || Math.floor(new Date().valueOf() * Math.random());
@@ -3703,7 +3790,16 @@ var Choices = function () {
 
         var addGroupChoices = function addGroupChoices(choice) {
           var isOptDisabled = choice.disabled || choice.parentNode && choice.parentNode.disabled;
-          _this21._addChoice(choice[valueKey], (0, _utils.isType)('Object', choice) ? choice[labelKey] : choice.innerHTML, choice.selected, isOptDisabled, groupId, choice.customProperties, choice.placeholder);
+
+          _this21._addChoice({
+            value: choice[valueKey],
+            label: (0, _utils.isType)('Object', choice) ? choice[labelKey] : choice.innerHTML,
+            isSelected: choice.selected,
+            isDisabled: isOptDisabled,
+            groupId: groupId,
+            customProperties: choice.customProperties,
+            placeholder: choice.placeholder
+          });
         };
 
         groupChoices.forEach(addGroupChoices);
@@ -3746,44 +3842,36 @@ var Choices = function () {
   }, {
     key: '_createElements',
     value: function _createElements() {
-      var direction = this.passedElement.element.getAttribute('dir') || 'ltr';
-      var containerOuter = this._getTemplate('containerOuter', direction, this._isSelectElement, this._isSelectOneElement, this.config.searchEnabled, this.passedElement.element.type);
-      var containerInner = this._getTemplate('containerInner');
-      var itemList = this._getTemplate('itemList', this._isSelectOneElement);
-      var choiceList = this._getTemplate('choiceList', this._isSelectOneElement);
-      var input = this._getTemplate('input');
-      var dropdown = this._getTemplate('dropdown');
-
       this.containerOuter = new _components.Container({
-        element: containerOuter,
+        element: this._getTemplate('containerOuter', this._direction, this._isSelectElement, this._isSelectOneElement, this.config.searchEnabled, this.passedElement.element.type),
         classNames: this.config.classNames,
         type: this.passedElement.element.type,
         position: this.config.position
       });
 
       this.containerInner = new _components.Container({
-        element: containerInner,
+        element: this._getTemplate('containerInner'),
         classNames: this.config.classNames,
         type: this.passedElement.element.type,
         position: this.config.position
       });
 
       this.input = new _components.Input({
-        element: input,
+        element: this._getTemplate('input'),
         classNames: this.config.classNames,
         type: this.passedElement.element.type
       });
 
       this.choiceList = new _components.List({
-        element: choiceList
+        element: this._getTemplate('choiceList', this._isSelectOneElement)
       });
 
       this.itemList = new _components.List({
-        element: itemList
+        element: this._getTemplate('itemList', this._isSelectOneElement)
       });
 
       this.dropdown = new _components.Dropdown({
-        element: dropdown,
+        element: this._getTemplate('dropdown'),
         classNames: this.config.classNames,
         type: this.passedElement.element.type
       });
@@ -3843,12 +3931,20 @@ var Choices = function () {
         // If we have a placeholder option
         var placeholderChoice = this.passedElement.placeholderOption;
         if (placeholderChoice && placeholderChoice.parentNode.tagName === 'SELECT') {
-          this._addChoice(placeholderChoice.value, placeholderChoice.innerHTML, placeholderChoice.selected, placeholderChoice.disabled, undefined, undefined,
-          /* placeholder */true);
+          this._addChoice({
+            value: placeholderChoice.value,
+            label: placeholderChoice.innerHTML,
+            isSelected: placeholderChoice.selected,
+            isDisabled: placeholderChoice.disabled,
+            placeholder: true
+          });
         }
 
         passedGroups.forEach(function (group) {
-          return _this22._addGroup(group, group.id || null);
+          return _this22._addGroup({
+            group: group,
+            id: group.id || null
+          });
         });
       } else {
         var passedOptions = this.passedElement.options;
@@ -3876,10 +3972,19 @@ var Choices = function () {
           return choice.selected;
         });
         var handleChoice = function handleChoice(choice, index) {
+          var value = choice.value,
+              label = choice.label,
+              customProperties = choice.customProperties,
+              placeholder = choice.placeholder;
+
+
           if (_this22._isSelectElement) {
             // If the choice is actually a group
             if (choice.choices) {
-              _this22._addGroup(choice, choice.id || null);
+              _this22._addGroup({
+                group: choice,
+                id: choice.id || null
+              });
             } else {
               // If there is a selected choice already or the choice is not
               // the first in the array, add each choice normally
@@ -3888,10 +3993,24 @@ var Choices = function () {
               var isSelected = shouldPreselect ? true : choice.selected;
               var isDisabled = shouldPreselect ? false : choice.disabled;
 
-              _this22._addChoice(choice.value, choice.label, isSelected, isDisabled, undefined, choice.customProperties, choice.placeholder);
+              _this22._addChoice({
+                value: value,
+                label: label,
+                isSelected: isSelected,
+                isDisabled: isDisabled,
+                customProperties: customProperties,
+                placeholder: placeholder
+              });
             }
           } else {
-            _this22._addChoice(choice.value, choice.label, choice.selected, choice.disabled, undefined, choice.customProperties, choice.placeholder);
+            _this22._addChoice({
+              value: value,
+              label: label,
+              isSelected: choice.selected,
+              isDisabled: choice.disabled,
+              customProperties: customProperties,
+              placeholder: placeholder
+            });
           }
         };
 
@@ -3908,13 +4027,18 @@ var Choices = function () {
 
       var handlePresetItem = function handlePresetItem(item) {
         var itemType = (0, _utils.getType)(item);
-        if (itemType === 'Object') {
-          if (!item.value) {
-            return;
-          }
-          _this23._addItem(item.value, item.label, item.id, undefined, item.customProperties, item.placeholder);
+        if (itemType === 'Object' && item.value) {
+          _this23._addItem({
+            value: item.value,
+            label: item.label,
+            choiceId: item.id,
+            customProperties: item.customProperties,
+            placeholder: item.placeholder
+          });
         } else if (itemType === 'String') {
-          _this23._addItem(item);
+          _this23._addItem({
+            value: item
+          });
         }
       };
 
@@ -3937,16 +4061,36 @@ var Choices = function () {
           // If we are dealing with a select input, we need to create an option first
           // that is then selected. For text inputs we can just add items normally.
           if (!_this24._isTextElement) {
-            _this24._addChoice(item.value, item.label, true, false, -1, item.customProperties, item.placeholder);
+            _this24._addChoice({
+              value: item.value,
+              label: item.label,
+              isSelected: true,
+              isDisabled: false,
+              customProperties: item.customProperties,
+              placeholder: item.placeholder
+            });
           } else {
-            _this24._addItem(item.value, item.label, item.id, undefined, item.customProperties, item.placeholder);
+            _this24._addItem({
+              value: item.value,
+              label: item.label,
+              choiceId: item.id,
+              customProperties: item.customProperties,
+              placeholder: item.placeholder
+            });
           }
         },
         string: function string() {
           if (!_this24._isTextElement) {
-            _this24._addChoice(item, item, true, false, -1, null);
+            _this24._addChoice({
+              value: item,
+              label: item,
+              isSelected: true,
+              isDisabled: false
+            });
           } else {
-            _this24._addItem(item);
+            _this24._addItem({
+              value: item
+            });
           }
         }
       };
@@ -3965,7 +4109,15 @@ var Choices = function () {
       });
 
       if (foundChoice && !foundChoice.selected) {
-        this._addItem(foundChoice.value, foundChoice.label, foundChoice.id, foundChoice.groupId, foundChoice.customProperties, foundChoice.placeholder, foundChoice.keyCode);
+        this._addItem({
+          value: foundChoice.value,
+          label: foundChoice.label,
+          id: foundChoice.id,
+          groupId: foundChoice.groupId,
+          customProperties: foundChoice.customProperties,
+          placeholder: foundChoice.placeholder,
+          keyCode: foundChoice.keyCode
+        });
       }
     }
   }, {
@@ -4096,7 +4248,7 @@ module.exports = Choices;
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
- * Fuse.js v3.2.0 - Lightweight fuzzy-search (http://fusejs.io)
+ * Fuse.js v3.2.1 - Lightweight fuzzy-search (http://fusejs.io)
  * 
  * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
  * All Rights Reserved. Apache Software License 2.0
@@ -4189,7 +4341,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 module.exports = function (obj) {
-  return Object.prototype.toString.call(obj) === '[object Array]';
+  return !Array.isArray ? Object.prototype.toString.call(obj) === '[object Array]' : Array.isArray(obj);
 };
 
 /***/ }),
@@ -4619,12 +4771,16 @@ module.exports = function (text, pattern, patternAlphabet, _ref) {
       distance: distance
     });
 
+    // console.log('score', score, finalScore)
+
     if (_score2 > currentThreshold) {
       break;
     }
 
     lastBitArr = bitArr;
   }
+
+  // console.log('FINAL SCORE', finalScore)
 
   // Count exact matches (those with a score of 0) to be "almost" exact
   return {
@@ -4977,7 +5133,7 @@ var Fuse = function () {
         var output = results[i].output;
         var scoreLen = output.length;
 
-        var totalScore = 0;
+        var currScore = 1;
         var bestScore = 1;
 
         for (var j = 0; j < scoreLen; j += 1) {
@@ -4989,11 +5145,11 @@ var Fuse = function () {
             bestScore = Math.min(bestScore, nScore);
           } else {
             output[j].nScore = nScore;
-            totalScore += nScore;
+            currScore *= nScore;
           }
         }
 
-        results[i].score = bestScore === 1 ? totalScore / scoreLen : bestScore;
+        results[i].score = bestScore === 1 ? currScore : bestScore;
 
         this._log(results[i]);
       }
@@ -5009,7 +5165,9 @@ var Fuse = function () {
     value: function _format(results) {
       var finalOutput = [];
 
-      this._log('\n\nOutput:\n\n', JSON.stringify(results));
+      if (this.options.verbose) {
+        this._log('\n\nOutput:\n\n', JSON.stringify(results));
+      }
 
       var transformers = [];
 
@@ -5702,7 +5860,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _redux = __webpack_require__(30);
 
-var _index = __webpack_require__(69);
+var _index = __webpack_require__(68);
 
 var _index2 = _interopRequireDefault(_index);
 
@@ -5941,30 +6099,14 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 
 /***/ }),
 /* 65 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(66);
-
-
-/***/ }),
-/* 66 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global, module) {
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ponyfill_js__ = __webpack_require__(67);
+/* global window */
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 
-var _ponyfill = __webpack_require__(68);
-
-var _ponyfill2 = _interopRequireDefault(_ponyfill);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var root; /* global window */
-
+var root;
 
 if (typeof self !== 'undefined') {
   root = self;
@@ -5978,18 +6120,18 @@ if (typeof self !== 'undefined') {
   root = Function('return this')();
 }
 
-var result = (0, _ponyfill2['default'])(root);
-exports['default'] = result;
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31), __webpack_require__(67)(module)))
+var result = Object(__WEBPACK_IMPORTED_MODULE_0__ponyfill_js__["a" /* default */])(root);
+/* harmony default export */ __webpack_exports__["a"] = (result);
+
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(31), __webpack_require__(66)(module)))
 
 /***/ }),
-/* 67 */
+/* 66 */
 /***/ (function(module, exports) {
 
-module.exports = function(module) {
-	if(!module.webpackPolyfill) {
-		module.deprecate = function() {};
-		module.paths = [];
+module.exports = function(originalModule) {
+	if(!originalModule.webpackPolyfill) {
+		var module = Object.create(originalModule);
 		// module.parent = undefined by default
 		if(!module.children) module.children = [];
 		Object.defineProperty(module, "loaded", {
@@ -6004,9 +6146,37 @@ module.exports = function(module) {
 				return module.i;
 			}
 		});
+		Object.defineProperty(module, "exports", {
+			enumerable: true,
+		});
 		module.webpackPolyfill = 1;
 	}
 	return module;
+};
+
+
+/***/ }),
+/* 67 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = symbolObservablePonyfill;
+function symbolObservablePonyfill(root) {
+	var result;
+	var Symbol = root.Symbol;
+
+	if (typeof Symbol === 'function') {
+		if (Symbol.observable) {
+			result = Symbol.observable;
+		} else {
+			result = Symbol('observable');
+			Symbol.observable = result;
+		}
+	} else {
+		result = '@@observable';
+	}
+
+	return result;
 };
 
 
@@ -6018,49 +6188,20 @@ module.exports = function(module) {
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports['default'] = symbolObservablePonyfill;
-function symbolObservablePonyfill(root) {
-	var result;
-	var _Symbol = root.Symbol;
-
-	if (typeof _Symbol === 'function') {
-		if (_Symbol.observable) {
-			result = _Symbol.observable;
-		} else {
-			result = _Symbol('observable');
-			_Symbol.observable = result;
-		}
-	} else {
-		result = '@@observable';
-	}
-
-	return result;
-};
-
-/***/ }),
-/* 69 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
 var _redux = __webpack_require__(30);
 
-var _items = __webpack_require__(70);
+var _items = __webpack_require__(69);
 
 var _items2 = _interopRequireDefault(_items);
 
-var _groups = __webpack_require__(71);
+var _groups = __webpack_require__(70);
 
 var _groups2 = _interopRequireDefault(_groups);
 
-var _choices = __webpack_require__(72);
+var _choices = __webpack_require__(71);
 
 var _choices2 = _interopRequireDefault(_choices);
 
@@ -6092,7 +6233,7 @@ var rootReducer = function rootReducer(passedState, action) {
 exports.default = rootReducer;
 
 /***/ }),
-/* 70 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6166,7 +6307,7 @@ function items() {
 }
 
 /***/ }),
-/* 71 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6209,7 +6350,7 @@ function groups() {
 }
 
 /***/ }),
-/* 72 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6338,7 +6479,7 @@ function choices() {
 }
 
 /***/ }),
-/* 73 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6349,27 +6490,27 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.WrappedSelect = exports.WrappedInput = exports.List = exports.Input = exports.Container = exports.Dropdown = undefined;
 
-var _dropdown = __webpack_require__(74);
+var _dropdown = __webpack_require__(73);
 
 var _dropdown2 = _interopRequireDefault(_dropdown);
 
-var _container = __webpack_require__(75);
+var _container = __webpack_require__(74);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _input = __webpack_require__(76);
+var _input = __webpack_require__(75);
 
 var _input2 = _interopRequireDefault(_input);
 
-var _list = __webpack_require__(77);
+var _list = __webpack_require__(76);
 
 var _list2 = _interopRequireDefault(_list);
 
-var _wrappedInput = __webpack_require__(78);
+var _wrappedInput = __webpack_require__(77);
 
 var _wrappedInput2 = _interopRequireDefault(_wrappedInput);
 
-var _wrappedSelect = __webpack_require__(79);
+var _wrappedSelect = __webpack_require__(78);
 
 var _wrappedSelect2 = _interopRequireDefault(_wrappedSelect);
 
@@ -6383,7 +6524,7 @@ exports.WrappedInput = _wrappedInput2.default;
 exports.WrappedSelect = _wrappedSelect2.default;
 
 /***/ }),
-/* 74 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6473,7 +6614,7 @@ var Dropdown = function () {
 exports.default = Dropdown;
 
 /***/ }),
-/* 75 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6721,7 +6862,7 @@ var Container = function () {
 exports.default = Container;
 
 /***/ }),
-/* 76 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6844,19 +6985,21 @@ var Input = function () {
     value: function setWidth(enforceWidth) {
       var _this = this;
 
+      var callback = function callback(width) {
+        _this.element.style.width = width;
+      };
+
       if (this._placeholderValue) {
         // If there is a placeholder, we only want to set the width of the input when it is a greater
         // length than 75% of the placeholder. This stops the input jumping around.
-        if (this.element.value && this.element.value.length >= this._placeholderValue.length / 1.25 || enforceWidth) {
-          this.calcWidth(function (width) {
-            _this.element.style.width = width;
-          });
+        var valueHasDesiredLength = this.element.value.length >= this._placeholderValue.length / 1.25;
+
+        if (this.element.value && valueHasDesiredLength || enforceWidth) {
+          this.calcWidth(callback);
         }
       } else {
         // If there is no placeholder, resize input to contents
-        this.calcWidth(function (width) {
-          _this.element.style.width = width;
-        });
+        this.calcWidth(callback);
       }
     }
   }, {
@@ -6922,7 +7065,7 @@ var Input = function () {
 exports.default = Input;
 
 /***/ }),
-/* 77 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7046,7 +7189,7 @@ var List = function () {
 exports.default = List;
 
 /***/ }),
-/* 78 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7113,7 +7256,7 @@ var WrappedInput = function (_WrappedElement) {
 exports.default = WrappedInput;
 
 /***/ }),
-/* 79 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7198,7 +7341,7 @@ var WrappedSelect = function (_WrappedElement) {
 exports.default = WrappedSelect;
 
 /***/ }),
-/* 80 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -7253,7 +7396,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 81 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7266,7 +7409,16 @@ exports.clearChoices = exports.activateChoices = exports.filterChoices = exports
 
 var _constants = __webpack_require__(4);
 
-var addChoice = exports.addChoice = function addChoice(value, label, id, groupId, disabled, elementId, customProperties, placeholder, keyCode) {
+var addChoice = exports.addChoice = function addChoice(_ref) {
+  var value = _ref.value,
+      label = _ref.label,
+      id = _ref.id,
+      groupId = _ref.groupId,
+      disabled = _ref.disabled,
+      elementId = _ref.elementId,
+      customProperties = _ref.customProperties,
+      placeholder = _ref.placeholder,
+      keyCode = _ref.keyCode;
   return {
     type: _constants.ACTION_TYPES.ADD_CHOICE,
     value: value,
@@ -7303,7 +7455,7 @@ var clearChoices = exports.clearChoices = function clearChoices() {
 };
 
 /***/ }),
-/* 82 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7316,7 +7468,15 @@ exports.highlightItem = exports.removeItem = exports.addItem = undefined;
 
 var _constants = __webpack_require__(4);
 
-var addItem = exports.addItem = function addItem(value, label, id, choiceId, groupId, customProperties, placeholder, keyCode) {
+var addItem = exports.addItem = function addItem(_ref) {
+  var value = _ref.value,
+      label = _ref.label,
+      id = _ref.id,
+      choiceId = _ref.choiceId,
+      groupId = _ref.groupId,
+      customProperties = _ref.customProperties,
+      placeholder = _ref.placeholder,
+      keyCode = _ref.keyCode;
   return {
     type: _constants.ACTION_TYPES.ADD_ITEM,
     value: value,
@@ -7347,7 +7507,7 @@ var highlightItem = exports.highlightItem = function highlightItem(id, highlight
 };
 
 /***/ }),
-/* 83 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7372,7 +7532,7 @@ var addGroup = exports.addGroup = function addGroup(value, id, active, disabled)
 };
 
 /***/ }),
-/* 84 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

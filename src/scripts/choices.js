@@ -1420,6 +1420,7 @@ class Choices {
     highlightedChoices.forEach(choice => {
       choice.classList.remove(this.config.classNames.highlightedState);
       choice.setAttribute('aria-selected', 'false');
+      choice.setAttribute('aria-live', 'off');
     });
 
     if (passedEl) {
@@ -1441,6 +1442,7 @@ class Choices {
 
     passedEl.classList.add(this.config.classNames.highlightedState);
     passedEl.setAttribute('aria-selected', 'true');
+    passedEl.setAttribute('aria-live', 'assertive');
 
     if (this.dropdown.isActive) {
       // IE11 ignores aria-label and blocks virtual keyboard
