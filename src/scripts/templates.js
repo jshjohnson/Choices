@@ -57,6 +57,7 @@ export const TEMPLATES = {
   },
   item(globalClasses, data, removeItemButton) {
     const ariaSelected = data.active ? 'aria-selected="true"' : '';
+    const ariaLive = data.active ? 'aria-live="assertive"' : 'aria-live="off"';
     const ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
 
     let localClasses = classNames(globalClasses.item, {
@@ -81,6 +82,7 @@ export const TEMPLATES = {
           data-deletable
           ${ariaSelected}
           ${ariaDisabled}
+          ${ariaLive}
           >
           ${data.label}<!--
        --><button
