@@ -274,8 +274,7 @@
     position: absolute;
     right: 10px;
     top: 50%;
-    -webkit-transform: translateY(-50%);
-            transform: translateY(-50%);
+    transform: translateY(-50%);
   }
   [dir="rtl"] .choices__list--dropdown .choices__item--selectable {
     text-align: right;

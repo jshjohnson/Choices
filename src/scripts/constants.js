@@ -82,6 +82,7 @@ export const EVENTS = {
   addItem: 'addItem',
   removeItem: 'removeItem',
   highlightItem: 'highlightItem',
+  highlightChoice: 'highlightChoice',
 };
 
 export const ACTION_TYPES = {

@@ -1441,6 +1441,7 @@ class Choices {
 
     passedEl.classList.add(this.config.classNames.highlightedState);
     passedEl.setAttribute('aria-selected', 'true');
+    this.passedElement.triggerEvent(EVENTS.highlightChoice, { el: passedEl });
 
     if (this.dropdown.isActive) {
       // IE11 ignores aria-label and blocks virtual keyboard

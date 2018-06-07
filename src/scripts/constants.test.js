@@ -102,6 +102,7 @@ describe('constants', () => {
           'addItem',
           'removeItem',
           'highlightItem',
+          'highlightChoice',
         ]);
       });
     });
