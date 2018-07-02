@@ -636,6 +636,13 @@ example.passedElement.addEventListener('addItem', function(event) {
 
 **Usage:** Triggered when the dropdown is hidden.
 
+### highlightChoice
+**Arguments:** `el`
+
+**Input types affected:** `select-one`, `select-multiple`
+
+**Usage:** Triggered when a choice from the dropdown is highlighted. The `el` argument is the HTML element node object that was affected.
+
 ## Methods
 Methods can be called either directly or by chaining:
 
