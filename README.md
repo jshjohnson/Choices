@@ -872,7 +872,7 @@ Choices is compiled using [Babel](https://babeljs.io/) to enable support for [ES
 **Polyfill example used for the demo:**
 
 ```html
-<script src="https://cdn.polyfill.io/v2/polyfill.js?features=es5,fetch,Element.prototype.classList,requestAnimationFrame,Node.insertBefore,Node.firstChild"></script>
+<script src="https://cdn.polyfill.io/v2/polyfill.js?features=es5,fetch,Element.prototype.classList,requestAnimationFrame,Node.insertBefore,Node.firstChild,Object.assign"></script>
 ```
 
 **Features used in Choices:**
