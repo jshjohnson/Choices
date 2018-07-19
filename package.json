@@ -28,6 +28,14 @@
     "url": "https://github.com/jshjohnson/Choices/issues"
   },
   "homepage": "https://github.com/jshjohnson/Choices#readme",
+  "keywords": [
+    "customisable",
+    "input",
+    "select",
+    "vanilla",
+    "plugin",
+    "js"
+  ],
   "devDependencies": {
     "autoprefixer": "^6.3.3",
     "babel-core": "^6.7.2",

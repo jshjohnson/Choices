@@ -27,9 +27,9 @@ With [NPM](https://www.npmjs.com/package/choices.js):
 npm install choices.js --save
 ```
 
-With [Bower](https://bower.io/):
+With [Yarn](https://yarnpkg.com/lang/en/)
 ```zsh
-bower install choices.js --save
+yarn add choices.js --save
 ```
 
 Or include Choices directly:
