@@ -20,7 +20,7 @@ A vanilla, lightweight (~20kb gzipped 🎉), configurable select box/text input 
 ## Installation
 With [NPM](https://www.npmjs.com/package/choices.js):
 ```zsh
-npm install choices.js --save
+npm install choices.js
 ```
 
 With [Yarn](https://yarnpkg.com/):
