@@ -32,15 +32,15 @@ With [Bower](https://bower.io/):
 bower install choices.js --save
 ```
 
-Or include Choices directly:
+Or download the files manually, or include them from a [CDN](https://www.jsdelivr.com/package/npm/choices.js):
 
 ```html
 <!-- Include base CSS (optional) -->
-<link rel="stylesheet" href="assets/styles/css/base.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@3/assets/styles/css/base.min.css">
 <!-- Include Choices CSS -->
-<link rel="stylesheet" href="assets/styles/css/choices.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js@3/assets/styles/css/choices.min.css">
 <!-- Include Choices JavaScript -->
-<script src="/assets/scripts/dist/choices.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/choices.js@3/assets/scripts/dist/choices.min.js"></script>
 ```
 ## Setup
 
