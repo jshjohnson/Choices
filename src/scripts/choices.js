@@ -361,7 +361,9 @@ class Choices {
     if (!this.dropdown.isActive) {
       return this;
     }
-
+    // remove click handler, to prevent its reaction on the page elements under the dropdown.
+    // We add it back after the dropdown is closed
+    document.removeEventListener('click', this._onClick);
     requestAnimationFrame(() => {
       this.dropdown.hide();
       this.containerOuter.close();
@@ -370,7 +372,7 @@ class Choices {
         this.input.removeActiveDescendant();
         this.input.blur();
       }
-
+      document.addEventListener('click', this._onClick);
       this.passedElement.triggerEvent(EVENTS.hideDropdown, {});
     });
 
