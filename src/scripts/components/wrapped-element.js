@@ -17,10 +17,8 @@ export default class WrappedElement {
 
   conceal() {
     // Hide passed input
-    this.element.classList.add(
-      this.classNames.input,
-      this.classNames.hiddenState,
-    );
+    this.element.classList.add(this.classNames.input);
+    this.element.classList.add(this.classNames.hiddenState);
 
     // Remove element from tab index
     this.element.tabIndex = '-1';
@@ -38,10 +36,8 @@ export default class WrappedElement {
 
   reveal() {
     // Reinstate passed element
-    this.element.classList.remove(
-      this.classNames.input,
-      this.classNames.hiddenState,
-    );
+    this.element.classList.remove(this.classNames.input);
+    this.element.classList.remove(this.classNames.hiddenState);
     this.element.removeAttribute('tabindex');
 
     // Recover original styles if any
