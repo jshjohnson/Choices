@@ -715,7 +715,7 @@ declare module "choices.js" {
 			 *
 			 * @default null
 			 */
-      callbackOnCreateTemplates?: (template: string) => string;
+      callbackOnCreateTemplates?: (template: Function) => any;
     }
   }
 
