@@ -2,13 +2,19 @@ import { combineReducers } from 'redux';
 import items from './items';
 import groups from './groups';
 import choices from './choices';
+<<<<<<< HEAD
 import general from './general';
+=======
+>>>>>>> 8c75294... Add all files
 
 const appReducer = combineReducers({
   items,
   groups,
   choices,
+<<<<<<< HEAD
   general
+=======
+>>>>>>> 8c75294... Add all files
 });
 
 const rootReducer = (passedState, action) => {

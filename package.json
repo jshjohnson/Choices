@@ -1,9 +1,15 @@
 {
   "name": "choices.js",
+<<<<<<< HEAD
   "version": "3.0.4",
   "description": "A vanilla JS customisable text input/select box plugin",
   "main": "./assets/scripts/dist/choices.min.js",
   "types": "./types/index.d.ts",
+=======
+  "version": "3.0.2",
+  "description": "A vanilla JS customisable text input/select box plugin",
+  "main": "./assets/scripts/dist/choices.min.js",
+>>>>>>> 8c75294... Add all files
   "scripts": {
     "start": "node server.js",
     "test": "karma start --single-run --no-auto-watch tests/karma.config.js",
@@ -66,7 +72,10 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "fuse.js": "^2.2.2",
+<<<<<<< HEAD
     "opn": "^5.1.0",
+=======
+>>>>>>> 8c75294... Add all files
     "redux": "^3.3.1"
   },
   "npmName": "choices.js",

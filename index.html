@@ -16,7 +16,11 @@
   <meta name="theme-color" content="#ffffff">
 
   <!-- Ignore these -->
+<<<<<<< HEAD
   <link rel="stylesheet" href="assets/styles/css/base.min.css?version=3.0.4">
+=======
+  <link rel="stylesheet" href="assets/styles/css/base.min.css?version=3.0.2">
+>>>>>>> 8c75294... Add all files
   <!-- End ignore these -->
 
   <!-- Optional includes -->
@@ -24,8 +28,13 @@
   <!-- End optional includes -->
 
   <!-- Choices includes -->
+<<<<<<< HEAD
   <link rel="stylesheet" href="assets/styles/css/choices.min.css?version=3.0.4">
   <script src="assets/scripts/dist/choices.min.js?version=3.0.4"></script>
+=======
+  <link rel="stylesheet" href="assets/styles/css/choices.min.css?version=3.0.2">
+  <script src="assets/scripts/dist/choices.min.js?version=2.8.8"></script>
+>>>>>>> 8c75294... Add all files
   <!-- End Choices includes -->
 
   <!--[if lt IE 9]>
@@ -258,6 +267,7 @@
         <option value="Vue">Vue</option>
       </select>
 
+<<<<<<< HEAD
       <p>
         Below is an example of how you could have two select inputs depend on eachother. 'Tube stations' will only be enabled if
         the value of 'Cities' is 'London'
@@ -278,6 +288,26 @@
         <option value="Old Street">Old Street</option>
         <option value="Liverpool Street">Liverpool Street</option>
         <option value="Kings Cross St. Pancras">Kings Cross St. Pancras</option>
+=======
+      <p>Below is an example of how you could have two select inputs depend on eachother. 'Boroughs' will only be enabled if
+        the value of 'States' is 'New York'</p>
+      <label for="states">States</label>
+      <select class="form-control" name="states" id="states" placeholder="Choose a state">
+        <option value="Michigan">Michigan</option>
+        <option value="Texas">Texas</option>
+        <option value="Chicago">Chicago</option>
+        <option value="New York">New York</option>
+        <option value="Washington">Washington</option>
+      </select>
+
+      <label for="boroughs">Boroughs</label>
+      <select class="form-control" name="boroughs" id="boroughs" placeholder="Choose a borough">
+        <option value="The Bronx">The Bronx</option>
+        <option value="Brooklyn">Brooklyn</option>
+        <option value="Manhattan">Manhattan</option>
+        <option value="Queens">Queens</option>
+        <option value="Staten Island">Staten Island</option>
+>>>>>>> 8c75294... Add all files
       </select>
     </div>
   </div>
@@ -438,7 +468,9 @@
 
       var singlePresetOpts = new Choices('#choices-single-preset-options', {
         placeholder: true,
-      }).setChoices([{
+      }).setChoices([
+      { label: 'I\'m not in a group', value: 'no-group' },
+      {
         label: 'Group one',
         id: 1,
         disabled: false,
@@ -448,6 +480,7 @@
           { value: 'Child Three', label: 'Child Three' },
         ]
       },
+      { label: 'I\'m not in a group neither', value: 'no-group-2' },
       {
         label: 'Group two',
         id: 2,
@@ -476,6 +509,7 @@
         shouldSort: false,
       });
 
+<<<<<<< HEAD
       var cities = new Choices(document.getElementById('cities'));
       var tubeStations = new Choices(document.getElementById('tube-stations')).disable();
 
@@ -484,6 +518,15 @@
           tubeStations.enable();
         } else {
           tubeStations.disable();
+=======
+      var states = new Choices(document.getElementById('states'));
+
+      states.passedElement.addEventListener('change', function(e) {
+        if (e.detail.value === 'New York') {
+          boroughs.enable();
+        } else {
+          boroughs.disable();
+>>>>>>> 8c75294... Add all files
         }
       });
 
@@ -524,6 +567,11 @@
           };
         }
       });
+<<<<<<< HEAD
+=======
+
+      var boroughs = new Choices(document.getElementById('boroughs')).disable();
+>>>>>>> 8c75294... Add all files
     });
   </script>
 

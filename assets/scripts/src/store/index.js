@@ -36,6 +36,7 @@ export default class Store {
   }
 
   /**
+<<<<<<< HEAD
    * Get loading state from store
    * @return {Boolean} Loading State
    */
@@ -45,6 +46,8 @@ export default class Store {
   }
 
   /**
+=======
+>>>>>>> 8c75294... Add all files
    * Get items from store
    * @return {Array} Item objects
    */

@@ -432,6 +432,7 @@ export const isScrolledIntoView = (el, parent, direction = 1) => {
 };
 
 /**
+<<<<<<< HEAD
  * Escape html in a string
  * @param  {String} html  Initial string/html
  * @return {String}  Sanitised string
@@ -441,6 +442,17 @@ export const stripHTML = html =>
      .replace(/>/g, '&rt;')
      .replace(/</g, '&lt;')
      .replace(/"/g, '&quot;');
+=======
+ * Remove html tags from a string
+ * @param  {String}  Initial string/html
+ * @return {String}  Sanitised string
+ */
+export const stripHTML = function(html) {
+  let el = document.createElement("DIV");
+  el.innerHTML = html;
+  return el.textContent || el.innerText || "";
+};
+>>>>>>> 8c75294... Add all files
 
 /**
  * Adds animation to an element and removes it upon animation completion
@@ -501,7 +513,11 @@ export const getWidthOfInput = (input) => {
   let width = input.offsetWidth;
 
   if (value) {
+<<<<<<< HEAD
     const testEl = strToEl(`<span>${ stripHTML(value) }</span>`);
+=======
+    const testEl = strToEl(`<span>${ value }</span>`);
+>>>>>>> 8c75294... Add all files
     testEl.style.position = 'absolute';
     testEl.style.padding = '0';
     testEl.style.top = '-9999px';

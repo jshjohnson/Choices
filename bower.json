@@ -1,6 +1,10 @@
 {
   "name": "choices.js",
+<<<<<<< HEAD
   "version": "3.0.4",
+=======
+  "version": "3.0.2",
+>>>>>>> 8c75294... Add all files
   "description": "A vanilla JS customisable text input/select box plugin",
   "main": [
     "./assets/scripts/dist/choices.js",

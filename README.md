@@ -1,4 +1,5 @@
 # Choices.js ![Build Status](https://travis-ci.org/jshjohnson/Choices.svg?branch=master)
+<<<<<<< HEAD
 A vanilla, lightweight (~18kb gzipped 🎉), configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.
 
 [Demo](https://joshuajohnson.co.uk/Choices/)
@@ -7,6 +8,12 @@ A vanilla, lightweight (~18kb gzipped 🎉), configurable select box/text input 
 ### 👉 Please use [develop](https://github.com/jshjohnson/Choices/tree/develop) as the base branch for pull requests. This will be the next major release. Only minor fixes will be pushed into master 👈
 ---
 
+=======
+A vanilla, lightweight (~15kb gzipped 🎉), configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.
+
+[Demo](https://joshuajohnson.co.uk/Choices/)
+
+>>>>>>> 8c75294... Add all files
 ## TL;DR
 * Lightweight
 * No jQuery dependency
@@ -52,7 +59,11 @@ Or include Choices directly:
   const choices = new Choices(element);
 
   // Pass reference
+<<<<<<< HEAD
   const choices = new Choices('[data-trigger]');
+=======
+  const choices = new Choices('[data-trigger']);
+>>>>>>> 8c75294... Add all files
   const choices = new Choices('.js-choice');
 
   // Pass jQuery element
@@ -99,9 +110,12 @@ Or include Choices directly:
     maxItemText: (maxItemCount) => {
       return `Only ${maxItemCount} values can be added.`;
     },
+<<<<<<< HEAD
     itemComparer: (choice, item) => {
       return choice === item;
     },
+=======
+>>>>>>> 8c75294... Add all files
     classNames: {
       containerOuter: 'choices',
       containerInner: 'choices__inner',
@@ -122,7 +136,11 @@ Or include Choices directly:
       activeState: 'is-active',
       focusState: 'is-focused',
       openState: 'is-open',
+<<<<<<< HEAD
       disabledState: 'is-disabled',
+=======
+      disabledState: 'is-disaqbled',
+>>>>>>> 8c75294... Add all files
       highlightedState: 'is-highlighted',
       hiddenState: 'is-hidden',
       flippedState: 'is-flipped',
@@ -461,6 +479,7 @@ const example = new Choices(element, {
 
 **Usage:** The text that is shown when a user has focus on the input but has already reached the [max item count](https://github.com/jshjohnson/Choices#maxitemcount). To access the max item count, pass a function with a `maxItemCount` argument (see the [default config](https://github.com/jshjohnson/Choices#setup) for an example), otherwise pass a string.
 
+<<<<<<< HEAD
 ### itemComparer
 **Type:** `Function` **Default:** `strict equality`
 
@@ -468,6 +487,8 @@ const example = new Choices(element, {
 
 **Usage:** Compare choice and value in appropriate way (e.g. deep equality for objects). To compare choice and value, pass a function with a `itemComparer` argument (see the [default config](https://github.com/jshjohnson/Choices#setup) for an example).
 
+=======
+>>>>>>> 8c75294... Add all files
 ### classNames
 **Type:** `Object` **Default:**
 
@@ -872,7 +893,11 @@ Choices is compiled using [Babel](https://babeljs.io/) to enable support for [ES
 **Polyfill example used for the demo:**
 
 ```html
+<<<<<<< HEAD
 <script src="https://cdn.polyfill.io/v2/polyfill.js?features=es5,fetch,Element.prototype.classList,requestAnimationFrame,Node.insertBefore,Node.firstChild,Object.assign"></script>
+=======
+<script src="https://cdn.polyfill.io/v2/polyfill.js?features=es5,fetch,Element.prototype.classList,requestAnimationFrame,Node.insertBefore,Node.firstChild"></script>
+>>>>>>> 8c75294... Add all files
 ```
 
 **Features used in Choices:**

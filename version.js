@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Example usage: npm --newVersion=3.0.4 run version
+=======
+// Example usage: npm --newVersion=3.0.2 run version
+>>>>>>> 8c75294... Add all files
 
 const fs = require('fs');
 const path = require('path');

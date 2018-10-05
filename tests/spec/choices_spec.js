@@ -78,7 +78,10 @@ describe('Choices', () => {
       expect(this.choices.config.noChoicesText).toEqual(jasmine.any(String));
       expect(this.choices.config.itemSelectText).toEqual(jasmine.any(String));
       expect(this.choices.config.classNames).toEqual(jasmine.any(Object));
+<<<<<<< HEAD
       expect(this.choices.config.itemComparer).toEqual(jasmine.any(Function));
+=======
+>>>>>>> 8c75294... Add all files
       expect(this.choices.config.callbackOnInit).toEqual(null);
       expect(this.choices.config.callbackOnCreateTemplates).toEqual(null);
     });
@@ -1218,6 +1221,7 @@ describe('Choices', () => {
       expect(selectedItems[0].customProperties).toBe(expectedCustomProperties);
     });
   });
+<<<<<<< HEAD
 
   describe('should allow to use object in value', function() {
     beforeEach(function() {
@@ -1270,4 +1274,6 @@ describe('Choices', () => {
       expect(this.choices.currentState.items[0].label).toBe(this.choicesArray[0].label);
     });
   });
+=======
+>>>>>>> 8c75294... Add all files
 });

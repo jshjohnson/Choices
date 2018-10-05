@@ -78,6 +78,7 @@ export const clearAll = () => {
     type: 'CLEAR_ALL',
   };
 };
+<<<<<<< HEAD
 
 export const setIsLoading = (isLoading) => {
   return {
@@ -86,3 +87,5 @@ export const setIsLoading = (isLoading) => {
   };
 };
 
+=======
+>>>>>>> 8c75294... Add all files
