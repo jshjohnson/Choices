@@ -6,4 +6,6 @@ before_install:
   - npm install -g npm@latest
 install:
   - npm install
-script: npm run test
+script:
+  - npm run test:unit
+  - npm run test:e2e

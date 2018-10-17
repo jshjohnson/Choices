@@ -172,4 +172,8 @@ h6,
   display: none;
 }
 
+[data-test-hook] {
+  margin-bottom: 24px;
+}
+
 /*=====  End of Section comment block  ======*/

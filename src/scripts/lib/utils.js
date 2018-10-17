@@ -1,20 +1,9 @@
 /* eslint-disable */
 
-/**
- * Get a random number between a range
- * @param  {Number} min Minimum range
- * @param  {Number} max Maximum range
- * @return {Number}     Random number
- */
 export const getRandomNumber = function(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-/**
- * Generates a string of random chars
- * @param  {Number} length Length of the string to generate
- * @return {String} String of random chars
- */
 export const generateChars = function(length) {
   let chars = '';
 
@@ -26,12 +15,6 @@ export const generateChars = function(length) {
   return chars;
 };
 
-/**
- * Generates a unique id based on an element
- * @param  {HTMLElement} element Element to generate the id from
- * @param  {String} Prefix for the Id
- * @return {String} Unique Id
- */
 export const generateId = function(element, prefix) {
   let id =
     element.id ||
@@ -43,41 +26,19 @@ export const generateId = function(element, prefix) {
   return id;
 };
 
-/**
- * Gets the type of an object
- * Why not use typeof? See here: http: //bonsaiden.github.io/JavaScript-Garden/#types.typeof
- * @param  {Object}  obj  Object to check
- * @return {Boolean}
- */
 export const getType = function(obj) {
   return Object.prototype.toString.call(obj).slice(8, -1);
 };
 
-/**
- * Tests the type of an object
- * @param  {String}  type Type to test object against
- * @param  {Object}  obj  Object to be tested
- * @return {Boolean}
- */
 export const isType = function(type, obj) {
   const clas = getType(obj);
   return obj !== undefined && obj !== null && clas === type;
 };
 
-/**
- * Tests to see if a passed object is an element
- * @param  {Object}  obj  Object to be tested
- * @return {Boolean}
- */
 export const isElement = (element) => {
   return element instanceof Element;
 };
 
-/**
- * Merges unspecified amount of objects into new object
- * @private
- * @return {Object} Merged object of arguments
- */
 export const extend = function() {
   const extended = {};
   const length = arguments.length;
@@ -123,23 +84,11 @@ export const wrap = function(element, wrapper) {
   return wrapper.appendChild(element);
 };
 
-/**
- * Find ancestor in DOM tree
- * @param  {NodeElement} el  Element to start search from
- * @param  {[type]} cls Class of parent
- * @return {NodeElement}     Found parent element
- */
 export const findAncestor = function(el, cls) {
   while ((el = el.parentElement) && !el.classList.contains(cls));
   return el;
 };
 
-/**
- * Find ancestor in DOM tree by attribute name
- * @param  {NodeElement} el  Element to start search from
- * @param  {string} attr Attribute name of parent
- * @return {?NodeElement}     Found parent element or null
- */
 export const findAncestorByAttrName = function(el, attr) {
   let target = el;
 
@@ -154,13 +103,6 @@ export const findAncestorByAttrName = function(el, attr) {
   return null;
 };
 
-/**
- * Get the next or previous element from a given start point
- * @param  {HTMLElement} startEl    Element to start position from
- * @param  {String}      className  The class we will look through
- * @param  {Number}      direction  Positive next element, negative previous element
- * @return {[HTMLElement}           Found element
- */
 export const getAdjacentEl = (startEl, className, direction = 1) => {
   if (!startEl || !className) return;
 
@@ -173,13 +115,6 @@ export const getAdjacentEl = (startEl, className, direction = 1) => {
   return children[startPos + operatorDirection];
 };
 
-/**
- * Determine whether an element is within
- * @param  {HTMLElement} el        Element to test
- * @param  {HTMLElement} parent    Scrolling parent
- * @param  {Number} direction      Whether element is visible from above or below
- * @return {Boolean}
- */
 export const isScrolledIntoView = (el, parent, direction = 1) => {
   if (!el) return;
 
@@ -197,11 +132,6 @@ export const isScrolledIntoView = (el, parent, direction = 1) => {
   return isVisible;
 };
 
-/**
- * Escapes html in the string
- * @param  {String} html Initial string/html
- * @return {String}  Sanitised string
- */
 export const stripHTML = html =>
   html
     .replace(/&/g, '&amp;')
@@ -209,11 +139,6 @@ export const stripHTML = html =>
     .replace(/</g, '&lt;')
     .replace(/"/g, '&quot;');
 
-/**
- * Turn a string into a node
- * @param  {String} String to convert
- * @return {HTMLElement}   Converted node element
- */
 export const strToEl = (function() {
   const tmpEl = document.createElement('div');
   return function(str) {
@@ -277,14 +202,6 @@ export const calcWidthOfInput = (input, callback) => {
   }
 };
 
-/**
- * Sorting function for current and previous string
- * @param  {String} a Current value
- * @param  {String} b Next value
- * @return {Number}   -1 for after previous,
- *                    1 for before,
- *                    0 for same location
- */
 export const sortByAlpha = (a, b) => {
   const labelA = (a.label || a.value).toLowerCase();
   const labelB = (b.label || b.value).toLowerCase();
@@ -300,23 +217,8 @@ export const sortByAlpha = (a, b) => {
   return 0;
 };
 
-/**
- * Sort by numeric score
- * @param  {Object} a Current value
- * @param  {Object} b Next value
- * @return {Number}   -1 for after previous,
- *                    1 for before,
- *                    0 for same location
- */
 export const sortByScore = (a, b) => a.score - b.score;
 
-/**
- * Dispatch native event
- * @param  {NodeElement} element Element to trigger event on
- * @param  {String} type         Type of event to trigger
- * @param  {Object} customArgs   Data to pass with event
- * @return {Object}              Triggered event
- */
 export const dispatchEvent = (element, type, customArgs = null) => {
   const event = new CustomEvent(type, {
     detail: customArgs,
@@ -327,12 +229,6 @@ export const dispatchEvent = (element, type, customArgs = null) => {
   return element.dispatchEvent(event);
 };
 
-/**
- * Tests value against a regular expression
- * @param  {string} value   Value to test
- * @return {Boolean}        Whether test passed/failed
- * @private
- */
 export const regexFilter = (value, regex) => {
   if (!value || !regex) {
     return false;
@@ -363,11 +259,6 @@ export const reduceToValues = (items, key = 'value') => {
   return values;
 };
 
-/**
- * Fetch properties from object
- * @param {Object} object Related object
- * @param {String} path   Path to value
- */
 export const fetchFromObject = (object, path) => {
   const index = path.indexOf('.');
 
@@ -396,10 +287,10 @@ export const existsInArray = (array, value, key = 'value') =>
     return item[key] === value;
   });
 
-/**
- * Deep clone an object
- * @param  {Object} obj Object to clone
- * @return {Object}     Clone of the object
- * @private
- */
 export const cloneObject = obj => JSON.parse(JSON.stringify(obj));
+
+export const doKeysMatch = (a, b) => {
+  const aKeys = Object.keys(a).sort();
+  const bKeys = Object.keys(b).sort();
+  return JSON.stringify(aKeys) === JSON.stringify(bKeys);
+}

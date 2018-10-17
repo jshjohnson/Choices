@@ -1,4 +1,5 @@
 import Fuse from 'fuse.js';
+import merge from 'deepmerge';
 
 import './lib/polyfills';
 import Store from './store/store';
@@ -10,12 +11,7 @@ import {
   WrappedInput,
   WrappedSelect,
 } from './components';
-import {
-  DEFAULT_CONFIG,
-  DEFAULT_CLASSNAMES,
-  EVENTS,
-  KEY_CODES,
-} from './constants';
+import { DEFAULT_CONFIG, EVENTS, KEY_CODES } from './constants';
 import { TEMPLATES } from './templates';
 import {
   addChoice,
@@ -33,7 +29,6 @@ import {
   isType,
   strToEl,
   extend,
-  sortByAlpha,
   sortByScore,
   generateId,
   findAncestorByAttrName,
@@ -42,6 +37,7 @@ import {
   isIE11,
   existsInArray,
   cloneObject,
+  doKeysMatch,
 } from './lib/utils';
 
 /**
@@ -60,7 +56,11 @@ class Choices {
       }
     }
 
-    this.config = Choices._generateConfig(userConfig);
+    this.config = merge.all([DEFAULT_CONFIG, Choices.userDefaults, userConfig]);
+
+    if (!doKeysMatch(this.config, DEFAULT_CONFIG)) {
+      console.warn('Unknown config option(s) passed');
+    }
 
     if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
       this.config.renderSelectedChoices = 'auto';
@@ -70,6 +70,12 @@ class Choices {
     const passedElement = isType('String', element)
       ? document.querySelector(element)
       : element;
+
+    if (!passedElement) {
+      return console.error(
+        'Could not find passed element or passed element was of an invalid type',
+      );
+    }
 
     this._isTextElement = passedElement.type === 'text';
     this._isSelectOneElement = passedElement.type === 'select-one';
@@ -90,8 +96,8 @@ class Choices {
       });
     }
 
-    if (!this.passedElement) {
-      throw new Error('Could not wrap passed element');
+    if (!passedElement) {
+      return console.error('Passed element was of an invalid type');
     }
 
     if (
@@ -131,7 +137,8 @@ class Choices {
         this.passedElement.value.split(this.config.delimiter),
       );
     }
-    this.render = this.render.bind(this);
+
+    this._render = this._render.bind(this);
     this._onFocus = this._onFocus.bind(this);
     this._onBlur = this._onBlur.bind(this);
     this._onKeyUp = this._onKeyUp.bind(this);
@@ -142,6 +149,11 @@ class Choices {
     this._onMouseDown = this._onMouseDown.bind(this);
     this._onMouseOver = this._onMouseOver.bind(this);
     this._onFormReset = this._onFormReset.bind(this);
+    this._onAKey = this._onAKey.bind(this);
+    this._onEnterKey = this._onEnterKey.bind(this);
+    this._onEscapeKey = this._onEscapeKey.bind(this);
+    this._onDirectionKey = this._onDirectionKey.bind(this);
+    this._onDeleteKey = this._onDeleteKey.bind(this);
 
     // If element has already been initialised with Choices, fail silently
     if (this.passedElement.element.getAttribute('data-choice') === 'active') {
@@ -169,9 +181,10 @@ class Choices {
     // Set initial state (We need to clone the state because some reducers
     // modify the inner objects properties in the state) 🤢
     this._initialState = cloneObject(this._store.state);
-    this._store.subscribe(this.render);
-    this.render();
+    this._store.subscribe(this._render);
+    this._render();
     this._addEventListeners();
+
     this.initialised = true;
 
     const { callbackOnInit } = this.config;
@@ -230,32 +243,6 @@ class Choices {
     }
 
     return this;
-  }
-
-  render() {
-    this._currentState = this._store.state;
-
-    const stateChanged =
-      this._currentState.choices !== this._prevState.choices ||
-      this._currentState.groups !== this._prevState.groups ||
-      this._currentState.items !== this._prevState.items;
-    const shouldRenderChoices = this._isSelectElement;
-    const shouldRenderItems =
-      this._currentState.items !== this._prevState.items;
-
-    if (!stateChanged) {
-      return;
-    }
-
-    if (shouldRenderChoices) {
-      this._renderChoices();
-    }
-
-    if (shouldRenderItems) {
-      this._renderItems();
-    }
-
-    this._prevState = this._currentState;
   }
 
   highlightItem(item, runEvent = true) {
@@ -486,6 +473,121 @@ class Choices {
   /* =============================================
   =                Private functions            =
   ============================================= */
+
+  _render() {
+    this._currentState = this._store.state;
+
+    const stateChanged =
+      this._currentState.choices !== this._prevState.choices ||
+      this._currentState.groups !== this._prevState.groups ||
+      this._currentState.items !== this._prevState.items;
+    const shouldRenderChoices = this._isSelectElement;
+    const shouldRenderItems =
+      this._currentState.items !== this._prevState.items;
+
+    if (!stateChanged) {
+      return;
+    }
+
+    if (shouldRenderChoices) {
+      this._renderChoices();
+    }
+
+    if (shouldRenderItems) {
+      this._renderItems();
+    }
+
+    this._prevState = this._currentState;
+  }
+
+  _renderChoices() {
+    const { activeGroups, activeChoices } = this._store;
+    let choiceListFragment = document.createDocumentFragment();
+
+    this.choiceList.clear();
+
+    if (this.config.resetScrollPosition) {
+      requestAnimationFrame(() => this.choiceList.scrollToTop());
+    }
+
+    // If we have grouped options
+    if (activeGroups.length >= 1 && !this._isSearching) {
+      // If we have a placeholder choice along with groups
+      const activePlaceholders = activeChoices.filter(
+        activeChoice =>
+          activeChoice.placeholder === true && activeChoice.groupId === -1,
+      );
+      if (activePlaceholders.length >= 1) {
+        choiceListFragment = this._createChoicesFragment(
+          activePlaceholders,
+          choiceListFragment,
+        );
+      }
+      choiceListFragment = this._createGroupsFragment(
+        activeGroups,
+        activeChoices,
+        choiceListFragment,
+      );
+    } else if (activeChoices.length >= 1) {
+      choiceListFragment = this._createChoicesFragment(
+        activeChoices,
+        choiceListFragment,
+      );
+    }
+
+    // If we have choices to show
+    if (
+      choiceListFragment.childNodes &&
+      choiceListFragment.childNodes.length > 0
+    ) {
+      const activeItems = this._store.activeItems;
+      const canAddItem = this._canAddItem(activeItems, this.input.value);
+
+      // ...and we can select them
+      if (canAddItem.response) {
+        // ...append them and highlight the first choice
+        this.choiceList.append(choiceListFragment);
+        this._highlightChoice();
+      } else {
+        // ...otherwise show a notice
+        this.choiceList.append(this._getTemplate('notice', canAddItem.notice));
+      }
+    } else {
+      // Otherwise show a notice
+      let dropdownItem;
+      let notice;
+
+      if (this._isSearching) {
+        notice = isType('Function', this.config.noResultsText)
+          ? this.config.noResultsText()
+          : this.config.noResultsText;
+
+        dropdownItem = this._getTemplate('notice', notice, 'no-results');
+      } else {
+        notice = isType('Function', this.config.noChoicesText)
+          ? this.config.noChoicesText()
+          : this.config.noChoicesText;
+
+        dropdownItem = this._getTemplate('notice', notice, 'no-choices');
+      }
+
+      this.choiceList.append(dropdownItem);
+    }
+  }
+
+  _renderItems() {
+    const activeItems = this._store.activeItems || [];
+    this.itemList.clear();
+
+    // Create a fragment to store our list items
+    // (so we don't have to update the DOM for each item)
+    const itemListFragment = this._createItemsFragment(activeItems);
+
+    // If we have items to add, append them
+    if (itemListFragment.childNodes) {
+      this.itemList.append(itemListFragment);
+    }
+  }
 
   _createGroupsFragment(groups, choices, fragment) {
     const groupFragment = fragment || document.createDocumentFragment();
@@ -795,6 +897,30 @@ class Choices {
     }
   }
 
+  _handleSearch(value) {
+    if (!value || !this.input.isFocussed) {
+      return;
+    }
+
+    const choices = this._store.choices;
+    const { searchFloor, searchChoices } = this.config;
+    const hasUnactiveChoices = choices.some(option => !option.active);
+
+    // Check that we have a value to search and the input was an alphanumeric character
+    if (value && value.length >= searchFloor) {
+      const resultCount = searchChoices ? this._searchChoices(value) : 0;
+      // Trigger search event
+      this.passedElement.triggerEvent(EVENTS.search, {
+        value,
+        resultCount,
+      });
+    } else if (hasUnactiveChoices) {
+      // Otherwise reset choices to active
+      this._isSearching = false;
+      this._store.dispatch(activateChoices(true));
+    }
+  }
+
   _canAddItem(activeItems, value) {
     let canAddItem = true;
     let notice = isType('Function', this.config.addItemText)
@@ -918,30 +1044,6 @@ class Choices {
     return results.length;
   }
 
-  _handleSearch(value) {
-    if (!value || !this.input.isFocussed) {
-      return;
-    }
-
-    const choices = this._store.choices;
-    const { searchFloor, searchChoices } = this.config;
-    const hasUnactiveChoices = choices.some(option => !option.active);
-
-    // Check that we have a value to search and the input was an alphanumeric character
-    if (value && value.length >= searchFloor) {
-      const resultCount = searchChoices ? this._searchChoices(value) : 0;
-      // Trigger search event
-      this.passedElement.triggerEvent(EVENTS.search, {
-        value,
-        resultCount,
-      });
-    } else if (hasUnactiveChoices) {
-      // Otherwise reset choices to active
-      this._isSearching = false;
-      this._store.dispatch(activateChoices(true));
-    }
-  }
-
   _addEventListeners() {
     document.addEventListener('keyup', this._onKeyUp);
     document.addEventListener('keydown', this._onKeyDown);
@@ -1005,168 +1107,50 @@ class Choices {
     const hasActiveDropdown = this.dropdown.isActive;
     const hasItems = this.itemList.hasChildren;
     const keyString = String.fromCharCode(keyCode);
-    const backKey = KEY_CODES.BACK_KEY;
-    const deleteKey = KEY_CODES.DELETE_KEY;
-    const enterKey = KEY_CODES.ENTER_KEY;
-    const aKey = KEY_CODES.A_KEY;
-    const escapeKey = KEY_CODES.ESC_KEY;
-    const upKey = KEY_CODES.UP_KEY;
-    const downKey = KEY_CODES.DOWN_KEY;
-    const pageUpKey = KEY_CODES.PAGE_UP_KEY;
-    const pageDownKey = KEY_CODES.PAGE_DOWN_KEY;
-    const ctrlDownKey = ctrlKey || metaKey;
+
+    const {
+      BACK_KEY,
+      DELETE_KEY,
+      ENTER_KEY,
+      A_KEY,
+      ESC_KEY,
+      UP_KEY,
+      DOWN_KEY,
+      PAGE_UP_KEY,
+      PAGE_DOWN_KEY,
+    } = KEY_CODES;
+    const hasCtrlDownKeyPressed = ctrlKey || metaKey;
 
     // If a user is typing and the dropdown is not active
     if (!this._isTextElement && /[a-zA-Z0-9-_ ]/.test(keyString)) {
       this.showDropdown();
     }
 
-    const onAKey = () => {
-      // If CTRL + A or CMD + A have been pressed and there are items to select
-      if (ctrlDownKey && hasItems) {
-        this._canSearch = false;
-        if (
-          this.config.removeItems &&
-          !this.input.value &&
-          this.input.element === document.activeElement
-        ) {
-          // Highlight items
-          this.highlightAll();
-        }
-      }
-    };
-
-    const onEnterKey = () => {
-      // If enter key is pressed and the input has a value
-      if (this._isTextElement && target.value) {
-        const value = this.input.value;
-        const canAddItem = this._canAddItem(activeItems, value);
-
-        // All is good, add
-        if (canAddItem.response) {
-          this.hideDropdown(true);
-          this._addItem({ value });
-          this._triggerChange(value);
-          this.clearInput();
-        }
-      }
-
-      if (target.hasAttribute('data-button')) {
-        this._handleButtonAction(activeItems, target);
-        event.preventDefault();
-      }
-
-      if (hasActiveDropdown) {
-        event.preventDefault();
-        const highlighted = this.dropdown.getChild(
-          `.${this.config.classNames.highlightedState}`,
-        );
-
-        // If we have a highlighted choice
-        if (highlighted) {
-          // add enter keyCode value
-          if (activeItems[0]) {
-            activeItems[0].keyCode = enterKey;
-          }
-          this._handleChoiceAction(activeItems, highlighted);
-        }
-      } else if (this._isSelectOneElement) {
-        // Open single select dropdown if it's not active
-        this.showDropdown();
-        event.preventDefault();
-      }
-    };
-
-    const onEscapeKey = () => {
-      if (hasActiveDropdown) {
-        this.hideDropdown(true);
-        this.containerOuter.focus();
-      }
-    };
-
-    const onDirectionKey = () => {
-      // If up or down key is pressed, traverse through options
-      if (hasActiveDropdown || this._isSelectOneElement) {
-        this.showDropdown();
-        this._canSearch = false;
-
-        const directionInt =
-          keyCode === downKey || keyCode === pageDownKey ? 1 : -1;
-        const skipKey =
-          metaKey || keyCode === pageDownKey || keyCode === pageUpKey;
-        const selectableChoiceIdentifier = '[data-choice-selectable]';
-
-        let nextEl;
-        if (skipKey) {
-          if (directionInt > 0) {
-            nextEl = Array.from(
-              this.dropdown.element.querySelectorAll(
-                selectableChoiceIdentifier,
-              ),
-            ).pop();
-          } else {
-            nextEl = this.dropdown.element.querySelector(
-              selectableChoiceIdentifier,
-            );
-          }
-        } else {
-          const currentEl = this.dropdown.element.querySelector(
-            `.${this.config.classNames.highlightedState}`,
-          );
-          if (currentEl) {
-            nextEl = getAdjacentEl(
-              currentEl,
-              selectableChoiceIdentifier,
-              directionInt,
-            );
-          } else {
-            nextEl = this.dropdown.element.querySelector(
-              selectableChoiceIdentifier,
-            );
-          }
-        }
-
-        if (nextEl) {
-          // We prevent default to stop the cursor moving
-          // when pressing the arrow
-          if (
-            !isScrolledIntoView(nextEl, this.choiceList.element, directionInt)
-          ) {
-            this.choiceList.scrollToChoice(nextEl, directionInt);
-          }
-          this._highlightChoice(nextEl);
-        }
-
-        // Prevent default to maintain cursor position whilst
-        // traversing dropdown options
-        event.preventDefault();
-      }
-    };
-
-    const onDeleteKey = () => {
-      // If backspace or delete key is pressed and the input has no value
-      if (hasFocusedInput && !target.value && !this._isSelectOneElement) {
-        this._handleBackspace(activeItems);
-        event.preventDefault();
-      }
-    };
-
     // Map keys to key actions
     const keyDownActions = {
-      [aKey]: onAKey,
-      [enterKey]: onEnterKey,
-      [escapeKey]: onEscapeKey,
-      [upKey]: onDirectionKey,
-      [pageUpKey]: onDirectionKey,
-      [downKey]: onDirectionKey,
-      [pageDownKey]: onDirectionKey,
-      [deleteKey]: onDeleteKey,
-      [backKey]: onDeleteKey,
+      [A_KEY]: this._onAKey,
+      [ENTER_KEY]: this._onEnterKey,
+      [ESC_KEY]: this._onEscapeKey,
+      [UP_KEY]: this._onDirectionKey,
+      [PAGE_UP_KEY]: this._onDirectionKey,
+      [DOWN_KEY]: this._onDirectionKey,
+      [PAGE_DOWN_KEY]: this._onDirectionKey,
+      [DELETE_KEY]: this._onDeleteKey,
+      [BACK_KEY]: this._onDeleteKey,
     };
 
     // If keycode has a function, run it
     if (keyDownActions[keyCode]) {
-      keyDownActions[keyCode]();
+      keyDownActions[keyCode]({
+        target,
+        keyCode,
+        metaKey,
+        activeItems,
+        hasFocusedInput,
+        hasActiveDropdown,
+        hasItems,
+        hasCtrlDownKeyPressed,
+      });
     }
   }
 
@@ -1212,6 +1196,141 @@ class Choices {
     }
 
     this._canSearch = this.config.searchEnabled;
+  }
+
+  _onAKey({ hasItems, hasCtrlDownKeyPressed }) {
+    // If CTRL + A or CMD + A have been pressed and there are items to select
+    if (hasCtrlDownKeyPressed && hasItems) {
+      this._canSearch = false;
+      if (
+        this.config.removeItems &&
+        !this.input.value &&
+        this.input.element === document.activeElement
+      ) {
+        // Highlight items
+        this.highlightAll();
+      }
+    }
+  }
+
+  _onEnterKey({ target, activeItems, hasActiveDropdown }) {
+    const { ENTER_KEY: enterKey } = KEY_CODES;
+    // If enter key is pressed and the input has a value
+    if (this._isTextElement && target.value) {
+      const value = this.input.value;
+      const canAddItem = this._canAddItem(activeItems, value);
+
+      // All is good, add
+      if (canAddItem.response) {
+        this.hideDropdown(true);
+        this._addItem({ value });
+        this._triggerChange(value);
+        this.clearInput();
+      }
+    }
+
+    if (target.hasAttribute('data-button')) {
+      this._handleButtonAction(activeItems, target);
+      event.preventDefault();
+    }
+
+    if (hasActiveDropdown) {
+      event.preventDefault();
+      const highlighted = this.dropdown.getChild(
+        `.${this.config.classNames.highlightedState}`,
+      );
+
+      // If we have a highlighted choice
+      if (highlighted) {
+        // add enter keyCode value
+        if (activeItems[0]) {
+          activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
+        }
+        this._handleChoiceAction(activeItems, highlighted);
+      }
+    } else if (this._isSelectOneElement) {
+      // Open single select dropdown if it's not active
+      this.showDropdown();
+      event.preventDefault();
+    }
+  }
+
+  _onEscapeKey({ hasActiveDropdown }) {
+    if (hasActiveDropdown) {
+      this.hideDropdown(true);
+      this.containerOuter.focus();
+    }
+  }
+
+  _onDirectionKey({ hasActiveDropdown, keyCode, metaKey }) {
+    const {
+      DOWN_KEY: downKey,
+      PAGE_UP_KEY: pageUpKey,
+      PAGE_DOWN_KEY: pageDownKey,
+    } = KEY_CODES;
+
+    // If up or down key is pressed, traverse through options
+    if (hasActiveDropdown || this._isSelectOneElement) {
+      this.showDropdown();
+      this._canSearch = false;
+
+      const directionInt =
+        keyCode === downKey || keyCode === pageDownKey ? 1 : -1;
+      const skipKey =
+        metaKey || keyCode === pageDownKey || keyCode === pageUpKey;
+      const selectableChoiceIdentifier = '[data-choice-selectable]';
+
+      let nextEl;
+      if (skipKey) {
+        if (directionInt > 0) {
+          nextEl = Array.from(
+            this.dropdown.element.querySelectorAll(selectableChoiceIdentifier),
+          ).pop();
+        } else {
+          nextEl = this.dropdown.element.querySelector(
+            selectableChoiceIdentifier,
+          );
+        }
+      } else {
+        const currentEl = this.dropdown.element.querySelector(
+          `.${this.config.classNames.highlightedState}`,
+        );
+        if (currentEl) {
+          nextEl = getAdjacentEl(
+            currentEl,
+            selectableChoiceIdentifier,
+            directionInt,
+          );
+        } else {
+          nextEl = this.dropdown.element.querySelector(
+            selectableChoiceIdentifier,
+          );
+        }
+      }
+
+      if (nextEl) {
+        // We prevent default to stop the cursor moving
+        // when pressing the arrow
+        if (
+          !isScrolledIntoView(nextEl, this.choiceList.element, directionInt)
+        ) {
+          this.choiceList.scrollToChoice(nextEl, directionInt);
+        }
+        this._highlightChoice(nextEl);
+      }
+
+      // Prevent default to maintain cursor position whilst
+      // traversing dropdown options
+      event.preventDefault();
+    }
+  }
+
+  _onDeleteKey({ target, hasFocusedInput, activeItems }) {
+    // If backspace or delete key is pressed and the input has no value
+    if (hasFocusedInput && !target.value && !this._isSelectOneElement) {
+      this._handleBackspace(activeItems);
+      event.preventDefault();
+    }
   }
 
   _onTouchMove() {
@@ -1939,18 +2058,6 @@ class Choices {
     );
   }
 
-  static _generateConfig(userConfig) {
-    const defaultConfig = {
-      ...DEFAULT_CONFIG,
-      items: [],
-      choices: [],
-      classNames: DEFAULT_CLASSNAMES,
-      sortFn: sortByAlpha,
-    };
-
-    return extend(defaultConfig, Choices.userDefaults, userConfig);
-  }
-
   _generatePlaceholderValue() {
     if (this._isSelectOneElement) {
       return false;
@@ -1960,97 +2067,6 @@ class Choices {
       ? this.config.placeholderValue ||
           this.passedElement.element.getAttribute('placeholder')
       : false;
-  }
-
-  _renderChoices() {
-    const { activeGroups, activeChoices } = this._store;
-    let choiceListFragment = document.createDocumentFragment();
-
-    this.choiceList.clear();
-
-    if (this.config.resetScrollPosition) {
-      requestAnimationFrame(() => this.choiceList.scrollToTop());
-    }
-
-    // If we have grouped options
-    if (activeGroups.length >= 1 && !this._isSearching) {
-      // If we have a placeholder choice along with groups
-      const activePlaceholders = activeChoices.filter(
-        activeChoice =>
-          activeChoice.placeholder === true && activeChoice.groupId === -1,
-      );
-      if (activePlaceholders.length >= 1) {
-        choiceListFragment = this._createChoicesFragment(
-          activePlaceholders,
-          choiceListFragment,
-        );
-      }
-      choiceListFragment = this._createGroupsFragment(
-        activeGroups,
-        activeChoices,
-        choiceListFragment,
-      );
-    } else if (activeChoices.length >= 1) {
-      choiceListFragment = this._createChoicesFragment(
-        activeChoices,
-        choiceListFragment,
-      );
-    }
-
-    // If we have choices to show
-    if (
-      choiceListFragment.childNodes &&
-      choiceListFragment.childNodes.length > 0
-    ) {
-      const activeItems = this._store.activeItems;
-      const canAddItem = this._canAddItem(activeItems, this.input.value);
-
-      // ...and we can select them
-      if (canAddItem.response) {
-        // ...append them and highlight the first choice
-        this.choiceList.append(choiceListFragment);
-        this._highlightChoice();
-      } else {
-        // ...otherwise show a notice
-        this.choiceList.append(this._getTemplate('notice', canAddItem.notice));
-      }
-    } else {
-      // Otherwise show a notice
-      let dropdownItem;
-      let notice;
-
-      if (this._isSearching) {
-        notice = isType('Function', this.config.noResultsText)
-          ? this.config.noResultsText()
-          : this.config.noResultsText;
-
-        dropdownItem = this._getTemplate('notice', notice, 'no-results');
-      } else {
-        notice = isType('Function', this.config.noChoicesText)
-          ? this.config.noChoicesText()
-          : this.config.noChoicesText;
-
-        dropdownItem = this._getTemplate('notice', notice, 'no-choices');
-      }
-
-      this.choiceList.append(dropdownItem);
-    }
-  }
-
-  _renderItems() {
-    const activeItems = this._store.activeItems || [];
-    this.itemList.clear();
-
-    if (activeItems.length) {
-      // Create a fragment to store our list items
-      // (so we don't have to update the DOM for each item)
-      const itemListFragment = this._createItemsFragment(activeItems);
-
-      // If we have items to add, append them
-      if (itemListFragment.childNodes) {
-        this.itemList.append(itemListFragment);
-      }
-    }
   }
 
   /* =====  End of Private functions  ====== */

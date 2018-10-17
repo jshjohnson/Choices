@@ -32,11 +32,11 @@ Or include Choices directly:
 
 ```html
 <!-- Include base CSS (optional) -->
-<link rel="stylesheet" href="public/styles/base.min.css">
+<link rel="stylesheet" href="public/assets/styles/base.min.css">
 <!-- Include Choices CSS -->
-<link rel="stylesheet" href="public/styles/choices.min.css">
+<link rel="stylesheet" href="public/assets/styles/choices.min.css">
 <!-- Include Choices JavaScript -->
-<script src="/public/scripts/choices.min.js"></script>
+<script src="/public/assets/scripts/choices.min.js"></script>
 ```
 ## Setup
 
@@ -919,8 +919,10 @@ To setup a local environment: clone this repo, navigate into it's directory in a
 | Task                 | Usage                                                        |
 | -------------------- | ------------------------------------------------------------ |
 | `npm run start`      | Fire up local server for development                         |
-| `npm run test`       | Run sequence of tests once                                   |
-| `npm run test:watch` | Fire up test server and re-test on file change               |
+| `npm run test:unit`  | Run sequence of tests once                                   |
+| `npm run test:unit:watch` | Fire up test server and re-test on file change          |
+| `npm run test:e2e`    | Run sequence of e2e tests                                   |
+| `npm run test`    | Run both unit and e2e tests                                 |
 | `npm run js:build`   | Compile Choices to an uglified JavaScript file               |
 | `npm run css:watch`  | Watch SCSS files for changes. On a change, run build process |
 | `npm run css:build`  | Compile, minify and prefix SCSS files to CSS                 |

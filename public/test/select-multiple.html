@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <title>Choices</title>
+  <meta name=description itemprop=description content="A lightweight, configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.">
+  <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="../assets/images/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="../assets/images/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="../assets/images/manifest.json">
+  <link rel="mask-icon" href="../assets/images/safari-pinned-tab.svg" color="#00bcd4">
+  <link rel="shortcut icon" href="../assets/images/favicon.ico">
+  <meta name="msapplication-config" content="../assets/images/browserconfig.xml">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Ignore these -->
+  <link rel="stylesheet" href="../assets/styles/base.min.css?version=3.0.2">
+  <!-- End ignore these -->
+
+  <!-- Choices includes -->
+  <link rel="stylesheet" href="../assets/styles/choices.min.css?version=3.0.2">
+  <script src="../assets/scripts/choices.min.js?version=2.8.8"></script>
+  <!-- End Choices includes -->
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="section">
+        <h2>Select multiple inputs</h2>
+        <div data-test-hook="basic">
+          <label for="choices-basic">Basic</label>
+          <select class="form-control" name="choices-basic" id="choices-basic" placeholder="This is a placeholder" multiple>
+            <option value="Dropdown item 1">Dropdown item 1</option>
+            <option value="Dropdown item 2">Dropdown item 2</option>
+            <option value="Find me">Dropdown item 3</option>
+            <option value="Dropdown item 4">Dropdown item 4</option>
+          </select>
+        </div>
+
+        <div data-test-hook="remove-button">
+          <label for="choices-remove-button">Remove button</label>
+          <select class="form-control" name="choices-remove-button" id="choices-remove-button" placeholder="This is a placeholder" multiple>
+            <option value="Dropdown item 1">Dropdown item 1</option>
+            <option value="Dropdown item 2">Dropdown item 2</option>
+            <option value="Dropdown item 3">Dropdown item 3</option>
+            <option value="Dropdown item 4">Dropdown item 4</option>
+          </select>
+        </div>
+
+        <div data-test-hook="disabled-choice">
+          <label for="choices-disabled-choice">Disabled choice</label>
+          <select class="form-control" name="choices-disabled-choice" id="choices-disabled-choice" placeholder="This is a placeholder" multiple>
+            <option value="Dropdown item 1">Dropdown item 1</option>
+            <option value="Dropdown item 2">Dropdown item 2</option>
+            <option value="Dropdown item 3">Dropdown item 3</option>
+            <option value="Dropdown item 4" disabled>Dropdown item 4</option>
+          </select>
+        </div>
+
+        <div data-test-hook="selection-limit">
+          <label for="choices-selection-limit">Input limit</label>
+          <select class="form-control" name="choices-selection-limit" id="choices-selection-limit" placeholder="This is a placeholder" multiple>
+            <option value="Dropdown item 1">Dropdown item 1</option>
+            <option value="Dropdown item 2">Dropdown item 2</option>
+            <option value="Dropdown item 3">Dropdown item 3</option>
+            <option value="Dropdown item 4">Dropdown item 4</option>
+            <option value="Dropdown item 5">Dropdown item 5</option>
+            <option value="Dropdown item 6">Dropdown item 6</option>
+          </select>
+        </div>
+
+        <div data-test-hook="prepend-append">
+          <label for="choices-prepend-append">Prepend/append</label>
+          <select class="form-control" name="choices-prepend-append" id="choices-prepend-append" placeholder="This is a placeholder" multiple>
+            <option value="Dropdown item 1">Dropdown item 1</option>
+            <option value="Dropdown item 2">Dropdown item 2</option>
+            <option value="Dropdown item 3">Dropdown item 3</option>
+          </select>
+        </div>
+
+        <div data-test-hook="render-choice-limit">
+          <label for="choices-render-choice-limit">Render choice limit</label>
+          <select class="form-control" name="choices-render-choice-limit" id="choices-render-choice-limit" placeholder="This is a placeholder" multiple>
+            <option value="Dropdown item 1">Dropdown item 1</option>
+            <option value="Dropdown item 2">Dropdown item 2</option>
+            <option value="Dropdown item 3">Dropdown item 3</option>
+          </select>
+        </div>
+
+        <div data-test-hook="search-floor">
+          <label for="choices-search-floor">Search floor</label>
+          <select class="form-control" name="choices-search-floor" id="choices-search-floor" placeholder="This is a placeholder" multiple>
+            <option value="Dropdown item 1">Dropdown item 1</option>
+            <option value="Dropdown item 2">Dropdown item 2</option>
+            <option value="Dropdown item 3">Dropdown item 3</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        new Choices('#choices-basic');
+
+        new Choices('#choices-remove-button', {
+          removeItemButton: true,
+        });
+
+        new Choices('#choices-disabled-choice');
+
+        new Choices('#choices-selection-limit', {
+          maxItemCount: 5,
+        });
+
+        new Choices('#choices-prepend-append', {
+          prependValue: 'before-',
+          appendValue: '-after',
+        });
+
+        new Choices('#choices-render-choice-limit', {
+          renderChoiceLimit: 1,
+        });
+
+        new Choices('#choices-search-floor', {
+          searchFloor: 10,
+        });
+      });
+    </script>
+  </body>
+  </html>
