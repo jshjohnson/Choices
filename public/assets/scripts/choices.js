@@ -90,21 +90,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 /* eslint-disable */
 
-/**
- * Get a random number between a range
- * @param  {Number} min Minimum range
- * @param  {Number} max Maximum range
- * @return {Number}     Random number
- */
 var getRandomNumber = exports.getRandomNumber = function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
 
-/**
- * Generates a string of random chars
- * @param  {Number} length Length of the string to generate
- * @return {String} String of random chars
- */
 var generateChars = exports.generateChars = function generateChars(length) {
   var chars = '';
 
@@ -116,12 +105,6 @@ var generateChars = exports.generateChars = function generateChars(length) {
   return chars;
 };
 
-/**
- * Generates a unique id based on an element
- * @param  {HTMLElement} element Element to generate the id from
- * @param  {String} Prefix for the Id
- * @return {String} Unique Id
- */
 var generateId = exports.generateId = function generateId(element, prefix) {
   var id = element.id || element.name && element.name + '-' + generateChars(2) || generateChars(4);
   id = id.replace(/(:|\.|\[|\]|,)/g, '');
@@ -130,41 +113,19 @@ var generateId = exports.generateId = function generateId(element, prefix) {
   return id;
 };
 
-/**
- * Gets the type of an object
- * Why not use typeof? See here: http: //bonsaiden.github.io/JavaScript-Garden/#types.typeof
- * @param  {Object}  obj  Object to check
- * @return {Boolean}
- */
 var getType = exports.getType = function getType(obj) {
   return Object.prototype.toString.call(obj).slice(8, -1);
 };
 
-/**
- * Tests the type of an object
- * @param  {String}  type Type to test object against
- * @param  {Object}  obj  Object to be tested
- * @return {Boolean}
- */
 var isType = exports.isType = function isType(type, obj) {
   var clas = getType(obj);
   return obj !== undefined && obj !== null && clas === type;
 };
 
-/**
- * Tests to see if a passed object is an element
- * @param  {Object}  obj  Object to be tested
- * @return {Boolean}
- */
 var isElement = exports.isElement = function isElement(element) {
   return element instanceof Element;
 };
 
-/**
- * Merges unspecified amount of objects into new object
- * @private
- * @return {Object} Merged object of arguments
- */
 var extend = exports.extend = function extend() {
   var extended = {};
   var length = arguments.length;
@@ -210,23 +171,11 @@ var wrap = exports.wrap = function wrap(element, wrapper) {
   return wrapper.appendChild(element);
 };
 
-/**
- * Find ancestor in DOM tree
- * @param  {NodeElement} el  Element to start search from
- * @param  {[type]} cls Class of parent
- * @return {NodeElement}     Found parent element
- */
 var findAncestor = exports.findAncestor = function findAncestor(el, cls) {
   while ((el = el.parentElement) && !el.classList.contains(cls)) {}
   return el;
 };
 
-/**
- * Find ancestor in DOM tree by attribute name
- * @param  {NodeElement} el  Element to start search from
- * @param  {string} attr Attribute name of parent
- * @return {?NodeElement}     Found parent element or null
- */
 var findAncestorByAttrName = exports.findAncestorByAttrName = function findAncestorByAttrName(el, attr) {
   var target = el;
 
@@ -241,13 +190,6 @@ var findAncestorByAttrName = exports.findAncestorByAttrName = function findAnces
   return null;
 };
 
-/**
- * Get the next or previous element from a given start point
- * @param  {HTMLElement} startEl    Element to start position from
- * @param  {String}      className  The class we will look through
- * @param  {Number}      direction  Positive next element, negative previous element
- * @return {[HTMLElement}           Found element
- */
 var getAdjacentEl = exports.getAdjacentEl = function getAdjacentEl(startEl, className) {
   var direction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
 
@@ -262,13 +204,6 @@ var getAdjacentEl = exports.getAdjacentEl = function getAdjacentEl(startEl, clas
   return children[startPos + operatorDirection];
 };
 
-/**
- * Determine whether an element is within
- * @param  {HTMLElement} el        Element to test
- * @param  {HTMLElement} parent    Scrolling parent
- * @param  {Number} direction      Whether element is visible from above or below
- * @return {Boolean}
- */
 var isScrolledIntoView = exports.isScrolledIntoView = function isScrolledIntoView(el, parent) {
   var direction = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
 
@@ -287,20 +222,10 @@ var isScrolledIntoView = exports.isScrolledIntoView = function isScrolledIntoVie
   return isVisible;
 };
 
-/**
- * Escapes html in the string
- * @param  {String} html Initial string/html
- * @return {String}  Sanitised string
- */
 var stripHTML = exports.stripHTML = function stripHTML(html) {
   return html.replace(/&/g, '&amp;').replace(/>/g, '&rt;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 };
 
-/**
- * Turn a string into a node
- * @param  {String} String to convert
- * @return {HTMLElement}   Converted node element
- */
 var strToEl = exports.strToEl = function () {
   var tmpEl = document.createElement('div');
   return function (str) {
@@ -364,14 +289,6 @@ var calcWidthOfInput = exports.calcWidthOfInput = function calcWidthOfInput(inpu
   }
 };
 
-/**
- * Sorting function for current and previous string
- * @param  {String} a Current value
- * @param  {String} b Next value
- * @return {Number}   -1 for after previous,
- *                    1 for before,
- *                    0 for same location
- */
 var sortByAlpha = exports.sortByAlpha = function sortByAlpha(a, b) {
   var labelA = (a.label || a.value).toLowerCase();
   var labelB = (b.label || b.value).toLowerCase();
@@ -387,25 +304,10 @@ var sortByAlpha = exports.sortByAlpha = function sortByAlpha(a, b) {
   return 0;
 };
 
-/**
- * Sort by numeric score
- * @param  {Object} a Current value
- * @param  {Object} b Next value
- * @return {Number}   -1 for after previous,
- *                    1 for before,
- *                    0 for same location
- */
 var sortByScore = exports.sortByScore = function sortByScore(a, b) {
   return a.score - b.score;
 };
 
-/**
- * Dispatch native event
- * @param  {NodeElement} element Element to trigger event on
- * @param  {String} type         Type of event to trigger
- * @param  {Object} customArgs   Data to pass with event
- * @return {Object}              Triggered event
- */
 var dispatchEvent = exports.dispatchEvent = function dispatchEvent(element, type) {
   var customArgs = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
@@ -418,12 +320,6 @@ var dispatchEvent = exports.dispatchEvent = function dispatchEvent(element, type
   return element.dispatchEvent(event);
 };
 
-/**
- * Tests value against a regular expression
- * @param  {string} value   Value to test
- * @return {Boolean}        Whether test passed/failed
- * @private
- */
 var regexFilter = exports.regexFilter = function regexFilter(value, regex) {
   if (!value || !regex) {
     return false;
@@ -450,11 +346,6 @@ var reduceToValues = exports.reduceToValues = function reduceToValues(items) {
   return values;
 };
 
-/**
- * Fetch properties from object
- * @param {Object} object Related object
- * @param {String} path   Path to value
- */
 var fetchFromObject = exports.fetchFromObject = function fetchFromObject(object, path) {
   var index = path.indexOf('.');
 
@@ -480,14 +371,14 @@ var existsInArray = exports.existsInArray = function existsInArray(array, value)
   });
 };
 
-/**
- * Deep clone an object
- * @param  {Object} obj Object to clone
- * @return {Object}     Clone of the object
- * @private
- */
 var cloneObject = exports.cloneObject = function cloneObject(obj) {
   return JSON.parse(JSON.stringify(obj));
+};
+
+var doKeysMatch = exports.doKeysMatch = function doKeysMatch(a, b) {
+  var aKeys = Object.keys(a).sort();
+  var bKeys = Object.keys(b).sort();
+  return JSON.stringify(aKeys) === JSON.stringify(bKeys);
 };
 
 /***/ }),
@@ -593,6 +484,7 @@ var DEFAULT_CONFIG = exports.DEFAULT_CONFIG = {
   regexFilter: null,
   shouldSort: true,
   shouldSortItems: false,
+  sortFn: _utils.sortByAlpha,
   placeholder: true,
   placeholderValue: null,
   searchPlaceholderValue: null,
@@ -617,7 +509,8 @@ var DEFAULT_CONFIG = exports.DEFAULT_CONFIG = {
     includeScore: true
   },
   callbackOnInit: null,
-  callbackOnCreateTemplates: null
+  callbackOnCreateTemplates: null,
+  classNames: DEFAULT_CLASSNAMES
 };
 
 var EVENTS = exports.EVENTS = {
@@ -677,8 +570,8 @@ module.exports = __webpack_require__(8) ? function (object, key, value) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var anObject = __webpack_require__(7);
-var IE8_DOM_DEFINE = __webpack_require__(42);
-var toPrimitive = __webpack_require__(43);
+var IE8_DOM_DEFINE = __webpack_require__(43);
+var toPrimitive = __webpack_require__(44);
 var dP = Object.defineProperty;
 
 exports.f = __webpack_require__(8) ? Object.defineProperty : function defineProperty(O, P, Attributes) {
@@ -924,7 +817,7 @@ __webpack_require__(3).inspectSource = function (it) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // optional / simple context binding
-var aFunction = __webpack_require__(44);
+var aFunction = __webpack_require__(45);
 module.exports = function (fn, that, length) {
   aFunction(fn);
   if (that === undefined) return fn;
@@ -950,7 +843,7 @@ module.exports = function (fn, that, length) {
 /***/ (function(module, exports, __webpack_require__) {
 
 // to indexed object, toObject with fallback for non-array-like ES3 strings
-var IObject = __webpack_require__(50);
+var IObject = __webpack_require__(51);
 var defined = __webpack_require__(11);
 module.exports = function (it) {
   return IObject(defined(it));
@@ -1040,7 +933,7 @@ module.exports = function (it) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 // EXTERNAL MODULE: ./node_modules/lodash-es/_freeGlobal.js
-var _freeGlobal = __webpack_require__(64);
+var _freeGlobal = __webpack_require__(65);
 
 // CONCATENATED MODULE: ./node_modules/lodash-es/_root.js
 
@@ -1284,7 +1177,7 @@ function isPlainObject(value) {
 /* harmony default export */ var lodash_es_isPlainObject = (isPlainObject);
 
 // EXTERNAL MODULE: ./node_modules/symbol-observable/es/index.js
-var es = __webpack_require__(65);
+var es = __webpack_require__(66);
 
 // CONCATENATED MODULE: ./node_modules/redux/es/createStore.js
 
@@ -1987,7 +1880,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.TEMPLATES = undefined;
 
-var _classnames = __webpack_require__(79);
+var _classnames = __webpack_require__(80);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -2100,33 +1993,35 @@ module.exports = __webpack_require__(35);
 "use strict";
 
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _fuse = __webpack_require__(36);
 
 var _fuse2 = _interopRequireDefault(_fuse);
 
-__webpack_require__(37);
+var _deepmerge = __webpack_require__(37);
 
-var _store2 = __webpack_require__(63);
+var _deepmerge2 = _interopRequireDefault(_deepmerge);
+
+__webpack_require__(38);
+
+var _store2 = __webpack_require__(64);
 
 var _store3 = _interopRequireDefault(_store2);
 
-var _components = __webpack_require__(72);
+var _components = __webpack_require__(73);
 
 var _constants = __webpack_require__(4);
 
 var _templates = __webpack_require__(33);
 
-var _choices = __webpack_require__(80);
+var _choices = __webpack_require__(81);
 
-var _items = __webpack_require__(81);
+var _items = __webpack_require__(82);
 
-var _groups = __webpack_require__(82);
+var _groups = __webpack_require__(83);
 
-var _misc = __webpack_require__(83);
+var _misc = __webpack_require__(84);
 
 var _utils = __webpack_require__(0);
 
@@ -2159,7 +2054,11 @@ var Choices = function () {
       }
     }
 
-    this.config = Choices._generateConfig(userConfig);
+    this.config = _deepmerge2.default.all([_constants.DEFAULT_CONFIG, Choices.userDefaults, userConfig]);
+
+    if (!(0, _utils.doKeysMatch)(this.config, _constants.DEFAULT_CONFIG)) {
+      console.warn('Unknown config option(s) passed');
+    }
 
     if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
       this.config.renderSelectedChoices = 'auto';
@@ -2167,6 +2066,10 @@ var Choices = function () {
 
     // Retrieve triggering element (i.e. element with 'data-choice' trigger)
     var passedElement = (0, _utils.isType)('String', element) ? document.querySelector(element) : element;
+
+    if (!passedElement) {
+      return console.error('Could not find passed element or passed element was of an invalid type');
+    }
 
     this._isTextElement = passedElement.type === 'text';
     this._isSelectOneElement = passedElement.type === 'select-one';
@@ -2186,8 +2089,8 @@ var Choices = function () {
       });
     }
 
-    if (!this.passedElement) {
-      throw new Error('Could not wrap passed element');
+    if (!passedElement) {
+      return console.error('Passed element was of an invalid type');
     }
 
     if (this.config.shouldSortItems === true && this._isSelectOneElement && !this.config.silent) {
@@ -2219,7 +2122,8 @@ var Choices = function () {
     if (this.passedElement.value) {
       this._presetItems = this._presetItems.concat(this.passedElement.value.split(this.config.delimiter));
     }
-    this.render = this.render.bind(this);
+
+    this._render = this._render.bind(this);
     this._onFocus = this._onFocus.bind(this);
     this._onBlur = this._onBlur.bind(this);
     this._onKeyUp = this._onKeyUp.bind(this);
@@ -2230,6 +2134,11 @@ var Choices = function () {
     this._onMouseDown = this._onMouseDown.bind(this);
     this._onMouseOver = this._onMouseOver.bind(this);
     this._onFormReset = this._onFormReset.bind(this);
+    this._onAKey = this._onAKey.bind(this);
+    this._onEnterKey = this._onEnterKey.bind(this);
+    this._onEscapeKey = this._onEscapeKey.bind(this);
+    this._onDirectionKey = this._onDirectionKey.bind(this);
+    this._onDeleteKey = this._onDeleteKey.bind(this);
 
     // If element has already been initialised with Choices, fail silently
     if (this.passedElement.element.getAttribute('data-choice') === 'active') {
@@ -2257,9 +2166,10 @@ var Choices = function () {
       // Set initial state (We need to clone the state because some reducers
       // modify the inner objects properties in the state) 🤢
       this._initialState = (0, _utils.cloneObject)(this._store.state);
-      this._store.subscribe(this.render);
-      this.render();
+      this._store.subscribe(this._render);
+      this._render();
       this._addEventListeners();
+
       this.initialised = true;
 
       var callbackOnInit = this.config.callbackOnInit;
@@ -2322,29 +2232,6 @@ var Choices = function () {
       }
 
       return this;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      this._currentState = this._store.state;
-
-      var stateChanged = this._currentState.choices !== this._prevState.choices || this._currentState.groups !== this._prevState.groups || this._currentState.items !== this._prevState.items;
-      var shouldRenderChoices = this._isSelectElement;
-      var shouldRenderItems = this._currentState.items !== this._prevState.items;
-
-      if (!stateChanged) {
-        return;
-      }
-
-      if (shouldRenderChoices) {
-        this._renderChoices();
-      }
-
-      if (shouldRenderItems) {
-        this._renderItems();
-      }
-
-      this._prevState = this._currentState;
     }
   }, {
     key: 'highlightItem',
@@ -2655,17 +2542,122 @@ var Choices = function () {
     ============================================= */
 
   }, {
+    key: '_render',
+    value: function _render() {
+      this._currentState = this._store.state;
+
+      var stateChanged = this._currentState.choices !== this._prevState.choices || this._currentState.groups !== this._prevState.groups || this._currentState.items !== this._prevState.items;
+      var shouldRenderChoices = this._isSelectElement;
+      var shouldRenderItems = this._currentState.items !== this._prevState.items;
+
+      if (!stateChanged) {
+        return;
+      }
+
+      if (shouldRenderChoices) {
+        this._renderChoices();
+      }
+
+      if (shouldRenderItems) {
+        this._renderItems();
+      }
+
+      this._prevState = this._currentState;
+    }
+  }, {
+    key: '_renderChoices',
+    value: function _renderChoices() {
+      var _this12 = this;
+
+      var _store = this._store,
+          activeGroups = _store.activeGroups,
+          activeChoices = _store.activeChoices;
+
+      var choiceListFragment = document.createDocumentFragment();
+
+      this.choiceList.clear();
+
+      if (this.config.resetScrollPosition) {
+        requestAnimationFrame(function () {
+          return _this12.choiceList.scrollToTop();
+        });
+      }
+
+      // If we have grouped options
+      if (activeGroups.length >= 1 && !this._isSearching) {
+        // If we have a placeholder choice along with groups
+        var activePlaceholders = activeChoices.filter(function (activeChoice) {
+          return activeChoice.placeholder === true && activeChoice.groupId === -1;
+        });
+        if (activePlaceholders.length >= 1) {
+          choiceListFragment = this._createChoicesFragment(activePlaceholders, choiceListFragment);
+        }
+        choiceListFragment = this._createGroupsFragment(activeGroups, activeChoices, choiceListFragment);
+      } else if (activeChoices.length >= 1) {
+        choiceListFragment = this._createChoicesFragment(activeChoices, choiceListFragment);
+      }
+
+      // If we have choices to show
+      if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
+        var activeItems = this._store.activeItems;
+        var canAddItem = this._canAddItem(activeItems, this.input.value);
+
+        // ...and we can select them
+        if (canAddItem.response) {
+          // ...append them and highlight the first choice
+          this.choiceList.append(choiceListFragment);
+          this._highlightChoice();
+        } else {
+          // ...otherwise show a notice
+          this.choiceList.append(this._getTemplate('notice', canAddItem.notice));
+        }
+      } else {
+        // Otherwise show a notice
+        var dropdownItem = void 0;
+        var notice = void 0;
+
+        if (this._isSearching) {
+          notice = (0, _utils.isType)('Function', this.config.noResultsText) ? this.config.noResultsText() : this.config.noResultsText;
+
+          dropdownItem = this._getTemplate('notice', notice, 'no-results');
+        } else {
+          notice = (0, _utils.isType)('Function', this.config.noChoicesText) ? this.config.noChoicesText() : this.config.noChoicesText;
+
+          dropdownItem = this._getTemplate('notice', notice, 'no-choices');
+        }
+
+        this.choiceList.append(dropdownItem);
+      }
+    }
+  }, {
+    key: '_renderItems',
+    value: function _renderItems() {
+      var activeItems = this._store.activeItems || [];
+      this.itemList.clear();
+
+      if (activeItems.length) {
+        // Create a fragment to store our list items
+        // (so we don't have to update the DOM for each item)
+        var itemListFragment = this._createItemsFragment(activeItems);
+
+        // If we have items to add, append them
+        if (itemListFragment.childNodes) {
+          this.itemList.append(itemListFragment);
+        }
+      }
+    }
+  }, {
     key: '_createGroupsFragment',
     value: function _createGroupsFragment(groups, choices, fragment) {
-      var _this12 = this;
+      var _this13 = this;
 
       var groupFragment = fragment || document.createDocumentFragment();
       var getGroupChoices = function getGroupChoices(group) {
         return choices.filter(function (choice) {
-          if (_this12._isSelectOneElement) {
+          if (_this13._isSelectOneElement) {
             return choice.groupId === group.id;
           }
-          return choice.groupId === group.id && (_this12.config.renderSelectedChoices === 'always' || !choice.selected);
+          return choice.groupId === group.id && (_this13.config.renderSelectedChoices === 'always' || !choice.selected);
         });
       };
 
@@ -2677,9 +2669,9 @@ var Choices = function () {
       groups.forEach(function (group) {
         var groupChoices = getGroupChoices(group);
         if (groupChoices.length >= 1) {
-          var dropdownGroup = _this12._getTemplate('choiceGroup', group);
+          var dropdownGroup = _this13._getTemplate('choiceGroup', group);
           groupFragment.appendChild(dropdownGroup);
-          _this12._createChoicesFragment(groupChoices, groupFragment, true);
+          _this13._createChoicesFragment(groupChoices, groupFragment, true);
         }
       });
 
@@ -2688,7 +2680,7 @@ var Choices = function () {
   }, {
     key: '_createChoicesFragment',
     value: function _createChoicesFragment(choices, fragment) {
-      var _this13 = this;
+      var _this14 = this;
 
       var withinGroup = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
@@ -2701,9 +2693,9 @@ var Choices = function () {
 
       var filter = this._isSearching ? _utils.sortByScore : this.config.sortFn;
       var appendChoice = function appendChoice(choice) {
-        var shouldRender = renderSelectedChoices === 'auto' ? _this13._isSelectOneElement || !choice.selected : true;
+        var shouldRender = renderSelectedChoices === 'auto' ? _this14._isSelectOneElement || !choice.selected : true;
         if (shouldRender) {
-          var dropdownItem = _this13._getTemplate('choice', choice, _this13.config.itemSelectText);
+          var dropdownItem = _this14._getTemplate('choice', choice, _this14.config.itemSelectText);
           choicesFragment.appendChild(dropdownItem);
         }
       };
@@ -2759,7 +2751,7 @@ var Choices = function () {
   }, {
     key: '_createItemsFragment',
     value: function _createItemsFragment(items) {
-      var _this14 = this;
+      var _this15 = this;
 
       var fragment = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
@@ -2786,7 +2778,7 @@ var Choices = function () {
 
       var addItemToFragment = function addItemToFragment(item) {
         // Create new list element
-        var listItem = _this14._getTemplate('item', item, removeItemButton);
+        var listItem = _this15._getTemplate('item', item, removeItemButton);
         // Append it to list
         itemListFragment.appendChild(listItem);
       };
@@ -2849,7 +2841,7 @@ var Choices = function () {
   }, {
     key: '_handleItemAction',
     value: function _handleItemAction(activeItems, element) {
-      var _this15 = this;
+      var _this16 = this;
 
       var hasShiftKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
@@ -2864,9 +2856,9 @@ var Choices = function () {
       // unless shift is being pressed
       activeItems.forEach(function (item) {
         if (item.id === parseInt(passedId, 10) && !item.highlighted) {
-          _this15.highlightItem(item);
+          _this16.highlightItem(item);
         } else if (!hasShiftKey && item.highlighted) {
-          _this15.unhighlightItem(item);
+          _this16.unhighlightItem(item);
         }
       });
 
@@ -2976,6 +2968,36 @@ var Choices = function () {
       }
     }
   }, {
+    key: '_handleSearch',
+    value: function _handleSearch(value) {
+      if (!value || !this.input.isFocussed) {
+        return;
+      }
+
+      var choices = this._store.choices;
+      var _config3 = this.config,
+          searchFloor = _config3.searchFloor,
+          searchChoices = _config3.searchChoices;
+
+      var hasUnactiveChoices = choices.some(function (option) {
+        return !option.active;
+      });
+
+      // Check that we have a value to search and the input was an alphanumeric character
+      if (value && value.length >= searchFloor) {
+        var resultCount = searchChoices ? this._searchChoices(value) : 0;
+        // Trigger search event
+        this.passedElement.triggerEvent(_constants.EVENTS.search, {
+          value: value,
+          resultCount: resultCount
+        });
+      } else if (hasUnactiveChoices) {
+        // Otherwise reset choices to active
+        this._isSearching = false;
+        this._store.dispatch((0, _choices.activateChoices)(true));
+      }
+    }
+  }, {
     key: '_canAddItem',
     value: function _canAddItem(activeItems, value) {
       var canAddItem = true;
@@ -3012,7 +3034,7 @@ var Choices = function () {
   }, {
     key: '_ajaxCallback',
     value: function _ajaxCallback() {
-      var _this16 = this;
+      var _this17 = this;
 
       return function (results, value, label) {
         if (!results || !value) {
@@ -3023,18 +3045,18 @@ var Choices = function () {
 
         if (parsedResults && (0, _utils.isType)('Array', parsedResults) && parsedResults.length) {
           // Remove loading states/text
-          _this16._handleLoadingState(false);
+          _this17._handleLoadingState(false);
           // Add each result as a choice
           parsedResults.forEach(function (result) {
             if (result.choices) {
-              _this16._addGroup({
+              _this17._addGroup({
                 group: result,
                 id: result.id || null,
                 valueKey: value,
                 labelKey: label
               });
             } else {
-              _this16._addChoice({
+              _this17._addChoice({
                 value: (0, _utils.fetchFromObject)(result, value),
                 label: (0, _utils.fetchFromObject)(result, label),
                 isSelected: result.selected,
@@ -3045,12 +3067,12 @@ var Choices = function () {
             }
           });
 
-          if (_this16._isSelectOneElement) {
-            _this16._selectPlaceholderChoice();
+          if (_this17._isSelectOneElement) {
+            _this17._selectPlaceholderChoice();
           }
         } else {
           // No results, remove loading state
-          _this16._handleLoadingState(false);
+          _this17._handleLoadingState(false);
         }
       };
     }
@@ -3078,36 +3100,6 @@ var Choices = function () {
       this._store.dispatch((0, _choices.filterChoices)(results));
 
       return results.length;
-    }
-  }, {
-    key: '_handleSearch',
-    value: function _handleSearch(value) {
-      if (!value || !this.input.isFocussed) {
-        return;
-      }
-
-      var choices = this._store.choices;
-      var _config3 = this.config,
-          searchFloor = _config3.searchFloor,
-          searchChoices = _config3.searchChoices;
-
-      var hasUnactiveChoices = choices.some(function (option) {
-        return !option.active;
-      });
-
-      // Check that we have a value to search and the input was an alphanumeric character
-      if (value && value.length >= searchFloor) {
-        var resultCount = searchChoices ? this._searchChoices(value) : 0;
-        // Trigger search event
-        this.passedElement.triggerEvent(_constants.EVENTS.search, {
-          value: value,
-          resultCount: resultCount
-        });
-      } else if (hasUnactiveChoices) {
-        // Otherwise reset choices to active
-        this._isSearching = false;
-        this._store.dispatch((0, _choices.activateChoices)(true));
-      }
     }
   }, {
     key: '_addEventListeners',
@@ -3162,8 +3154,7 @@ var Choices = function () {
   }, {
     key: '_onKeyDown',
     value: function _onKeyDown(event) {
-      var _this17 = this,
-          _keyDownActions;
+      var _keyDownActions;
 
       var target = event.target,
           keyCode = event.keyCode,
@@ -3180,134 +3171,39 @@ var Choices = function () {
       var hasActiveDropdown = this.dropdown.isActive;
       var hasItems = this.itemList.hasChildren;
       var keyString = String.fromCharCode(keyCode);
-      var backKey = _constants.KEY_CODES.BACK_KEY;
-      var deleteKey = _constants.KEY_CODES.DELETE_KEY;
-      var enterKey = _constants.KEY_CODES.ENTER_KEY;
-      var aKey = _constants.KEY_CODES.A_KEY;
-      var escapeKey = _constants.KEY_CODES.ESC_KEY;
-      var upKey = _constants.KEY_CODES.UP_KEY;
-      var downKey = _constants.KEY_CODES.DOWN_KEY;
-      var pageUpKey = _constants.KEY_CODES.PAGE_UP_KEY;
-      var pageDownKey = _constants.KEY_CODES.PAGE_DOWN_KEY;
-      var ctrlDownKey = ctrlKey || metaKey;
+
+      var BACK_KEY = _constants.KEY_CODES.BACK_KEY,
+          DELETE_KEY = _constants.KEY_CODES.DELETE_KEY,
+          ENTER_KEY = _constants.KEY_CODES.ENTER_KEY,
+          A_KEY = _constants.KEY_CODES.A_KEY,
+          ESC_KEY = _constants.KEY_CODES.ESC_KEY,
+          UP_KEY = _constants.KEY_CODES.UP_KEY,
+          DOWN_KEY = _constants.KEY_CODES.DOWN_KEY,
+          PAGE_UP_KEY = _constants.KEY_CODES.PAGE_UP_KEY,
+          PAGE_DOWN_KEY = _constants.KEY_CODES.PAGE_DOWN_KEY;
+
+      var hasCtrlDownKeyPressed = ctrlKey || metaKey;
 
       // If a user is typing and the dropdown is not active
       if (!this._isTextElement && /[a-zA-Z0-9-_ ]/.test(keyString)) {
         this.showDropdown();
       }
 
-      var onAKey = function onAKey() {
-        // If CTRL + A or CMD + A have been pressed and there are items to select
-        if (ctrlDownKey && hasItems) {
-          _this17._canSearch = false;
-          if (_this17.config.removeItems && !_this17.input.value && _this17.input.element === document.activeElement) {
-            // Highlight items
-            _this17.highlightAll();
-          }
-        }
-      };
-
-      var onEnterKey = function onEnterKey() {
-        // If enter key is pressed and the input has a value
-        if (_this17._isTextElement && target.value) {
-          var value = _this17.input.value;
-          var canAddItem = _this17._canAddItem(activeItems, value);
-
-          // All is good, add
-          if (canAddItem.response) {
-            _this17.hideDropdown(true);
-            _this17._addItem({ value: value });
-            _this17._triggerChange(value);
-            _this17.clearInput();
-          }
-        }
-
-        if (target.hasAttribute('data-button')) {
-          _this17._handleButtonAction(activeItems, target);
-          event.preventDefault();
-        }
-
-        if (hasActiveDropdown) {
-          event.preventDefault();
-          var highlighted = _this17.dropdown.getChild('.' + _this17.config.classNames.highlightedState);
-
-          // If we have a highlighted choice
-          if (highlighted) {
-            // add enter keyCode value
-            if (activeItems[0]) {
-              activeItems[0].keyCode = enterKey;
-            }
-            _this17._handleChoiceAction(activeItems, highlighted);
-          }
-        } else if (_this17._isSelectOneElement) {
-          // Open single select dropdown if it's not active
-          _this17.showDropdown();
-          event.preventDefault();
-        }
-      };
-
-      var onEscapeKey = function onEscapeKey() {
-        if (hasActiveDropdown) {
-          _this17.hideDropdown(true);
-          _this17.containerOuter.focus();
-        }
-      };
-
-      var onDirectionKey = function onDirectionKey() {
-        // If up or down key is pressed, traverse through options
-        if (hasActiveDropdown || _this17._isSelectOneElement) {
-          _this17.showDropdown();
-          _this17._canSearch = false;
-
-          var directionInt = keyCode === downKey || keyCode === pageDownKey ? 1 : -1;
-          var skipKey = metaKey || keyCode === pageDownKey || keyCode === pageUpKey;
-          var selectableChoiceIdentifier = '[data-choice-selectable]';
-
-          var nextEl = void 0;
-          if (skipKey) {
-            if (directionInt > 0) {
-              nextEl = Array.from(_this17.dropdown.element.querySelectorAll(selectableChoiceIdentifier)).pop();
-            } else {
-              nextEl = _this17.dropdown.element.querySelector(selectableChoiceIdentifier);
-            }
-          } else {
-            var currentEl = _this17.dropdown.element.querySelector('.' + _this17.config.classNames.highlightedState);
-            if (currentEl) {
-              nextEl = (0, _utils.getAdjacentEl)(currentEl, selectableChoiceIdentifier, directionInt);
-            } else {
-              nextEl = _this17.dropdown.element.querySelector(selectableChoiceIdentifier);
-            }
-          }
-
-          if (nextEl) {
-            // We prevent default to stop the cursor moving
-            // when pressing the arrow
-            if (!(0, _utils.isScrolledIntoView)(nextEl, _this17.choiceList.element, directionInt)) {
-              _this17.choiceList.scrollToChoice(nextEl, directionInt);
-            }
-            _this17._highlightChoice(nextEl);
-          }
-
-          // Prevent default to maintain cursor position whilst
-          // traversing dropdown options
-          event.preventDefault();
-        }
-      };
-
-      var onDeleteKey = function onDeleteKey() {
-        // If backspace or delete key is pressed and the input has no value
-        if (hasFocusedInput && !target.value && !_this17._isSelectOneElement) {
-          _this17._handleBackspace(activeItems);
-          event.preventDefault();
-        }
-      };
-
       // Map keys to key actions
-      var keyDownActions = (_keyDownActions = {}, _defineProperty(_keyDownActions, aKey, onAKey), _defineProperty(_keyDownActions, enterKey, onEnterKey), _defineProperty(_keyDownActions, escapeKey, onEscapeKey), _defineProperty(_keyDownActions, upKey, onDirectionKey), _defineProperty(_keyDownActions, pageUpKey, onDirectionKey), _defineProperty(_keyDownActions, downKey, onDirectionKey), _defineProperty(_keyDownActions, pageDownKey, onDirectionKey), _defineProperty(_keyDownActions, deleteKey, onDeleteKey), _defineProperty(_keyDownActions, backKey, onDeleteKey), _keyDownActions);
+      var keyDownActions = (_keyDownActions = {}, _defineProperty(_keyDownActions, A_KEY, this._onAKey), _defineProperty(_keyDownActions, ENTER_KEY, this._onEnterKey), _defineProperty(_keyDownActions, ESC_KEY, this._onEscapeKey), _defineProperty(_keyDownActions, UP_KEY, this._onDirectionKey), _defineProperty(_keyDownActions, PAGE_UP_KEY, this._onDirectionKey), _defineProperty(_keyDownActions, DOWN_KEY, this._onDirectionKey), _defineProperty(_keyDownActions, PAGE_DOWN_KEY, this._onDirectionKey), _defineProperty(_keyDownActions, DELETE_KEY, this._onDeleteKey), _defineProperty(_keyDownActions, BACK_KEY, this._onDeleteKey), _keyDownActions);
 
       // If keycode has a function, run it
       if (keyDownActions[keyCode]) {
-        keyDownActions[keyCode]();
+        keyDownActions[keyCode]({
+          target: target,
+          keyCode: keyCode,
+          metaKey: metaKey,
+          activeItems: activeItems,
+          hasFocusedInput: hasFocusedInput,
+          hasActiveDropdown: hasActiveDropdown,
+          hasItems: hasItems,
+          hasCtrlDownKeyPressed: hasCtrlDownKeyPressed
+        });
       }
     }
   }, {
@@ -3357,6 +3253,139 @@ var Choices = function () {
       }
 
       this._canSearch = this.config.searchEnabled;
+    }
+  }, {
+    key: '_onAKey',
+    value: function _onAKey(_ref3) {
+      var hasItems = _ref3.hasItems,
+          hasCtrlDownKeyPressed = _ref3.hasCtrlDownKeyPressed;
+
+      // If CTRL + A or CMD + A have been pressed and there are items to select
+      if (hasCtrlDownKeyPressed && hasItems) {
+        this._canSearch = false;
+        if (this.config.removeItems && !this.input.value && this.input.element === document.activeElement) {
+          // Highlight items
+          this.highlightAll();
+        }
+      }
+    }
+  }, {
+    key: '_onEnterKey',
+    value: function _onEnterKey(_ref4) {
+      var target = _ref4.target,
+          activeItems = _ref4.activeItems,
+          hasActiveDropdown = _ref4.hasActiveDropdown;
+      var enterKey = _constants.KEY_CODES.ENTER_KEY;
+      // If enter key is pressed and the input has a value
+
+      if (this._isTextElement && target.value) {
+        var value = this.input.value;
+        var canAddItem = this._canAddItem(activeItems, value);
+
+        // All is good, add
+        if (canAddItem.response) {
+          this.hideDropdown(true);
+          this._addItem({ value: value });
+          this._triggerChange(value);
+          this.clearInput();
+        }
+      }
+
+      if (target.hasAttribute('data-button')) {
+        this._handleButtonAction(activeItems, target);
+        event.preventDefault();
+      }
+
+      if (hasActiveDropdown) {
+        event.preventDefault();
+        var highlighted = this.dropdown.getChild('.' + this.config.classNames.highlightedState);
+
+        // If we have a highlighted choice
+        if (highlighted) {
+          // add enter keyCode value
+          if (activeItems[0]) {
+            activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
+          }
+          this._handleChoiceAction(activeItems, highlighted);
+        }
+      } else if (this._isSelectOneElement) {
+        // Open single select dropdown if it's not active
+        this.showDropdown();
+        event.preventDefault();
+      }
+    }
+  }, {
+    key: '_onEscapeKey',
+    value: function _onEscapeKey(_ref5) {
+      var hasActiveDropdown = _ref5.hasActiveDropdown;
+
+      if (hasActiveDropdown) {
+        this.hideDropdown(true);
+        this.containerOuter.focus();
+      }
+    }
+  }, {
+    key: '_onDirectionKey',
+    value: function _onDirectionKey(_ref6) {
+      var hasActiveDropdown = _ref6.hasActiveDropdown,
+          keyCode = _ref6.keyCode,
+          metaKey = _ref6.metaKey;
+      var downKey = _constants.KEY_CODES.DOWN_KEY,
+          pageUpKey = _constants.KEY_CODES.PAGE_UP_KEY,
+          pageDownKey = _constants.KEY_CODES.PAGE_DOWN_KEY;
+
+      // If up or down key is pressed, traverse through options
+
+      if (hasActiveDropdown || this._isSelectOneElement) {
+        this.showDropdown();
+        this._canSearch = false;
+
+        var directionInt = keyCode === downKey || keyCode === pageDownKey ? 1 : -1;
+        var skipKey = metaKey || keyCode === pageDownKey || keyCode === pageUpKey;
+        var selectableChoiceIdentifier = '[data-choice-selectable]';
+
+        var nextEl = void 0;
+        if (skipKey) {
+          if (directionInt > 0) {
+            nextEl = Array.from(this.dropdown.element.querySelectorAll(selectableChoiceIdentifier)).pop();
+          } else {
+            nextEl = this.dropdown.element.querySelector(selectableChoiceIdentifier);
+          }
+        } else {
+          var currentEl = this.dropdown.element.querySelector('.' + this.config.classNames.highlightedState);
+          if (currentEl) {
+            nextEl = (0, _utils.getAdjacentEl)(currentEl, selectableChoiceIdentifier, directionInt);
+          } else {
+            nextEl = this.dropdown.element.querySelector(selectableChoiceIdentifier);
+          }
+        }
+
+        if (nextEl) {
+          // We prevent default to stop the cursor moving
+          // when pressing the arrow
+          if (!(0, _utils.isScrolledIntoView)(nextEl, this.choiceList.element, directionInt)) {
+            this.choiceList.scrollToChoice(nextEl, directionInt);
+          }
+          this._highlightChoice(nextEl);
+        }
+
+        // Prevent default to maintain cursor position whilst
+        // traversing dropdown options
+        event.preventDefault();
+      }
+    }
+  }, {
+    key: '_onDeleteKey',
+    value: function _onDeleteKey(_ref7) {
+      var target = _ref7.target,
+          hasFocusedInput = _ref7.hasFocusedInput,
+          activeItems = _ref7.activeItems;
+
+      // If backspace or delete key is pressed and the input has no value
+      if (hasFocusedInput && !target.value && !this._isSelectOneElement) {
+        this._handleBackspace(activeItems);
+        event.preventDefault();
+      }
     }
   }, {
     key: '_onTouchMove',
@@ -3425,8 +3454,8 @@ var Choices = function () {
     }
   }, {
     key: '_onMouseOver',
-    value: function _onMouseOver(_ref3) {
-      var target = _ref3.target;
+    value: function _onMouseOver(_ref8) {
+      var target = _ref8.target;
 
       var targetWithinDropdown = target === this.dropdown || this.dropdown.element.contains(target);
       var shouldHighlightChoice = targetWithinDropdown && target.hasAttribute('data-choice');
@@ -3437,8 +3466,8 @@ var Choices = function () {
     }
   }, {
     key: '_onClick',
-    value: function _onClick(_ref4) {
-      var target = _ref4.target;
+    value: function _onClick(_ref9) {
+      var target = _ref9.target;
 
       if (this.containerOuter.element.contains(target)) {
         if (!this.dropdown.isActive) {
@@ -3466,10 +3495,10 @@ var Choices = function () {
     }
   }, {
     key: '_onFocus',
-    value: function _onFocus(_ref5) {
+    value: function _onFocus(_ref10) {
       var _this18 = this;
 
-      var target = _ref5.target;
+      var target = _ref10.target;
 
       if (!this.containerOuter.element.contains(target)) {
         return;
@@ -3501,10 +3530,10 @@ var Choices = function () {
     }
   }, {
     key: '_onBlur',
-    value: function _onBlur(_ref6) {
+    value: function _onBlur(_ref11) {
       var _this19 = this;
 
-      var target = _ref6.target;
+      var target = _ref11.target;
 
       // If target is something that concerns us
       if (this.containerOuter.element.contains(target) && !this._isScrollingOnIe) {
@@ -3605,20 +3634,20 @@ var Choices = function () {
     }
   }, {
     key: '_addItem',
-    value: function _addItem(_ref7) {
-      var value = _ref7.value,
-          _ref7$label = _ref7.label,
-          label = _ref7$label === undefined ? null : _ref7$label,
-          _ref7$choiceId = _ref7.choiceId,
-          choiceId = _ref7$choiceId === undefined ? -1 : _ref7$choiceId,
-          _ref7$groupId = _ref7.groupId,
-          groupId = _ref7$groupId === undefined ? -1 : _ref7$groupId,
-          _ref7$customPropertie = _ref7.customProperties,
-          customProperties = _ref7$customPropertie === undefined ? null : _ref7$customPropertie,
-          _ref7$placeholder = _ref7.placeholder,
-          placeholder = _ref7$placeholder === undefined ? false : _ref7$placeholder,
-          _ref7$keyCode = _ref7.keyCode,
-          keyCode = _ref7$keyCode === undefined ? null : _ref7$keyCode;
+    value: function _addItem(_ref12) {
+      var value = _ref12.value,
+          _ref12$label = _ref12.label,
+          label = _ref12$label === undefined ? null : _ref12$label,
+          _ref12$choiceId = _ref12.choiceId,
+          choiceId = _ref12$choiceId === undefined ? -1 : _ref12$choiceId,
+          _ref12$groupId = _ref12.groupId,
+          groupId = _ref12$groupId === undefined ? -1 : _ref12$groupId,
+          _ref12$customProperti = _ref12.customProperties,
+          customProperties = _ref12$customProperti === undefined ? null : _ref12$customProperti,
+          _ref12$placeholder = _ref12.placeholder,
+          placeholder = _ref12$placeholder === undefined ? false : _ref12$placeholder,
+          _ref12$keyCode = _ref12.keyCode,
+          keyCode = _ref12$keyCode === undefined ? null : _ref12$keyCode;
 
       var passedValue = (0, _utils.isType)('String', value) ? value.trim() : value;
 
@@ -3713,22 +3742,22 @@ var Choices = function () {
     }
   }, {
     key: '_addChoice',
-    value: function _addChoice(_ref8) {
-      var value = _ref8.value,
-          _ref8$label = _ref8.label,
-          label = _ref8$label === undefined ? null : _ref8$label,
-          _ref8$isSelected = _ref8.isSelected,
-          isSelected = _ref8$isSelected === undefined ? false : _ref8$isSelected,
-          _ref8$isDisabled = _ref8.isDisabled,
-          isDisabled = _ref8$isDisabled === undefined ? false : _ref8$isDisabled,
-          _ref8$groupId = _ref8.groupId,
-          groupId = _ref8$groupId === undefined ? -1 : _ref8$groupId,
-          _ref8$customPropertie = _ref8.customProperties,
-          customProperties = _ref8$customPropertie === undefined ? null : _ref8$customPropertie,
-          _ref8$placeholder = _ref8.placeholder,
-          placeholder = _ref8$placeholder === undefined ? false : _ref8$placeholder,
-          _ref8$keyCode = _ref8.keyCode,
-          keyCode = _ref8$keyCode === undefined ? null : _ref8$keyCode;
+    value: function _addChoice(_ref13) {
+      var value = _ref13.value,
+          _ref13$label = _ref13.label,
+          label = _ref13$label === undefined ? null : _ref13$label,
+          _ref13$isSelected = _ref13.isSelected,
+          isSelected = _ref13$isSelected === undefined ? false : _ref13$isSelected,
+          _ref13$isDisabled = _ref13.isDisabled,
+          isDisabled = _ref13$isDisabled === undefined ? false : _ref13$isDisabled,
+          _ref13$groupId = _ref13.groupId,
+          groupId = _ref13$groupId === undefined ? -1 : _ref13$groupId,
+          _ref13$customProperti = _ref13.customProperties,
+          customProperties = _ref13$customProperti === undefined ? null : _ref13$customProperti,
+          _ref13$placeholder = _ref13.placeholder,
+          placeholder = _ref13$placeholder === undefined ? false : _ref13$placeholder,
+          _ref13$keyCode = _ref13.keyCode,
+          keyCode = _ref13$keyCode === undefined ? null : _ref13$keyCode;
 
       if (typeof value === 'undefined' || value === null) {
         return;
@@ -3770,15 +3799,15 @@ var Choices = function () {
     }
   }, {
     key: '_addGroup',
-    value: function _addGroup(_ref9) {
+    value: function _addGroup(_ref14) {
       var _this21 = this;
 
-      var group = _ref9.group,
-          id = _ref9.id,
-          _ref9$valueKey = _ref9.valueKey,
-          valueKey = _ref9$valueKey === undefined ? 'value' : _ref9$valueKey,
-          _ref9$labelKey = _ref9.labelKey,
-          labelKey = _ref9$labelKey === undefined ? 'label' : _ref9$labelKey;
+      var group = _ref14.group,
+          id = _ref14.id,
+          _ref14$valueKey = _ref14.valueKey,
+          valueKey = _ref14$valueKey === undefined ? 'value' : _ref14$valueKey,
+          _ref14$labelKey = _ref14.labelKey,
+          labelKey = _ref14$labelKey === undefined ? 'label' : _ref14$labelKey;
 
       var groupChoices = (0, _utils.isType)('Object', group) ? group.choices : Array.from(group.getElementsByTagName('OPTION'));
       var groupId = id || Math.floor(new Date().valueOf() * Math.random());
@@ -4136,103 +4165,9 @@ var Choices = function () {
 
       return this.config.placeholder ? this.config.placeholderValue || this.passedElement.element.getAttribute('placeholder') : false;
     }
-  }, {
-    key: '_renderChoices',
-    value: function _renderChoices() {
-      var _this26 = this;
-
-      var _store = this._store,
-          activeGroups = _store.activeGroups,
-          activeChoices = _store.activeChoices;
-
-      var choiceListFragment = document.createDocumentFragment();
-
-      this.choiceList.clear();
-
-      if (this.config.resetScrollPosition) {
-        requestAnimationFrame(function () {
-          return _this26.choiceList.scrollToTop();
-        });
-      }
-
-      // If we have grouped options
-      if (activeGroups.length >= 1 && !this._isSearching) {
-        // If we have a placeholder choice along with groups
-        var activePlaceholders = activeChoices.filter(function (activeChoice) {
-          return activeChoice.placeholder === true && activeChoice.groupId === -1;
-        });
-        if (activePlaceholders.length >= 1) {
-          choiceListFragment = this._createChoicesFragment(activePlaceholders, choiceListFragment);
-        }
-        choiceListFragment = this._createGroupsFragment(activeGroups, activeChoices, choiceListFragment);
-      } else if (activeChoices.length >= 1) {
-        choiceListFragment = this._createChoicesFragment(activeChoices, choiceListFragment);
-      }
-
-      // If we have choices to show
-      if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
-        var activeItems = this._store.activeItems;
-        var canAddItem = this._canAddItem(activeItems, this.input.value);
-
-        // ...and we can select them
-        if (canAddItem.response) {
-          // ...append them and highlight the first choice
-          this.choiceList.append(choiceListFragment);
-          this._highlightChoice();
-        } else {
-          // ...otherwise show a notice
-          this.choiceList.append(this._getTemplate('notice', canAddItem.notice));
-        }
-      } else {
-        // Otherwise show a notice
-        var dropdownItem = void 0;
-        var notice = void 0;
-
-        if (this._isSearching) {
-          notice = (0, _utils.isType)('Function', this.config.noResultsText) ? this.config.noResultsText() : this.config.noResultsText;
-
-          dropdownItem = this._getTemplate('notice', notice, 'no-results');
-        } else {
-          notice = (0, _utils.isType)('Function', this.config.noChoicesText) ? this.config.noChoicesText() : this.config.noChoicesText;
-
-          dropdownItem = this._getTemplate('notice', notice, 'no-choices');
-        }
-
-        this.choiceList.append(dropdownItem);
-      }
-    }
-  }, {
-    key: '_renderItems',
-    value: function _renderItems() {
-      var activeItems = this._store.activeItems || [];
-      this.itemList.clear();
-
-      if (activeItems.length) {
-        // Create a fragment to store our list items
-        // (so we don't have to update the DOM for each item)
-        var itemListFragment = this._createItemsFragment(activeItems);
-
-        // If we have items to add, append them
-        if (itemListFragment.childNodes) {
-          this.itemList.append(itemListFragment);
-        }
-      }
-    }
 
     /* =====  End of Private functions  ====== */
 
-  }], [{
-    key: '_generateConfig',
-    value: function _generateConfig(userConfig) {
-      var defaultConfig = _extends({}, _constants.DEFAULT_CONFIG, {
-        items: [],
-        choices: [],
-        classNames: _constants.DEFAULT_CLASSNAMES,
-        sortFn: _utils.sortByAlpha
-      });
-
-      return (0, _utils.extend)(defaultConfig, Choices.userDefaults, userConfig);
-    }
   }]);
 
   return Choices;
@@ -4247,7 +4182,7 @@ module.exports = Choices;
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
- * Fuse.js v3.2.1 - Lightweight fuzzy-search (http://fusejs.io)
+ * Fuse.js v3.2.0 - Lightweight fuzzy-search (http://fusejs.io)
  * 
  * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
  * All Rights Reserved. Apache Software License 2.0
@@ -4340,7 +4275,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 module.exports = function (obj) {
-  return !Array.isArray ? Object.prototype.toString.call(obj) === '[object Array]' : Array.isArray(obj);
+  return Object.prototype.toString.call(obj) === '[object Array]';
 };
 
 /***/ }),
@@ -4770,16 +4705,12 @@ module.exports = function (text, pattern, patternAlphabet, _ref) {
       distance: distance
     });
 
-    // console.log('score', score, finalScore)
-
     if (_score2 > currentThreshold) {
       break;
     }
 
     lastBitArr = bitArr;
   }
-
-  // console.log('FINAL SCORE', finalScore)
 
   // Count exact matches (those with a score of 0) to be "almost" exact
   return {
@@ -5132,7 +5063,7 @@ var Fuse = function () {
         var output = results[i].output;
         var scoreLen = output.length;
 
-        var currScore = 1;
+        var totalScore = 0;
         var bestScore = 1;
 
         for (var j = 0; j < scoreLen; j += 1) {
@@ -5144,11 +5075,11 @@ var Fuse = function () {
             bestScore = Math.min(bestScore, nScore);
           } else {
             output[j].nScore = nScore;
-            currScore *= nScore;
+            totalScore += nScore;
           }
         }
 
-        results[i].score = bestScore === 1 ? currScore : bestScore;
+        results[i].score = bestScore === 1 ? totalScore / scoreLen : bestScore;
 
         this._log(results[i]);
       }
@@ -5164,9 +5095,7 @@ var Fuse = function () {
     value: function _format(results) {
       var finalOutput = [];
 
-      if (this.options.verbose) {
-        this._log('\n\nOutput:\n\n', JSON.stringify(results));
-      }
+      this._log('\n\nOutput:\n\n', JSON.stringify(results));
 
       var transformers = [];
 
@@ -5251,34 +5180,131 @@ module.exports = Fuse;
 
 /***/ }),
 /* 37 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var isMergeableObject = function isMergeableObject(value) {
+	return isNonNullObject(value)
+		&& !isSpecial(value)
+};
 
+function isNonNullObject(value) {
+	return !!value && typeof value === 'object'
+}
 
-__webpack_require__(38);
+function isSpecial(value) {
+	var stringValue = Object.prototype.toString.call(value);
 
-__webpack_require__(62);
+	return stringValue === '[object RegExp]'
+		|| stringValue === '[object Date]'
+		|| isReactElement(value)
+}
+
+// see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
+var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
+
+function isReactElement(value) {
+	return value.$$typeof === REACT_ELEMENT_TYPE
+}
+
+function emptyTarget(val) {
+	return Array.isArray(val) ? [] : {}
+}
+
+function cloneUnlessOtherwiseSpecified(value, options) {
+	return (options.clone !== false && options.isMergeableObject(value))
+		? deepmerge(emptyTarget(value), value, options)
+		: value
+}
+
+function defaultArrayMerge(target, source, options) {
+	return target.concat(source).map(function(element) {
+		return cloneUnlessOtherwiseSpecified(element, options)
+	})
+}
+
+function mergeObject(target, source, options) {
+	var destination = {};
+	if (options.isMergeableObject(target)) {
+		Object.keys(target).forEach(function(key) {
+			destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
+		});
+	}
+	Object.keys(source).forEach(function(key) {
+		if (!options.isMergeableObject(source[key]) || !target[key]) {
+			destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
+		} else {
+			destination[key] = deepmerge(target[key], source[key], options);
+		}
+	});
+	return destination
+}
+
+function deepmerge(target, source, options) {
+	options = options || {};
+	options.arrayMerge = options.arrayMerge || defaultArrayMerge;
+	options.isMergeableObject = options.isMergeableObject || isMergeableObject;
+
+	var sourceIsArray = Array.isArray(source);
+	var targetIsArray = Array.isArray(target);
+	var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
+
+	if (!sourceAndTargetTypesMatch) {
+		return cloneUnlessOtherwiseSpecified(source, options)
+	} else if (sourceIsArray) {
+		return options.arrayMerge(target, source, options)
+	} else {
+		return mergeObject(target, source, options)
+	}
+}
+
+deepmerge.all = function deepmergeAll(array, options) {
+	if (!Array.isArray(array)) {
+		throw new Error('first argument should be an array')
+	}
+
+	return array.reduce(function(prev, next) {
+		return deepmerge(prev, next, options)
+	}, {})
+};
+
+var deepmerge_1 = deepmerge;
+
+/* harmony default export */ __webpack_exports__["default"] = (deepmerge_1);
+
 
 /***/ }),
 /* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(39);
-__webpack_require__(55);
-module.exports = __webpack_require__(3).Array.from;
+"use strict";
 
+
+__webpack_require__(39);
+
+__webpack_require__(63);
 
 /***/ }),
 /* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
+__webpack_require__(40);
+__webpack_require__(56);
+module.exports = __webpack_require__(3).Array.from;
+
+
+/***/ }),
+/* 40 */
+/***/ (function(module, exports, __webpack_require__) {
+
 "use strict";
 
-var $at = __webpack_require__(40)(true);
+var $at = __webpack_require__(41)(true);
 
 // 21.1.3.27 String.prototype[@@iterator]()
-__webpack_require__(41)(String, 'String', function (iterated) {
+__webpack_require__(42)(String, 'String', function (iterated) {
   this._t = String(iterated); // target
   this._i = 0;                // next index
 // 21.1.5.2.1 %StringIteratorPrototype%.next()
@@ -5294,7 +5320,7 @@ __webpack_require__(41)(String, 'String', function (iterated) {
 
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var toInteger = __webpack_require__(10);
@@ -5317,7 +5343,7 @@ module.exports = function (TO_STRING) {
 
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5327,9 +5353,9 @@ var $export = __webpack_require__(18);
 var redefine = __webpack_require__(21);
 var hide = __webpack_require__(5);
 var Iterators = __webpack_require__(15);
-var $iterCreate = __webpack_require__(45);
+var $iterCreate = __webpack_require__(46);
 var setToStringTag = __webpack_require__(28);
-var getPrototypeOf = __webpack_require__(54);
+var getPrototypeOf = __webpack_require__(55);
 var ITERATOR = __webpack_require__(1)('iterator');
 var BUGGY = !([].keys && 'next' in [].keys()); // Safari has buggy iterators w/o `next`
 var FF_ITERATOR = '@@iterator';
@@ -5393,7 +5419,7 @@ module.exports = function (Base, NAME, Constructor, next, DEFAULT, IS_SET, FORCE
 
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = !__webpack_require__(8) && !__webpack_require__(19)(function () {
@@ -5402,7 +5428,7 @@ module.exports = !__webpack_require__(8) && !__webpack_require__(19)(function ()
 
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 7.1.1 ToPrimitive(input [, PreferredType])
@@ -5420,7 +5446,7 @@ module.exports = function (it, S) {
 
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports) {
 
 module.exports = function (it) {
@@ -5430,12 +5456,12 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var create = __webpack_require__(46);
+var create = __webpack_require__(47);
 var descriptor = __webpack_require__(13);
 var setToStringTag = __webpack_require__(28);
 var IteratorPrototype = {};
@@ -5450,12 +5476,12 @@ module.exports = function (Constructor, NAME, next) {
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.2 / 15.2.3.5 Object.create(O [, Properties])
 var anObject = __webpack_require__(7);
-var dPs = __webpack_require__(47);
+var dPs = __webpack_require__(48);
 var enumBugKeys = __webpack_require__(27);
 var IE_PROTO = __webpack_require__(16)('IE_PROTO');
 var Empty = function () { /* empty */ };
@@ -5470,7 +5496,7 @@ var createDict = function () {
   var gt = '>';
   var iframeDocument;
   iframe.style.display = 'none';
-  __webpack_require__(53).appendChild(iframe);
+  __webpack_require__(54).appendChild(iframe);
   iframe.src = 'javascript:'; // eslint-disable-line no-script-url
   // createDict = iframe.contentWindow.Object;
   // html.removeChild(iframe);
@@ -5497,12 +5523,12 @@ module.exports = Object.create || function create(O, Properties) {
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var dP = __webpack_require__(6);
 var anObject = __webpack_require__(7);
-var getKeys = __webpack_require__(48);
+var getKeys = __webpack_require__(49);
 
 module.exports = __webpack_require__(8) ? Object.defineProperties : function defineProperties(O, Properties) {
   anObject(O);
@@ -5516,11 +5542,11 @@ module.exports = __webpack_require__(8) ? Object.defineProperties : function def
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.14 / 15.2.3.14 Object.keys(O)
-var $keys = __webpack_require__(49);
+var $keys = __webpack_require__(50);
 var enumBugKeys = __webpack_require__(27);
 
 module.exports = Object.keys || function keys(O) {
@@ -5529,12 +5555,12 @@ module.exports = Object.keys || function keys(O) {
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var has = __webpack_require__(9);
 var toIObject = __webpack_require__(23);
-var arrayIndexOf = __webpack_require__(51)(false);
+var arrayIndexOf = __webpack_require__(52)(false);
 var IE_PROTO = __webpack_require__(16)('IE_PROTO');
 
 module.exports = function (object, names) {
@@ -5552,7 +5578,7 @@ module.exports = function (object, names) {
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // fallback for non-array-like ES3 and non-enumerable old V8 strings
@@ -5564,14 +5590,14 @@ module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // false -> Array#indexOf
 // true  -> Array#includes
 var toIObject = __webpack_require__(23);
 var toLength = __webpack_require__(25);
-var toAbsoluteIndex = __webpack_require__(52);
+var toAbsoluteIndex = __webpack_require__(53);
 module.exports = function (IS_INCLUDES) {
   return function ($this, el, fromIndex) {
     var O = toIObject($this);
@@ -5593,7 +5619,7 @@ module.exports = function (IS_INCLUDES) {
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var toInteger = __webpack_require__(10);
@@ -5606,7 +5632,7 @@ module.exports = function (index, length) {
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var document = __webpack_require__(2).document;
@@ -5614,7 +5640,7 @@ module.exports = document && document.documentElement;
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // 19.1.2.9 / 15.2.3.2 Object.getPrototypeOf(O)
@@ -5633,7 +5659,7 @@ module.exports = Object.getPrototypeOf || function (O) {
 
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5641,13 +5667,13 @@ module.exports = Object.getPrototypeOf || function (O) {
 var ctx = __webpack_require__(22);
 var $export = __webpack_require__(18);
 var toObject = __webpack_require__(29);
-var call = __webpack_require__(56);
-var isArrayIter = __webpack_require__(57);
+var call = __webpack_require__(57);
+var isArrayIter = __webpack_require__(58);
 var toLength = __webpack_require__(25);
-var createProperty = __webpack_require__(58);
-var getIterFn = __webpack_require__(59);
+var createProperty = __webpack_require__(59);
+var getIterFn = __webpack_require__(60);
 
-$export($export.S + $export.F * !__webpack_require__(61)(function (iter) { Array.from(iter); }), 'Array', {
+$export($export.S + $export.F * !__webpack_require__(62)(function (iter) { Array.from(iter); }), 'Array', {
   // 22.1.2.1 Array.from(arrayLike, mapfn = undefined, thisArg = undefined)
   from: function from(arrayLike /* , mapfn = undefined, thisArg = undefined */) {
     var O = toObject(arrayLike);
@@ -5677,7 +5703,7 @@ $export($export.S + $export.F * !__webpack_require__(61)(function (iter) { Array
 
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // call something on iterator step with safe closing on error
@@ -5695,7 +5721,7 @@ module.exports = function (iterator, fn, value, entries) {
 
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // check on default Array iterator
@@ -5709,7 +5735,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5724,10 +5750,10 @@ module.exports = function (object, index, value) {
 
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var classof = __webpack_require__(60);
+var classof = __webpack_require__(61);
 var ITERATOR = __webpack_require__(1)('iterator');
 var Iterators = __webpack_require__(15);
 module.exports = __webpack_require__(3).getIteratorMethod = function (it) {
@@ -5738,7 +5764,7 @@ module.exports = __webpack_require__(3).getIteratorMethod = function (it) {
 
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // getting tag from 19.1.3.6 Object.prototype.toString()
@@ -5767,7 +5793,7 @@ module.exports = function (it) {
 
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var ITERATOR = __webpack_require__(1)('iterator');
@@ -5795,7 +5821,7 @@ module.exports = function (exec, skipClosing) {
 
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 // Polyfill for creating CustomEvents on IE9/10/11
@@ -5845,7 +5871,7 @@ try {
 
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5859,7 +5885,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _redux = __webpack_require__(30);
 
-var _index = __webpack_require__(68);
+var _index = __webpack_require__(69);
 
 var _index2 = _interopRequireDefault(_index);
 
@@ -6085,7 +6111,7 @@ var Store = function () {
 exports.default = Store;
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6097,11 +6123,11 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(31)))
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ponyfill_js__ = __webpack_require__(67);
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ponyfill_js__ = __webpack_require__(68);
 /* global window */
 
 
@@ -6122,10 +6148,10 @@ if (typeof self !== 'undefined') {
 var result = Object(__WEBPACK_IMPORTED_MODULE_0__ponyfill_js__["a" /* default */])(root);
 /* harmony default export */ __webpack_exports__["a"] = (result);
 
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(31), __webpack_require__(66)(module)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(31), __webpack_require__(67)(module)))
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -6155,7 +6181,7 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -6180,7 +6206,7 @@ function symbolObservablePonyfill(root) {
 
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6192,15 +6218,15 @@ Object.defineProperty(exports, "__esModule", {
 
 var _redux = __webpack_require__(30);
 
-var _items = __webpack_require__(69);
+var _items = __webpack_require__(70);
 
 var _items2 = _interopRequireDefault(_items);
 
-var _groups = __webpack_require__(70);
+var _groups = __webpack_require__(71);
 
 var _groups2 = _interopRequireDefault(_groups);
 
-var _choices = __webpack_require__(71);
+var _choices = __webpack_require__(72);
 
 var _choices2 = _interopRequireDefault(_choices);
 
@@ -6232,7 +6258,7 @@ var rootReducer = function rootReducer(passedState, action) {
 exports.default = rootReducer;
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6306,7 +6332,7 @@ function items() {
 }
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6349,7 +6375,7 @@ function groups() {
 }
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6478,7 +6504,7 @@ function choices() {
 }
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6489,27 +6515,27 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.WrappedSelect = exports.WrappedInput = exports.List = exports.Input = exports.Container = exports.Dropdown = undefined;
 
-var _dropdown = __webpack_require__(73);
+var _dropdown = __webpack_require__(74);
 
 var _dropdown2 = _interopRequireDefault(_dropdown);
 
-var _container = __webpack_require__(74);
+var _container = __webpack_require__(75);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _input = __webpack_require__(75);
+var _input = __webpack_require__(76);
 
 var _input2 = _interopRequireDefault(_input);
 
-var _list = __webpack_require__(76);
+var _list = __webpack_require__(77);
 
 var _list2 = _interopRequireDefault(_list);
 
-var _wrappedInput = __webpack_require__(77);
+var _wrappedInput = __webpack_require__(78);
 
 var _wrappedInput2 = _interopRequireDefault(_wrappedInput);
 
-var _wrappedSelect = __webpack_require__(78);
+var _wrappedSelect = __webpack_require__(79);
 
 var _wrappedSelect2 = _interopRequireDefault(_wrappedSelect);
 
@@ -6523,7 +6549,7 @@ exports.WrappedInput = _wrappedInput2.default;
 exports.WrappedSelect = _wrappedSelect2.default;
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6613,7 +6639,7 @@ var Dropdown = function () {
 exports.default = Dropdown;
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6861,7 +6887,7 @@ var Container = function () {
 exports.default = Container;
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7064,7 +7090,7 @@ var Input = function () {
 exports.default = Input;
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7188,7 +7214,7 @@ var List = function () {
 exports.default = List;
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7255,7 +7281,7 @@ var WrappedInput = function (_WrappedElement) {
 exports.default = WrappedInput;
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7340,7 +7366,7 @@ var WrappedSelect = function (_WrappedElement) {
 exports.default = WrappedSelect;
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -7395,7 +7421,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7454,7 +7480,7 @@ var clearChoices = exports.clearChoices = function clearChoices() {
 };
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7506,7 +7532,7 @@ var highlightItem = exports.highlightItem = function highlightItem(id, highlight
 };
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7531,7 +7557,7 @@ var addGroup = exports.addGroup = function addGroup(value, id, active, disabled)
 };
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

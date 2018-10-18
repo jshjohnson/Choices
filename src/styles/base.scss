@@ -176,4 +176,8 @@ h6,
   display: none;
 }
 
+[data-test-hook] {
+  margin-bottom: $global-guttering;
+}
+
 /*=====  End of Section comment block  ======*/

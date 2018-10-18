@@ -19,10 +19,7 @@
 .choices.is-disabled .choices__input {
   background-color: #EAEAEA;
   cursor: not-allowed;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  user-select: none;
 }
 
 .choices.is-disabled .choices__item {
@@ -305,10 +302,7 @@
 
 .choices__item--disabled {
   cursor: not-allowed;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
+  user-select: none;
   opacity: .5;
 }
 
@@ -323,8 +317,7 @@
 .choices__button {
   text-indent: -9999px;
   -webkit-appearance: none;
-  -moz-appearance: none;
-       appearance: none;
+  appearance: none;
   border: 0;
   background-color: transparent;
   background-repeat: no-repeat;

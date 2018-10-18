@@ -61,7 +61,7 @@ describe('choices', () => {
           createTemplatesSpy = spy(instance, '_createTemplates');
           createInputSpy = spy(instance, '_createStructure');
           storeSubscribeSpy = spy(instance._store, 'subscribe');
-          renderSpy = spy(instance, 'render');
+          renderSpy = spy(instance, '_render');
           addEventListenersSpy = spy(instance, '_addEventListeners');
 
           instance.initialised = false;
@@ -90,7 +90,7 @@ describe('choices', () => {
 
         it('subscribes to store with render method', () => {
           expect(storeSubscribeSpy.called).to.equal(true);
-          expect(storeSubscribeSpy.lastCall.args[0]).to.equal(instance.render);
+          expect(storeSubscribeSpy.lastCall.args[0]).to.equal(instance._render);
         });
 
         it('fires initial render', () => {
@@ -1748,32 +1748,5 @@ describe('choices', () => {
         });
       });
     });
-
-    // describe('render', () => {
-    //   beforeEach(() => {});
-
-    //   describe('no change to state', () => {
-    //     it('returns early', () => {});
-    //   });
-
-    //   describe('change to state', () => {
-    //     it('updates previous state to current state', () => {});
-
-    //     describe('select element', () => {
-    //       it('clears choice list', () => {});
-
-    //       describe('when resetScrollPosition config option is set to true', () => {
-    //         it('scrolls to top of choice list', () => {});
-    //       });
-    //     });
-
-    //     describe('text element', () => {
-    //       describe('active items in store', () => {
-    //         it('clears item list', () => {});
-    //         it('renders active items inside item list', () => {});
-    //       });
-    //     });
-    //   });
-    // });
   });
 });

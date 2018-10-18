@@ -1,4 +1,4 @@
-import { stripHTML } from './lib/utils';
+import { stripHTML, sortByAlpha } from './lib/utils';
 
 export const DEFAULT_CLASSNAMES = {
   containerOuter: 'choices',
@@ -52,6 +52,7 @@ export const DEFAULT_CONFIG = {
   regexFilter: null,
   shouldSort: true,
   shouldSortItems: false,
+  sortFn: sortByAlpha,
   placeholder: true,
   placeholderValue: null,
   searchPlaceholderValue: null,
@@ -62,15 +63,16 @@ export const DEFAULT_CONFIG = {
   noResultsText: 'No results found',
   noChoicesText: 'No choices to choose from',
   itemSelectText: 'Press to select',
-  uniqueItemText: 'Only unique values can be added.',
+  uniqueItemText: 'Only unique values can be added',
   addItemText: value => `Press Enter to add <b>"${stripHTML(value)}"</b>`,
-  maxItemText: maxItemCount => `Only ${maxItemCount} values can be added.`,
+  maxItemText: maxItemCount => `Only ${maxItemCount} values can be added`,
   itemComparer: (choice, item) => choice === item,
   fuseOptions: {
     includeScore: true,
   },
   callbackOnInit: null,
   callbackOnCreateTemplates: null,
+  classNames: DEFAULT_CLASSNAMES,
 };
 
 export const EVENTS = {
