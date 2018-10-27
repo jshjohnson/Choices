@@ -31,7 +31,7 @@
         <h2>Select one inputs</h2>
         <div data-test-hook="basic">
           <label for="choices-basic">Basic</label>
-          <select class="form-control" name="choices-basic" id="choices-basic" placeholder="This is a placeholder">
+          <select class="form-control" name="choices-basic" id="choices-basic">
             <option value="Dropdown item 1">Dropdown item 1</option>
             <option value="Dropdown item 2">Dropdown item 2</option>
             <option value="Find me">Dropdown item 3</option>
@@ -41,7 +41,7 @@
 
         <div data-test-hook="remove-button">
           <label for="choices-remove-button">Remove button</label>
-          <select class="form-control" name="choices-remove-button" id="choices-remove-button" placeholder="This is a placeholder">
+          <select class="form-control" name="choices-remove-button" id="choices-remove-button">
             <option value="Dropdown item 1">Dropdown item 1</option>
             <option value="Dropdown item 2">Dropdown item 2</option>
             <option value="Dropdown item 3">Dropdown item 3</option>
@@ -51,7 +51,7 @@
 
         <div data-test-hook="disabled-choice">
           <label for="choices-disabled-choice">Disabled choice</label>
-          <select class="form-control" name="choices-disabled-choice" id="choices-disabled-choice" placeholder="This is a placeholder">
+          <select class="form-control" name="choices-disabled-choice" id="choices-disabled-choice">
             <option value="Dropdown item 1">Dropdown item 1</option>
             <option value="Dropdown item 2">Dropdown item 2</option>
             <option value="Dropdown item 3">Dropdown item 3</option>
@@ -59,9 +59,18 @@
           </select>
         </div>
 
+        <div data-test-hook="add-items-disabled">
+          <label for="choices-add-items-disabled">Add items disabled</label>
+          <select class="form-control" name="choices-add-items-disabled" id="choices-add-items-disabled">
+            <option value="Dropdown item 1" selected>Dropdown item 1</option>
+            <option value="Dropdown item 2">Dropdown item 2</option>
+            <option value="Dropdown item 3">Dropdown item 3</option>
+          </select>
+        </div>
+
         <div data-test-hook="prepend-append">
           <label for="choices-prepend-append">Prepend/append</label>
-          <select class="form-control" name="choices-prepend-append" id="choices-prepend-append" placeholder="This is a placeholder">
+          <select class="form-control" name="choices-prepend-append" id="choices-prepend-append">
             <option value="Dropdown item 1">Dropdown item 1</option>
             <option value="Dropdown item 2">Dropdown item 2</option>
             <option value="Dropdown item 3">Dropdown item 3</option>
@@ -70,7 +79,7 @@
 
         <div data-test-hook="render-choice-limit">
           <label for="choices-render-choice-limit">Render choice limit</label>
-          <select class="form-control" name="choices-render-choice-limit" id="choices-render-choice-limit" placeholder="This is a placeholder">
+          <select class="form-control" name="choices-render-choice-limit" id="choices-render-choice-limit">
             <option value="Dropdown item 1">Dropdown item 1</option>
             <option value="Dropdown item 2">Dropdown item 2</option>
             <option value="Dropdown item 3">Dropdown item 3</option>
@@ -79,7 +88,7 @@
 
         <div data-test-hook="search-disabled">
           <label for="choices-search-disabled">Search disabled</label>
-          <select class="form-control" name="choices-search-disabled" id="choices-search-disabled" placeholder="This is a placeholder">
+          <select class="form-control" name="choices-search-disabled" id="choices-search-disabled">
             <option value="Dropdown item 1">Dropdown item 1</option>
             <option value="Dropdown item 2">Dropdown item 2</option>
             <option value="Dropdown item 3">Dropdown item 3</option>
@@ -88,10 +97,36 @@
 
         <div data-test-hook="search-floor">
           <label for="choices-search-floor">Search floor</label>
-          <select class="form-control" name="choices-search-floor" id="choices-search-floor" placeholder="This is a placeholder">
+          <select class="form-control" name="choices-search-floor" id="choices-search-floor">
             <option value="Dropdown item 1">Dropdown item 1</option>
             <option value="Dropdown item 2">Dropdown item 2</option>
             <option value="Dropdown item 3">Dropdown item 3</option>
+          </select>
+        </div>
+
+        <div data-test-hook="remote-data">
+          <label for="choices-remote-data">Remote data</label>
+          <select class="form-control" name="choices-remote-data" id="choices-remote-data"></select>
+        </div>
+
+        <div data-test-hook="scrolling-dropdown">
+          <label for="choices-scrolling-dropdown">Scrolling dropdown</label>
+          <select class="form-control" name="choices-scrolling-dropdown" id="choices-scrolling-dropdown">
+            <option value="Dropdown item 1">Dropdown item 1</option>
+            <option value="Dropdown item 2">Dropdown item 2</option>
+            <option value="Dropdown item 3">Dropdown item 3</option>
+            <option value="Dropdown item 4">Dropdown item 4</option>
+            <option value="Dropdown item 5">Dropdown item 5</option>
+            <option value="Dropdown item 6">Dropdown item 6</option>
+            <option value="Dropdown item 7">Dropdown item 7</option>
+            <option value="Dropdown item 8">Dropdown item 8</option>
+            <option value="Dropdown item 9">Dropdown item 9</option>
+            <option value="Dropdown item 10">Dropdown item 10</option>
+            <option value="Dropdown item 11">Dropdown item 11</option>
+            <option value="Dropdown item 12">Dropdown item 12</option>
+            <option value="Dropdown item 13">Dropdown item 13</option>
+            <option value="Dropdown item 14">Dropdown item 14</option>
+            <option value="Dropdown item 15">Dropdown item 15</option>
           </select>
         </div>
       </div>
@@ -106,6 +141,10 @@
 
         new Choices('#choices-disabled-choice', {
           removeItemButton: true,
+        });
+
+        new Choices('#choices-add-items-disabled', {
+          addItems: false,
         });
 
         new Choices('#choices-prepend-append', {
@@ -123,6 +162,24 @@
 
         new Choices('#choices-search-floor', {
           searchFloor: 10,
+        });
+
+        new Choices('#choices-remote-data', {
+          shouldSort: false,
+        }).ajax((callback) => {
+          fetch('/data')
+            .then((response) => {
+              response.json().then((data) => {
+                callback(data, 'value', 'label');
+              });
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        });
+
+        new Choices('#choices-scrolling-dropdown', {
+          shouldSort: false,
         });
       });
     </script>

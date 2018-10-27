@@ -3,8 +3,8 @@ describe('Choices - select multiple', () => {
     cy.visit('/select-multiple.html');
   });
 
-  describe('configs', () => {
-    describe('basic', () => {
+  describe('scenarios', () => {
+    describe('basic setup', () => {
       beforeEach(() => {
         cy.get('[data-test-hook=basic]')
           .find('.choices__input--cloned')
@@ -197,7 +197,6 @@ describe('Choices - select multiple', () => {
           removeItemButton: true,
         };
       */
-
       beforeEach(() => {
         cy.get('[data-test-hook=remove-button]')
           .find('.choices__input--cloned')
@@ -253,13 +252,60 @@ describe('Choices - select multiple', () => {
       });
     });
 
+    describe('adding items disabled', () => {
+      /*
+        {
+          addItems: false,
+        }
+      */
+      beforeEach(() => {
+        cy.get('[data-test-hook=add-items-disabled]')
+          .find('.choices')
+          .click();
+      });
+
+      it('disables the search input', () => {
+        cy.get('[data-test-hook=add-items-disabled]')
+          .find('.choices__input--cloned')
+          .should('be.disabled');
+      });
+
+      describe('on click', () => {
+        it('opens choice dropdown', () => {
+          cy.get('[data-test-hook=add-items-disabled]')
+            .find('.choices__list--dropdown')
+            .should('be.visible');
+        });
+      });
+
+      describe('attempting to select choice', () => {
+        let selectedChoice;
+
+        it('does not select choice', () => {
+          cy.get('[data-test-hook=add-items-disabled]')
+            .find('.choices__list--dropdown .choices__item')
+            .last()
+            .then($lastChoice => {
+              selectedChoice = $lastChoice;
+            })
+            .click();
+
+          cy.get('[data-test-hook=add-items-disabled]')
+            .find('.choices__list--multiple .choices__item')
+            .last()
+            .should($item => {
+              expect($item.text()).to.not.contain(selectedChoice.text());
+            });
+        });
+      });
+    });
+
     describe('selection limit', () => {
       /*
         {
           maxItemCount: 5,
-        };
+        }
       */
-
       const selectionLimit = 5;
 
       beforeEach(() => {
@@ -294,7 +340,7 @@ describe('Choices - select multiple', () => {
         {
           prependValue: 'before-',
           appendValue: '-after',
-        };
+        }
       */
       let selectedChoiceText;
 
@@ -311,10 +357,6 @@ describe('Choices - select multiple', () => {
             selectedChoiceText = $choice.text().trim();
           })
           .click();
-      });
-
-      it('works', () => {
-        expect(true).to.equal(true);
       });
 
       it('prepends and appends value to inputted value', () => {
@@ -345,9 +387,8 @@ describe('Choices - select multiple', () => {
       /*
         {
           renderChoiceLimit: 1,
-        };
+        }
       */
-
       it('only displays given number of choices in the dropdown', () => {
         cy.get('[data-test-hook=render-choice-limit]')
           .find('.choices__list--dropdown .choices__list')
@@ -360,9 +401,8 @@ describe('Choices - select multiple', () => {
       /*
         {
           searchFloor: 10,
-        };
+        }
       */
-
       describe('on input', () => {
         describe('search floor not reached', () => {
           it('displays choices not filtered by inputted value', () => {
@@ -399,6 +439,129 @@ describe('Choices - select multiple', () => {
               });
           });
         });
+      });
+    });
+
+    describe('placeholder', () => {
+      /*
+        {
+          placeholder: true,
+          placeholderValue: 'I am a placeholder',
+        }
+      */
+      describe('when no value has been inputted', () => {
+        it('displays a placeholder', () => {
+          cy.get('[data-test-hook=placeholder]')
+            .find('.choices__input--cloned')
+            .should('have.attr', 'placeholder', 'I am a placeholder');
+        });
+      });
+    });
+
+    describe('remote data', () => {
+      beforeEach(() => {
+        cy.reload(true);
+      });
+
+      describe('when loading data', () => {
+        it('shows a loading message as a placeholder', () => {
+          cy.get('[data-test-hook=remote-data]')
+            .find('.choices__input--cloned')
+            .should('have.attr', 'placeholder', 'Loading...');
+        });
+
+        describe('opening the dropdown', () => {
+          it('displays "no choices to choose" prompt', () => {
+            cy.get('[data-test-hook=remote-data]').click();
+            cy.get('[data-test-hook=remote-data]')
+              .find('.choices__list--dropdown')
+              .should('be.visible')
+              .should($dropdown => {
+                const dropdownText = $dropdown.text().trim();
+                expect(dropdownText).to.equal('No choices to choose from');
+              });
+          });
+        });
+      });
+
+      describe('when data has loaded', () => {
+        describe('opening the dropdown', () => {
+          it('displays the loaded data', () => {
+            cy.wait(2000);
+            cy.get('[data-test-hook=remote-data]')
+              .find('.choices__list--dropdown .choices__list')
+              .children()
+              .should('have.length', 50)
+              .each(($choice, index) => {
+                expect($choice.text().trim()).to.equal(`Label ${index + 1}`);
+                expect($choice.data('value')).to.equal(`Value ${index + 1}`);
+              });
+          });
+        });
+      });
+    });
+
+    describe('dropdown scrolling', () => {
+      let choicesCount;
+
+      beforeEach(() => {
+        cy.get('[data-test-hook=scrolling-dropdown]')
+          .find('.choices__list--dropdown .choices__list .choices__item')
+          .then($choices => {
+            choicesCount = $choices.length;
+          });
+
+        cy.get('[data-test-hook=scrolling-dropdown]')
+          .find('.choices__input--cloned')
+          .focus();
+      });
+
+      it('highlights first choice on dropdown open', () => {
+        cy.get('[data-test-hook=scrolling-dropdown]')
+          .find('.choices__list--dropdown .choices__list .is-highlighted')
+          .should($choice => {
+            expect($choice.text().trim()).to.equal('Dropdown item 1');
+          });
+      });
+
+      it('scrolls to next choice on down arrow', () => {
+        for (let index = 0; index < choicesCount; index++) {
+          cy.get('[data-test-hook=scrolling-dropdown]')
+            .find('.choices__list--dropdown .choices__list .is-highlighted')
+            .should($choice => {
+              expect($choice.text().trim()).to.equal(
+                `Dropdown item ${index + 1}`,
+              );
+            });
+
+          cy.get('[data-test-hook=scrolling-dropdown]')
+            .find('.choices__input--cloned')
+            .type('{downarrow}');
+        }
+      });
+
+      it('scrolls up to previous choice on up arrow', () => {
+        // scroll to last choice
+        for (let index = 0; index < choicesCount; index++) {
+          cy.get('[data-test-hook=scrolling-dropdown]')
+            .find('.choices__input--cloned')
+            .type('{downarrow}');
+        }
+
+        // scroll up to first choice
+        for (let index = choicesCount; index > 0; index--) {
+          cy.wait(100); // allow for dropdown animation to finish
+
+          cy.get('[data-test-hook=scrolling-dropdown]')
+            .find('.choices__list--dropdown .choices__list .is-highlighted')
+            .should($choice => {
+              expect($choice.text().trim()).to.equal(`Dropdown item ${index}`);
+            });
+
+          cy.get('[data-test-hook=scrolling-dropdown]')
+            .find('.choices__input--cloned')
+            .type('{uparrow}');
+        }
       });
     });
   });

@@ -118,6 +118,7 @@ class Choices {
     this._prevState = {};
     this._currentValue = '';
     this._canSearch = this.config.searchEnabled;
+    this._isDisabled = this.config.addItems;
     this._isScrollingOnIe = false;
     this._highlightPosition = 0;
     this._wasTap = true;
@@ -214,7 +215,7 @@ class Choices {
   }
 
   enable() {
-    if (!this.initialised) {
+    if (!this._isDisabled) {
       return this;
     }
 
@@ -226,11 +227,13 @@ class Choices {
       this.containerOuter.enable();
     }
 
+    this._isDisabled = false;
+
     return this;
   }
 
   disable() {
-    if (!this.initialised) {
+    if (this._isDisabled) {
       return this;
     }
 
@@ -241,6 +244,8 @@ class Choices {
       this.input.disable();
       this.containerOuter.disable();
     }
+
+    this._isDisabled = true;
 
     return this;
   }

@@ -8,7 +8,7 @@
     "start": "run-p js:watch css:watch",
     "build": "npm run js:build && npm run css:build",
     "lint": "eslint assets/**/*.js",
-    "coverage": "nyc npm run test",
+    "coverage": "nyc npm run test:unit",
     "cypress:run": "$(npm bin)/cypress run",
     "cypress:open": "$(npm bin)/cypress open",
     "test:unit": "mocha --require ./config/test.js --compilers js:babel-core/register \"./src/**/**/**/**/*.test.js\" --exit",

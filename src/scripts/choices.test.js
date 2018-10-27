@@ -200,9 +200,9 @@ describe('choices', () => {
         inputEnableSpy.restore();
       });
 
-      describe('not already initialised', () => {
+      describe('when already enabled', () => {
         beforeEach(() => {
-          instance.initialised = false;
+          instance._isDisabled = false;
           output = instance.enable();
         });
 
@@ -216,10 +216,10 @@ describe('choices', () => {
         });
       });
 
-      describe('when already initialised', () => {
+      describe('when not already enabled', () => {
         describe('containerOuter enabled', () => {
           beforeEach(() => {
-            instance.initialised = true;
+            instance._isDisabled = true;
             output = instance.enable();
           });
 
@@ -232,7 +232,7 @@ describe('choices', () => {
 
         describe('containerOuter disabled', () => {
           beforeEach(() => {
-            instance.initialised = true;
+            instance._isDisabled = true;
             instance.containerOuter.isDisabled = true;
             instance.enable();
           });
@@ -272,9 +272,9 @@ describe('choices', () => {
         inputDisableSpy.restore();
       });
 
-      describe('not already initialised', () => {
+      describe('when already disabled', () => {
         beforeEach(() => {
-          instance.initialised = false;
+          instance._isDisabled = true;
           output = instance.disable();
         });
 
@@ -288,10 +288,10 @@ describe('choices', () => {
         });
       });
 
-      describe('when already initialised', () => {
+      describe('when not already disabled', () => {
         describe('containerOuter disabled', () => {
           beforeEach(() => {
-            instance.initialised = true;
+            instance._isDisabled = false;
             instance.containerOuter.isDisabled = true;
             output = instance.disable();
           });
@@ -305,7 +305,7 @@ describe('choices', () => {
 
         describe('containerOuter enabled', () => {
           beforeEach(() => {
-            instance.initialised = true;
+            instance._isDisabled = false;
             instance.containerOuter.isDisabled = false;
             instance.disable();
           });

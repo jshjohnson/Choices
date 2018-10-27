@@ -3,12 +3,13 @@ describe('Choices - select one', () => {
     cy.visit('/select-one.html');
   });
 
-  describe('configs', () => {
+  describe('scenarios', () => {
     describe('basic', () => {
       beforeEach(() => {
+        // open dropdown
         cy.get('[data-test-hook=basic]')
-          .find('.choices__input--cloned')
-          .focus();
+          .find('.choices')
+          .click();
       });
 
       describe('selecting choice', () => {
@@ -200,6 +201,54 @@ describe('Choices - select one', () => {
       });
     });
 
+    describe('adding items disabled', () => {
+      /*
+        {
+          addItems: false,
+        }
+      */
+      beforeEach(() => {
+        cy.get('[data-test-hook=add-items-disabled]')
+          .find('.choices')
+          .click();
+      });
+
+      it('disables the search input', () => {
+        cy.get('[data-test-hook=add-items-disabled]')
+          .find('.choices__input--cloned')
+          .should('be.disabled');
+      });
+
+      describe('on click', () => {
+        it('opens choice dropdown', () => {
+          cy.get('[data-test-hook=add-items-disabled]')
+            .find('.choices__list--dropdown')
+            .should('be.visible');
+        });
+      });
+
+      describe('attempting to select choice', () => {
+        let selectedChoice;
+
+        it('does not select choice', () => {
+          cy.get('[data-test-hook=add-items-disabled]')
+            .find('.choices__list--dropdown .choices__item')
+            .last()
+            .then($lastChoice => {
+              selectedChoice = $lastChoice;
+            })
+            .click();
+
+          cy.get('[data-test-hook=add-items-disabled]')
+            .find('.choices__list--single .choices__item')
+            .last()
+            .should($item => {
+              expect($item.text()).to.not.contain(selectedChoice.text());
+            });
+        });
+      });
+    });
+
     describe('prepend/append', () => {
       /*
         {
@@ -349,6 +398,118 @@ describe('Choices - select one', () => {
               });
           });
         });
+      });
+    });
+
+    describe('remote data', () => {
+      beforeEach(() => {
+        cy.reload(true);
+      });
+
+      describe('when loading data', () => {
+        it('shows a loading message as a placeholder', () => {
+          cy.get('[data-test-hook=remote-data]')
+            .find('.choices__list--single')
+            .children()
+            .first()
+            .should('have.class', 'choices__placeholder')
+            .and($placeholder => {
+              expect($placeholder).to.contain('Loading...');
+            });
+        });
+
+        describe('opening the dropdown', () => {
+          it('displays "no choices to choose" prompt', () => {
+            cy.get('[data-test-hook=remote-data]').click();
+            cy.get('[data-test-hook=remote-data]')
+              .find('.choices__list--dropdown')
+              .should('be.visible')
+              .should($dropdown => {
+                const dropdownText = $dropdown.text().trim();
+                expect(dropdownText).to.equal('No choices to choose from');
+              });
+          });
+        });
+      });
+
+      describe('when data has loaded', () => {
+        describe('opening the dropdown', () => {
+          it('displays the loaded data', () => {
+            cy.wait(2000);
+            cy.get('[data-test-hook=remote-data]')
+              .find('.choices__list--dropdown .choices__list')
+              .children()
+              .should('have.length', 50)
+              .each(($choice, index) => {
+                expect($choice.text().trim()).to.equal(`Label ${index + 1}`);
+                expect($choice.data('value')).to.equal(`Value ${index + 1}`);
+              });
+          });
+        });
+      });
+    });
+
+    describe('scrolling dropdown', () => {
+      let choicesCount;
+
+      beforeEach(() => {
+        cy.get('[data-test-hook=scrolling-dropdown]')
+          .find('.choices__list--dropdown .choices__list .choices__item')
+          .then($choices => {
+            choicesCount = $choices.length;
+          });
+
+        cy.get('[data-test-hook=scrolling-dropdown]')
+          .find('.choices')
+          .click();
+      });
+
+      it('highlights first choice on dropdown open', () => {
+        cy.get('[data-test-hook=scrolling-dropdown]')
+          .find('.choices__list--dropdown .choices__list .is-highlighted')
+          .should($choice => {
+            expect($choice.text().trim()).to.equal('Dropdown item 1');
+          });
+      });
+
+      it('scrolls to next choice on down arrow', () => {
+        for (let index = 0; index < choicesCount; index++) {
+          cy.get('[data-test-hook=scrolling-dropdown]')
+            .find('.choices__list--dropdown .choices__list .is-highlighted')
+            .should($choice => {
+              expect($choice.text().trim()).to.equal(
+                `Dropdown item ${index + 1}`,
+              );
+            });
+
+          cy.get('[data-test-hook=scrolling-dropdown]')
+            .find('.choices__input--cloned')
+            .type('{downarrow}');
+        }
+      });
+
+      it('scrolls up to previous choice on up arrow', () => {
+        // scroll to last choice
+        for (let index = 0; index < choicesCount; index++) {
+          cy.get('[data-test-hook=scrolling-dropdown]')
+            .find('.choices__input--cloned')
+            .type('{downarrow}');
+        }
+
+        // scroll up to first choice
+        for (let index = choicesCount; index > 0; index--) {
+          cy.wait(100); // allow for dropdown animation to finish
+
+          cy.get('[data-test-hook=scrolling-dropdown]')
+            .find('.choices__list--dropdown .choices__list .is-highlighted')
+            .should($choice => {
+              expect($choice.text().trim()).to.equal(`Dropdown item ${index}`);
+            });
+
+          cy.get('[data-test-hook=scrolling-dropdown]')
+            .find('.choices__input--cloned')
+            .type('{uparrow}');
+        }
       });
     });
   });

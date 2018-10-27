@@ -31,47 +31,52 @@
         <h2>Text inputs</h2>
         <div data-test-hook="basic">
           <label for="choices-basic">Basic</label>
-          <input class="form-control" id="choices-basic" type="text" placeholder="Enter something">
+          <input class="form-control" id="choices-basic" type="text">
         </div>
 
         <div data-test-hook="edit-items">
           <label for="choices-edit-items">Edit items</label>
-          <input class="form-control" id="choices-edit-items" type="text" placeholder="Enter something">
+          <input class="form-control" id="choices-edit-items" type="text">
         </div>
 
         <div data-test-hook="remove-button">
           <label for="choices-remove-button">Remove button</label>
-          <input class="form-control" id="choices-remove-button" type="text" placeholder="Enter something">
+          <input class="form-control" id="choices-remove-button" type="text">
         </div>
 
         <div data-test-hook="unique-values">
           <label for="choices-unique-values">Unique values</label>
-          <input class="form-control" id="choices-unique-values" type="text" placeholder="This is a placeholder">
+          <input class="form-control" id="choices-unique-values" type="text">
         </div>
 
         <div data-test-hook="input-limit">
           <label for="choices-input-limit">Input limit</label>
-          <input class="form-control" id="choices-input-limit" type="text" placeholder="This is a placeholder">
+          <input class="form-control" id="choices-input-limit" type="text">
         </div>
 
         <div data-test-hook="regex-filter">
           <label for="choices-regex-filter">Regex filter</label>
-          <input class="form-control" id="choices-regex-filter" type="text" placeholder="This is a placeholder">
+          <input class="form-control" id="choices-regex-filter" type="text">
         </div>
 
         <div data-test-hook="disabled">
           <label for="choices-disabled">Disabled</label>
-          <input class="form-control" id="choices-disabled" type="text" placeholder="This is a placeholder">
+          <input class="form-control" id="choices-disabled" type="text">
         </div>
 
         <div data-test-hook="prepend-append">
           <label for="choices-prepend-append">Prepend/append</label>
-          <input class="form-control" id="choices-prepend-append" type="text" placeholder="This is a placeholder">
+          <input class="form-control" id="choices-prepend-append" type="text">
         </div>
 
         <div data-test-hook="prepopulated">
           <label for="choices-prepopulated">Pre-populated choices</label>
-          <input class="form-control" id="choices-prepopulated" type="text" placeholder="This is a placeholder">
+          <input class="form-control" id="choices-prepopulated" type="text">
+        </div>
+
+        <div data-test-hook="placeholder">
+          <label for="choices-placeholder">Placeholder</label>
+          <input class="form-control" id="choices-placeholder" type="text">
         </div>
       </div>
     </div>
@@ -114,9 +119,14 @@
             value: 'joe@bloggs.co.uk',
             label: 'Joe Bloggs',
             customProperties: {
-              description: 'Joe Blogg is such a generic name'
+              description: 'Joe Blogg is such a generic name',
             }
           }],
+        });
+
+        new Choices('#choices-placeholder', {
+          placeholder: true,
+          placeholderValue: 'I am a placeholder',
         });
       });
     </script>

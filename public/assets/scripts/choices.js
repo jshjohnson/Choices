@@ -495,12 +495,12 @@ var DEFAULT_CONFIG = exports.DEFAULT_CONFIG = {
   noResultsText: 'No results found',
   noChoicesText: 'No choices to choose from',
   itemSelectText: 'Press to select',
-  uniqueItemText: 'Only unique values can be added.',
+  uniqueItemText: 'Only unique values can be added',
   addItemText: function addItemText(value) {
     return 'Press Enter to add <b>"' + (0, _utils.stripHTML)(value) + '"</b>';
   },
   maxItemText: function maxItemText(maxItemCount) {
-    return 'Only ' + maxItemCount + ' values can be added.';
+    return 'Only ' + maxItemCount + ' values can be added';
   },
   itemComparer: function itemComparer(choice, item) {
     return choice === item;
@@ -2635,15 +2635,13 @@ var Choices = function () {
       var activeItems = this._store.activeItems || [];
       this.itemList.clear();
 
-      if (activeItems.length) {
-        // Create a fragment to store our list items
-        // (so we don't have to update the DOM for each item)
-        var itemListFragment = this._createItemsFragment(activeItems);
+      // Create a fragment to store our list items
+      // (so we don't have to update the DOM for each item)
+      var itemListFragment = this._createItemsFragment(activeItems);
 
-        // If we have items to add, append them
-        if (itemListFragment.childNodes) {
-          this.itemList.append(itemListFragment);
-        }
+      // If we have items to add, append them
+      if (itemListFragment.childNodes) {
+        this.itemList.append(itemListFragment);
       }
     }
   }, {

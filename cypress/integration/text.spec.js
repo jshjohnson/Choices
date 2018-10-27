@@ -3,7 +3,7 @@ describe('Choices - text element', () => {
     cy.visit('/text.html');
   });
 
-  describe('configs', () => {
+  describe('scenarios', () => {
     const textInput = 'testing';
 
     describe('basic', () => {
@@ -281,6 +281,22 @@ describe('Choices - text element', () => {
           .should($choice => {
             expect($choice.text().trim()).to.equal('Joe Bloggs');
           });
+      });
+    });
+
+    describe('placeholder', () => {
+      /*
+        {
+          placeholder: true,
+          placeholderValue: 'I am a placeholder',
+        }
+      */
+      describe('when no value has been inputted', () => {
+        it('displays a placeholder', () => {
+          cy.get('[data-test-hook=placeholder]')
+            .find('.choices__input--cloned')
+            .should('have.attr', 'placeholder', 'I am a placeholder');
+        });
       });
     });
   });

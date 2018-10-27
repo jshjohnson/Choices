@@ -26,6 +26,22 @@ if (process.env.NODE_ENV !== 'production') {
   );
 
   app.use(webpackHotMiddleware(compiler));
+
+  app.get('/data', (req, res) => {
+    // prevent endpoint from being cached
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+
+    const fakeData = [...new Array(50)].map((_, index) => ({
+      label: `Label ${index + 1}`,
+      value: `Value ${index + 1}`,
+    }));
+
+    setTimeout(() => {
+      res.status(200).send(fakeData);
+    }, 2000);
+  });
 }
 
 app.use(express.static(DIST_DIR));
