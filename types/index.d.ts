@@ -850,10 +850,10 @@ export default class Choices {
    *   ],
    * });
    *
-   * example.setValueByChoice('Two'); // Choice with value of 'Two' has now been selected.
+   * example.setChoiceByValue('Two'); // Choice with value of 'Two' has now been selected.
    * ```
    */
-  setValueByChoice(value: string | string[]): this;
+  setChoiceByValue(value: string | string[]): this;
 
   /** Direct populate choices */
   setChoices(choices: any[], value: string, label: string, replaceChoices?: boolean): this;
