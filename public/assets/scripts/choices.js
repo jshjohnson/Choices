@@ -1,4 +1,4 @@
-/*! choices.js v4.1.4 | (c) 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
+/*! choices.js v4.1.4 | (c) 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
    //CommonJS2
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -1936,7 +1936,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.TEMPLATES = undefined;
 
-var _classnames = __webpack_require__(89);
+var _classnames = __webpack_require__(90);
 
 var _classnames2 = _interopRequireDefault(_classnames);
 
@@ -2065,19 +2065,21 @@ var _store2 = __webpack_require__(73);
 
 var _store3 = _interopRequireDefault(_store2);
 
-var _components = __webpack_require__(82);
+var _components = __webpack_require__(83);
 
 var _constants = __webpack_require__(5);
 
 var _templates = __webpack_require__(36);
 
-var _choices = __webpack_require__(90);
+var _choices = __webpack_require__(91);
 
-var _items = __webpack_require__(91);
+var _items = __webpack_require__(92);
 
-var _groups = __webpack_require__(92);
+var _groups = __webpack_require__(93);
 
-var _misc = __webpack_require__(93);
+var _misc = __webpack_require__(94);
+
+var _general = __webpack_require__(95);
 
 var _utils = __webpack_require__(1);
 
@@ -2559,7 +2561,9 @@ var Choices = function () {
         }
       };
 
+      this._setLoading(true);
       choices.forEach(addGroupsAndChoices);
+      this._setLoading(false);
 
       return this;
     }
@@ -2608,6 +2612,10 @@ var Choices = function () {
   }, {
     key: '_render',
     value: function _render() {
+      if (this._store.isLoading()) {
+        return;
+      }
+
       this._currentState = this._store.state;
 
       var stateChanged = this._currentState.choices !== this._prevState.choices || this._currentState.groups !== this._prevState.groups || this._currentState.items !== this._prevState.items;
@@ -3002,13 +3010,18 @@ var Choices = function () {
       }
     }
   }, {
+    key: '_setLoading',
+    value: function _setLoading(isLoading) {
+      this._store.dispatch((0, _general.setIsLoading)(isLoading));
+    }
+  }, {
     key: '_handleLoadingState',
     value: function _handleLoadingState() {
-      var isLoading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+      var setLoading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
       var placeholderItem = this.itemList.getChild('.' + this.config.classNames.placeholder);
 
-      if (isLoading) {
+      if (setLoading) {
         this.disable();
         this.containerOuter.addLoadingState();
 
@@ -3112,6 +3125,7 @@ var Choices = function () {
         if (parsedResults && (0, _utils.isType)('Array', parsedResults) && parsedResults.length) {
           // Remove loading states/text
           _this17._handleLoadingState(false);
+          _this17._setLoading(true);
           // Add each result as a choice
           parsedResults.forEach(function (result) {
             if (result.choices) {
@@ -3132,6 +3146,8 @@ var Choices = function () {
               });
             }
           });
+
+          _this17._setLoading(false);
 
           if (_this17._isSelectOneElement) {
             _this17._selectPlaceholderChoice();
@@ -4011,6 +4027,7 @@ var Choices = function () {
 
       this._highlightPosition = 0;
       this._isSearching = false;
+      this._setLoading(true);
 
       if (passedGroups && passedGroups.length) {
         // If we have a placeholder option
@@ -4104,6 +4121,8 @@ var Choices = function () {
           return handleChoice(choice, index);
         });
       }
+
+      this._setLoading(false);
     }
   }, {
     key: '_addPredefinedItems',
@@ -4240,10 +4259,10 @@ module.exports = Choices;
 
 /*!
  * Fuse.js v3.2.0 - Lightweight fuzzy-search (http://fusejs.io)
- * 
+ *
  * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
  * All Rights Reserved. Apache Software License 2.0
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -6104,13 +6123,24 @@ var Store = function () {
      */
 
   }, {
-    key: 'getChoiceById',
+    key: 'isLoading',
 
+
+    /**
+     * Get loading state from store
+     * @return {Boolean} Loading State
+     */
+    value: function isLoading() {
+      return this.state.general.loading;
+    }
 
     /**
      * Get single choice by it's ID
      * @return {Object} Found choice
      */
+
+  }, {
+    key: 'getChoiceById',
     value: function getChoiceById(id) {
       if (id) {
         var choices = this.activeChoices;
@@ -6401,6 +6431,10 @@ var _choices = __webpack_require__(81);
 
 var _choices2 = _interopRequireDefault(_choices);
 
+var _general = __webpack_require__(82);
+
+var _general2 = _interopRequireDefault(_general);
+
 var _utils = __webpack_require__(1);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -6408,7 +6442,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var appReducer = (0, _redux.combineReducers)({
   items: _items2.default,
   groups: _groups2.default,
-  choices: _choices2.default
+  choices: _choices2.default,
+  general: _general2.default
 });
 
 var rootReducer = function rootReducer(passedState, action) {
@@ -6684,29 +6719,64 @@ function choices() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var defaultState = exports.defaultState = {
+  loading: false
+};
+
+var general = function general() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : defaultState;
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'LOADING':
+      {
+        return {
+          loading: action.isLoading
+        };
+      }
+
+    default:
+      {
+        return state;
+      }
+  }
+};
+
+exports.default = general;
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.WrappedSelect = exports.WrappedInput = exports.List = exports.Input = exports.Container = exports.Dropdown = undefined;
 
-var _dropdown = __webpack_require__(83);
+var _dropdown = __webpack_require__(84);
 
 var _dropdown2 = _interopRequireDefault(_dropdown);
 
-var _container = __webpack_require__(84);
+var _container = __webpack_require__(85);
 
 var _container2 = _interopRequireDefault(_container);
 
-var _input = __webpack_require__(85);
+var _input = __webpack_require__(86);
 
 var _input2 = _interopRequireDefault(_input);
 
-var _list = __webpack_require__(86);
+var _list = __webpack_require__(87);
 
 var _list2 = _interopRequireDefault(_list);
 
-var _wrappedInput = __webpack_require__(87);
+var _wrappedInput = __webpack_require__(88);
 
 var _wrappedInput2 = _interopRequireDefault(_wrappedInput);
 
-var _wrappedSelect = __webpack_require__(88);
+var _wrappedSelect = __webpack_require__(89);
 
 var _wrappedSelect2 = _interopRequireDefault(_wrappedSelect);
 
@@ -6720,7 +6790,7 @@ exports.WrappedInput = _wrappedInput2.default;
 exports.WrappedSelect = _wrappedSelect2.default;
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6810,7 +6880,7 @@ var Dropdown = function () {
 exports.default = Dropdown;
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7058,7 +7128,7 @@ var Container = function () {
 exports.default = Container;
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7261,7 +7331,7 @@ var Input = function () {
 exports.default = Input;
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7385,7 +7455,7 @@ var List = function () {
 exports.default = List;
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7452,7 +7522,7 @@ var WrappedInput = function (_WrappedElement) {
 exports.default = WrappedInput;
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7537,7 +7607,7 @@ var WrappedSelect = function (_WrappedElement) {
 exports.default = WrappedSelect;
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -7592,7 +7662,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7651,7 +7721,7 @@ var clearChoices = exports.clearChoices = function clearChoices() {
 };
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7703,7 +7773,7 @@ var highlightItem = exports.highlightItem = function highlightItem(id, highlight
 };
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7728,7 +7798,7 @@ var addGroup = exports.addGroup = function addGroup(value, id, active, disabled)
 };
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7747,6 +7817,25 @@ var resetTo = exports.resetTo = function resetTo(state) {
   return {
     type: 'RESET_TO',
     state: state
+  };
+};
+
+/***/ }),
+/* 95 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/* eslint-disable import/prefer-default-export */
+
+var setIsLoading = exports.setIsLoading = function setIsLoading(isLoading) {
+  return {
+    type: 'LOADING',
+    isLoading: isLoading
   };
 };
 
