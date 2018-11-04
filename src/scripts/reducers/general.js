@@ -4,7 +4,7 @@ export const defaultState = {
 
 const general = (state = defaultState, action) => {
   switch (action.type) {
-    case 'LOADING': {
+    case 'SET_IS_LOADING': {
       return {
         loading: action.isLoading,
       };
