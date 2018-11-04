@@ -22,6 +22,7 @@ import {
 import { addItem, removeItem, highlightItem } from './actions/items';
 import { addGroup } from './actions/groups';
 import { clearAll, resetTo } from './actions/misc';
+import { setIsLoading } from './actions/general';
 import {
   isScrolledIntoView,
   getAdjacentEl,
@@ -443,7 +444,9 @@ class Choices {
       }
     };
 
+    this._setLoading(true);
     choices.forEach(addGroupsAndChoices);
+    this._setLoading(false);
 
     return this;
   }
@@ -483,6 +486,10 @@ class Choices {
   ============================================= */
 
   _render() {
+    if (this._store.isLoading()) {
+      return;
+    }
+
     this._currentState = this._store.state;
 
     const stateChanged =
@@ -875,12 +882,16 @@ class Choices {
     }
   }
 
-  _handleLoadingState(isLoading = true) {
+  _setLoading(isLoading) {
+    this._store.dispatch(setIsLoading(isLoading));
+  }
+
+  _handleLoadingState(setLoading = true) {
     let placeholderItem = this.itemList.getChild(
       `.${this.config.classNames.placeholder}`,
     );
 
-    if (isLoading) {
+    if (setLoading) {
       this.disable();
       this.containerOuter.addLoadingState();
 
@@ -999,6 +1010,7 @@ class Choices {
       ) {
         // Remove loading states/text
         this._handleLoadingState(false);
+        this._setLoading(true);
         // Add each result as a choice
         parsedResults.forEach(result => {
           if (result.choices) {
@@ -1019,6 +1031,8 @@ class Choices {
             });
           }
         });
+
+        this._setLoading(false);
 
         if (this._isSelectOneElement) {
           this._selectPlaceholderChoice();
@@ -1868,6 +1882,7 @@ class Choices {
 
     this._highlightPosition = 0;
     this._isSearching = false;
+    this._setLoading(true);
 
     if (passedGroups && passedGroups.length) {
       // If we have a placeholder option
@@ -1957,6 +1972,8 @@ class Choices {
       // Add each choice
       allChoices.forEach((choice, index) => handleChoice(choice, index));
     }
+
+    this._setLoading(false);
   }
 
   _addPredefinedItems() {

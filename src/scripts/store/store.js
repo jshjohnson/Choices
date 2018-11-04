@@ -130,6 +130,14 @@ export default class Store {
   }
 
   /**
+   * Get loading state from store
+   * @return {Boolean} Loading State
+   */
+  isLoading() {
+    return this.state.general.loading;
+  }
+
+  /**
    * Get single choice by it's ID
    * @return {Object} Found choice
    */

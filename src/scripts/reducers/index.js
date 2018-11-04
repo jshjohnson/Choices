@@ -2,12 +2,14 @@ import { combineReducers } from 'redux';
 import items from './items';
 import groups from './groups';
 import choices from './choices';
+import general from './general';
 import { cloneObject } from '../lib/utils';
 
 const appReducer = combineReducers({
   items,
   groups,
   choices,
+  general,
 });
 
 const rootReducer = (passedState, action) => {

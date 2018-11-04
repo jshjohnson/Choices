@@ -33,6 +33,9 @@ describe('reducers/rootReducer', () => {
         items: [],
         groups: [],
         choices: [],
+        general: {
+          loading: false,
+        },
       });
     });
   });
