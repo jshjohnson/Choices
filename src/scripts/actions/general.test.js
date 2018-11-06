@@ -3,13 +3,26 @@ import * as actions from './general';
 
 describe('actions/general', () => {
   describe('setIsLoading action', () => {
-    it('returns LOADING action with passed loading flag', () => {
-      const expectedAction = {
-        type: 'LOADING',
-        isLoading: true,
-      };
+    describe('setting loading state to true', () => {
+      it('returns expected action', () => {
+        const expectedAction = {
+          type: 'SET_IS_LOADING',
+          isLoading: true,
+        };
 
-      expect(actions.setIsLoading(true)).to.eql(expectedAction);
+        expect(actions.setIsLoading(true)).to.eql(expectedAction);
+      });
+    });
+
+    describe('setting loading state to false', () => {
+      it('returns expected action', () => {
+        const expectedAction = {
+          type: 'SET_IS_LOADING',
+          isLoading: false,
+        };
+
+        expect(actions.setIsLoading(false)).to.eql(expectedAction);
+      });
     });
   });
 });
