@@ -35,6 +35,12 @@
   },
   "author": "Josh Johnson",
   "license": "MIT",
+  "files": [
+    "public/assets/scripts",
+    "public/assets/styles",
+    "src",
+    "types"
+  ],
   "bugs": {
     "url": "https://github.com/jshjohnson/Choices/issues"
   },
