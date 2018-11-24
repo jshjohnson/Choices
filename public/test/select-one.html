@@ -180,6 +180,15 @@
           <label for="choices-custom-properties">Custom properties</label>
           <select class="form-control" name="choices-custom-properties" id="choices-custom-properties"></select>
         </div>
+
+        <div data-test-hook="within-form">
+          <form>
+            <label for="choices-within-form">Within form</label>
+            <select class="form-control" name="choices-within-form" id="choices-within-form">
+              <option value="Choice 1">Choice 1</option>
+            </select>
+          </form>
+        </div>
       </div>
     </div>
     <script>
@@ -297,6 +306,8 @@
             }
           ]
         });
+
+        new Choices('#choices-within-form');
       });
     </script>
   </body>

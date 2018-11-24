@@ -83,6 +83,13 @@
           <label for="choices-placeholder">Placeholder</label>
           <input class="form-control" id="choices-placeholder" type="text">
         </div>
+
+        <div data-test-hook="within-form">
+          <form>
+            <label for="choices-within-form">Within form</label>
+            <input class="form-control" id="choices-within-form" type="text">
+          </form>
+        </div>
       </div>
     </div>
     <script>
@@ -134,6 +141,8 @@
           placeholder: true,
           placeholderValue: 'I am a placeholder',
         });
+
+        new Choices('#choices-within-form');
       });
     </script>
   </body>

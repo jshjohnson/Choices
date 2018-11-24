@@ -803,5 +803,37 @@ describe('Choices - select one', () => {
         });
       });
     });
+
+    describe('within form', () => {
+      describe('selecting choice', () => {
+        describe('on enter key', () => {
+          it('does not submit form', () => {
+            cy.get('[data-test-hook=within-form] form').then($form => {
+              $form.submit(() => {
+                // this will fail the test if the form submits
+                throw new Error('Form submitted');
+              });
+            });
+
+            cy.get('[data-test-hook=within-form]')
+              .find('.choices')
+              .click()
+              .find('.choices__input--cloned')
+              .type('{enter}');
+
+            cy.get('[data-test-hook=within-form]')
+              .find('.choices')
+              .click();
+
+            cy.get('[data-test-hook=within-form]')
+              .find('.choices__list--single .choices__item')
+              .last()
+              .should($item => {
+                expect($item).to.contain('Choice 1');
+              });
+          });
+        });
+      });
+    });
   });
 });

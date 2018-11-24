@@ -791,5 +791,32 @@ describe('Choices - select multiple', () => {
         });
       });
     });
+
+    describe('within form', () => {
+      describe('selecting choice', () => {
+        describe('on enter key', () => {
+          it('does not submit form', () => {
+            cy.get('[data-test-hook=within-form] form').then($form => {
+              $form.submit(() => {
+                // this will fail the test if the form submits
+                throw new Error('Form submitted');
+              });
+            });
+
+            cy.get('[data-test-hook=within-form]')
+              .find('.choices__input--cloned')
+              .focus()
+              .type('{enter}');
+
+            cy.get('[data-test-hook=within-form]')
+              .find('.choices__list--multiple .choices__item')
+              .last()
+              .should($item => {
+                expect($item).to.contain('Choice 1');
+              });
+          });
+        });
+      });
+    });
   });
 });

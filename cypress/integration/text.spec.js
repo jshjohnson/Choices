@@ -225,7 +225,7 @@ describe('Choices - text element', () => {
     });
 
     describe('regex filter', () => {
-      describe('a valid that satisfies regex', () => {
+      describe('inputting a value that satisfies the regex', () => {
         const input = 'joe@bloggs.com';
 
         it('allows me to add choice', () => {
@@ -337,6 +337,33 @@ describe('Choices - text element', () => {
           cy.get('[data-test-hook=placeholder]')
             .find('.choices__input--cloned')
             .should('have.attr', 'placeholder', 'I am a placeholder');
+        });
+      });
+    });
+
+    describe('within form', () => {
+      describe('inputting item', () => {
+        describe('on enter key', () => {
+          it('does not submit form', () => {
+            cy.get('[data-test-hook=within-form] form').then($form => {
+              $form.submit(() => {
+                // this will fail the test if the form submits
+                throw new Error('Form submitted');
+              });
+            });
+
+            cy.get('[data-test-hook=within-form]')
+              .find('.choices__input--cloned')
+              .type(textInput)
+              .type('{enter}');
+
+            cy.get('[data-test-hook=within-form]')
+              .find('.choices__list--multiple .choices__item')
+              .last()
+              .should($el => {
+                expect($el).to.contain(textInput);
+              });
+          });
         });
       });
     });
