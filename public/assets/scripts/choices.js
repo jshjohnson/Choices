@@ -1,4 +1,4 @@
-/*! choices.js v4.1.2 | (c) 2018 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
+/*! choices.js v4.1.3 | (c) 2018 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
 (function webpackUniversalModuleDefinition(root, factory) {
    //CommonJS2
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -3751,24 +3751,14 @@ var Choices = function () {
       }
 
       // Trigger change event
-      if (group && group.value) {
-        this.passedElement.triggerEvent(_constants.EVENTS.addItem, {
-          id: id,
-          value: passedValue,
-          label: passedLabel,
-          customProperties: passedCustomProperties,
-          groupValue: group.value,
-          keyCode: passedKeyCode
-        });
-      } else {
-        this.passedElement.triggerEvent(_constants.EVENTS.addItem, {
-          id: id,
-          value: passedValue,
-          label: passedLabel,
-          customProperties: passedCustomProperties,
-          keyCode: passedKeyCode
-        });
-      }
+      this.passedElement.triggerEvent(_constants.EVENTS.addItem, {
+        id: id,
+        value: passedValue,
+        label: passedLabel,
+        customProperties: passedCustomProperties,
+        groupValue: group && group.value ? group.value : undefined,
+        keyCode: passedKeyCode
+      });
 
       return this;
     }
@@ -4202,7 +4192,7 @@ var Choices = function () {
         this._addItem({
           value: foundChoice.value,
           label: foundChoice.label,
-          id: foundChoice.id,
+          choiceId: foundChoice.id,
           groupId: foundChoice.groupId,
           customProperties: foundChoice.customProperties,
           placeholder: foundChoice.placeholder,
