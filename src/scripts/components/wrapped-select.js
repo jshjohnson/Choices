@@ -7,7 +7,7 @@ export default class WrappedSelect extends WrappedElement {
   }
 
   get placeholderOption() {
-    return this.element.querySelector('option[placeholder]');
+    return this.element.querySelector('option[value=""]');
   }
 
   get optionGroups() {

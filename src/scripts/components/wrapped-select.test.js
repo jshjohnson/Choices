@@ -11,14 +11,15 @@ describe('components/wrappedSelect', () => {
   beforeEach(() => {
     element = document.createElement('select');
     element.id = 'target';
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 0; i <= 4; i++) {
       const option = document.createElement('option');
 
-      option.value = `Value ${i}`;
-      option.innerHTML = `Label ${i}`;
-
-      if (i === 1) {
-        option.setAttribute('placeholder', '');
+      if (i > 0) {
+        option.value = `Value ${i}`;
+        option.innerHTML = `Label ${i}`;
+      } else {
+        option.value = '';
+        option.innerHTML = 'Placeholder label';
       }
 
       element.appendChild(option);
@@ -67,7 +68,7 @@ describe('components/wrappedSelect', () => {
   });
 
   describe('placeholderOption getter', () => {
-    it('returns option element with placeholder attribute', () => {
+    it('returns option element with empty value attribute', () => {
       expect(instance.placeholderOption).to.be.instanceOf(HTMLOptionElement);
     });
   });
@@ -142,7 +143,7 @@ describe('components/wrappedSelect', () => {
   describe('appendDocFragment', () => {
     it('empties contents of element', () => {
       expect(instance.element.getElementsByTagName('option').length).to.equal(
-        4,
+        5,
       );
       instance.appendDocFragment(document.createDocumentFragment());
       expect(instance.element.getElementsByTagName('option').length).to.equal(
