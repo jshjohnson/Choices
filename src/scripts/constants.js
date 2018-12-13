@@ -64,6 +64,7 @@ export const DEFAULT_CONFIG = {
   noChoicesText: 'No choices to choose from',
   itemSelectText: 'Press to select',
   uniqueItemText: 'Only unique values can be added',
+  customAddItemText: 'Only values matching specific conditions can be added.',
   addItemText: value => `Press Enter to add <b>"${stripHTML(value)}"</b>`,
   maxItemText: maxItemCount => `Only ${maxItemCount} values can be added`,
   itemComparer: (choice, item) => choice === item,
@@ -71,6 +72,7 @@ export const DEFAULT_CONFIG = {
     includeScore: true,
   },
   callbackOnInit: null,
+  callbackCanAddItem: null,
   callbackOnCreateTemplates: null,
   classNames: DEFAULT_CLASSNAMES,
 };

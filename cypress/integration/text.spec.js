@@ -293,6 +293,39 @@ describe('Choices - text element', () => {
       });
     });
 
+    describe('custom add item callback', () => {
+      describe('inputting a value that satisfies the callbackCanAddItem', () => {
+        const input = 'test';
+
+        it('allows me to add choice', () => {
+          cy.get('[data-test-hook=add-item-callback]')
+            .find('.choices__input--cloned')
+            .type(input)
+            .type('{enter}');
+
+          cy.get('[data-test-hook=add-item-callback]')
+            .find('.choices__list--multiple .choices__item')
+            .last()
+            .should($choice => {
+              expect($choice.text().trim()).to.equal(input);
+            });
+        });
+      });
+
+      describe('inputting a value that does not satisfy the callback', () => {
+        it('displays dropdown prompt', () => {
+          cy.get('[data-test-hook=add-item-callback]')
+            .find('.choices__input--cloned')
+            .type(`this is not the allowed text`)
+            .type('{enter}');
+
+          cy.get('[data-test-hook=add-item-callback]')
+            .find('.choices__list--dropdown')
+            .should('not.be.visible');
+        });
+      });
+    });
+
     describe('disabled via attribute', () => {
       it('does not allow me to input data', () => {
         cy.get('[data-test-hook=disabled-via-attr]')
