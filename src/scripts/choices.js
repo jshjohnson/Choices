@@ -973,8 +973,8 @@ class Choices {
       }
 
       if (
-        isType('Function', this.config.callbackOnAddItem) &&
-        this.config.callbackOnAddItem(value) &&
+        isType('Function', this.config.callbackFilterAddItem) &&
+        this.config.callbackFilterAddItem(value) &&
         this._isTextElement &&
         this.config.addItems &&
         canAddItem

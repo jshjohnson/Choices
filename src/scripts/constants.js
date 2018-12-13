@@ -72,7 +72,7 @@ export const DEFAULT_CONFIG = {
     includeScore: true,
   },
   callbackOnInit: null,
-  callbackCanAddItem: null,
+  callbackFilterAddItem: null,
   callbackOnCreateTemplates: null,
   classNames: DEFAULT_CLASSNAMES,
 };
