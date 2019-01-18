@@ -56,7 +56,12 @@ class Choices {
       }
     }
 
-    this.config = merge.all([DEFAULT_CONFIG, Choices.userDefaults, userConfig]);
+    this.config = merge.all(
+      [DEFAULT_CONFIG, Choices.userDefaults, userConfig],
+      // When merging array configs, replace with a copy of the userConfig array,
+      // instead of concatenating with the default array
+      { arrayMerge: (destinationArray, sourceArray) => [...sourceArray] },
+    );
 
     if (!doKeysMatch(this.config, DEFAULT_CONFIG)) {
       console.warn('Unknown config option(s) passed');

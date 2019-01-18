@@ -867,5 +867,41 @@ describe('Choices - select one', () => {
           });
       });
     });
+
+    describe('searching by label only', () => {
+      beforeEach(() => {
+        cy.get('[data-test-hook=search-by-label]')
+          .find('.choices')
+          .click();
+      });
+
+      it('gets zero results when searching by value', () => {
+        cy.get('[data-test-hook=search-by-label]')
+          .find('.choices__input--cloned')
+          .type('value1');
+
+        cy.get('[data-test-hook=search-by-label]')
+          .find('.choices__list--dropdown .choices__list')
+          .children()
+          .first()
+          .should($choice => {
+            expect($choice.text().trim()).to.equal('No results found');
+          });
+      });
+
+      it('gets a result when searching by label', () => {
+        cy.get('[data-test-hook=search-by-label]')
+          .find('.choices__input--cloned')
+          .type('label1');
+
+        cy.get('[data-test-hook=search-by-label]')
+          .find('.choices__list--dropdown .choices__list')
+          .children()
+          .first()
+          .should($choice => {
+            expect($choice.text().trim()).to.equal('label1');
+          });
+      });
+    });
   });
 });

@@ -194,6 +194,14 @@
             <option value="Choice 3">Choice 3</option>
           </select>
         </div>
+
+        <div data-test-hook="search-by-label">
+          <label for="choices-search-by-label">Search by label</label>
+          <select class="form-control" name="choices-search-by-label" id="choices-search-by-label" multiple>
+            <option value="value1">label1</option>
+            <option value="value2">label2</option>
+          </select>
+        </div>
       </div>
     </div>
     <script>
@@ -307,6 +315,8 @@
         new Choices('#choices-within-form');
 
         new Choices('#choices-set-choice-by-value').setChoiceByValue('Choice 2');
+
+        new Choices('#choices-search-by-label', { searchFields: ['label'] });
       });
     </script>
   </body>
