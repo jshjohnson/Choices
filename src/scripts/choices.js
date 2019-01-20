@@ -101,7 +101,7 @@ class Choices {
       });
     }
 
-    if (!passedElement) {
+    if (!this.passedElement) {
       return console.error('Passed element was of an invalid type');
     }
 
