@@ -6,14 +6,14 @@ describe('reducers/general', () => {
     expect(general(defaultState, {})).to.equal(defaultState);
   });
 
-  describe('LOADING', () => {
+  describe('SET_IS_LOADING', () => {
     it('sets loading state', () => {
       const expectedState = {
         loading: true,
       };
 
       const actualState = general(undefined, {
-        type: 'LOADING',
+        type: 'SET_IS_LOADING',
         isLoading: true,
       });
 
