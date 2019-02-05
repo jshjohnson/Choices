@@ -229,6 +229,8 @@ export const dispatchEvent = (element, type, customArgs = null) => {
   return element.dispatchEvent(event);
 };
 
+export const parseJSON = (s) => (!s || typeof JSON.parse !== 'function') ? {} : JSON.parse(s.replace(/'/g, '"'));
+
 export const regexFilter = (value, regex) => {
   if (!value || !regex) {
     return false;

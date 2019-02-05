@@ -78,6 +78,7 @@ export const TEMPLATES = {
           data-item
           data-id="${data.id}"
           data-value="${data.value}"
+          data-custom-properties='${JSON.stringify(data.customProperties)}'
           data-deletable
           ${ariaSelected}
           ${ariaDisabled}
@@ -225,6 +226,10 @@ export const TEMPLATES = {
     return strToEl(`
       <option value="${data.value}" ${data.selected ? 'selected' : ''} ${
       data.disabled ? 'disabled' : ''
+    } ${
+      data.customProperties
+        ? `data-custom-properties=${JSON.stringify(data.customProperties)}`
+        : ''
     }>${data.label}</option>
     `);
   },

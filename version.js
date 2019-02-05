@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const config = {
-  files: ['bower.json', 'package.json', 'index.html', 'version.js']
+  files: ['package.json', './public/index.html', 'version.js']
 };
 
 /**

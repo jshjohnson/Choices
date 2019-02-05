@@ -229,6 +229,14 @@
       <p><small>Try searching for 'fantastic'</small></p>
       <select class="form-control" name="choices-single-selected-option" id="choices-single-selected-option" placeholder="This is a placeholder"></select>
 
+      <label for="choices-with-custom-props-via-html">Option searchable by custom properties via <code>data-custom-properties</code> attribute</label>
+      <p><small>Try searching for 'fantastic', again</small>
+      <select class="form-control" id="choices-with-custom-props-via-html" placeholder="Fuck">
+        <option value="Dropdown item 1">Label One</option>
+        <option value="Dropdown item 2" selected disabled>Label Two</option>
+        <option value="Dropdown item 2" data-custom-properties='{"description": "This option is fantastic"}'>Label Three</option>
+      </select>
+
       <label for="choices-single-no-sorting">Options without sorting</label>
       <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting" placeholder="This is a placeholder">
         <option value="Madrid">Madrid</option>
@@ -495,6 +503,10 @@
           },
         ],
       }).setChoiceByValue('Two');
+
+      var customChoicesPropertiesViaDataAttributes = new Choices('#choices-with-custom-props-via-html', {
+       searchFields: ['label', 'value', 'customProperties.description']
+      })
 
       var singleNoSorting = new Choices('#choices-single-no-sorting', {
         shouldSort: false,
