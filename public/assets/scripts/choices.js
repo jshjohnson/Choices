@@ -1989,7 +1989,7 @@ var TEMPLATES = exports.TEMPLATES = {
 
       localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
 
-      return (0, _utils.strToEl)('\n        <div\n          class="' + localClasses + '"\n          data-item\n          data-id="' + data.id + '"\n          data-value="' + data.value + '"\n          data-custom-properties=\'' + JSON.stringify(data.customProperties) + '\'\n          data-deletable\n          ' + ariaSelected + '\n          ' + ariaDisabled + '\n          >\n          ' + data.label + '<!--\n       --><button\n            type="button"\n            class="' + globalClasses.button + '"\n            data-button\n            aria-label="Remove item: \'' + data.value + '\'"\n            >\n            Remove item\n          </button>\n        </div>\n      ');
+      return (0, _utils.strToEl)('\n        <div\n          class="' + localClasses + '"\n          data-item\n          data-id="' + data.id + '"\n          data-value="' + data.value + '"\n          data-custom-properties=\'' + data.customProperties + '\'\n          data-deletable\n          ' + ariaSelected + '\n          ' + ariaDisabled + '\n          >\n          ' + data.label + '<!--\n       --><button\n            type="button"\n            class="' + globalClasses.button + '"\n            data-button\n            aria-label="Remove item: \'' + data.value + '\'"\n            >\n            Remove item\n          </button>\n        </div>\n      ');
     }
 
     return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-item\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        ' + ariaSelected + '\n        ' + ariaDisabled + '\n        >\n        ' + data.label + '\n      </div>\n    ');
@@ -2033,7 +2033,7 @@ var TEMPLATES = exports.TEMPLATES = {
     return (0, _utils.strToEl)('\n      <div class="' + localClasses + '">\n        ' + label + '\n      </div>\n    ');
   },
   option: function option(data) {
-    return (0, _utils.strToEl)('\n      <option value="' + data.value + '" ' + (data.selected ? 'selected' : '') + ' ' + (data.disabled ? 'disabled' : '') + ' data-custom-properties=\'' + JSON.stringify(data.customProperties) + '\'>' + data.label + '</option>\n    ');
+    return (0, _utils.strToEl)('\n      <option value="' + data.value + '" ' + (data.selected ? 'selected' : '') + ' ' + (data.disabled ? 'disabled' : '') + ' ' + (data.customProperties ? 'data-custom-properties=' + data.customProperties : '') + '>' + data.label + '</option>\n    ');
   }
 };
 
@@ -4050,7 +4050,9 @@ var Choices = function () {
             selected: o.selected,
             disabled: o.disabled || o.parentNode.disabled,
             placeholder: o.hasAttribute('placeholder'),
-            customProperties: (0, _utils.parseJSON)(o.getAttribute('data-custom-properties'))
+            customProperties: {
+              description: o.getAttribute('data-custom-properties')
+            }
           });
         });
 

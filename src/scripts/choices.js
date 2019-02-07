@@ -32,7 +32,6 @@ import {
   sortByScore,
   generateId,
   findAncestorByAttrName,
-  parseJSON,
   regexFilter,
   fetchFromObject,
   isIE11,
@@ -1908,7 +1907,9 @@ class Choices {
           selected: o.selected,
           disabled: o.disabled || o.parentNode.disabled,
           placeholder: o.hasAttribute('placeholder'),
-          customProperties: parseJSON(o.getAttribute('data-custom-properties')),
+          customProperties: {
+            description: o.getAttribute('data-custom-properties'),
+          },
         });
       });
 

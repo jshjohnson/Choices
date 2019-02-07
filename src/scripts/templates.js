@@ -78,7 +78,7 @@ export const TEMPLATES = {
           data-item
           data-id="${data.id}"
           data-value="${data.value}"
-          data-custom-properties='${JSON.stringify(data.customProperties)}'
+          data-custom-properties='${data.customProperties}'
           data-deletable
           ${ariaSelected}
           ${ariaDisabled}
@@ -228,7 +228,7 @@ export const TEMPLATES = {
       data.disabled ? 'disabled' : ''
     } ${
       data.customProperties
-        ? `data-custom-properties=${JSON.stringify(data.customProperties)}`
+        ? `data-custom-properties=${data.customProperties}`
         : ''
     }>${data.label}</option>
     `);
