@@ -1,8 +1,8 @@
 const path = require('path');
-const webpack = require('webpack');
+const { HotModuleReplacementPlugin } = require('webpack');
 
 module.exports = {
-  devtool: 'eval',
+  mode: 'development',
   entry: [
     'webpack/hot/dev-server',
     'webpack-hot-middleware/client',
@@ -15,21 +15,14 @@ module.exports = {
     library: 'Choices',
     libraryTarget: 'umd',
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('development'),
-      },
-    }),
-  ],
+  plugins: [new HotModuleReplacementPlugin()],
   module: {
     rules: [
       {
         enforce: 'pre',
         test: /\.js?$/,
         include: path.join(__dirname, 'src/scripts'),
-        exclude: /(node_modules|bower_components)/,
+        exclude: /node_modules/,
         loader: 'eslint-loader',
         query: {
           configFile: '.eslintrc',
@@ -38,8 +31,11 @@ module.exports = {
       {
         test: /\.js?$/,
         include: path.join(__dirname, 'src/scripts'),
-        exclude: /(node_modules|bower_components)/,
+        exclude: /node_modules/,
         loader: 'babel-loader',
+        options: {
+          babelrc: true,
+        },
       },
     ],
   },
