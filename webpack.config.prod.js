@@ -1,6 +1,8 @@
 const path = require('path');
-const pkg = require('./package.json');
 const WrapperPlugin = require('wrapper-webpack-plugin');
+const UnminifiedWebpackPlugin = require('unminified-webpack-plugin');
+
+const pkg = require('./package.json');
 
 const banner = `/*! ${pkg.name} v${
   pkg.version
@@ -26,6 +28,7 @@ module.exports = {
     new WrapperPlugin({
       header: banner,
     }),
+    new UnminifiedWebpackPlugin(),
   ],
   module: {
     rules: [

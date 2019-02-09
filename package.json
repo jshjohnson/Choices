@@ -87,6 +87,7 @@
     "postcss-cli": "^2.5.1",
     "prettier": "^1.16.4",
     "sinon": "^2.4.0",
+    "unminified-webpack-plugin": "^2.0.0",
     "webpack": "^4.29.3",
     "webpack-cli": "^3.2.3",
     "webpack-dev-middleware": "^3.5.2",
