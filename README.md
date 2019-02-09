@@ -919,6 +919,8 @@ Choices is compiled using [Babel](https://babeljs.io/) to enable support for [ES
 * Array.prototype.map
 * Array.prototype.find
 * Array.prototype.some
+* Array.prototype.includes
+* Array.from
 * Array.prototype.reduce
 * Array.prototype.indexOf
 * Object.assign

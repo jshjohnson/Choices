@@ -97,7 +97,6 @@
   },
   "dependencies": {
     "classnames": "^2.2.6",
-    "core-js": "^2.6.4",
     "custom-event-polyfill": "^0.3.0",
     "deepmerge": "^2.2.1",
     "fuse.js": "^3.4.1",
