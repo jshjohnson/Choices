@@ -294,7 +294,7 @@ describe('Choices - text element', () => {
     });
 
     describe('custom add item callback', () => {
-      describe('inputting a value that satisfies the callbackFilterAddItem', () => {
+      describe('inputting a value that satisfies the addItemFilter', () => {
         const input = 'test';
 
         it('allows me to add choice', () => {

@@ -92,7 +92,7 @@ will be returned. If you target one element, that instance will be returned.
     position: 'auto',
     resetScrollPosition: true,
     regexFilter: null,
-    callbackFilterAddItem: null,
+    addItemFilter: null,
     shouldSort: true,
     shouldSortItems: false,
     sortFn: () => {...},
@@ -340,7 +340,7 @@ Pass an array of objects:
 
 **Usage:** Whether the scroll position should reset after adding an item.
 
-### callbackFilterAddItem
+### addItemFilter
 **Type:** `Function` **Default:** `null`
 
 **Input types affected:** `text`
@@ -352,7 +352,7 @@ Pass an array of objects:
 ```js
 // Only adds items matching the text test
 new Choices(element, {
-  callbackFilterAddItem: function (value) {
+  addItemFilter: function (value) {
     return (value !== 'test')
   }
 });
