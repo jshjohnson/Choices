@@ -623,13 +623,13 @@ describe('templates', () => {
       beforeEach(() => {
         data = {
           ...data,
-          active: true,
+          selected: true,
         };
       });
 
       it('sets selected attr to true', () => {
         const output = templates.option(data);
-        expect(output.active).to.equal(true);
+        expect(output.selected).to.equal(true);
       });
     });
 

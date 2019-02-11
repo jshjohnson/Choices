@@ -1,4 +1,4 @@
-/*! choices.js v4.1.5 | (c) 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v4.1.5 | (c) 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */ 
 (function webpackUniversalModuleDefinition(root, factory) {
    //CommonJS2
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -4259,10 +4259,10 @@ module.exports = Choices;
 
 /*!
  * Fuse.js v3.3.1 - Lightweight fuzzy-search (http://fusejs.io)
- *
+ * 
  * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
  * All Rights Reserved. Apache Software License 2.0
- *
+ * 
  * http://www.apache.org/licenses/LICENSE-2.0
  */
 (function webpackUniversalModuleDefinition(root, factory) {
