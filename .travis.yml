@@ -13,18 +13,21 @@ jobs:
       if: branch = master
       script: npm run build && npm run bump-cache
 
-    - stage: Publish to NPM
+    - stage: Publishing to NPM
       deploy:
         provider: npm
         email: $NPM_EMAIL_ADDRESS
         api_key: $NPM_API_KEY
+        skip_cleanup: true
         on:
+          branch: master
           tags: true
 
-    - stage: Publish GitHub release
+    - stage: Publishing to GitHub releases
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
         skip_cleanup: true
         on:
+          branch: master
           tags: true
