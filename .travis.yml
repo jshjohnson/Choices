@@ -6,6 +6,9 @@ jobs:
     - stage: Judging bundle size
       script: npm run bundlesize
 
+    - stage: Linting code
+      script: npm run lint
+
     - stage: Running tests
       script: npm run test
 
