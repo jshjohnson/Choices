@@ -14,6 +14,7 @@ jobs:
       script: npm run build && npm run bump-cache
 
     - stage: Publishing to NPM
+      script: echo "Publishing to NPM..."
       deploy:
         provider: npm
         email: $NPM_EMAIL_ADDRESS
@@ -24,6 +25,7 @@ jobs:
           tags: true
 
     - stage: Publishing to GitHub releases
+      script: echo "Publishing to Github releases..."
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
