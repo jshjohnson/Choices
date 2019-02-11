@@ -92,6 +92,7 @@ will be returned. If you target one element, that instance will be returned.
     position: 'auto',
     resetScrollPosition: true,
     regexFilter: null,
+    callbackFilterAddItem: null,
     shouldSort: true,
     shouldSortItems: false,
     sortFn: () => {...},
@@ -338,6 +339,24 @@ Pass an array of objects:
 **Input types affected:** `select-multiple`
 
 **Usage:** Whether the scroll position should reset after adding an item.
+
+### callbackFilterAddItem
+**Type:** `Function` **Default:** `null`
+
+**Input types affected:** `text`
+
+**Usage:** A callback function that will need to return `true` for a user to successfully add an item.
+
+**Example:**
+
+```js
+// Only adds items matching the text test
+new Choices(element, {
+  callbackFilterAddItem: function (value) {
+    return (value !== 'test')
+  }
+});
+```
 
 ### regexFilter
 **Type:** `Regex` **Default:** `null`
