@@ -124,6 +124,10 @@
     {
       "path": "public/assets/scripts/choices.min.js",
       "maxSize": "25 kB"
+    },
+    {
+      "path": "public/assets/styles/choices.min.css",
+      "maxSize": "2 kB"
     }
   ]
 }
