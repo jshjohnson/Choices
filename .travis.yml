@@ -6,14 +6,14 @@ jobs:
     - stage: Judging bundle size
       script: npm run bundlesize
 
-    - stage: Run unit tests
-      script: npm run test:unit
+    - stage: Running tests
+      script: npm run test
 
-    - stage: Run e2e tests
-      script: npm run test:e2e
+    - stage: Building for publish
+      if: branch = master
+      script: npm run build && npm run bump-cache
 
     - stage: Publish to NPM
-      script:
       deploy:
         provider: npm
         email: "josh@joshuajohnson.co.uk"
@@ -22,7 +22,6 @@ jobs:
           tags: true
 
     - stage: Publish GitHub release
-      script:
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
