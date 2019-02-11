@@ -1,12 +1,31 @@
 language: node_js
 node_js:
   - "8"
-before_install:
-  - '[ "${TRAVIS_NODE_VERSION}" != "0.8" ] || npm install -g npm@1.4.28'
-  - npm install -g npm@latest
-install:
-  - npm install
-script:
-  - npm run test
-after_script:
-  - npm run bundlesize
+jobs:
+  include:
+    - stage: Judging bundle size
+      script: npm run bundlesize
+
+    - stage: Run unit tests
+      script: npm run test:unit
+
+    - stage: Run e2e tests
+      script: npm run test:e2e
+
+    - stage: Publish to NPM
+      script:
+      deploy:
+        provider: npm
+        email: "josh@joshuajohnson.co.uk"
+        api_key: $NPM_API_KEY
+        on:
+          tags: true
+
+    - stage: Publish GitHub release
+      script:
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        skip_cleanup: true
+        on:
+          tags: true
