@@ -1,4 +1,4 @@
-/*! choices.js v4.1.4 | (c) 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v4.1.5 | (c) 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
    //CommonJS2
 	if(typeof exports === 'object' && typeof module === 'object')
@@ -402,7 +402,7 @@ var doKeysMatch = exports.doKeysMatch = function doKeysMatch(a, b) {
 /* 2 */
 /***/ (function(module, exports) {
 
-var core = module.exports = { version: '2.5.7' };
+var core = module.exports = { version: '2.6.3' };
 if (typeof __e == 'number') __e = core; // eslint-disable-line no-undef
 
 
@@ -891,7 +891,7 @@ var store = global[SHARED] || (global[SHARED] = {});
 })('versions', []).push({
   version: core.version,
   mode: __webpack_require__(27) ? 'pure' : 'global',
-  copyright: '© 2018 Denis Pushkarev (zloirock.ru)'
+  copyright: '© 2019 Denis Pushkarev (zloirock.ru)'
 });
 
 
@@ -1985,7 +1985,7 @@ var TEMPLATES = exports.TEMPLATES = {
 
       localClasses = (0, _classnames2.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
 
-      return (0, _utils.strToEl)('\n        <div\n          class="' + localClasses + '"\n          data-item\n          data-id="' + data.id + '"\n          data-value="' + data.value + '"\n          data-deletable\n          ' + ariaSelected + '\n          ' + ariaDisabled + '\n          >\n          ' + data.label + '<!--\n       --><button\n            type="button"\n            class="' + globalClasses.button + '"\n            data-button\n            aria-label="Remove item: \'' + data.value + '\'"\n            >\n            Remove item\n          </button>\n        </div>\n      ');
+      return (0, _utils.strToEl)('\n        <div\n          class="' + localClasses + '"\n          data-item\n          data-id="' + data.id + '"\n          data-value="' + data.value + '"\n          data-custom-properties=\'' + data.customProperties + '\'\n          data-deletable\n          ' + ariaSelected + '\n          ' + ariaDisabled + '\n          >\n          ' + data.label + '<!--\n       --><button\n            type="button"\n            class="' + globalClasses.button + '"\n            data-button\n            aria-label="Remove item: \'' + data.value + '\'"\n            >\n            Remove item\n          </button>\n        </div>\n      ');
     }
 
     return (0, _utils.strToEl)('\n      <div\n        class="' + localClasses + '"\n        data-item\n        data-id="' + data.id + '"\n        data-value="' + data.value + '"\n        ' + ariaSelected + '\n        ' + ariaDisabled + '\n        >\n        ' + data.label + '\n      </div>\n    ');
@@ -2029,7 +2029,7 @@ var TEMPLATES = exports.TEMPLATES = {
     return (0, _utils.strToEl)('\n      <div class="' + localClasses + '">\n        ' + label + '\n      </div>\n    ');
   },
   option: function option(data) {
-    return (0, _utils.strToEl)('\n      <option value="' + data.value + '" ' + (data.active ? 'selected' : '') + ' ' + (data.disabled ? 'disabled' : '') + '>' + data.label + '</option>\n    ');
+    return (0, _utils.strToEl)('\n      <option value="' + data.value + '" ' + (data.selected ? 'selected' : '') + ' ' + (data.disabled ? 'disabled' : '') + ' ' + (data.customProperties ? 'data-custom-properties=' + data.customProperties : '') + '>' + data.label + '</option>\n    ');
   }
 };
 
@@ -4053,14 +4053,14 @@ var Choices = function () {
         var filter = this.config.sortFn;
         var allChoices = this._presetChoices;
 
-        // Create array of options from option elements
         passedOptions.forEach(function (o) {
           allChoices.push({
             value: o.value,
             label: o.innerHTML,
             selected: o.selected,
             disabled: o.disabled || o.parentNode.disabled,
-            placeholder: o.hasAttribute('placeholder')
+            placeholder: o.hasAttribute('placeholder'),
+            customProperties: o.getAttribute('data-custom-properties')
           });
         });
 
@@ -4258,7 +4258,7 @@ module.exports = Choices;
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
- * Fuse.js v3.2.0 - Lightweight fuzzy-search (http://fusejs.io)
+ * Fuse.js v3.3.1 - Lightweight fuzzy-search (http://fusejs.io)
  *
  * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
  * All Rights Reserved. Apache Software License 2.0
@@ -4351,7 +4351,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 module.exports = function (obj) {
-  return Object.prototype.toString.call(obj) === '[object Array]';
+  return !Array.isArray ? Object.prototype.toString.call(obj) === '[object Array]' : Array.isArray(obj);
 };
 
 /***/ }),
@@ -4781,12 +4781,16 @@ module.exports = function (text, pattern, patternAlphabet, _ref) {
       distance: distance
     });
 
+    // console.log('score', score, finalScore)
+
     if (_score2 > currentThreshold) {
       break;
     }
 
     lastBitArr = bitArr;
   }
+
+  // console.log('FINAL SCORE', finalScore)
 
   // Count exact matches (those with a score of 0) to be "almost" exact
   return {
@@ -4802,6 +4806,8 @@ module.exports = function (text, pattern, patternAlphabet, _ref) {
 
 "use strict";
 
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -4887,6 +4893,8 @@ var Fuse = function () {
   }, {
     key: 'search',
     value: function search(pattern) {
+      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : { limit: false };
+
       this._log('---------\nSearch pattern: "' + pattern + '"');
 
       var _prepareSearchers2 = this._prepareSearchers(pattern),
@@ -4901,6 +4909,10 @@ var Fuse = function () {
 
       if (this.options.shouldSort) {
         this._sort(results);
+      }
+
+      if (opts.limit && typeof opts.limit === 'number') {
+        results = results.slice(0, opts.limit);
       }
 
       return this._format(results);
@@ -5139,7 +5151,7 @@ var Fuse = function () {
         var output = results[i].output;
         var scoreLen = output.length;
 
-        var totalScore = 0;
+        var currScore = 1;
         var bestScore = 1;
 
         for (var j = 0; j < scoreLen; j += 1) {
@@ -5151,11 +5163,11 @@ var Fuse = function () {
             bestScore = Math.min(bestScore, nScore);
           } else {
             output[j].nScore = nScore;
-            totalScore += nScore;
+            currScore *= nScore;
           }
         }
 
-        results[i].score = bestScore === 1 ? totalScore / scoreLen : bestScore;
+        results[i].score = bestScore === 1 ? currScore : bestScore;
 
         this._log(results[i]);
       }
@@ -5171,7 +5183,21 @@ var Fuse = function () {
     value: function _format(results) {
       var finalOutput = [];
 
-      this._log('\n\nOutput:\n\n', JSON.stringify(results));
+      if (this.options.verbose) {
+        var cache = [];
+        this._log('\n\nOutput:\n\n', JSON.stringify(results, function (key, value) {
+          if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value !== null) {
+            if (cache.indexOf(value) !== -1) {
+              // Circular reference found, discard key
+              return;
+            }
+            // Store value in our collection
+            cache.push(value);
+          }
+          return value;
+        }));
+        cache = null; // Enable garbage collection
+      }
 
       var transformers = [];
 
@@ -6728,7 +6754,7 @@ var general = function general() {
   var action = arguments[1];
 
   switch (action.type) {
-    case 'LOADING':
+    case 'SET_IS_LOADING':
       {
         return {
           loading: action.isLoading
@@ -7611,7 +7637,7 @@ exports.default = WrappedSelect;
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-  Copyright (c) 2016 Jed Watson.
+  Copyright (c) 2017 Jed Watson.
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/classnames
 */
@@ -7633,8 +7659,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 
 			if (argType === 'string' || argType === 'number') {
 				classes.push(arg);
-			} else if (Array.isArray(arg)) {
-				classes.push(classNames.apply(null, arg));
+			} else if (Array.isArray(arg) && arg.length) {
+				var inner = classNames.apply(null, arg);
+				if (inner) {
+					classes.push(inner);
+				}
 			} else if (argType === 'object') {
 				for (var key in arg) {
 					if (hasOwn.call(arg, key) && arg[key]) {
@@ -7648,6 +7677,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
 	}
 
 	if (typeof module !== 'undefined' && module.exports) {
+		classNames.default = classNames;
 		module.exports = classNames;
 	} else if (true) {
 		// register as 'classnames', consistent with npm package name
@@ -7834,7 +7864,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var setIsLoading = exports.setIsLoading = function setIsLoading(isLoading) {
   return {
-    type: 'LOADING',
+    type: 'SET_IS_LOADING',
     isLoading: isLoading
   };
 };

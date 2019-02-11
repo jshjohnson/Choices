@@ -1,6 +1,6 @@
 {
   "name": "choices.js",
-  "version": "4.1.4",
+  "version": "4.1.5",
   "description": "A vanilla JS customisable text input/select box plugin",
   "main": "./public/assets/scripts/choices.min.js",
   "types": "./types/index.d.ts",

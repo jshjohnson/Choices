@@ -1911,7 +1911,6 @@ class Choices {
       const filter = this.config.sortFn;
       const allChoices = this._presetChoices;
 
-      // Create array of options from option elements
       passedOptions.forEach(o => {
         allChoices.push({
           value: o.value,
@@ -1919,6 +1918,7 @@ class Choices {
           selected: o.selected,
           disabled: o.disabled || o.parentNode.disabled,
           placeholder: o.hasAttribute('placeholder'),
+          customProperties: o.getAttribute('data-custom-properties'),
         });
       });
 

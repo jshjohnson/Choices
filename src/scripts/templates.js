@@ -78,6 +78,7 @@ export const TEMPLATES = {
           data-item
           data-id="${data.id}"
           data-value="${data.value}"
+          data-custom-properties='${data.customProperties}'
           data-deletable
           ${ariaSelected}
           ${ariaDisabled}
@@ -223,8 +224,12 @@ export const TEMPLATES = {
   },
   option(data) {
     return strToEl(`
-      <option value="${data.value}" ${data.active ? 'selected' : ''} ${
+      <option value="${data.value}" ${data.selected ? 'selected' : ''} ${
       data.disabled ? 'disabled' : ''
+    } ${
+      data.customProperties
+        ? `data-custom-properties=${data.customProperties}`
+        : ''
     }>${data.label}</option>
     `);
   },

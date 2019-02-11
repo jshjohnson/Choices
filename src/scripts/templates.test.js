@@ -623,7 +623,7 @@ describe('templates', () => {
       beforeEach(() => {
         data = {
           ...data,
-          active: true,
+          selected: true,
         };
       });
 

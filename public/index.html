@@ -16,7 +16,7 @@
   <meta name="theme-color" content="#ffffff">
 
   <!-- Ignore these -->
-  <link rel="stylesheet" href="assets/styles/base.min.css?version=4.1.4">
+  <link rel="stylesheet" href="assets/styles/base.min.css?version=4.1.5">
   <!-- End ignore these -->
 
   <!-- Optional includes -->
@@ -24,8 +24,8 @@
   <!-- End optional includes -->
 
   <!-- Choices includes -->
-  <link rel="stylesheet" href="assets/styles/choices.min.css?version=4.1.4">
-  <script src="assets/scripts/choices.min.js?version=4.1.4"></script>
+  <link rel="stylesheet" href="assets/styles/choices.min.css?version=4.1.5">
+  <script src="assets/scripts/choices.min.js?version=4.1.5"></script>
   <!-- End Choices includes -->
 
   <!--[if lt IE 9]>
@@ -228,6 +228,14 @@
       <label for="choices-single-selected-option">Option selected via config with custom properties</label>
       <p><small>Try searching for 'fantastic'</small></p>
       <select class="form-control" name="choices-single-selected-option" id="choices-single-selected-option" placeholder="This is a placeholder"></select>
+
+      <label for="choices-with-custom-props-via-html">Option searchable by custom properties via <code>data-custom-properties</code> attribute</label>
+      <p><small>Try searching for 'fantastic', again</small>
+      <select class="form-control" id="choices-with-custom-props-via-html">
+        <option value="Dropdown item 1">Label One</option>
+        <option value="Dropdown item 2" selected disabled>Label Two</option>
+        <option value="Dropdown item 3" data-custom-properties='This option is fantastic'>Label Three</option>
+      </select>
 
       <label for="choices-single-no-sorting">Options without sorting</label>
       <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting" placeholder="This is a placeholder">
@@ -495,6 +503,10 @@
           },
         ],
       }).setChoiceByValue('Two');
+
+      var customChoicesPropertiesViaDataAttributes = new Choices('#choices-with-custom-props-via-html', {
+       searchFields: ['label', 'value', 'customProperties']
+      })
 
       var singleNoSorting = new Choices('#choices-single-no-sorting', {
         shouldSort: false,
