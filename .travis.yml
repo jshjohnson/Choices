@@ -16,7 +16,7 @@ jobs:
     - stage: Publish to NPM
       deploy:
         provider: npm
-        email: "josh@joshuajohnson.co.uk"
+        email: $NPM_EMAIL_ADDRESS
         api_key: $NPM_API_KEY
         on:
           tags: true
