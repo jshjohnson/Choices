@@ -1,7 +1,12 @@
 language: node_js
 node_js:
-  - "8"
-cache: npm
+  - 10
+cache:
+  directories:
+    - ~/.npm
+    - ~/.cache
+install:
+  - npm ci
 jobs:
   include:
     - stage: Judging bundle size
