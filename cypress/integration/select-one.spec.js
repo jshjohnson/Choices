@@ -134,7 +134,7 @@ describe('Choices - select one', () => {
 
         @todo Investigate why
       */
-      describe.skip('interacting with dropdown', () => {
+      describe('interacting with dropdown', () => {
         describe('opening dropdown', () => {
           it('opens dropdown', () => {
             cy.get('[data-test-hook=basic]')
@@ -163,44 +163,6 @@ describe('Choices - select one', () => {
             cy.get('[data-test-hook=basic]')
               .find('.choices__list--dropdown')
               .should('not.be.visible');
-          });
-        });
-
-        describe('toggling dropdown', () => {
-          describe('when open', () => {
-            it('closes dropdown', () => {
-              cy.get('[data-test-hook=basic]')
-                .find('button.open-dropdown')
-                .focus()
-                .click();
-
-              cy.get('[data-test-hook=basic]')
-                .find('button.toggle-dropdown')
-                .focus()
-                .click();
-
-              cy.get('[data-test-hook=basic]')
-                .find('.choices__list--dropdown')
-                .should('not.be.visible');
-            });
-          });
-
-          describe('when closed', () => {
-            it('opens dropdown', () => {
-              cy.get('[data-test-hook=basic]')
-                .find('button.close-dropdown')
-                .focus()
-                .click();
-
-              cy.get('[data-test-hook=basic]')
-                .find('button.toggle-dropdown')
-                .focus()
-                .click();
-
-              cy.get('[data-test-hook=basic]')
-                .find('.choices__list--dropdown')
-                .should('be.visible');
-            });
           });
         });
       });
