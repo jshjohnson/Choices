@@ -260,7 +260,13 @@ describe('Choices - text element', () => {
 
           cy.get('[data-test-hook=add-item-filter]')
             .find('.choices__list--dropdown')
-            .should('not.be.visible');
+            .should('be.visible')
+            .should($dropdown => {
+              const dropdownText = $dropdown.text().trim();
+              expect(dropdownText).to.equal(
+                'Only values matching specific conditions can be added',
+              );
+            });
         });
       });
     });
