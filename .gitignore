@@ -1,10 +1,7 @@
 node_modules
 npm-debug.log
 .DS_Store
-.gitignore
 .idea
-.vscode
-package-lock.json
 
 # Test
 tests/reports
