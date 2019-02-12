@@ -765,13 +765,6 @@ export default class Choices {
   hideDropdown(blurInput?: boolean): this;
 
   /**
-   * Toggle dropdown between showing/hidden.
-   *
-   * **Input types affected:** text, select-multiple
-   */
-  toggleDropdown(): this;
-
-  /**
    * Get value(s) of input (i.e. inputted items (text) or selected choices (select)). Optionally pass an argument of `true` to only return values rather than value objects.
    *
    * **Input types affected:** text, select-one, select-multiple

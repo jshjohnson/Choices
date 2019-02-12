@@ -378,11 +378,6 @@ class Choices {
     return this;
   }
 
-  toggleDropdown() {
-    this.dropdown.isActive ? this.hideDropdown() : this.showDropdown();
-    return this;
-  }
-
   getValue(valueOnly = false) {
     const values = this._store.activeItems.reduce((selectedItems, item) => {
       const itemValue = valueOnly ? item.value : item;

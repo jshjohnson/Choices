@@ -33,7 +33,6 @@
           <label for="choices-basic">Basic</label>
           <button class="open-dropdown push-bottom">Open dropdown</button>
           <button class="close-dropdown push-bottom">Close dropdown</button>
-          <button class="toggle-dropdown push-bottom">Toggle dropdown</button>
           <button class="disable push-bottom">Disable</button>
           <button class="enable push-bottom">Enable</button>
           <select class="form-control" name="choices-basic" id="choices-basic" multiple>
@@ -214,10 +213,6 @@
 
         document.querySelector('button.close-dropdown').addEventListener('click', () => {
           choicesBasic.hideDropdown();
-        });
-
-        document.querySelector('button.toggle-dropdown').addEventListener('click', () => {
-          choicesBasic.toggleDropdown();
         });
 
         document.querySelector('button.disable').addEventListener('click', () => {

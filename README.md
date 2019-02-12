@@ -744,12 +744,6 @@ choices.disable();
 
 **Usage:** Hide option list dropdown (only affects select inputs).
 
-
-### toggleDropdown();
-**Input types affected:** `text`, `select-multiple`
-
-**Usage:** Toggle dropdown between showing/hidden.
-
 ### setChoices(choices, value, label, replaceChoices);
 **Input types affected:** `select-one`, `select-multiple`
 

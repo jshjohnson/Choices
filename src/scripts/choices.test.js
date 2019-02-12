@@ -491,50 +491,6 @@ describe('choices', () => {
       });
     });
 
-    describe('toggleDropdown', () => {
-      let hideDropdownStub;
-      let showDropdownStub;
-
-      beforeEach(() => {
-        hideDropdownStub = stub();
-        showDropdownStub = stub();
-
-        instance.hideDropdown = hideDropdownStub;
-        instance.showDropdown = showDropdownStub;
-      });
-
-      afterEach(() => {
-        instance.hideDropdown.reset();
-        instance.showDropdown.reset();
-      });
-
-      describe('dropdown active', () => {
-        beforeEach(() => {
-          instance.dropdown.isActive = true;
-          output = instance.toggleDropdown();
-        });
-
-        it('hides dropdown', () => {
-          expect(hideDropdownStub.called).to.equal(true);
-        });
-
-        returnsInstance(output);
-      });
-
-      describe('dropdown inactive', () => {
-        beforeEach(() => {
-          instance.dropdown.isActive = false;
-          output = instance.toggleDropdown();
-        });
-
-        it('shows dropdown', () => {
-          expect(showDropdownStub.called).to.equal(true);
-        });
-
-        returnsInstance(output);
-      });
-    });
-
     describe('highlightItem', () => {
       let passedElementTriggerEventStub;
       let storeDispatchSpy;
