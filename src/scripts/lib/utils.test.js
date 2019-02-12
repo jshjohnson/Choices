@@ -14,7 +14,6 @@ import {
   fetchFromObject,
   existsInArray,
   cloneObject,
-  regexFilter,
   dispatchEvent,
 } from './utils';
 
