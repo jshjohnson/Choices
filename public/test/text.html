@@ -54,19 +54,14 @@
           <input class="form-control" id="choices-input-limit" type="text">
         </div>
 
-        <div data-test-hook="regex-filter">
-          <label for="choices-regex-filter">Regex filter</label>
-          <input class="form-control" id="choices-regex-filter" type="text">
+        <div data-test-hook="add-item-filter">
+          <label for="choices-add-item-filter">Add item filter</label>
+          <input class="form-control" id="choices-add-item-filter" type="text">
         </div>
 
         <div data-test-hook="adding-items-disabled">
           <label for="choices-adding-items-disabled">Add items disabled</label>
           <input class="form-control" id="choices-adding-items-disabled" type="text">
-        </div>
-
-        <div data-test-hook="add-item-callback">
-          <label for="choices-add-item-callback">Callback on Add Item</label>
-          <input class="form-control" id="choices-add-item-callback" type="text">
         </div>
 
         <div data-test-hook="disabled-via-attr">
@@ -117,18 +112,17 @@
           maxItemCount: 5,
         });
 
-        new Choices('#choices-regex-filter', {
-          regexFilter: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        new Choices('#choices-add-item-filter', {
+          addItems: true,
+          addItemFilterFn: (value) => {
+            const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            const expression = new RegExp(regex.source, 'i');
+            return expression.test(value);
+          },
         });
 
         new Choices('#choices-adding-items-disabled', {
           addItems: false,
-        });
-
-        new Choices('#choices-add-item-callback', {
-          addItemFilter: function (value) {
-            return (value !== 'test')
-          }
         });
 
         new Choices('#choices-disabled-via-attr');

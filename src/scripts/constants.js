@@ -36,6 +36,7 @@ export const DEFAULT_CONFIG = {
   renderChoiceLimit: -1,
   maxItemCount: -1,
   addItems: true,
+  addItemFilterFn: null,
   removeItems: true,
   removeItemButton: false,
   editItems: false,
@@ -49,7 +50,6 @@ export const DEFAULT_CONFIG = {
   searchFields: ['label', 'value'],
   position: 'auto',
   resetScrollPosition: true,
-  regexFilter: null,
   shouldSort: true,
   shouldSortItems: false,
   sortFn: sortByAlpha,
@@ -72,7 +72,6 @@ export const DEFAULT_CONFIG = {
     includeScore: true,
   },
   callbackOnInit: null,
-  addItemFilter: null,
   callbackOnCreateTemplates: null,
   classNames: DEFAULT_CLASSNAMES,
 };

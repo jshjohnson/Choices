@@ -33,12 +33,11 @@ import {
   sortByScore,
   generateId,
   findAncestorByAttrName,
-  regexFilter,
   fetchFromObject,
   isIE11,
   existsInArray,
   cloneObject,
-  doKeysMatch,
+  diff,
 } from './lib/utils';
 
 /**
@@ -64,8 +63,12 @@ class Choices {
       { arrayMerge: (destinationArray, sourceArray) => [...sourceArray] },
     );
 
-    if (!doKeysMatch(this.config, DEFAULT_CONFIG)) {
-      console.warn('Unknown config option(s) passed');
+    const invalidConfigOptions = diff(this.config, DEFAULT_CONFIG);
+    if (invalidConfigOptions.length) {
+      console.warn(
+        'Unknown config option(s) passed',
+        invalidConfigOptions.join(', '),
+      );
     }
 
     if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
@@ -966,18 +969,6 @@ class Choices {
       }
 
       if (
-        this.config.regexFilter &&
-        this._isTextElement &&
-        this.config.addItems &&
-        canAddItem
-      ) {
-        // If a user has supplied a regular expression filter
-        // determine whether we can update based on whether
-        // our regular expression passes
-        canAddItem = regexFilter(value, this.config.regexFilter);
-      }
-
-      if (
         !this.config.duplicateItemsAllowed &&
         isDuplicateValue &&
         canAddItem
@@ -989,11 +980,11 @@ class Choices {
       }
 
       if (
-        isType('Function', this.config.addItemFilter) &&
-        this.config.addItemFilter(value) &&
         this._isTextElement &&
         this.config.addItems &&
-        canAddItem
+        canAddItem &&
+        isType('Function', this.config.addItemFilterFn) &&
+        !this.config.addItemFilterFn(value)
       ) {
         canAddItem = false;
         notice = isType('Function', this.config.customAddItemText)
@@ -1202,35 +1193,29 @@ class Choices {
     const value = this.input.value;
     const activeItems = this._store.activeItems;
     const canAddItem = this._canAddItem(activeItems, value);
+    const { BACK_KEY: backKey, DELETE_KEY: deleteKey } = KEY_CODES;
 
     // We are typing into a text input and have a value, we want to show a dropdown
     // notice. Otherwise hide the dropdown
     if (this._isTextElement) {
-      if (value) {
-        if (canAddItem.notice) {
-          const dropdownItem = this._getTemplate('notice', canAddItem.notice);
-          this.dropdown.element.innerHTML = dropdownItem.outerHTML;
-        }
-
-        if (canAddItem.response === true) {
-          this.showDropdown(true);
-        } else if (!canAddItem.notice) {
-          this.hideDropdown(true);
-        }
+      const canShowDropdownNotice = canAddItem.notice && value;
+      if (canShowDropdownNotice) {
+        const dropdownItem = this._getTemplate('notice', canAddItem.notice);
+        this.dropdown.element.innerHTML = dropdownItem.outerHTML;
+        this.showDropdown(true);
       } else {
         this.hideDropdown(true);
       }
     } else {
-      const backKey = KEY_CODES.BACK_KEY;
-      const deleteKey = KEY_CODES.DELETE_KEY;
+      const userHasRemovedValue =
+        (keyCode === backKey || keyCode === deleteKey) && !target.value;
+      const canReactivateChoices = !this._isTextElement && this._isSearching;
+      const canSearch = this._canSearch && canAddItem.response;
 
-      // If user has removed value...
-      if ((keyCode === backKey || keyCode === deleteKey) && !target.value) {
-        if (!this._isTextElement && this._isSearching) {
-          this._isSearching = false;
-          this._store.dispatch(activateChoices(true));
-        }
-      } else if (this._canSearch && canAddItem.response) {
+      if (userHasRemovedValue && canReactivateChoices) {
+        this._isSearching = false;
+        this._store.dispatch(activateChoices(true));
+      } else if (canSearch) {
         this._handleSearch(this.input.value);
       }
     }
@@ -1242,12 +1227,13 @@ class Choices {
     // If CTRL + A or CMD + A have been pressed and there are items to select
     if (hasCtrlDownKeyPressed && hasItems) {
       this._canSearch = false;
-      if (
+
+      const shouldHightlightAll =
         this.config.removeItems &&
         !this.input.value &&
-        this.input.element === document.activeElement
-      ) {
-        // Highlight items
+        this.input.element === document.activeElement;
+
+      if (shouldHightlightAll) {
         this.highlightAll();
       }
     }
@@ -1255,12 +1241,12 @@ class Choices {
 
   _onEnterKey({ event, target, activeItems, hasActiveDropdown }) {
     const { ENTER_KEY: enterKey } = KEY_CODES;
-    // If enter key is pressed and the input has a value
+    const targetWasButton = target.hasAttribute('data-button');
+
     if (this._isTextElement && target.value) {
       const value = this.input.value;
       const canAddItem = this._canAddItem(activeItems, value);
 
-      // All is good, add
       if (canAddItem.response) {
         this.hideDropdown(true);
         this._addItem({ value });
@@ -1269,28 +1255,26 @@ class Choices {
       }
     }
 
-    if (target.hasAttribute('data-button')) {
+    if (targetWasButton) {
       this._handleButtonAction(activeItems, target);
       event.preventDefault();
     }
 
     if (hasActiveDropdown) {
-      const highlighted = this.dropdown.getChild(
+      const highlightedChoice = this.dropdown.getChild(
         `.${this.config.classNames.highlightedState}`,
       );
 
-      // If we have a highlighted choice
-      if (highlighted) {
+      if (highlightedChoice) {
         // add enter keyCode value
         if (activeItems[0]) {
           activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
         }
-        this._handleChoiceAction(activeItems, highlighted);
+        this._handleChoiceAction(activeItems, highlightedChoice);
       }
 
       event.preventDefault();
     } else if (this._isSelectOneElement) {
-      // Open single select dropdown if it's not active
       this.showDropdown();
       event.preventDefault();
     }
@@ -1375,31 +1359,29 @@ class Choices {
   }
 
   _onTouchMove() {
-    if (this._wasTap === true) {
+    if (this._wasTap) {
       this._wasTap = false;
     }
   }
 
   _onTouchEnd(event) {
-    const target = event.target || event.touches[0].target;
+    const { target } = event || event.touches[0];
+    const touchWasWithinContainer =
+      this._wasTap && this.containerOuter.element.contains(target);
 
-    // If a user tapped within our container...
-    if (this._wasTap === true && this.containerOuter.element.contains(target)) {
-      // ...and we aren't dealing with a single select box, show dropdown/focus input
-
-      const containerWasTarget =
+    if (touchWasWithinContainer) {
+      const containerWasExactTarget =
         target === this.containerOuter.element ||
         target === this.containerInner.element;
 
-      if (containerWasTarget && !this._isSelectOneElement) {
+      if (containerWasExactTarget) {
         if (this._isTextElement) {
-          // If text element, we only want to focus the input
           this.input.focus();
-        } else {
-          // If a select box, we want to show the dropdown
+        } else if (this._isSelectMultipleElement) {
           this.showDropdown();
         }
       }
+
       // Prevents focus event firing
       event.stopPropagation();
     }
@@ -1423,7 +1405,6 @@ class Choices {
 
     const activeItems = this._store.activeItems;
     const hasShiftKey = shiftKey;
-
     const buttonTarget = findAncestorByAttrName(target, 'data-button');
     const itemTarget = findAncestorByAttrName(target, 'data-item');
     const choiceTarget = findAncestorByAttrName(target, 'data-choice');
@@ -1451,7 +1432,11 @@ class Choices {
   }
 
   _onClick({ target }) {
-    if (this.containerOuter.element.contains(target)) {
+    const clickWasWithinContainer = this.containerOuter.element.contains(
+      target,
+    );
+
+    if (clickWasWithinContainer) {
       if (!this.dropdown.isActive && !this.containerOuter.isDisabled) {
         if (this._isTextElement) {
           if (document.activeElement !== this.input.element) {
@@ -1481,7 +1466,11 @@ class Choices {
   }
 
   _onFocus({ target }) {
-    if (!this.containerOuter.element.contains(target)) {
+    const focusWasWithinContainer = this.containerOuter.element.contains(
+      target,
+    );
+
+    if (!focusWasWithinContainer) {
       return;
     }
 
@@ -1511,11 +1500,9 @@ class Choices {
   }
 
   _onBlur({ target }) {
-    // If target is something that concerns us
-    if (
-      this.containerOuter.element.contains(target) &&
-      !this._isScrollingOnIe
-    ) {
+    const blurWasWithinContainer = this.containerOuter.element.contains(target);
+
+    if (blurWasWithinContainer && !this._isScrollingOnIe) {
       const activeItems = this._store.activeItems;
       const hasHighlightedItems = activeItems.some(item => item.highlighted);
       const blurActions = {

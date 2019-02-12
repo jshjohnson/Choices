@@ -56,6 +56,7 @@ describe('constants', () => {
         expect(DEFAULT_CONFIG.renderChoiceLimit).to.be.a('number');
         expect(DEFAULT_CONFIG.maxItemCount).to.be.a('number');
         expect(DEFAULT_CONFIG.addItems).to.be.a('boolean');
+        expect(DEFAULT_CONFIG.addItemFilterFn).to.equal(null);
         expect(DEFAULT_CONFIG.removeItems).to.be.a('boolean');
         expect(DEFAULT_CONFIG.removeItemButton).to.be.a('boolean');
         expect(DEFAULT_CONFIG.editItems).to.be.a('boolean');
@@ -68,7 +69,6 @@ describe('constants', () => {
         expect(DEFAULT_CONFIG.searchResultLimit).to.be.a('number');
         expect(DEFAULT_CONFIG.searchFields).to.be.an('array');
         expect(DEFAULT_CONFIG.position).to.be.a('string');
-        expect(DEFAULT_CONFIG.regexFilter).to.equal(null);
         expect(DEFAULT_CONFIG.shouldSort).to.be.a('boolean');
         expect(DEFAULT_CONFIG.shouldSortItems).to.be.a('boolean');
         expect(DEFAULT_CONFIG.placeholder).to.be.a('boolean');
@@ -86,7 +86,6 @@ describe('constants', () => {
         expect(DEFAULT_CONFIG.addItemText).to.be.a('function');
         expect(DEFAULT_CONFIG.maxItemText).to.be.a('function');
         expect(DEFAULT_CONFIG.fuseOptions).to.be.an('object');
-        expect(DEFAULT_CONFIG.addItemFilter).to.equal(null);
         expect(DEFAULT_CONFIG.callbackOnInit).to.equal(null);
         expect(DEFAULT_CONFIG.callbackOnCreateTemplates).to.equal(null);
       });

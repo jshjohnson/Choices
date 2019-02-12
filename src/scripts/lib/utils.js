@@ -229,15 +229,6 @@ export const dispatchEvent = (element, type, customArgs = null) => {
   return element.dispatchEvent(event);
 };
 
-export const regexFilter = (value, regex) => {
-  if (!value || !regex) {
-    return false;
-  }
-
-  const expression = new RegExp(regex.source, 'i');
-  return expression.test(value);
-};
-
 export const getWindowHeight = () => {
   const body = document.body;
   const html = document.documentElement;
@@ -289,8 +280,11 @@ export const existsInArray = (array, value, key = 'value') =>
 
 export const cloneObject = obj => JSON.parse(JSON.stringify(obj));
 
-export const doKeysMatch = (a, b) => {
+export const diff = (a, b) => {
   const aKeys = Object.keys(a).sort();
   const bKeys = Object.keys(b).sort();
-  return JSON.stringify(aKeys) === JSON.stringify(bKeys);
+
+  return aKeys.filter((i) => {
+    return bKeys.indexOf(i) < 0;
+  });
 }

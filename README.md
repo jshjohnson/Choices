@@ -78,6 +78,7 @@ will be returned. If you target one element, that instance will be returned.
     renderChoiceLimit: -1,
     maxItemCount: -1,
     addItems: true,
+    addItemFilterFn: null,
     removeItems: true,
     removeItemButton: false,
     editItems: false,
@@ -91,8 +92,6 @@ will be returned. If you target one element, that instance will be returned.
     searchFields: ['label', 'value'],
     position: 'auto',
     resetScrollPosition: true,
-    regexFilter: null,
-    addItemFilter: null,
     shouldSort: true,
     shouldSortItems: false,
     sortFn: () => {...},
@@ -340,30 +339,23 @@ Pass an array of objects:
 
 **Usage:** Whether the scroll position should reset after adding an item.
 
-### addItemFilter
+### addItemFilterFn
 **Type:** `Function` **Default:** `null`
 
 **Input types affected:** `text`
 
-**Usage:** A callback function that will need to return `true` for a user to successfully add an item.
+**Usage:** A filter function that will need to return `true` for a user to successfully add an item.
 
 **Example:**
 
 ```js
 // Only adds items matching the text test
 new Choices(element, {
-  addItemFilter: function (value) {
-    return (value !== 'test')
-  }
+  addItemFilterFn: (value) => {
+    return (value !== 'test');
+  };
 });
 ```
-
-### regexFilter
-**Type:** `Regex` **Default:** `null`
-
-**Input types affected:** `text`
-
-**Usage:** A filter that will need to pass for a user to successfully add an item.
 
 ### shouldSort
 **Type:** `Boolean` **Default:** `true`

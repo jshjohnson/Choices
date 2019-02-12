@@ -197,8 +197,9 @@ describe('Choices - text element', () => {
     });
 
     describe('input limit', () => {
+      const inputLimit = 5;
       beforeEach(() => {
-        for (let index = 0; index < 6; index++) {
+        for (let index = 0; index < inputLimit + 1; index++) {
           cy.get('[data-test-hook=input-limit]')
             .find('.choices__input--cloned')
             .type(`${textInput} + ${index}`)
@@ -212,29 +213,36 @@ describe('Choices - text element', () => {
           .first()
           .children()
           .should($items => {
-            expect($items.length).to.equal(5);
+            expect($items.length).to.equal(inputLimit);
           });
       });
 
-      it('hides dropdown prompt once limit has been reached', () => {
-        cy.wait(500); // allow for animation frame
-        cy.get('[data-test-hook=input-limit]')
-          .find('.choices__list--dropdown')
-          .should('not.be.visible');
+      describe('reaching input limit', () => {
+        it('displays dropdown prompt', () => {
+          cy.get('[data-test-hook=input-limit]')
+            .find('.choices__list--dropdown')
+            .should('be.visible')
+            .should($dropdown => {
+              const dropdownText = $dropdown.text().trim();
+              expect(dropdownText).to.equal(
+                `Only ${inputLimit} values can be added`,
+              );
+            });
+        });
       });
     });
 
-    describe('regex filter', () => {
-      describe('inputting a value that satisfies the regex', () => {
+    describe('add item filter', () => {
+      describe('inputting a value that satisfies the filter', () => {
         const input = 'joe@bloggs.com';
 
         it('allows me to add choice', () => {
-          cy.get('[data-test-hook=regex-filter]')
+          cy.get('[data-test-hook=add-item-filter]')
             .find('.choices__input--cloned')
             .type(input)
             .type('{enter}');
 
-          cy.get('[data-test-hook=regex-filter]')
+          cy.get('[data-test-hook=add-item-filter]')
             .find('.choices__list--multiple .choices__item')
             .last()
             .should($choice => {
@@ -245,12 +253,12 @@ describe('Choices - text element', () => {
 
       describe('inputting a value that does not satisfy the regex', () => {
         it('displays dropdown prompt', () => {
-          cy.get('[data-test-hook=regex-filter]')
+          cy.get('[data-test-hook=add-item-filter]')
             .find('.choices__input--cloned')
             .type(`this is not an email address`)
             .type('{enter}');
 
-          cy.get('[data-test-hook=regex-filter]')
+          cy.get('[data-test-hook=add-item-filter]')
             .find('.choices__list--dropdown')
             .should('not.be.visible');
         });
@@ -290,39 +298,6 @@ describe('Choices - text element', () => {
         cy.get('[data-test-hook=adding-items-disabled]')
           .find('.choices__input--cloned')
           .should('be.disabled');
-      });
-    });
-
-    describe('custom add item callback', () => {
-      describe('inputting a value that satisfies the addItemFilter', () => {
-        const input = 'test';
-
-        it('allows me to add choice', () => {
-          cy.get('[data-test-hook=add-item-callback]')
-            .find('.choices__input--cloned')
-            .type(input)
-            .type('{enter}');
-
-          cy.get('[data-test-hook=add-item-callback]')
-            .find('.choices__list--multiple .choices__item')
-            .last()
-            .should($choice => {
-              expect($choice.text().trim()).to.equal(input);
-            });
-        });
-      });
-
-      describe('inputting a value that does not satisfy the callback', () => {
-        it('displays dropdown prompt', () => {
-          cy.get('[data-test-hook=add-item-callback]')
-            .find('.choices__input--cloned')
-            .type(`this is not the allowed text`)
-            .type('{enter}');
-
-          cy.get('[data-test-hook=add-item-callback]')
-            .find('.choices__list--dropdown')
-            .should('not.be.visible');
-        });
       });
     });
 

@@ -30,6 +30,15 @@ declare namespace Choices {
     "addItem": CustomEvent;
 
     /**
+     * A filter that will need to pass for a user to successfully add an item.
+     *
+     * **Input types affected:** text
+     *
+     * @default null
+     */
+    addItemFilterFn?: () => any;
+
+    /**
      * Triggered each time an item is removed (programmatically or by the user).
      *
      * **Input types affected:** text, select-one, select-multiple
@@ -404,15 +413,6 @@ declare namespace Choices {
      * @default true
      */
     resetScrollPosition?: boolean;
-
-    /**
-     * A filter that will need to pass for a user to successfully add an item.
-     *
-     * **Input types affected:** text
-     *
-     * @default null
-     */
-    regexFilter?: RegExp;
 
     /**
      * Whether choices and groups should be sorted. If false, choices/groups will appear in the order they were given.
