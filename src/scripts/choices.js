@@ -411,7 +411,13 @@ class Choices {
     return this;
   }
 
-  setChoices(choices = [], value = '', label = '', replaceChoices = false) {
+  setChoices(
+    choices = [],
+    value = '',
+    label = '',
+    customProperties = '',
+    replaceChoices = false,
+  ) {
     if (!this._isSelectElement || !choices.length || !value) {
       return this;
     }
@@ -429,6 +435,7 @@ class Choices {
           id: groupOrChoice.id || null,
           valueKey: value,
           labelKey: label,
+          customPropertiesKey: customProperties,
         });
       } else {
         this._addChoice({

@@ -1313,16 +1313,19 @@ describe('choices', () => {
       let containerOuterRemoveLoadingStateStub;
       const value = 'value';
       const label = 'label';
+      const customProperties = 'customProperties';
       const choices = [
         {
           id: '1',
           value: '1',
           label: 'Test 1',
+          customProperties: 'test1',
         },
         {
           id: '2',
           value: '2',
           label: 'Test 2',
+          customProperties: 'test2',
         },
       ];
       const groups = [
@@ -1401,13 +1404,14 @@ describe('choices', () => {
 
         describe('passing choices with children choices', () => {
           it('adds groups', () => {
-            instance.setChoices(groups, value, label, false);
+            instance.setChoices(groups, value, label, customProperties, false);
             expect(addGroupStub.callCount).to.equal(1);
             expect(addGroupStub.firstCall.args[0]).to.eql({
               group: groups[0],
               id: groups[0].id,
               valueKey: value,
               labelKey: label,
+              customPropertiesKey: customProperties,
             });
           });
         });
@@ -1431,7 +1435,7 @@ describe('choices', () => {
 
         describe('passing true replaceChoices flag', () => {
           it('choices are cleared', () => {
-            instance.setChoices(choices, value, label, true);
+            instance.setChoices(choices, value, label, customProperties, true);
             expect(clearChoicesStub.called).to.equal(true);
           });
         });

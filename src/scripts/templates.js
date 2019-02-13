@@ -169,6 +169,11 @@ export const TEMPLATES = {
         }
         id="${data.elementId}"
         ${role}
+        ${
+          data.customProperties
+            ? `data-custom-properties="${data.customProperties}"`
+            : ''
+        }
         >
         ${data.label}
       </div>
@@ -228,7 +233,7 @@ export const TEMPLATES = {
       data.disabled ? 'disabled' : ''
     } ${
       data.customProperties
-        ? `data-custom-properties=${data.customProperties}`
+        ? `data-custom-properties="${data.customProperties}"`
         : ''
     }>${data.label}</option>
     `);

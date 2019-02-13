@@ -813,7 +813,7 @@ var TEMPLATES = {
 
     var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
     var localClasses = (0, _classnames.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.placeholder, data.placeholder), _classNames5));
-    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        data-select-text=\"").concat(itemSelectText, "\"\n        data-choice\n        data-id=\"").concat(data.id, "\"\n        data-value=\"").concat(data.value, "\"\n        ").concat(data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable', "\n        id=\"").concat(data.elementId, "\"\n        ").concat(role, "\n        >\n        ").concat(data.label, "\n      </div>\n    "));
+    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        data-select-text=\"").concat(itemSelectText, "\"\n        data-choice\n        data-id=\"").concat(data.id, "\"\n        data-value=\"").concat(data.value, "\"\n        ").concat(data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable', "\n        id=\"").concat(data.elementId, "\"\n        ").concat(role, "\n        ").concat(data.customProperties ? "data-custom-properties=\"".concat(data.customProperties, "\"") : '', "\n        >\n        ").concat(data.label, "\n      </div>\n    "));
   },
   input: function input(globalClasses) {
     var localClasses = (0, _classnames.default)(globalClasses.input, globalClasses.inputCloned);
@@ -831,7 +831,7 @@ var TEMPLATES = {
     return (0, _utils.strToEl)("\n      <div class=\"".concat(localClasses, "\">\n        ").concat(label, "\n      </div>\n    "));
   },
   option: function option(data) {
-    return (0, _utils.strToEl)("\n      <option value=\"".concat(data.value, "\" ").concat(data.active ? 'selected' : '', " ").concat(data.disabled ? 'disabled' : '', " ").concat(data.customProperties ? "data-custom-properties=".concat(data.customProperties) : '', ">").concat(data.label, "</option>\n    "));
+    return (0, _utils.strToEl)("\n      <option value=\"".concat(data.value, "\" ").concat(data.active ? 'selected' : '', " ").concat(data.disabled ? 'disabled' : '', " ").concat(data.customProperties ? "data-custom-properties=\"".concat(data.customProperties, "\"") : '', ">").concat(data.label, "</option>\n    "));
   }
 };
 exports.TEMPLATES = TEMPLATES;
@@ -2160,7 +2160,8 @@ function () {
       var choices = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
       var label = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-      var replaceChoices = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+      var customProperties = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : '';
+      var replaceChoices = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
 
       if (!this._isSelectElement || !choices.length || !value) {
         return this;
@@ -2179,7 +2180,8 @@ function () {
             group: groupOrChoice,
             id: groupOrChoice.id || null,
             valueKey: value,
-            labelKey: label
+            labelKey: label,
+            customPropertiesLabel: customProperties
           });
         } else {
           _this10._addChoice({

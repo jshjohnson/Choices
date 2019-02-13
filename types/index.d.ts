@@ -849,7 +849,7 @@ export default class Choices {
   setChoiceByValue(value: string | string[]): this;
 
   /** Direct populate choices */
-  setChoices(choices: any[], value: string, label: string, replaceChoices?: boolean): this;
+  setChoices(choices: any[], value: string, label: string, customProperties: string, replaceChoices?: boolean): this;
 
   /**
    * Removes all items, choices and groups. Use with caution.
