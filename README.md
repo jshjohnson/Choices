@@ -589,7 +589,7 @@ element.addEventListener('addItem', function(event) {
 // or
 const example = new Choices(document.getElementById('example'));
 
-example.passedElement.addEventListener('addItem', function(event) {
+example.passedElement.element.addEventListener('addItem', function(event) {
   // do something creative here...
   console.log(event.detail.id);
   console.log(event.detail.value);
