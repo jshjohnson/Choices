@@ -1,5 +1,4 @@
 import WrappedElement from './wrapped-element';
-import { reduceToValues } from './../lib/utils';
 
 export default class WrappedInput extends WrappedElement {
   constructor({ element, classNames, delimiter }) {
@@ -8,11 +7,11 @@ export default class WrappedInput extends WrappedElement {
   }
 
   set value(items) {
-    const itemsFiltered = reduceToValues(items);
-    const itemsFilteredString = itemsFiltered.join(this.delimiter);
+    const itemValues = items.map(({ value }) => value);
+    const joinedValues = itemValues.join(this.delimiter);
 
-    this.element.setAttribute('value', itemsFilteredString);
-    this.element.value = itemsFilteredString;
+    this.element.setAttribute('value', joinedValues);
+    this.element.value = joinedValues;
   }
 
   // @todo figure out why we need this? Perhaps a babel issue
