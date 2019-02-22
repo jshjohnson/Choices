@@ -1,15 +1,12 @@
-import { calcWidthOfInput, stripHTML } from '../lib/utils';
+import { calcWidthOfInput, sanitise } from '../lib/utils';
 
 export default class Input {
   constructor({ element, type, classNames, placeholderValue }) {
     Object.assign(this, { element, type, classNames, placeholderValue });
-
     this.element = element;
     this.classNames = classNames;
     this.isFocussed = this.element === document.activeElement;
     this.isDisabled = false;
-
-    // Bind event listeners
     this._onPaste = this._onPaste.bind(this);
     this._onInput = this._onInput.bind(this);
     this._onFocus = this._onFocus.bind(this);
@@ -21,11 +18,11 @@ export default class Input {
   }
 
   set value(value) {
-    this.element.value = `${value}`;
+    this.element.value = value;
   }
 
   get value() {
-    return stripHTML(this.element.value);
+    return sanitise(this.element.value);
   }
 
   addEventListeners() {
@@ -134,7 +131,6 @@ export default class Input {
 
   _onPaste(event) {
     const { target } = event;
-    // Disable pasting into the input if option has been set
     if (target === this.element && this.preventPaste) {
       event.preventDefault();
     }
