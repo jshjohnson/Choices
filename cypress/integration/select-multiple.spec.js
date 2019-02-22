@@ -68,7 +68,7 @@ describe('Choices - select multiple', () => {
               .click();
           });
 
-          it('allows me select choices from a dropdown', () => {
+          it('allows selecting choices from dropdown', () => {
             cy.get('[data-test-hook=basic]')
               .find('.choices__list--multiple .choices__item')
               .last()
@@ -713,6 +713,40 @@ describe('Choices - select multiple', () => {
               .type('{selectall}{del}');
           });
         });
+      });
+    });
+
+    describe('non-string values', () => {
+      beforeEach(() => {
+        cy.get('[data-test-hook=non-string-values]')
+          .find('.choices')
+          .click();
+      });
+
+      it('displays expected amount of choices in dropdown', () => {
+        cy.get('[data-test-hook=non-string-values]')
+          .find('.choices__list--dropdown .choices__list')
+          .children()
+          .should('have.length', 4);
+      });
+
+      it('allows selecting choices from dropdown', () => {
+        let $selectedChoice;
+        cy.get('[data-test-hook=non-string-values]')
+          .find('.choices__list--dropdown .choices__list')
+          .children()
+          .first()
+          .then($choice => {
+            $selectedChoice = $choice;
+          })
+          .click();
+
+        cy.get('[data-test-hook=non-string-values]')
+          .find('.choices__list--single .choices__item')
+          .last()
+          .should($item => {
+            expect($item.text().trim()).to.equal($selectedChoice.text().trim());
+          });
       });
     });
 

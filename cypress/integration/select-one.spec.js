@@ -45,7 +45,7 @@ describe('Choices - select one', () => {
       describe('selecting choices', () => {
         const selectedChoiceText = 'Choice 1';
 
-        it('allows me select choices from a dropdown', () => {
+        it('allows selecting choices from dropdown', () => {
           cy.get('[data-test-hook=basic]')
             .find('.choices__list--dropdown .choices__list')
             .children()
@@ -380,7 +380,7 @@ describe('Choices - select one', () => {
           .should('not.exist');
       });
 
-      it('allows me select choices from a dropdown', () => {
+      it('allows selecting choices from dropdown', () => {
         cy.get('[data-test-hook=search-disabled]')
           .find('.choices__list--dropdown .choices__list')
           .children()
@@ -725,6 +725,40 @@ describe('Choices - select one', () => {
               .type('{selectall}{del}');
           });
         });
+      });
+    });
+
+    describe('non-string values', () => {
+      beforeEach(() => {
+        cy.get('[data-test-hook=non-string-values]')
+          .find('.choices')
+          .click();
+      });
+
+      it('displays expected amount of choices in dropdown', () => {
+        cy.get('[data-test-hook=non-string-values]')
+          .find('.choices__list--dropdown .choices__list')
+          .children()
+          .should('have.length', 4);
+      });
+
+      it('allows selecting choices from dropdown', () => {
+        let $selectedChoice;
+        cy.get('[data-test-hook=non-string-values]')
+          .find('.choices__list--dropdown .choices__list')
+          .children()
+          .first()
+          .then($choice => {
+            $selectedChoice = $choice;
+          })
+          .click();
+
+        cy.get('[data-test-hook=non-string-values]')
+          .find('.choices__list--single .choices__item')
+          .last()
+          .should($item => {
+            expect($item.text().trim()).to.equal($selectedChoice.text().trim());
+          });
       });
     });
 

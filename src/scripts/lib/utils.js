@@ -161,8 +161,8 @@ export const calcWidthOfInput = (input, callback) => {
 };
 
 export const sortByAlpha = (a, b) => {
-  const labelA = (a.label || a.value).toLowerCase();
-  const labelB = (b.label || b.value).toLowerCase();
+  const labelA = `${a.label || a.value}`.toLowerCase();
+  const labelB = `${b.label || b.value}`.toLowerCase();
 
   if (labelA < labelB) {
     return -1;

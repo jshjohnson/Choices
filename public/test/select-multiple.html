@@ -174,6 +174,11 @@
           <select class="form-control" name="choices-custom-properties" id="choices-custom-properties" multiple></select>
         </div>
 
+        <div data-test-hook="non-string-values">
+          <label for="choices-non-string-values">Non-string values</label>
+          <select class="form-control" name="choices-non-string-values" id="choices-non-string-values"></select>
+        </div>
+
         <div data-test-hook="within-form">
           <form>
             <label for="choices-within-form">Within form</label>
@@ -293,8 +298,35 @@
               customProperties: {
                 country: 'Portugal',
               },
-            }
-          ]
+            },
+          ],
+        });
+
+        new Choices('#choices-non-string-values', {
+          choices: [
+            {
+              id: 1,
+              label: 'Number',
+              value: 1,
+            },
+            {
+              id: 2,
+              label: 'Boolean',
+              value: true,
+            },
+            {
+              id: 3,
+              label: 'Object',
+              value: {
+                test: true,
+              },
+            },
+            {
+              id: 4,
+              label: 'Array',
+              value: ['test'],
+            },
+          ],
         });
 
         new Choices('#choices-within-form');
