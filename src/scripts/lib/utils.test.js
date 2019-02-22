@@ -1,14 +1,13 @@
 import { expect } from 'chai';
 import { stub } from 'sinon';
 import {
-  reduceToValues,
   getRandomNumber,
   generateChars,
   generateId,
   getType,
   isType,
   isElement,
-  stripHTML,
+  sanitise,
   sortByAlpha,
   sortByScore,
   fetchFromObject,
@@ -18,54 +17,6 @@ import {
 } from './utils';
 
 describe('utils', () => {
-  describe('reduceToValues', () => {
-    const items = [
-      {
-        id: 1,
-        choiceId: 1,
-        groupId: -1,
-        value: 'Item one',
-        label: 'Item one',
-        active: false,
-        highlighted: false,
-        customProperties: null,
-        placeholder: false,
-        keyCode: null,
-      },
-      {
-        id: 2,
-        choiceId: 2,
-        groupId: -1,
-        value: 'Item two',
-        label: 'Item two',
-        active: true,
-        highlighted: false,
-        customProperties: null,
-        placeholder: false,
-        keyCode: null,
-      },
-      {
-        id: 3,
-        choiceId: 3,
-        groupId: -1,
-        value: 'Item three',
-        label: 'Item three',
-        active: true,
-        highlighted: true,
-        customProperties: null,
-        placeholder: false,
-        keyCode: null,
-      },
-    ];
-
-    it('returns an array of item values', () => {
-      const expectedResponse = [items[0].value, items[1].value, items[2].value];
-
-      const actualResponse = reduceToValues(items);
-      expect(actualResponse).to.eql(expectedResponse);
-    });
-  });
-
   describe('getRandomNumber', () => {
     it('returns random number between range', () => {
       for (let index = 0; index < 10; index++) {
@@ -154,10 +105,10 @@ describe('utils', () => {
     });
   });
 
-  describe('stripHTML', () => {
+  describe('sanitise', () => {
     it('strips HTML from value', () => {
       const value = '<script>somethingMalicious();</script>';
-      const output = stripHTML(value);
+      const output = sanitise(value);
       expect(output).to.equal(
         '&lt;script&rt;somethingMalicious();&lt;/script&rt;',
       );
@@ -244,25 +195,6 @@ describe('utils', () => {
       expect(event.bubbles).to.equal(true);
       expect(event.cancelable).to.equal(true);
       expect(event.detail).to.equal(customArgs);
-    });
-  });
-
-  describe('reduceToValues', () => {
-    it('reduces an array of objects to an array of values using given key', () => {
-      const values = [
-        { name: 'The Strokes' },
-        { name: 'Arctic Monkeys' },
-        { name: 'Oasis' },
-        { name: 'Tame Impala' },
-      ];
-
-      const output = reduceToValues(values, 'name');
-      expect(output).to.eql([
-        'The Strokes',
-        'Arctic Monkeys',
-        'Oasis',
-        'Tame Impala',
-      ]);
     });
   });
 

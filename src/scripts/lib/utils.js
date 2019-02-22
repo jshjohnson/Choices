@@ -1,10 +1,7 @@
-/* eslint-disable */
+export const getRandomNumber = (min, max) =>
+  Math.floor(Math.random() * (max - min) + min);
 
-export const getRandomNumber = function(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-};
-
-export const generateChars = function(length) {
+export const generateChars = length => {
   let chars = '';
 
   for (let i = 0; i < length; i++) {
@@ -15,7 +12,7 @@ export const generateChars = function(length) {
   return chars;
 };
 
-export const generateId = function(element, prefix) {
+export const generateId = (element, prefix) => {
   let id =
     element.id ||
     (element.name && `${element.name}-${generateChars(2)}`) ||
@@ -26,56 +23,14 @@ export const generateId = function(element, prefix) {
   return id;
 };
 
-export const getType = function(obj) {
-  return Object.prototype.toString.call(obj).slice(8, -1);
-};
+export const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
 
-export const isType = function(type, obj) {
-  const clas = getType(obj);
-  return obj !== undefined && obj !== null && clas === type;
-};
+export const isType = (type, obj) =>
+  obj !== undefined && obj !== null && getType(obj) === type;
 
-export const isElement = (element) => {
-  return element instanceof Element;
-};
+export const isElement = element => element instanceof Element;
 
-export const extend = function() {
-  const extended = {};
-  const length = arguments.length;
-
-  /**
-   * Merge one object into another
-   * @param  {Object} obj  Object to merge into extended object
-   */
-  const merge = function(obj) {
-    for (const prop in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-        // If deep merge and property is an object, merge properties
-        if (isType('Object', obj[prop])) {
-          extended[prop] = extend(true, extended[prop], obj[prop]);
-        } else {
-          extended[prop] = obj[prop];
-        }
-      }
-    }
-  };
-
-  // Loop through each passed argument
-  for (let i = 0; i < length; i++) {
-    // store argument at position i
-    const obj = arguments[i];
-
-    // If we are in fact dealing with an object, merge it.
-    if (isType('Object', obj)) {
-      merge(obj);
-    }
-  }
-
-  return extended;
-};
-
-export const wrap = function(element, wrapper) {
-  wrapper = wrapper || document.createElement('div');
+export const wrap = (element, wrapper = document.createElement('div')) => {
   if (element.nextSibling) {
     element.parentNode.insertBefore(wrapper, element.nextSibling);
   } else {
@@ -84,12 +39,7 @@ export const wrap = function(element, wrapper) {
   return wrapper.appendChild(element);
 };
 
-export const findAncestor = function(el, cls) {
-  while ((el = el.parentElement) && !el.classList.contains(cls));
-  return el;
-};
-
-export const findAncestorByAttrName = function(el, attr) {
+export const findAncestorByAttrName = (el, attr) => {
   let target = el;
 
   while (target) {
@@ -104,7 +54,9 @@ export const findAncestorByAttrName = function(el, attr) {
 };
 
 export const getAdjacentEl = (startEl, className, direction = 1) => {
-  if (!startEl || !className) return;
+  if (!startEl || !className) {
+    return;
+  }
 
   const parent = startEl.parentNode.parentNode;
   const children = Array.from(parent.querySelectorAll(className));
@@ -116,7 +68,9 @@ export const getAdjacentEl = (startEl, className, direction = 1) => {
 };
 
 export const isScrolledIntoView = (el, parent, direction = 1) => {
-  if (!el) return;
+  if (!el) {
+    return;
+  }
 
   let isVisible;
 
@@ -132,26 +86,30 @@ export const isScrolledIntoView = (el, parent, direction = 1) => {
   return isVisible;
 };
 
-export const stripHTML = html =>
-  html
+export const sanitise = value => {
+  if (!isType('String', value)) {
+    return value;
+  }
+
+  return value
     .replace(/&/g, '&amp;')
     .replace(/>/g, '&rt;')
     .replace(/</g, '&lt;')
     .replace(/"/g, '&quot;');
+};
 
-export const strToEl = (function() {
+export const strToEl = (() => {
   const tmpEl = document.createElement('div');
-  return function(str) {
+  return str => {
     const cleanedInput = str.trim();
-    let r;
     tmpEl.innerHTML = cleanedInput;
-    r = tmpEl.children[0];
+    const firldChild = tmpEl.children[0];
 
     while (tmpEl.firstChild) {
       tmpEl.removeChild(tmpEl.firstChild);
     }
 
-    return r;
+    return firldChild;
   };
 })();
 
@@ -164,7 +122,7 @@ export const calcWidthOfInput = (input, callback) => {
   let width = input.offsetWidth;
 
   if (value) {
-    const testEl = strToEl(`<span>${stripHTML(value)}</span>`);
+    const testEl = strToEl(`<span>${sanitise(value)}</span>`);
     testEl.style.position = 'absolute';
     testEl.style.padding = '0';
     testEl.style.top = '-9999px';
@@ -241,15 +199,6 @@ export const getWindowHeight = () => {
   );
 };
 
-export const reduceToValues = (items, key = 'value') => {
-  const values = items.reduce((prev, current) => {
-    prev.push(current[key]);
-    return prev;
-  }, []);
-
-  return values;
-};
-
 export const fetchFromObject = (object, path) => {
   const index = path.indexOf('.');
 
@@ -284,7 +233,5 @@ export const diff = (a, b) => {
   const aKeys = Object.keys(a).sort();
   const bKeys = Object.keys(b).sort();
 
-  return aKeys.filter((i) => {
-    return bKeys.indexOf(i) < 0;
-  });
-}
+  return aKeys.filter(i => bKeys.indexOf(i) < 0);
+};
