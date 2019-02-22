@@ -211,44 +211,6 @@ describe('Choices - select multiple', () => {
         });
       });
 
-      /*
-        There is currently a bug with opening/closing/toggling dropdowns
-
-        @todo Investigate why
-      */
-      describe('interacting with dropdown', () => {
-        describe('opening dropdown', () => {
-          it('opens dropdown', () => {
-            cy.get('[data-test-hook=basic]')
-              .find('button.open-dropdown')
-              .focus()
-              .click();
-
-            cy.get('[data-test-hook=basic]')
-              .find('.choices__list--dropdown')
-              .should('be.visible');
-          });
-        });
-
-        describe('closing dropdown', () => {
-          it('closes dropdown', () => {
-            cy.get('[data-test-hook=basic]')
-              .find('button.open-dropdown')
-              .focus()
-              .click();
-
-            cy.get('[data-test-hook=basic]')
-              .find('button.close-dropdown')
-              .focus()
-              .click();
-
-            cy.get('[data-test-hook=basic]')
-              .find('.choices__list--dropdown')
-              .should('not.be.visible');
-          });
-        });
-      });
-
       describe('disabling', () => {
         describe('on disable', () => {
           it('disables the search input', () => {

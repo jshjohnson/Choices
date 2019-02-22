@@ -31,8 +31,6 @@
         <h2>Select multiple inputs</h2>
         <div data-test-hook="basic">
           <label for="choices-basic">Basic</label>
-          <button class="open-dropdown push-bottom">Open dropdown</button>
-          <button class="close-dropdown push-bottom">Close dropdown</button>
           <button class="disable push-bottom">Disable</button>
           <button class="enable push-bottom">Enable</button>
           <select class="form-control" name="choices-basic" id="choices-basic" multiple>
@@ -206,14 +204,6 @@
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         const choicesBasic = new Choices('#choices-basic');
-
-        document.querySelector('button.open-dropdown').addEventListener('click', () => {
-          choicesBasic.showDropdown();
-        });
-
-        document.querySelector('button.close-dropdown').addEventListener('click', () => {
-          choicesBasic.hideDropdown();
-        });
 
         document.querySelector('button.disable').addEventListener('click', () => {
           choicesBasic.disable();
