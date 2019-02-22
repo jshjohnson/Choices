@@ -29,7 +29,6 @@ import {
   getType,
   isType,
   strToEl,
-  extend,
   sortByScore,
   generateId,
   findAncestorByAttrName,
@@ -1787,7 +1786,7 @@ class Choices {
       userTemplates = callbackOnCreateTemplates.call(this, strToEl);
     }
 
-    this.config.templates = extend(TEMPLATES, userTemplates);
+    this.config.templates = merge(TEMPLATES, userTemplates);
   }
 
   _createElements() {
