@@ -12,7 +12,7 @@
     "bundlesize": "bundlesize",
     "cypress:run": "$(npm bin)/cypress run",
     "cypress:open": "$(npm bin)/cypress open",
-    "test": "run-p test:unit test:e2e",
+    "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "mocha --require ./config/jsdom.js --require @babel/register $(find src -name '*.test.js') --exit",
     "test:unit:watch": "npm run test:unit -- --watch --inspect=5556",
     "test:e2e": "run-p --race start cypress:run",
