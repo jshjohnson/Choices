@@ -99,7 +99,7 @@
     "classnames": "^2.2.6",
     "custom-event-polyfill": "^0.3.0",
     "deepmerge": "^2.2.1",
-    "fuse.js": "^3.4.2",
+    "fuse.js": "3.4.2",
     "redux": "^3.3.1"
   },
   "npmName": "choices.js",
