@@ -841,5 +841,23 @@ describe('Choices - select multiple', () => {
           });
       });
     });
+
+    describe('adding user-created choices', () => {
+      it('allows the user to add choices', () => {
+        const newChoice = 'New Choice';
+
+        cy.get('[data-test-hook=add-choices]')
+          .find('.choices__input--cloned')
+          .type(newChoice)
+          .type('{enter}');
+          
+        cy.get('[data-test-hook=add-choices]')
+          .find('.choices__list--multiple')
+          .last()
+          .should($el => {
+            expect($el).to.contain(newChoice);
+          });
+      });
+    });
   });
 });

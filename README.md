@@ -83,6 +83,7 @@ will be returned. If you target one element, that instance will be returned.
     removeItemButton: false,
     editItems: false,
     duplicateItemsAllowed: true,
+    addChoices: false,
     delimiter: ',',
     paste: true,
     searchEnabled: true,
@@ -274,6 +275,15 @@ Pass an array of objects:
 **Input types affected:** `text`, `select-multiple`
 
 **Usage:** Whether duplicate inputted/chosen items are allowed
+
+### addChoices
+**Type**: `Boolean` **Default:** `false`
+
+**Input types affected:** `select-multiple`, `select-one`
+
+**Usage:** Whether a user can add choices
+
+**Note:** `addItems` must also be `true`
 
 ### delimiter
 **Type:** `String` **Default:** `,`

@@ -41,6 +41,7 @@ export const DEFAULT_CONFIG = {
   removeItemButton: false,
   editItems: false,
   duplicateItemsAllowed: true,
+  addChoices: false,
   delimiter: ',',
   paste: true,
   searchEnabled: true,

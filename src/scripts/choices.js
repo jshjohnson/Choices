@@ -547,12 +547,13 @@ class Choices {
       );
     }
 
+    const activeItems = this._store.activeItems;
+
     // If we have choices to show
     if (
       choiceListFragment.childNodes &&
       choiceListFragment.childNodes.length > 0
     ) {
-      const activeItems = this._store.activeItems;
       const canAddItem = this._canAddItem(activeItems, this.input.value);
 
       // ...and we can select them
@@ -566,10 +567,15 @@ class Choices {
       }
     } else {
       // Otherwise show a notice
+      const canAddChoice = this._canAddChoice(activeItems, this.input.value);
+
       let dropdownItem;
       let notice;
 
-      if (this._isSearching) {
+      if (canAddChoice.response) {
+        notice = canAddChoice.notice;
+        dropdownItem = this._getTemplate('notice', notice);
+      } else if (this._isSearching) {
         notice = isType('Function', this.config.noResultsText)
           ? this.config.noResultsText()
           : this.config.noResultsText;
@@ -993,6 +999,15 @@ class Choices {
     };
   }
 
+  _canAddChoice(activeItems, value) {
+    const canAddItem = this._canAddItem(activeItems, value);
+
+    return {
+      response: this.config.addChoices && canAddItem.response,
+      notice: canAddItem.notice,
+    };
+  }
+
   _ajaxCallback() {
     return (results, value, label) => {
       if (!results || !value) {
@@ -1236,16 +1251,22 @@ class Choices {
   _onEnterKey({ event, target, activeItems, hasActiveDropdown }) {
     const { ENTER_KEY: enterKey } = KEY_CODES;
     const targetWasButton = target.hasAttribute('data-button');
+    let addedItem;
 
-    if (this._isTextElement && target.value) {
+    if (target.value) {
       const value = this.input.value;
       const canAddItem = this._canAddItem(activeItems, value);
+      const canAddChoice = this._canAddChoice(activeItems, value);
 
-      if (canAddItem.response) {
+      if (
+        (this._isTextElement && canAddItem.response) ||
+        (!this._isTextElement && canAddChoice.response)
+      ) {
         this.hideDropdown(true);
         this._addItem({ value });
         this._triggerChange(value);
         this.clearInput();
+        addedItem = true;
       }
     }
 
@@ -1260,11 +1281,15 @@ class Choices {
       );
 
       if (highlightedChoice) {
-        // add enter keyCode value
-        if (activeItems[0]) {
-          activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
+        if (addedItem) {
+          this.unhighlightAll();
+        } else {
+          // add enter keyCode value
+          if (activeItems[0]) {
+            activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
+          }
+          this._handleChoiceAction(activeItems, highlightedChoice);
         }
-        this._handleChoiceAction(activeItems, highlightedChoice);
       }
 
       event.preventDefault();

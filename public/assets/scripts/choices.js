@@ -446,6 +446,7 @@ var DEFAULT_CONFIG = {
   removeItemButton: false,
   editItems: false,
   duplicateItemsAllowed: true,
+  addChoices: false,
   delimiter: ',',
   paste: true,
   searchEnabled: true,
@@ -2252,12 +2253,11 @@ function () {
         choiceListFragment = this._createGroupsFragment(activeGroups, activeChoices, choiceListFragment);
       } else if (activeChoices.length >= 1) {
         choiceListFragment = this._createChoicesFragment(activeChoices, choiceListFragment);
-      } // If we have choices to show
+      }
 
+      var activeItems = this._store.activeItems; // If we have choices to show
 
       if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
-        var activeItems = this._store.activeItems;
-
         var canAddItem = this._canAddItem(activeItems, this.input.value); // ...and we can select them
 
 
@@ -2272,10 +2272,15 @@ function () {
         }
       } else {
         // Otherwise show a notice
+        var canAddChoice = this._canAddChoice(activeItems, this.input.value);
+
         var dropdownItem;
         var notice;
 
-        if (this._isSearching) {
+        if (canAddChoice.response) {
+          notice = canAddChoice.notice;
+          dropdownItem = this._getTemplate('notice', notice);
+        } else if (this._isSearching) {
           notice = (0, _utils.isType)('Function', this.config.noResultsText) ? this.config.noResultsText() : this.config.noResultsText;
           dropdownItem = this._getTemplate('notice', notice, 'no-results');
         } else {
@@ -2692,6 +2697,16 @@ function () {
       };
     }
   }, {
+    key: "_canAddChoice",
+    value: function _canAddChoice(activeItems, value) {
+      var canAddItem = this._canAddItem(activeItems, value);
+
+      return {
+        response: this.config.addChoices && canAddItem.response,
+        notice: canAddItem.notice
+      };
+    }
+  }, {
     key: "_ajaxCallback",
     value: function _ajaxCallback() {
       var _this17 = this;
@@ -2940,13 +2955,16 @@ function () {
           hasActiveDropdown = _ref4.hasActiveDropdown;
       var enterKey = _constants.KEY_CODES.ENTER_KEY;
       var targetWasButton = target.hasAttribute('data-button');
+      var addedItem;
 
-      if (this._isTextElement && target.value) {
+      if (target.value) {
         var value = this.input.value;
 
         var canAddItem = this._canAddItem(activeItems, value);
 
-        if (canAddItem.response) {
+        var canAddChoice = this._canAddChoice(activeItems, value);
+
+        if (this._isTextElement && canAddItem.response || !this._isTextElement && canAddChoice.response) {
           this.hideDropdown(true);
 
           this._addItem({
@@ -2956,6 +2974,7 @@ function () {
           this._triggerChange(value);
 
           this.clearInput();
+          addedItem = true;
         }
       }
 
@@ -2969,12 +2988,16 @@ function () {
         var highlightedChoice = this.dropdown.getChild(".".concat(this.config.classNames.highlightedState));
 
         if (highlightedChoice) {
-          // add enter keyCode value
-          if (activeItems[0]) {
-            activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
-          }
+          if (addedItem) {
+            this.unhighlightAll();
+          } else {
+            // add enter keyCode value
+            if (activeItems[0]) {
+              activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
+            }
 
-          this._handleChoiceAction(activeItems, highlightedChoice);
+            this._handleChoiceAction(activeItems, highlightedChoice);
+          }
         }
 
         event.preventDefault();
