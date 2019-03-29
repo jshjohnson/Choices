@@ -88,7 +88,7 @@ class Choices {
     this._isTextElement = passedElement.type === 'text';
     this._isSelectOneElement = passedElement.type === 'select-one';
     this._isSelectMultipleElement = passedElement.type === 'select-multiple';
-    if (['one', 'mutiple'].includes(passedElement.getAttribute('select'))) {
+    if (['one', 'multiple'].includes(passedElement.getAttribute('select'))) {
       if (passedElement.getAttribute('select') === 'one') {
         this._isSelectOneElement = true;
       } else {
