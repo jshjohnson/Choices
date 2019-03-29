@@ -21,7 +21,7 @@
 
   <!-- Choices includes -->
   <link rel="stylesheet" href="../assets/styles/choices.min.css?version=3.0.2">
-  <script src="../assets/scripts/choices.min.js?version=2.8.8"></script>
+  <script src="../assets/scripts/choices.js?version=2.8.8"></script>
   <!-- End Choices includes -->
   </head>
 
@@ -208,132 +208,132 @@
     </div>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        const choicesBasic = new Choices('#choices-basic');
-
-        document.querySelector('button.disable').addEventListener('click', () => {
-          choicesBasic.disable();
-        });
-
-        document.querySelector('button.enable').addEventListener('click', () => {
-          choicesBasic.enable();
-        });
+        // const choicesBasic = new Choices('#choices-basic');
+        //
+        // document.querySelector('button.disable').addEventListener('click', () => {
+        //   choicesBasic.disable();
+        // });
+        //
+        // document.querySelector('button.enable').addEventListener('click', () => {
+        //   choicesBasic.enable();
+        // });
 
         new Choices('#choices-remove-button', {
           removeItemButton: true,
         });
 
-        new Choices('#choices-disabled-choice');
+        // new Choices('#choices-disabled-choice');
+        //
+        // new Choices('#choices-add-items-disabled', {
+        //   addItems: false,
+        // });
+        //
+        // new Choices('#choices-disabled-via-attr');
+        //
+        // new Choices('#choices-selection-limit', {
+        //   maxItemCount: 5,
+        // });
+        //
+        // new Choices('#choices-prepend-append', {
+        //   prependValue: 'before-',
+        //   appendValue: '-after',
+        // });
+        //
+        // new Choices('#choices-render-choice-limit', {
+        //   renderChoiceLimit: 1,
+        // });
+        //
+        // new Choices('#choices-search-floor', {
+        //   searchFloor: 5,
+        // });
+        //
+        // new Choices('#choices-placeholder', {
+        //   placeholder: true,
+        //   placeholderValue: 'I am a placeholder',
+        // });
 
-        new Choices('#choices-add-items-disabled', {
-          addItems: false,
-        });
+        // new Choices('#choices-remote-data', {
+        //   shouldSort: false,
+        // }).ajax((callback) => {
+        //   fetch('/data')
+        //     .then((response) => {
+        //       response.json().then((data) => {
+        //         callback(data, 'value', 'label');
+        //       });
+        //     })
+        //     .catch((error) => {
+        //       console.error(error);
+        //     });
+        // });
 
-        new Choices('#choices-disabled-via-attr');
-
-        new Choices('#choices-selection-limit', {
-          maxItemCount: 5,
-        });
-
-        new Choices('#choices-prepend-append', {
-          prependValue: 'before-',
-          appendValue: '-after',
-        });
-
-        new Choices('#choices-render-choice-limit', {
-          renderChoiceLimit: 1,
-        });
-
-        new Choices('#choices-search-floor', {
-          searchFloor: 5,
-        });
-
-        new Choices('#choices-placeholder', {
-          placeholder: true,
-          placeholderValue: 'I am a placeholder',
-        });
-
-        new Choices('#choices-remote-data', {
-          shouldSort: false,
-        }).ajax((callback) => {
-          fetch('/data')
-            .then((response) => {
-              response.json().then((data) => {
-                callback(data, 'value', 'label');
-              });
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        });
-
-        new Choices('#choices-scrolling-dropdown', {
-          shouldSort: false,
-        });
-
-        new Choices('#choices-groups');
-
-        new Choices('#choices-custom-properties', {
-          searchFields: ['label', 'value', 'customProperties.country'],
-          choices: [
-            {
-              id: 1,
-              value: 'London',
-              label: 'London',
-              customProperties: {
-                country: 'United Kingdom',
-              },
-            },
-            {
-              id: 2,
-              value: 'Berlin',
-              label: 'Berlin',
-              customProperties: {
-                country: 'Germany',
-              },
-            },
-            {
-              id: 3,
-              value: 'Lisbon',
-              label: 'Lisbon',
-              customProperties: {
-                country: 'Portugal',
-              },
-            },
-          ],
-        });
-
-        new Choices('#choices-non-string-values', {
-          choices: [
-            {
-              id: 1,
-              label: 'Number',
-              value: 1,
-            },
-            {
-              id: 2,
-              label: 'Boolean',
-              value: true,
-            },
-            {
-              id: 3,
-              label: 'Object',
-              value: {
-                test: true,
-              },
-            },
-            {
-              id: 4,
-              label: 'Array',
-              value: ['test'],
-            },
-          ],
-        });
-
-        new Choices('#choices-within-form');
-
-        new Choices('#choices-set-choice-by-value').setChoiceByValue('Choice 2');
-
-        new Choices('#choices-search-by-label', { searchFields: ['label'] });
+        // new Choices('#choices-scrolling-dropdown', {
+        //   shouldSort: false,
+        // });
+        //
+        // new Choices('#choices-groups');
+        //
+        // new Choices('#choices-custom-properties', {
+        //   searchFields: ['label', 'value', 'customProperties.country'],
+        //   choices: [
+        //     {
+        //       id: 1,
+        //       value: 'London',
+        //       label: 'London',
+        //       customProperties: {
+        //         country: 'United Kingdom',
+        //       },
+        //     },
+        //     {
+        //       id: 2,
+        //       value: 'Berlin',
+        //       label: 'Berlin',
+        //       customProperties: {
+        //         country: 'Germany',
+        //       },
+        //     },
+        //     {
+        //       id: 3,
+        //       value: 'Lisbon',
+        //       label: 'Lisbon',
+        //       customProperties: {
+        //         country: 'Portugal',
+        //       },
+        //     },
+        //   ],
+        // });
+        //
+        // new Choices('#choices-non-string-values', {
+        //   choices: [
+        //     {
+        //       id: 1,
+        //       label: 'Number',
+        //       value: 1,
+        //     },
+        //     {
+        //       id: 2,
+        //       label: 'Boolean',
+        //       value: true,
+        //     },
+        //     {
+        //       id: 3,
+        //       label: 'Object',
+        //       value: {
+        //         test: true,
+        //       },
+        //     },
+        //     {
+        //       id: 4,
+        //       label: 'Array',
+        //       value: ['test'],
+        //     },
+        //   ],
+        // });
+        //
+        // new Choices('#choices-within-form');
+        //
+        // new Choices('#choices-set-choice-by-value').setChoiceByValue('Choice 2');
+        //
+        // new Choices('#choices-search-by-label', { searchFields: ['label'] });
       });
     </script>
   </body>

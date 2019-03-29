@@ -1724,6 +1724,15 @@ function () {
     this._isTextElement = passedElement.type === 'text';
     this._isSelectOneElement = passedElement.type === 'select-one';
     this._isSelectMultipleElement = passedElement.type === 'select-multiple';
+
+    if (['one', 'mutiple'].includes(passedElement.getAttribute('select'))) {
+      if (passedElement.getAttribute('select') === 'one') {
+        this._isSelectOneElement = true;
+      } else {
+        this._isSelectMultipleElement = true;
+      }
+    }
+
     this._isSelectElement = this._isSelectOneElement || this._isSelectMultipleElement;
 
     if (this._isTextElement) {
@@ -2896,7 +2905,7 @@ function () {
 
           this.dropdown.element.innerHTML = dropdownItem.outerHTML;
           this.showDropdown(true);
-        } else {
+        } else if (!this._isSelectElement) {
           this.hideDropdown(true);
         }
       } else {
@@ -2947,8 +2956,6 @@ function () {
         var canAddItem = this._canAddItem(activeItems, value);
 
         if (canAddItem.response) {
-          this.hideDropdown(true);
-
           this._addItem({
             value: value
           });
@@ -2956,6 +2963,13 @@ function () {
           this._triggerChange(value);
 
           this.clearInput();
+
+          if (this._isSelectElement) {
+            this.dropdown.element.innerHTML = '';
+            this.dropdown.element.appendChild(this.choiceList.element);
+          } else {
+            this.hideDropdown(true);
+          }
         }
       }
 
@@ -3143,7 +3157,9 @@ function () {
             if (document.activeElement !== this.input.element) {
               this.input.focus();
             }
-          } else {
+          }
+
+          if (this._isSelectElement) {
             this.showDropdown();
             this.containerOuter.focus();
           }
@@ -3577,7 +3593,7 @@ function () {
       this.containerOuter.element.appendChild(this.dropdown.element);
       this.containerInner.element.appendChild(this.itemList.element);
 
-      if (!this._isTextElement) {
+      if (this._isSelectElement) {
         this.dropdown.element.appendChild(this.choiceList.element);
       }
 
@@ -3604,39 +3620,19 @@ function () {
 
       this._setLoading(true);
 
-      if (passedGroups && passedGroups.length) {
-        // If we have a placeholder option
-        var placeholderChoice = this.passedElement.placeholderOption;
-
-        if (placeholderChoice && placeholderChoice.parentNode.tagName === 'SELECT') {
-          this._addChoice({
-            value: placeholderChoice.value,
-            label: placeholderChoice.innerHTML,
-            isSelected: placeholderChoice.selected,
-            isDisabled: placeholderChoice.disabled,
-            placeholder: true
-          });
-        }
-
-        passedGroups.forEach(function (group) {
-          return _this22._addGroup({
-            group: group,
-            id: group.id || null
-          });
-        });
-      } else {
-        var passedOptions = this.passedElement.options;
+      if (this._isTextElement) {
+        var passedOptions = this.config.choices;
         var filter = this.config.sortFn;
         var allChoices = this._presetChoices; // Create array of options from option elements
 
         passedOptions.forEach(function (o) {
           allChoices.push({
-            value: o.value,
-            label: o.innerHTML,
-            selected: o.selected,
-            disabled: o.disabled || o.parentNode.disabled,
-            placeholder: o.hasAttribute('placeholder'),
-            customProperties: o.getAttribute('data-custom-properties')
+            value: o,
+            label: o,
+            selected: false,
+            disabled: false,
+            placeholder: undefined,
+            customProperties: undefined
           });
         }); // If sorting is enabled or the user is searching, filter choices
 
@@ -3691,6 +3687,95 @@ function () {
 
         allChoices.forEach(function (choice, index) {
           return handleChoice(choice, index);
+        });
+      } else if (passedGroups && passedGroups.length) {
+        // If we have a placeholder option
+        var placeholderChoice = this.passedElement.placeholderOption;
+
+        if (placeholderChoice && placeholderChoice.parentNode.tagName === 'SELECT') {
+          this._addChoice({
+            value: placeholderChoice.value,
+            label: placeholderChoice.innerHTML,
+            isSelected: placeholderChoice.selected,
+            isDisabled: placeholderChoice.disabled,
+            placeholder: true
+          });
+        }
+
+        passedGroups.forEach(function (group) {
+          return _this22._addGroup({
+            group: group,
+            id: group.id || null
+          });
+        });
+      } else {
+        var _passedOptions = this.passedElement.options;
+        var _filter = this.config.sortFn;
+        var _allChoices = this._presetChoices; // Create array of options from option elements
+
+        _passedOptions.forEach(function (o) {
+          _allChoices.push({
+            value: o.value,
+            label: o.innerHTML,
+            selected: o.selected,
+            disabled: o.disabled || o.parentNode.disabled,
+            placeholder: o.hasAttribute('placeholder'),
+            customProperties: o.getAttribute('data-custom-properties')
+          });
+        }); // If sorting is enabled or the user is searching, filter choices
+
+
+        if (this.config.shouldSort) _allChoices.sort(_filter); // Determine whether there is a selected choice
+
+        var _hasSelectedChoice = _allChoices.some(function (choice) {
+          return choice.selected;
+        });
+
+        var _handleChoice = function _handleChoice(choice, index) {
+          var value = choice.value,
+              label = choice.label,
+              customProperties = choice.customProperties,
+              placeholder = choice.placeholder;
+
+          if (_this22._isSelectElement) {
+            // If the choice is actually a group
+            if (choice.choices) {
+              _this22._addGroup({
+                group: choice,
+                id: choice.id || null
+              });
+            } else {
+              // If there is a selected choice already or the choice is not
+              // the first in the array, add each choice normally
+              // Otherwise pre-select the first choice in the array if it's a single select
+              var shouldPreselect = _this22._isSelectOneElement && !_hasSelectedChoice && index === 0;
+              var isSelected = shouldPreselect ? true : choice.selected;
+              var isDisabled = shouldPreselect ? false : choice.disabled;
+
+              _this22._addChoice({
+                value: value,
+                label: label,
+                isSelected: isSelected,
+                isDisabled: isDisabled,
+                customProperties: customProperties,
+                placeholder: placeholder
+              });
+            }
+          } else {
+            _this22._addChoice({
+              value: value,
+              label: label,
+              isSelected: choice.selected,
+              isDisabled: choice.disabled,
+              customProperties: customProperties,
+              placeholder: placeholder
+            });
+          }
+        }; // Add each choice
+
+
+        _allChoices.forEach(function (choice, index) {
+          return _handleChoice(choice, index);
         });
       }
 
