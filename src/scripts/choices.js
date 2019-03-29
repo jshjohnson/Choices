@@ -1875,11 +1875,11 @@ class Choices {
         this.dropdown.element.firstChild,
       );
     }
-
+    if (this._isTextElement) {
+      this._addPredefinedItems();
+    }
     if (this._isSelectElement) {
       this._addPredefinedChoices();
-    } else if (this._isTextElement) {
-      this._addPredefinedItems();
     }
   }
 
