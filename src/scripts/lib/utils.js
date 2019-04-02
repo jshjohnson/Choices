@@ -178,11 +178,17 @@ export const sortByAlpha = (a, b) => {
 export const sortByScore = (a, b) => a.score - b.score;
 
 export const dispatchEvent = (element, type, customArgs = null) => {
-  const event = new CustomEvent(type, {
-    detail: customArgs,
-    bubbles: true,
-    cancelable: true,
-  });
+  let event;
+  try {
+    event = new CustomEvent(type, {
+      detail: customArgs,
+      bubbles: true,
+      cancelable: true,
+    });
+  } catch {
+    event = document.createEvent('CustomEvent');
+    event.initCustomEvent(type, true, true, customArgs);
+  }
 
   return element.dispatchEvent(event);
 };
