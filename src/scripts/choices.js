@@ -117,6 +117,10 @@ class Choices {
       );
     }
 
+    this.config.searchEnabled = this._isSelectOneElement
+      ? this.config.searchEnabled
+      : true;
+
     this.initialised = false;
 
     this._store = new Store(this.render);

@@ -1745,6 +1745,7 @@ function () {
       console.warn("shouldSortElements: Type of passed element is 'select-one', falling back to false.");
     }
 
+    this.config.searchEnabled = this._isSelectOneElement ? this.config.searchEnabled : true;
     this.initialised = false;
     this._store = new _store.default(this.render);
     this._initialState = {};
