@@ -549,7 +549,7 @@ classNames: {
 const example = new Choices(element, {
   callbackOnCreateTemplates: function (template) {
     return {
-      item: (classNames, data) => {
+      item: (classNames, data, removeItemButton) => {
         return template(`
           <div class="${classNames.item} ${data.highlighted ? classNames.highlightedState : classNames.itemSelectable}" data-item data-id="${data.id}" data-value="${data.value}" ${data.active ? 'aria-selected="true"' : ''} ${data.disabled ? 'aria-disabled="true"' : ''}>
             <span>&bigstar;</span> ${data.label}

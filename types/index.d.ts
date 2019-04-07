@@ -116,7 +116,7 @@ declare namespace Choices {
     containerInner?: () => HTMLElement;
     itemList?: () => HTMLElement;
     placeholder?: (value: string) => HTMLElement;
-    item?: (data: any) => HTMLElement;
+    item?: (globalClasses: any, data: any, removeItemButton: boolean) => HTMLElement;
     choiceList?: () => HTMLElement;
     choiceGroup?: (data: any) => HTMLElement;
     choice?: (data: any) => HTMLElement;
