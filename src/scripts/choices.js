@@ -1938,13 +1938,12 @@ class Choices {
             const shouldPreselect =
               this._isSelectOneElement && !hasSelectedChoice && index === 0;
             const isSelected = shouldPreselect ? true : choice.selected;
-            const isDisabled = shouldPreselect ? false : choice.disabled;
 
             this._addChoice({
               value,
               label,
               isSelected,
-              isDisabled,
+              isDisabled: choice.disabled,
               customProperties,
               placeholder,
             });
