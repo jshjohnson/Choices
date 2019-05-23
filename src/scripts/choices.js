@@ -1238,6 +1238,8 @@ class Choices {
 
   _onEnterKey({ event, target, activeItems, hasActiveDropdown }) {
     const { ENTER_KEY: enterKey } = KEY_CODES;
+    const hasShiftKey = event.shiftKey;
+    const { callbackOnUnknownChoice } = this.config;
     const targetWasButton = target.hasAttribute('data-button');
 
     if (this._isTextElement && target.value) {
@@ -1262,12 +1264,20 @@ class Choices {
         `.${this.config.classNames.highlightedState}`,
       );
 
-      if (highlightedChoice) {
+      if (hasShiftKey && callbackOnUnknownChoice) {
+        if (isType('Function', callbackOnUnknownChoice)) {
+          callbackOnUnknownChoice.call(this, this.input.value, hasShiftKey);
+        }
+      } else if (highlightedChoice) {
         // add enter keyCode value
         if (activeItems[0]) {
           activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
         }
         this._handleChoiceAction(activeItems, highlightedChoice);
+      } else if (callbackOnUnknownChoice) {
+        if (isType('Function', callbackOnUnknownChoice)) {
+          callbackOnUnknownChoice.call(this, this.input.value, hasShiftKey);
+        }
       }
 
       event.preventDefault();

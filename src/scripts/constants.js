@@ -73,6 +73,7 @@ export const DEFAULT_CONFIG = {
   },
   callbackOnInit: null,
   callbackOnCreateTemplates: null,
+  callbackOnUnknownChoice: null,
   classNames: DEFAULT_CLASSNAMES,
 };
 
