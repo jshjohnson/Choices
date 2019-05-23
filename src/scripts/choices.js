@@ -812,13 +812,13 @@ class Choices {
     this.input.focus();
   }
 
-  _handleChoiceAction(activeItems, element) {
-    if (!activeItems || !element) {
+  _handleChoiceAction(activeItems, element, idDirectly) {
+    if (!activeItems || (!element && !idDirectly)) {
       return;
     }
 
     // If we are clicking on an option
-    const id = element.getAttribute('data-id');
+    const id = idDirectly || element.getAttribute('data-id');
     const choice = this._store.getChoiceById(id);
     const passedKeyCode =
       activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
