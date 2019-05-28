@@ -30,7 +30,7 @@ yarn add choices.js
 
 From a [CDN](https://www.jsdelivr.com/package/npm/choices.js):
 
-**Note:** There is sometimes a delay before the latest version of Choices in reflected on the CDN.
+**Note:** There is sometimes a delay before the latest version of Choices is reflected on the CDN.
 
 ```html
 <!-- Include base CSS (optional) -->
