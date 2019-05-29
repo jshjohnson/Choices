@@ -37,8 +37,8 @@ From a [CDN](https://www.jsdelivr.com/package/npm/choices.js):
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/base.min.css">
 <!-- Include Choices CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
-<!-- Include Choices JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+<!-- Include Choices JavaScript (+ all dependencies) -->
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.browser.min.js"></script>
 ```
 
 Or include Choices directly:
@@ -48,8 +48,8 @@ Or include Choices directly:
 <link rel="stylesheet" href="public/assets/styles/base.min.css">
 <!-- Include Choices CSS -->
 <link rel="stylesheet" href="public/assets/styles/choices.min.css">
-<!-- Include Choices JavaScript -->
-<script src="/public/assets/scripts/choices.min.js"></script>
+<!-- Include Choices JavaScript (+ all dependencies) -->
+<script src="/public/assets/scripts/choices.browser.min.js"></script>
 ```
 ## Setup
 

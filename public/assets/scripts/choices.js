@@ -1,17 +1,17 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	//CommonJS2
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
+		module.exports = factory(require("redux"), require("fuse.js"), require("deepmerge"), require("classnames"));
 	//AMD
 	else if(typeof define === 'function' && define.amd)
-		define([], factory);
+		define(["redux", "fuse.js", "deepmerge", "classnames"], factory);
 	//CommonJS
 	else if(typeof exports === 'object')
-		exports["Choices"] = factory();
+		exports["Choices"] = factory(require("redux"), require("fuse.js"), require("deepmerge"), require("classnames"));
 	//Window
 	else
-		root["Choices"] = factory();
-})(window, function() {
+		root["Choices"] = factory(root["redux"], root["fuse.js"], root["deepmerge"], root["classnames"]);
+})(window, function(__WEBPACK_EXTERNAL_MODULE__2__, __WEBPACK_EXTERNAL_MODULE__7__, __WEBPACK_EXTERNAL_MODULE__8__, __WEBPACK_EXTERNAL_MODULE__22__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -95,7 +95,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -528,58 +528,12 @@ exports.SCROLLING_SPEED = SCROLLING_SPEED;
 
 /***/ }),
 /* 2 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var _ponyfill_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
-/* global window */
-
-
-var root;
-
-if (typeof self !== 'undefined') {
-  root = self;
-} else if (typeof window !== 'undefined') {
-  root = window;
-} else if (typeof global !== 'undefined') {
-  root = global;
-} else if (true) {
-  root = module;
-} else {}
-
-var result = Object(_ponyfill_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(root);
-/* harmony default export */ __webpack_exports__["a"] = (result);
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(14)(module)))
+module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -691,7 +645,7 @@ function () {
 exports.default = WrappedElement;
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -702,7 +656,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = exports.TEMPLATES = void 0;
 
-var _classnames = _interopRequireDefault(__webpack_require__(27));
+var _classnames = _interopRequireDefault(__webpack_require__(22));
 
 var _utils = __webpack_require__(0);
 
@@ -791,875 +745,40 @@ var _default = TEMPLATES;
 exports.default = _default;
 
 /***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(6);
+
+
+/***/ }),
 /* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: ./node_modules/lodash-es/_freeGlobal.js
-var _freeGlobal = __webpack_require__(8);
-
-// CONCATENATED MODULE: ./node_modules/lodash-es/_root.js
-
-
-/** Detect free variable `self`. */
-var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
-
-/** Used as a reference to the global object. */
-var root = _freeGlobal["a" /* default */] || freeSelf || Function('return this')();
-
-/* harmony default export */ var _root = (root);
-
-// CONCATENATED MODULE: ./node_modules/lodash-es/_Symbol.js
-
-
-/** Built-in value references. */
-var Symbol = _root.Symbol;
-
-/* harmony default export */ var _Symbol = (Symbol);
-
-// CONCATENATED MODULE: ./node_modules/lodash-es/_getRawTag.js
-
-
-/** Used for built-in method references. */
-var objectProto = Object.prototype;
-
-/** Used to check objects for own properties. */
-var _getRawTag_hasOwnProperty = objectProto.hasOwnProperty;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var nativeObjectToString = objectProto.toString;
-
-/** Built-in value references. */
-var symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
-
-/**
- * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
- *
- * @private
- * @param {*} value The value to query.
- * @returns {string} Returns the raw `toStringTag`.
- */
-function getRawTag(value) {
-  var isOwn = _getRawTag_hasOwnProperty.call(value, symToStringTag),
-      tag = value[symToStringTag];
-
-  try {
-    value[symToStringTag] = undefined;
-    var unmasked = true;
-  } catch (e) {}
-
-  var result = nativeObjectToString.call(value);
-  if (unmasked) {
-    if (isOwn) {
-      value[symToStringTag] = tag;
-    } else {
-      delete value[symToStringTag];
-    }
-  }
-  return result;
-}
-
-/* harmony default export */ var _getRawTag = (getRawTag);
-
-// CONCATENATED MODULE: ./node_modules/lodash-es/_objectToString.js
-/** Used for built-in method references. */
-var _objectToString_objectProto = Object.prototype;
-
-/**
- * Used to resolve the
- * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
- * of values.
- */
-var _objectToString_nativeObjectToString = _objectToString_objectProto.toString;
-
-/**
- * Converts `value` to a string using `Object.prototype.toString`.
- *
- * @private
- * @param {*} value The value to convert.
- * @returns {string} Returns the converted string.
- */
-function objectToString(value) {
-  return _objectToString_nativeObjectToString.call(value);
-}
-
-/* harmony default export */ var _objectToString = (objectToString);
-
-// CONCATENATED MODULE: ./node_modules/lodash-es/_baseGetTag.js
-
-
-
-
-/** `Object#toString` result references. */
-var nullTag = '[object Null]',
-    undefinedTag = '[object Undefined]';
-
-/** Built-in value references. */
-var _baseGetTag_symToStringTag = _Symbol ? _Symbol.toStringTag : undefined;
-
-/**
- * The base implementation of `getTag` without fallbacks for buggy environments.
- *
- * @private
- * @param {*} value The value to query.
- * @returns {string} Returns the `toStringTag`.
- */
-function baseGetTag(value) {
-  if (value == null) {
-    return value === undefined ? undefinedTag : nullTag;
-  }
-  return (_baseGetTag_symToStringTag && _baseGetTag_symToStringTag in Object(value))
-    ? _getRawTag(value)
-    : _objectToString(value);
-}
-
-/* harmony default export */ var _baseGetTag = (baseGetTag);
-
-// CONCATENATED MODULE: ./node_modules/lodash-es/_overArg.js
-/**
- * Creates a unary function that invokes `func` with its argument transformed.
- *
- * @private
- * @param {Function} func The function to wrap.
- * @param {Function} transform The argument transform.
- * @returns {Function} Returns the new function.
- */
-function overArg(func, transform) {
-  return function(arg) {
-    return func(transform(arg));
-  };
-}
-
-/* harmony default export */ var _overArg = (overArg);
-
-// CONCATENATED MODULE: ./node_modules/lodash-es/_getPrototype.js
-
-
-/** Built-in value references. */
-var getPrototype = _overArg(Object.getPrototypeOf, Object);
-
-/* harmony default export */ var _getPrototype = (getPrototype);
-
-// CONCATENATED MODULE: ./node_modules/lodash-es/isObjectLike.js
-/**
- * Checks if `value` is object-like. A value is object-like if it's not `null`
- * and has a `typeof` result of "object".
- *
- * @static
- * @memberOf _
- * @since 4.0.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
- * @example
- *
- * _.isObjectLike({});
- * // => true
- *
- * _.isObjectLike([1, 2, 3]);
- * // => true
- *
- * _.isObjectLike(_.noop);
- * // => false
- *
- * _.isObjectLike(null);
- * // => false
- */
-function isObjectLike(value) {
-  return value != null && typeof value == 'object';
-}
-
-/* harmony default export */ var lodash_es_isObjectLike = (isObjectLike);
-
-// CONCATENATED MODULE: ./node_modules/lodash-es/isPlainObject.js
-
-
-
-
-/** `Object#toString` result references. */
-var objectTag = '[object Object]';
-
-/** Used for built-in method references. */
-var funcProto = Function.prototype,
-    isPlainObject_objectProto = Object.prototype;
-
-/** Used to resolve the decompiled source of functions. */
-var funcToString = funcProto.toString;
-
-/** Used to check objects for own properties. */
-var isPlainObject_hasOwnProperty = isPlainObject_objectProto.hasOwnProperty;
-
-/** Used to infer the `Object` constructor. */
-var objectCtorString = funcToString.call(Object);
-
-/**
- * Checks if `value` is a plain object, that is, an object created by the
- * `Object` constructor or one with a `[[Prototype]]` of `null`.
- *
- * @static
- * @memberOf _
- * @since 0.8.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is a plain object, else `false`.
- * @example
- *
- * function Foo() {
- *   this.a = 1;
- * }
- *
- * _.isPlainObject(new Foo);
- * // => false
- *
- * _.isPlainObject([1, 2, 3]);
- * // => false
- *
- * _.isPlainObject({ 'x': 0, 'y': 0 });
- * // => true
- *
- * _.isPlainObject(Object.create(null));
- * // => true
- */
-function isPlainObject(value) {
-  if (!lodash_es_isObjectLike(value) || _baseGetTag(value) != objectTag) {
-    return false;
-  }
-  var proto = _getPrototype(value);
-  if (proto === null) {
-    return true;
-  }
-  var Ctor = isPlainObject_hasOwnProperty.call(proto, 'constructor') && proto.constructor;
-  return typeof Ctor == 'function' && Ctor instanceof Ctor &&
-    funcToString.call(Ctor) == objectCtorString;
-}
-
-/* harmony default export */ var lodash_es_isPlainObject = (isPlainObject);
-
-// EXTERNAL MODULE: ./node_modules/symbol-observable/es/index.js
-var es = __webpack_require__(2);
-
-// CONCATENATED MODULE: ./node_modules/redux/es/createStore.js
-
-
-
-/**
- * These are private action types reserved by Redux.
- * For any unknown actions, you must return the current state.
- * If the current state is undefined, you must return the initial state.
- * Do not reference these action types directly in your code.
- */
-var ActionTypes = {
-  INIT: '@@redux/INIT'
-
-  /**
-   * Creates a Redux store that holds the state tree.
-   * The only way to change the data in the store is to call `dispatch()` on it.
-   *
-   * There should only be a single store in your app. To specify how different
-   * parts of the state tree respond to actions, you may combine several reducers
-   * into a single reducer function by using `combineReducers`.
-   *
-   * @param {Function} reducer A function that returns the next state tree, given
-   * the current state tree and the action to handle.
-   *
-   * @param {any} [preloadedState] The initial state. You may optionally specify it
-   * to hydrate the state from the server in universal apps, or to restore a
-   * previously serialized user session.
-   * If you use `combineReducers` to produce the root reducer function, this must be
-   * an object with the same shape as `combineReducers` keys.
-   *
-   * @param {Function} [enhancer] The store enhancer. You may optionally specify it
-   * to enhance the store with third-party capabilities such as middleware,
-   * time travel, persistence, etc. The only store enhancer that ships with Redux
-   * is `applyMiddleware()`.
-   *
-   * @returns {Store} A Redux store that lets you read the state, dispatch actions
-   * and subscribe to changes.
-   */
-};function createStore_createStore(reducer, preloadedState, enhancer) {
-  var _ref2;
-
-  if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
-    enhancer = preloadedState;
-    preloadedState = undefined;
-  }
-
-  if (typeof enhancer !== 'undefined') {
-    if (typeof enhancer !== 'function') {
-      throw new Error('Expected the enhancer to be a function.');
-    }
-
-    return enhancer(createStore_createStore)(reducer, preloadedState);
-  }
-
-  if (typeof reducer !== 'function') {
-    throw new Error('Expected the reducer to be a function.');
-  }
-
-  var currentReducer = reducer;
-  var currentState = preloadedState;
-  var currentListeners = [];
-  var nextListeners = currentListeners;
-  var isDispatching = false;
-
-  function ensureCanMutateNextListeners() {
-    if (nextListeners === currentListeners) {
-      nextListeners = currentListeners.slice();
-    }
-  }
-
-  /**
-   * Reads the state tree managed by the store.
-   *
-   * @returns {any} The current state tree of your application.
-   */
-  function getState() {
-    return currentState;
-  }
-
-  /**
-   * Adds a change listener. It will be called any time an action is dispatched,
-   * and some part of the state tree may potentially have changed. You may then
-   * call `getState()` to read the current state tree inside the callback.
-   *
-   * You may call `dispatch()` from a change listener, with the following
-   * caveats:
-   *
-   * 1. The subscriptions are snapshotted just before every `dispatch()` call.
-   * If you subscribe or unsubscribe while the listeners are being invoked, this
-   * will not have any effect on the `dispatch()` that is currently in progress.
-   * However, the next `dispatch()` call, whether nested or not, will use a more
-   * recent snapshot of the subscription list.
-   *
-   * 2. The listener should not expect to see all state changes, as the state
-   * might have been updated multiple times during a nested `dispatch()` before
-   * the listener is called. It is, however, guaranteed that all subscribers
-   * registered before the `dispatch()` started will be called with the latest
-   * state by the time it exits.
-   *
-   * @param {Function} listener A callback to be invoked on every dispatch.
-   * @returns {Function} A function to remove this change listener.
-   */
-  function subscribe(listener) {
-    if (typeof listener !== 'function') {
-      throw new Error('Expected listener to be a function.');
-    }
-
-    var isSubscribed = true;
-
-    ensureCanMutateNextListeners();
-    nextListeners.push(listener);
-
-    return function unsubscribe() {
-      if (!isSubscribed) {
-        return;
-      }
-
-      isSubscribed = false;
-
-      ensureCanMutateNextListeners();
-      var index = nextListeners.indexOf(listener);
-      nextListeners.splice(index, 1);
-    };
-  }
-
-  /**
-   * Dispatches an action. It is the only way to trigger a state change.
-   *
-   * The `reducer` function, used to create the store, will be called with the
-   * current state tree and the given `action`. Its return value will
-   * be considered the **next** state of the tree, and the change listeners
-   * will be notified.
-   *
-   * The base implementation only supports plain object actions. If you want to
-   * dispatch a Promise, an Observable, a thunk, or something else, you need to
-   * wrap your store creating function into the corresponding middleware. For
-   * example, see the documentation for the `redux-thunk` package. Even the
-   * middleware will eventually dispatch plain object actions using this method.
-   *
-   * @param {Object} action A plain object representing “what changed”. It is
-   * a good idea to keep actions serializable so you can record and replay user
-   * sessions, or use the time travelling `redux-devtools`. An action must have
-   * a `type` property which may not be `undefined`. It is a good idea to use
-   * string constants for action types.
-   *
-   * @returns {Object} For convenience, the same action object you dispatched.
-   *
-   * Note that, if you use a custom middleware, it may wrap `dispatch()` to
-   * return something else (for example, a Promise you can await).
-   */
-  function dispatch(action) {
-    if (!lodash_es_isPlainObject(action)) {
-      throw new Error('Actions must be plain objects. ' + 'Use custom middleware for async actions.');
-    }
-
-    if (typeof action.type === 'undefined') {
-      throw new Error('Actions may not have an undefined "type" property. ' + 'Have you misspelled a constant?');
-    }
-
-    if (isDispatching) {
-      throw new Error('Reducers may not dispatch actions.');
-    }
-
-    try {
-      isDispatching = true;
-      currentState = currentReducer(currentState, action);
-    } finally {
-      isDispatching = false;
-    }
-
-    var listeners = currentListeners = nextListeners;
-    for (var i = 0; i < listeners.length; i++) {
-      var listener = listeners[i];
-      listener();
-    }
-
-    return action;
-  }
-
-  /**
-   * Replaces the reducer currently used by the store to calculate the state.
-   *
-   * You might need this if your app implements code splitting and you want to
-   * load some of the reducers dynamically. You might also need this if you
-   * implement a hot reloading mechanism for Redux.
-   *
-   * @param {Function} nextReducer The reducer for the store to use instead.
-   * @returns {void}
-   */
-  function replaceReducer(nextReducer) {
-    if (typeof nextReducer !== 'function') {
-      throw new Error('Expected the nextReducer to be a function.');
-    }
-
-    currentReducer = nextReducer;
-    dispatch({ type: ActionTypes.INIT });
-  }
-
-  /**
-   * Interoperability point for observable/reactive libraries.
-   * @returns {observable} A minimal observable of state changes.
-   * For more information, see the observable proposal:
-   * https://github.com/tc39/proposal-observable
-   */
-  function observable() {
-    var _ref;
-
-    var outerSubscribe = subscribe;
-    return _ref = {
-      /**
-       * The minimal observable subscription method.
-       * @param {Object} observer Any object that can be used as an observer.
-       * The observer object should have a `next` method.
-       * @returns {subscription} An object with an `unsubscribe` method that can
-       * be used to unsubscribe the observable from the store, and prevent further
-       * emission of values from the observable.
-       */
-      subscribe: function subscribe(observer) {
-        if (typeof observer !== 'object') {
-          throw new TypeError('Expected the observer to be an object.');
-        }
-
-        function observeState() {
-          if (observer.next) {
-            observer.next(getState());
-          }
-        }
-
-        observeState();
-        var unsubscribe = outerSubscribe(observeState);
-        return { unsubscribe: unsubscribe };
-      }
-    }, _ref[es["a" /* default */]] = function () {
-      return this;
-    }, _ref;
-  }
-
-  // When a store is created, an "INIT" action is dispatched so that every
-  // reducer returns their initial state. This effectively populates
-  // the initial state tree.
-  dispatch({ type: ActionTypes.INIT });
-
-  return _ref2 = {
-    dispatch: dispatch,
-    subscribe: subscribe,
-    getState: getState,
-    replaceReducer: replaceReducer
-  }, _ref2[es["a" /* default */]] = observable, _ref2;
-}
-// CONCATENATED MODULE: ./node_modules/redux/es/utils/warning.js
-/**
- * Prints a warning in the console if it exists.
- *
- * @param {String} message The warning message.
- * @returns {void}
- */
-function warning(message) {
-  /* eslint-disable no-console */
-  if (typeof console !== 'undefined' && typeof console.error === 'function') {
-    console.error(message);
-  }
-  /* eslint-enable no-console */
-  try {
-    // This error was thrown as a convenience so that if you enable
-    // "break on all exceptions" in your console,
-    // it would pause the execution at this line.
-    throw new Error(message);
-    /* eslint-disable no-empty */
-  } catch (e) {}
-  /* eslint-enable no-empty */
-}
-// CONCATENATED MODULE: ./node_modules/redux/es/combineReducers.js
-
-
-
-
-function getUndefinedStateErrorMessage(key, action) {
-  var actionType = action && action.type;
-  var actionName = actionType && '"' + actionType.toString() + '"' || 'an action';
-
-  return 'Given action ' + actionName + ', reducer "' + key + '" returned undefined. ' + 'To ignore an action, you must explicitly return the previous state. ' + 'If you want this reducer to hold no value, you can return null instead of undefined.';
-}
-
-function getUnexpectedStateShapeWarningMessage(inputState, reducers, action, unexpectedKeyCache) {
-  var reducerKeys = Object.keys(reducers);
-  var argumentName = action && action.type === ActionTypes.INIT ? 'preloadedState argument passed to createStore' : 'previous state received by the reducer';
-
-  if (reducerKeys.length === 0) {
-    return 'Store does not have a valid reducer. Make sure the argument passed ' + 'to combineReducers is an object whose values are reducers.';
-  }
-
-  if (!lodash_es_isPlainObject(inputState)) {
-    return 'The ' + argumentName + ' has unexpected type of "' + {}.toString.call(inputState).match(/\s([a-z|A-Z]+)/)[1] + '". Expected argument to be an object with the following ' + ('keys: "' + reducerKeys.join('", "') + '"');
-  }
-
-  var unexpectedKeys = Object.keys(inputState).filter(function (key) {
-    return !reducers.hasOwnProperty(key) && !unexpectedKeyCache[key];
-  });
-
-  unexpectedKeys.forEach(function (key) {
-    unexpectedKeyCache[key] = true;
-  });
-
-  if (unexpectedKeys.length > 0) {
-    return 'Unexpected ' + (unexpectedKeys.length > 1 ? 'keys' : 'key') + ' ' + ('"' + unexpectedKeys.join('", "') + '" found in ' + argumentName + '. ') + 'Expected to find one of the known reducer keys instead: ' + ('"' + reducerKeys.join('", "') + '". Unexpected keys will be ignored.');
-  }
-}
-
-function assertReducerShape(reducers) {
-  Object.keys(reducers).forEach(function (key) {
-    var reducer = reducers[key];
-    var initialState = reducer(undefined, { type: ActionTypes.INIT });
-
-    if (typeof initialState === 'undefined') {
-      throw new Error('Reducer "' + key + '" returned undefined during initialization. ' + 'If the state passed to the reducer is undefined, you must ' + 'explicitly return the initial state. The initial state may ' + 'not be undefined. If you don\'t want to set a value for this reducer, ' + 'you can use null instead of undefined.');
-    }
-
-    var type = '@@redux/PROBE_UNKNOWN_ACTION_' + Math.random().toString(36).substring(7).split('').join('.');
-    if (typeof reducer(undefined, { type: type }) === 'undefined') {
-      throw new Error('Reducer "' + key + '" returned undefined when probed with a random type. ' + ('Don\'t try to handle ' + ActionTypes.INIT + ' or other actions in "redux/*" ') + 'namespace. They are considered private. Instead, you must return the ' + 'current state for any unknown actions, unless it is undefined, ' + 'in which case you must return the initial state, regardless of the ' + 'action type. The initial state may not be undefined, but can be null.');
-    }
-  });
-}
-
-/**
- * Turns an object whose values are different reducer functions, into a single
- * reducer function. It will call every child reducer, and gather their results
- * into a single state object, whose keys correspond to the keys of the passed
- * reducer functions.
- *
- * @param {Object} reducers An object whose values correspond to different
- * reducer functions that need to be combined into one. One handy way to obtain
- * it is to use ES6 `import * as reducers` syntax. The reducers may never return
- * undefined for any action. Instead, they should return their initial state
- * if the state passed to them was undefined, and the current state for any
- * unrecognized action.
- *
- * @returns {Function} A reducer function that invokes every reducer inside the
- * passed object, and builds a state object with the same shape.
- */
-function combineReducers(reducers) {
-  var reducerKeys = Object.keys(reducers);
-  var finalReducers = {};
-  for (var i = 0; i < reducerKeys.length; i++) {
-    var key = reducerKeys[i];
-
-    if (false) {}
-
-    if (typeof reducers[key] === 'function') {
-      finalReducers[key] = reducers[key];
-    }
-  }
-  var finalReducerKeys = Object.keys(finalReducers);
-
-  var unexpectedKeyCache = void 0;
-  if (false) {}
-
-  var shapeAssertionError = void 0;
-  try {
-    assertReducerShape(finalReducers);
-  } catch (e) {
-    shapeAssertionError = e;
-  }
-
-  return function combination() {
-    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var action = arguments[1];
-
-    if (shapeAssertionError) {
-      throw shapeAssertionError;
-    }
-
-    if (false) { var warningMessage; }
-
-    var hasChanged = false;
-    var nextState = {};
-    for (var _i = 0; _i < finalReducerKeys.length; _i++) {
-      var _key = finalReducerKeys[_i];
-      var reducer = finalReducers[_key];
-      var previousStateForKey = state[_key];
-      var nextStateForKey = reducer(previousStateForKey, action);
-      if (typeof nextStateForKey === 'undefined') {
-        var errorMessage = getUndefinedStateErrorMessage(_key, action);
-        throw new Error(errorMessage);
-      }
-      nextState[_key] = nextStateForKey;
-      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
-    }
-    return hasChanged ? nextState : state;
-  };
-}
-// CONCATENATED MODULE: ./node_modules/redux/es/bindActionCreators.js
-function bindActionCreator(actionCreator, dispatch) {
-  return function () {
-    return dispatch(actionCreator.apply(undefined, arguments));
-  };
-}
-
-/**
- * Turns an object whose values are action creators, into an object with the
- * same keys, but with every function wrapped into a `dispatch` call so they
- * may be invoked directly. This is just a convenience method, as you can call
- * `store.dispatch(MyActionCreators.doSomething())` yourself just fine.
- *
- * For convenience, you can also pass a single function as the first argument,
- * and get a function in return.
- *
- * @param {Function|Object} actionCreators An object whose values are action
- * creator functions. One handy way to obtain it is to use ES6 `import * as`
- * syntax. You may also pass a single function.
- *
- * @param {Function} dispatch The `dispatch` function available on your Redux
- * store.
- *
- * @returns {Function|Object} The object mimicking the original object, but with
- * every action creator wrapped into the `dispatch` call. If you passed a
- * function as `actionCreators`, the return value will also be a single
- * function.
- */
-function bindActionCreators(actionCreators, dispatch) {
-  if (typeof actionCreators === 'function') {
-    return bindActionCreator(actionCreators, dispatch);
-  }
-
-  if (typeof actionCreators !== 'object' || actionCreators === null) {
-    throw new Error('bindActionCreators expected an object or a function, instead received ' + (actionCreators === null ? 'null' : typeof actionCreators) + '. ' + 'Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?');
-  }
-
-  var keys = Object.keys(actionCreators);
-  var boundActionCreators = {};
-  for (var i = 0; i < keys.length; i++) {
-    var key = keys[i];
-    var actionCreator = actionCreators[key];
-    if (typeof actionCreator === 'function') {
-      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch);
-    }
-  }
-  return boundActionCreators;
-}
-// CONCATENATED MODULE: ./node_modules/redux/es/compose.js
-/**
- * Composes single-argument functions from right to left. The rightmost
- * function can take multiple arguments as it provides the signature for
- * the resulting composite function.
- *
- * @param {...Function} funcs The functions to compose.
- * @returns {Function} A function obtained by composing the argument functions
- * from right to left. For example, compose(f, g, h) is identical to doing
- * (...args) => f(g(h(...args))).
- */
-
-function compose() {
-  for (var _len = arguments.length, funcs = Array(_len), _key = 0; _key < _len; _key++) {
-    funcs[_key] = arguments[_key];
-  }
-
-  if (funcs.length === 0) {
-    return function (arg) {
-      return arg;
-    };
-  }
-
-  if (funcs.length === 1) {
-    return funcs[0];
-  }
-
-  return funcs.reduce(function (a, b) {
-    return function () {
-      return a(b.apply(undefined, arguments));
-    };
-  });
-}
-// CONCATENATED MODULE: ./node_modules/redux/es/applyMiddleware.js
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-
-
-/**
- * Creates a store enhancer that applies middleware to the dispatch method
- * of the Redux store. This is handy for a variety of tasks, such as expressing
- * asynchronous actions in a concise manner, or logging every action payload.
- *
- * See `redux-thunk` package as an example of the Redux middleware.
- *
- * Because middleware is potentially asynchronous, this should be the first
- * store enhancer in the composition chain.
- *
- * Note that each middleware will be given the `dispatch` and `getState` functions
- * as named arguments.
- *
- * @param {...Function} middlewares The middleware chain to be applied.
- * @returns {Function} A store enhancer applying the middleware.
- */
-function applyMiddleware() {
-  for (var _len = arguments.length, middlewares = Array(_len), _key = 0; _key < _len; _key++) {
-    middlewares[_key] = arguments[_key];
-  }
-
-  return function (createStore) {
-    return function (reducer, preloadedState, enhancer) {
-      var store = createStore(reducer, preloadedState, enhancer);
-      var _dispatch = store.dispatch;
-      var chain = [];
-
-      var middlewareAPI = {
-        getState: store.getState,
-        dispatch: function dispatch(action) {
-          return _dispatch(action);
-        }
-      };
-      chain = middlewares.map(function (middleware) {
-        return middleware(middlewareAPI);
-      });
-      _dispatch = compose.apply(undefined, chain)(store.dispatch);
-
-      return _extends({}, store, {
-        dispatch: _dispatch
-      });
-    };
-  };
-}
-// CONCATENATED MODULE: ./node_modules/redux/es/index.js
-/* concated harmony reexport createStore */__webpack_require__.d(__webpack_exports__, "createStore", function() { return createStore_createStore; });
-/* concated harmony reexport combineReducers */__webpack_require__.d(__webpack_exports__, "combineReducers", function() { return combineReducers; });
-/* concated harmony reexport bindActionCreators */__webpack_require__.d(__webpack_exports__, "bindActionCreators", function() { return bindActionCreators; });
-/* concated harmony reexport applyMiddleware */__webpack_require__.d(__webpack_exports__, "applyMiddleware", function() { return applyMiddleware; });
-/* concated harmony reexport compose */__webpack_require__.d(__webpack_exports__, "compose", function() { return compose; });
-
-
-
-
-
-
-
-/*
-* This is a dummy function to check if the function name has been altered by minification.
-* If the function has been minified and NODE_ENV !== 'production', warn the user.
-*/
-function isCrushed() {}
-
-if (false) {}
-
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return symbolObservablePonyfill; });
-function symbolObservablePonyfill(root) {
-	var result;
-	var Symbol = root.Symbol;
-
-	if (typeof Symbol === 'function') {
-		if (Symbol.observable) {
-			result = Symbol.observable;
-		} else {
-			result = Symbol('observable');
-			Symbol.observable = result;
-		}
-	} else {
-		result = '@@observable';
-	}
-
-	return result;
-};
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/** Detect free variable `global` from Node.js. */
-var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
-
-/* harmony default export */ __webpack_exports__["a"] = (freeGlobal);
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(10);
-
-
-/***/ }),
-/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _fuse = _interopRequireDefault(__webpack_require__(11));
+var _fuse = _interopRequireDefault(__webpack_require__(7));
 
-var _deepmerge = _interopRequireDefault(__webpack_require__(12));
+var _deepmerge = _interopRequireDefault(__webpack_require__(8));
 
-var _store = _interopRequireDefault(__webpack_require__(13));
+var _store = _interopRequireDefault(__webpack_require__(9));
 
-var _components = __webpack_require__(20);
+var _components = __webpack_require__(15);
 
 var _constants = __webpack_require__(1);
 
-var _templates = __webpack_require__(5);
+var _templates = __webpack_require__(4);
 
-var _choices = __webpack_require__(28);
+var _choices = __webpack_require__(23);
 
-var _items = __webpack_require__(29);
+var _items = __webpack_require__(24);
 
-var _groups = __webpack_require__(30);
+var _groups = __webpack_require__(25);
 
-var _misc = __webpack_require__(31);
+var _misc = __webpack_require__(26);
 
-var _general = __webpack_require__(32);
+var _general = __webpack_require__(27);
 
 var _utils = __webpack_require__(0);
 
@@ -3823,1185 +2942,19 @@ Choices.userDefaults = {}; // We cannot export default here due to Webpack: http
 module.exports = Choices;
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*!
- * Fuse.js v3.4.2 - Lightweight fuzzy-search (http://fusejs.io)
- * 
- * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
- * All Rights Reserved. Apache Software License 2.0
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- */
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(true)
-		module.exports = factory();
-	else {}
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./src/bitap/bitap_matched_indices.js":
-/*!********************************************!*\
-  !*** ./src/bitap/bitap_matched_indices.js ***!
-  \********************************************/
-/*! no static exports found */
+/* 7 */
 /***/ (function(module, exports) {
 
-module.exports = function () {
-  var matchmask = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  var minMatchCharLength = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  var matchedIndices = [];
-  var start = -1;
-  var end = -1;
-  var i = 0;
-
-  for (var len = matchmask.length; i < len; i += 1) {
-    var match = matchmask[i];
-
-    if (match && start === -1) {
-      start = i;
-    } else if (!match && start !== -1) {
-      end = i - 1;
-
-      if (end - start + 1 >= minMatchCharLength) {
-        matchedIndices.push([start, end]);
-      }
-
-      start = -1;
-    }
-  } // (i-1 - start) + 1 => i - start
-
-
-  if (matchmask[i - 1] && i - start >= minMatchCharLength) {
-    matchedIndices.push([start, i - 1]);
-  }
-
-  return matchedIndices;
-};
+module.exports = __WEBPACK_EXTERNAL_MODULE__7__;
 
 /***/ }),
-
-/***/ "./src/bitap/bitap_pattern_alphabet.js":
-/*!*********************************************!*\
-  !*** ./src/bitap/bitap_pattern_alphabet.js ***!
-  \*********************************************/
-/*! no static exports found */
+/* 8 */
 /***/ (function(module, exports) {
 
-module.exports = function (pattern) {
-  var mask = {};
-  var len = pattern.length;
-
-  for (var i = 0; i < len; i += 1) {
-    mask[pattern.charAt(i)] = 0;
-  }
-
-  for (var _i = 0; _i < len; _i += 1) {
-    mask[pattern.charAt(_i)] |= 1 << len - _i - 1;
-  }
-
-  return mask;
-};
+module.exports = __WEBPACK_EXTERNAL_MODULE__8__;
 
 /***/ }),
-
-/***/ "./src/bitap/bitap_regex_search.js":
-/*!*****************************************!*\
-  !*** ./src/bitap/bitap_regex_search.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var SPECIAL_CHARS_REGEX = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
-
-module.exports = function (text, pattern) {
-  var tokenSeparator = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : / +/g;
-  var regex = new RegExp(pattern.replace(SPECIAL_CHARS_REGEX, '\\$&').replace(tokenSeparator, '|'));
-  var matches = text.match(regex);
-  var isMatch = !!matches;
-  var matchedIndices = [];
-
-  if (isMatch) {
-    for (var i = 0, matchesLen = matches.length; i < matchesLen; i += 1) {
-      var match = matches[i];
-      matchedIndices.push([text.indexOf(match), match.length - 1]);
-    }
-  }
-
-  return {
-    // TODO: revisit this score
-    score: isMatch ? 0.5 : 1,
-    isMatch: isMatch,
-    matchedIndices: matchedIndices
-  };
-};
-
-/***/ }),
-
-/***/ "./src/bitap/bitap_score.js":
-/*!**********************************!*\
-  !*** ./src/bitap/bitap_score.js ***!
-  \**********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function (pattern, _ref) {
-  var _ref$errors = _ref.errors,
-      errors = _ref$errors === void 0 ? 0 : _ref$errors,
-      _ref$currentLocation = _ref.currentLocation,
-      currentLocation = _ref$currentLocation === void 0 ? 0 : _ref$currentLocation,
-      _ref$expectedLocation = _ref.expectedLocation,
-      expectedLocation = _ref$expectedLocation === void 0 ? 0 : _ref$expectedLocation,
-      _ref$distance = _ref.distance,
-      distance = _ref$distance === void 0 ? 100 : _ref$distance;
-  var accuracy = errors / pattern.length;
-  var proximity = Math.abs(expectedLocation - currentLocation);
-
-  if (!distance) {
-    // Dodge divide by zero error.
-    return proximity ? 1.0 : accuracy;
-  }
-
-  return accuracy + proximity / distance;
-};
-
-/***/ }),
-
-/***/ "./src/bitap/bitap_search.js":
-/*!***********************************!*\
-  !*** ./src/bitap/bitap_search.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var bitapScore = __webpack_require__(/*! ./bitap_score */ "./src/bitap/bitap_score.js");
-
-var matchedIndices = __webpack_require__(/*! ./bitap_matched_indices */ "./src/bitap/bitap_matched_indices.js");
-
-module.exports = function (text, pattern, patternAlphabet, _ref) {
-  var _ref$location = _ref.location,
-      location = _ref$location === void 0 ? 0 : _ref$location,
-      _ref$distance = _ref.distance,
-      distance = _ref$distance === void 0 ? 100 : _ref$distance,
-      _ref$threshold = _ref.threshold,
-      threshold = _ref$threshold === void 0 ? 0.6 : _ref$threshold,
-      _ref$findAllMatches = _ref.findAllMatches,
-      findAllMatches = _ref$findAllMatches === void 0 ? false : _ref$findAllMatches,
-      _ref$minMatchCharLeng = _ref.minMatchCharLength,
-      minMatchCharLength = _ref$minMatchCharLeng === void 0 ? 1 : _ref$minMatchCharLeng;
-  var expectedLocation = location; // Set starting location at beginning text and initialize the alphabet.
-
-  var textLen = text.length; // Highest score beyond which we give up.
-
-  var currentThreshold = threshold; // Is there a nearby exact match? (speedup)
-
-  var bestLocation = text.indexOf(pattern, expectedLocation);
-  var patternLen = pattern.length; // a mask of the matches
-
-  var matchMask = [];
-
-  for (var i = 0; i < textLen; i += 1) {
-    matchMask[i] = 0;
-  }
-
-  if (bestLocation !== -1) {
-    var score = bitapScore(pattern, {
-      errors: 0,
-      currentLocation: bestLocation,
-      expectedLocation: expectedLocation,
-      distance: distance
-    });
-    currentThreshold = Math.min(score, currentThreshold); // What about in the other direction? (speed up)
-
-    bestLocation = text.lastIndexOf(pattern, expectedLocation + patternLen);
-
-    if (bestLocation !== -1) {
-      var _score = bitapScore(pattern, {
-        errors: 0,
-        currentLocation: bestLocation,
-        expectedLocation: expectedLocation,
-        distance: distance
-      });
-
-      currentThreshold = Math.min(_score, currentThreshold);
-    }
-  } // Reset the best location
-
-
-  bestLocation = -1;
-  var lastBitArr = [];
-  var finalScore = 1;
-  var binMax = patternLen + textLen;
-  var mask = 1 << patternLen - 1;
-
-  for (var _i = 0; _i < patternLen; _i += 1) {
-    // Scan for the best match; each iteration allows for one more error.
-    // Run a binary search to determine how far from the match location we can stray
-    // at this error level.
-    var binMin = 0;
-    var binMid = binMax;
-
-    while (binMin < binMid) {
-      var _score3 = bitapScore(pattern, {
-        errors: _i,
-        currentLocation: expectedLocation + binMid,
-        expectedLocation: expectedLocation,
-        distance: distance
-      });
-
-      if (_score3 <= currentThreshold) {
-        binMin = binMid;
-      } else {
-        binMax = binMid;
-      }
-
-      binMid = Math.floor((binMax - binMin) / 2 + binMin);
-    } // Use the result from this iteration as the maximum for the next.
-
-
-    binMax = binMid;
-    var start = Math.max(1, expectedLocation - binMid + 1);
-    var finish = findAllMatches ? textLen : Math.min(expectedLocation + binMid, textLen) + patternLen; // Initialize the bit array
-
-    var bitArr = Array(finish + 2);
-    bitArr[finish + 1] = (1 << _i) - 1;
-
-    for (var j = finish; j >= start; j -= 1) {
-      var currentLocation = j - 1;
-      var charMatch = patternAlphabet[text.charAt(currentLocation)];
-
-      if (charMatch) {
-        matchMask[currentLocation] = 1;
-      } // First pass: exact match
-
-
-      bitArr[j] = (bitArr[j + 1] << 1 | 1) & charMatch; // Subsequent passes: fuzzy match
-
-      if (_i !== 0) {
-        bitArr[j] |= (lastBitArr[j + 1] | lastBitArr[j]) << 1 | 1 | lastBitArr[j + 1];
-      }
-
-      if (bitArr[j] & mask) {
-        finalScore = bitapScore(pattern, {
-          errors: _i,
-          currentLocation: currentLocation,
-          expectedLocation: expectedLocation,
-          distance: distance
-        }); // This match will almost certainly be better than any existing match.
-        // But check anyway.
-
-        if (finalScore <= currentThreshold) {
-          // Indeed it is
-          currentThreshold = finalScore;
-          bestLocation = currentLocation; // Already passed `loc`, downhill from here on in.
-
-          if (bestLocation <= expectedLocation) {
-            break;
-          } // When passing `bestLocation`, don't exceed our current distance from `expectedLocation`.
-
-
-          start = Math.max(1, 2 * expectedLocation - bestLocation);
-        }
-      }
-    } // No hope for a (better) match at greater error levels.
-
-
-    var _score2 = bitapScore(pattern, {
-      errors: _i + 1,
-      currentLocation: expectedLocation,
-      expectedLocation: expectedLocation,
-      distance: distance
-    }); // console.log('score', score, finalScore)
-
-
-    if (_score2 > currentThreshold) {
-      break;
-    }
-
-    lastBitArr = bitArr;
-  } // console.log('FINAL SCORE', finalScore)
-  // Count exact matches (those with a score of 0) to be "almost" exact
-
-
-  return {
-    isMatch: bestLocation >= 0,
-    score: finalScore === 0 ? 0.001 : finalScore,
-    matchedIndices: matchedIndices(matchMask, minMatchCharLength)
-  };
-};
-
-/***/ }),
-
-/***/ "./src/bitap/index.js":
-/*!****************************!*\
-  !*** ./src/bitap/index.js ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var bitapRegexSearch = __webpack_require__(/*! ./bitap_regex_search */ "./src/bitap/bitap_regex_search.js");
-
-var bitapSearch = __webpack_require__(/*! ./bitap_search */ "./src/bitap/bitap_search.js");
-
-var patternAlphabet = __webpack_require__(/*! ./bitap_pattern_alphabet */ "./src/bitap/bitap_pattern_alphabet.js");
-
-var Bitap =
-/*#__PURE__*/
-function () {
-  function Bitap(pattern, _ref) {
-    var _ref$location = _ref.location,
-        location = _ref$location === void 0 ? 0 : _ref$location,
-        _ref$distance = _ref.distance,
-        distance = _ref$distance === void 0 ? 100 : _ref$distance,
-        _ref$threshold = _ref.threshold,
-        threshold = _ref$threshold === void 0 ? 0.6 : _ref$threshold,
-        _ref$maxPatternLength = _ref.maxPatternLength,
-        maxPatternLength = _ref$maxPatternLength === void 0 ? 32 : _ref$maxPatternLength,
-        _ref$isCaseSensitive = _ref.isCaseSensitive,
-        isCaseSensitive = _ref$isCaseSensitive === void 0 ? false : _ref$isCaseSensitive,
-        _ref$tokenSeparator = _ref.tokenSeparator,
-        tokenSeparator = _ref$tokenSeparator === void 0 ? / +/g : _ref$tokenSeparator,
-        _ref$findAllMatches = _ref.findAllMatches,
-        findAllMatches = _ref$findAllMatches === void 0 ? false : _ref$findAllMatches,
-        _ref$minMatchCharLeng = _ref.minMatchCharLength,
-        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? 1 : _ref$minMatchCharLeng;
-
-    _classCallCheck(this, Bitap);
-
-    this.options = {
-      location: location,
-      distance: distance,
-      threshold: threshold,
-      maxPatternLength: maxPatternLength,
-      isCaseSensitive: isCaseSensitive,
-      tokenSeparator: tokenSeparator,
-      findAllMatches: findAllMatches,
-      minMatchCharLength: minMatchCharLength
-    };
-    this.pattern = this.options.isCaseSensitive ? pattern : pattern.toLowerCase();
-
-    if (this.pattern.length <= maxPatternLength) {
-      this.patternAlphabet = patternAlphabet(this.pattern);
-    }
-  }
-
-  _createClass(Bitap, [{
-    key: "search",
-    value: function search(text) {
-      if (!this.options.isCaseSensitive) {
-        text = text.toLowerCase();
-      } // Exact match
-
-
-      if (this.pattern === text) {
-        return {
-          isMatch: true,
-          score: 0,
-          matchedIndices: [[0, text.length - 1]]
-        };
-      } // When pattern length is greater than the machine word length, just do a a regex comparison
-
-
-      var _this$options = this.options,
-          maxPatternLength = _this$options.maxPatternLength,
-          tokenSeparator = _this$options.tokenSeparator;
-
-      if (this.pattern.length > maxPatternLength) {
-        return bitapRegexSearch(text, this.pattern, tokenSeparator);
-      } // Otherwise, use Bitap algorithm
-
-
-      var _this$options2 = this.options,
-          location = _this$options2.location,
-          distance = _this$options2.distance,
-          threshold = _this$options2.threshold,
-          findAllMatches = _this$options2.findAllMatches,
-          minMatchCharLength = _this$options2.minMatchCharLength;
-      return bitapSearch(text, this.pattern, this.patternAlphabet, {
-        location: location,
-        distance: distance,
-        threshold: threshold,
-        findAllMatches: findAllMatches,
-        minMatchCharLength: minMatchCharLength
-      });
-    }
-  }]);
-
-  return Bitap;
-}(); // let x = new Bitap("od mn war", {})
-// let result = x.search("Old Man's War")
-// console.log(result)
-
-
-module.exports = Bitap;
-
-/***/ }),
-
-/***/ "./src/helpers/deep_value.js":
-/*!***********************************!*\
-  !*** ./src/helpers/deep_value.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isArray = __webpack_require__(/*! ./is_array */ "./src/helpers/is_array.js");
-
-var deepValue = function deepValue(obj, path, list) {
-  if (!path) {
-    // If there's no path left, we've gotten to the object we care about.
-    list.push(obj);
-  } else {
-    var dotIndex = path.indexOf('.');
-    var firstSegment = path;
-    var remaining = null;
-
-    if (dotIndex !== -1) {
-      firstSegment = path.slice(0, dotIndex);
-      remaining = path.slice(dotIndex + 1);
-    }
-
-    var value = obj[firstSegment];
-
-    if (value !== null && value !== undefined) {
-      if (!remaining && (typeof value === 'string' || typeof value === 'number')) {
-        list.push(value.toString());
-      } else if (isArray(value)) {
-        // Search each item in the array.
-        for (var i = 0, len = value.length; i < len; i += 1) {
-          deepValue(value[i], remaining, list);
-        }
-      } else if (remaining) {
-        // An object. Recurse further.
-        deepValue(value, remaining, list);
-      }
-    }
-  }
-
-  return list;
-};
-
-module.exports = function (obj, path) {
-  return deepValue(obj, path, []);
-};
-
-/***/ }),
-
-/***/ "./src/helpers/is_array.js":
-/*!*********************************!*\
-  !*** ./src/helpers/is_array.js ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function (obj) {
-  return !Array.isArray ? Object.prototype.toString.call(obj) === '[object Array]' : Array.isArray(obj);
-};
-
-/***/ }),
-
-/***/ "./src/index.js":
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Bitap = __webpack_require__(/*! ./bitap */ "./src/bitap/index.js");
-
-var deepValue = __webpack_require__(/*! ./helpers/deep_value */ "./src/helpers/deep_value.js");
-
-var isArray = __webpack_require__(/*! ./helpers/is_array */ "./src/helpers/is_array.js");
-
-var Fuse =
-/*#__PURE__*/
-function () {
-  function Fuse(list, _ref) {
-    var _ref$location = _ref.location,
-        location = _ref$location === void 0 ? 0 : _ref$location,
-        _ref$distance = _ref.distance,
-        distance = _ref$distance === void 0 ? 100 : _ref$distance,
-        _ref$threshold = _ref.threshold,
-        threshold = _ref$threshold === void 0 ? 0.6 : _ref$threshold,
-        _ref$maxPatternLength = _ref.maxPatternLength,
-        maxPatternLength = _ref$maxPatternLength === void 0 ? 32 : _ref$maxPatternLength,
-        _ref$caseSensitive = _ref.caseSensitive,
-        caseSensitive = _ref$caseSensitive === void 0 ? false : _ref$caseSensitive,
-        _ref$tokenSeparator = _ref.tokenSeparator,
-        tokenSeparator = _ref$tokenSeparator === void 0 ? / +/g : _ref$tokenSeparator,
-        _ref$findAllMatches = _ref.findAllMatches,
-        findAllMatches = _ref$findAllMatches === void 0 ? false : _ref$findAllMatches,
-        _ref$minMatchCharLeng = _ref.minMatchCharLength,
-        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? 1 : _ref$minMatchCharLeng,
-        _ref$id = _ref.id,
-        id = _ref$id === void 0 ? null : _ref$id,
-        _ref$keys = _ref.keys,
-        keys = _ref$keys === void 0 ? [] : _ref$keys,
-        _ref$shouldSort = _ref.shouldSort,
-        shouldSort = _ref$shouldSort === void 0 ? true : _ref$shouldSort,
-        _ref$getFn = _ref.getFn,
-        getFn = _ref$getFn === void 0 ? deepValue : _ref$getFn,
-        _ref$sortFn = _ref.sortFn,
-        sortFn = _ref$sortFn === void 0 ? function (a, b) {
-      return a.score - b.score;
-    } : _ref$sortFn,
-        _ref$tokenize = _ref.tokenize,
-        tokenize = _ref$tokenize === void 0 ? false : _ref$tokenize,
-        _ref$matchAllTokens = _ref.matchAllTokens,
-        matchAllTokens = _ref$matchAllTokens === void 0 ? false : _ref$matchAllTokens,
-        _ref$includeMatches = _ref.includeMatches,
-        includeMatches = _ref$includeMatches === void 0 ? false : _ref$includeMatches,
-        _ref$includeScore = _ref.includeScore,
-        includeScore = _ref$includeScore === void 0 ? false : _ref$includeScore,
-        _ref$verbose = _ref.verbose,
-        verbose = _ref$verbose === void 0 ? false : _ref$verbose;
-
-    _classCallCheck(this, Fuse);
-
-    this.options = {
-      location: location,
-      distance: distance,
-      threshold: threshold,
-      maxPatternLength: maxPatternLength,
-      isCaseSensitive: caseSensitive,
-      tokenSeparator: tokenSeparator,
-      findAllMatches: findAllMatches,
-      minMatchCharLength: minMatchCharLength,
-      id: id,
-      keys: keys,
-      includeMatches: includeMatches,
-      includeScore: includeScore,
-      shouldSort: shouldSort,
-      getFn: getFn,
-      sortFn: sortFn,
-      verbose: verbose,
-      tokenize: tokenize,
-      matchAllTokens: matchAllTokens
-    };
-    this.setCollection(list);
-  }
-
-  _createClass(Fuse, [{
-    key: "setCollection",
-    value: function setCollection(list) {
-      this.list = list;
-      return list;
-    }
-  }, {
-    key: "search",
-    value: function search(pattern) {
-      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-        limit: false
-      };
-
-      this._log("---------\nSearch pattern: \"".concat(pattern, "\""));
-
-      var _this$_prepareSearche = this._prepareSearchers(pattern),
-          tokenSearchers = _this$_prepareSearche.tokenSearchers,
-          fullSearcher = _this$_prepareSearche.fullSearcher;
-
-      var _this$_search = this._search(tokenSearchers, fullSearcher),
-          weights = _this$_search.weights,
-          results = _this$_search.results;
-
-      this._computeScore(weights, results);
-
-      if (this.options.shouldSort) {
-        this._sort(results);
-      }
-
-      if (opts.limit && typeof opts.limit === 'number') {
-        results = results.slice(0, opts.limit);
-      }
-
-      return this._format(results);
-    }
-  }, {
-    key: "_prepareSearchers",
-    value: function _prepareSearchers() {
-      var pattern = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-      var tokenSearchers = [];
-
-      if (this.options.tokenize) {
-        // Tokenize on the separator
-        var tokens = pattern.split(this.options.tokenSeparator);
-
-        for (var i = 0, len = tokens.length; i < len; i += 1) {
-          tokenSearchers.push(new Bitap(tokens[i], this.options));
-        }
-      }
-
-      var fullSearcher = new Bitap(pattern, this.options);
-      return {
-        tokenSearchers: tokenSearchers,
-        fullSearcher: fullSearcher
-      };
-    }
-  }, {
-    key: "_search",
-    value: function _search() {
-      var tokenSearchers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      var fullSearcher = arguments.length > 1 ? arguments[1] : undefined;
-      var list = this.list;
-      var resultMap = {};
-      var results = []; // Check the first item in the list, if it's a string, then we assume
-      // that every item in the list is also a string, and thus it's a flattened array.
-
-      if (typeof list[0] === 'string') {
-        // Iterate over every item
-        for (var i = 0, len = list.length; i < len; i += 1) {
-          this._analyze({
-            key: '',
-            value: list[i],
-            record: i,
-            index: i
-          }, {
-            resultMap: resultMap,
-            results: results,
-            tokenSearchers: tokenSearchers,
-            fullSearcher: fullSearcher
-          });
-        }
-
-        return {
-          weights: null,
-          results: results
-        };
-      } // Otherwise, the first item is an Object (hopefully), and thus the searching
-      // is done on the values of the keys of each item.
-
-
-      var weights = {};
-
-      for (var _i = 0, _len = list.length; _i < _len; _i += 1) {
-        var item = list[_i]; // Iterate over every key
-
-        for (var j = 0, keysLen = this.options.keys.length; j < keysLen; j += 1) {
-          var key = this.options.keys[j];
-
-          if (typeof key !== 'string') {
-            weights[key.name] = {
-              weight: 1 - key.weight || 1
-            };
-
-            if (key.weight <= 0 || key.weight > 1) {
-              throw new Error('Key weight has to be > 0 and <= 1');
-            }
-
-            key = key.name;
-          } else {
-            weights[key] = {
-              weight: 1
-            };
-          }
-
-          this._analyze({
-            key: key,
-            value: this.options.getFn(item, key),
-            record: item,
-            index: _i
-          }, {
-            resultMap: resultMap,
-            results: results,
-            tokenSearchers: tokenSearchers,
-            fullSearcher: fullSearcher
-          });
-        }
-      }
-
-      return {
-        weights: weights,
-        results: results
-      };
-    }
-  }, {
-    key: "_analyze",
-    value: function _analyze(_ref2, _ref3) {
-      var key = _ref2.key,
-          _ref2$arrayIndex = _ref2.arrayIndex,
-          arrayIndex = _ref2$arrayIndex === void 0 ? -1 : _ref2$arrayIndex,
-          value = _ref2.value,
-          record = _ref2.record,
-          index = _ref2.index;
-      var _ref3$tokenSearchers = _ref3.tokenSearchers,
-          tokenSearchers = _ref3$tokenSearchers === void 0 ? [] : _ref3$tokenSearchers,
-          _ref3$fullSearcher = _ref3.fullSearcher,
-          fullSearcher = _ref3$fullSearcher === void 0 ? [] : _ref3$fullSearcher,
-          _ref3$resultMap = _ref3.resultMap,
-          resultMap = _ref3$resultMap === void 0 ? {} : _ref3$resultMap,
-          _ref3$results = _ref3.results,
-          results = _ref3$results === void 0 ? [] : _ref3$results;
-
-      // Check if the texvaluet can be searched
-      if (value === undefined || value === null) {
-        return;
-      }
-
-      var exists = false;
-      var averageScore = -1;
-      var numTextMatches = 0;
-
-      if (typeof value === 'string') {
-        this._log("\nKey: ".concat(key === '' ? '-' : key));
-
-        var mainSearchResult = fullSearcher.search(value);
-
-        this._log("Full text: \"".concat(value, "\", score: ").concat(mainSearchResult.score));
-
-        if (this.options.tokenize) {
-          var words = value.split(this.options.tokenSeparator);
-          var scores = [];
-
-          for (var i = 0; i < tokenSearchers.length; i += 1) {
-            var tokenSearcher = tokenSearchers[i];
-
-            this._log("\nPattern: \"".concat(tokenSearcher.pattern, "\"")); // let tokenScores = []
-
-
-            var hasMatchInText = false;
-
-            for (var j = 0; j < words.length; j += 1) {
-              var word = words[j];
-              var tokenSearchResult = tokenSearcher.search(word);
-              var obj = {};
-
-              if (tokenSearchResult.isMatch) {
-                obj[word] = tokenSearchResult.score;
-                exists = true;
-                hasMatchInText = true;
-                scores.push(tokenSearchResult.score);
-              } else {
-                obj[word] = 1;
-
-                if (!this.options.matchAllTokens) {
-                  scores.push(1);
-                }
-              }
-
-              this._log("Token: \"".concat(word, "\", score: ").concat(obj[word])); // tokenScores.push(obj)
-
-            }
-
-            if (hasMatchInText) {
-              numTextMatches += 1;
-            }
-          }
-
-          averageScore = scores[0];
-          var scoresLen = scores.length;
-
-          for (var _i2 = 1; _i2 < scoresLen; _i2 += 1) {
-            averageScore += scores[_i2];
-          }
-
-          averageScore = averageScore / scoresLen;
-
-          this._log('Token score average:', averageScore);
-        }
-
-        var finalScore = mainSearchResult.score;
-
-        if (averageScore > -1) {
-          finalScore = (finalScore + averageScore) / 2;
-        }
-
-        this._log('Score average:', finalScore);
-
-        var checkTextMatches = this.options.tokenize && this.options.matchAllTokens ? numTextMatches >= tokenSearchers.length : true;
-
-        this._log("\nCheck Matches: ".concat(checkTextMatches)); // If a match is found, add the item to <rawResults>, including its score
-
-
-        if ((exists || mainSearchResult.isMatch) && checkTextMatches) {
-          // Check if the item already exists in our results
-          var existingResult = resultMap[index];
-
-          if (existingResult) {
-            // Use the lowest score
-            // existingResult.score, bitapResult.score
-            existingResult.output.push({
-              key: key,
-              arrayIndex: arrayIndex,
-              value: value,
-              score: finalScore,
-              matchedIndices: mainSearchResult.matchedIndices
-            });
-          } else {
-            // Add it to the raw result list
-            resultMap[index] = {
-              item: record,
-              output: [{
-                key: key,
-                arrayIndex: arrayIndex,
-                value: value,
-                score: finalScore,
-                matchedIndices: mainSearchResult.matchedIndices
-              }]
-            };
-            results.push(resultMap[index]);
-          }
-        }
-      } else if (isArray(value)) {
-        for (var _i3 = 0, len = value.length; _i3 < len; _i3 += 1) {
-          this._analyze({
-            key: key,
-            arrayIndex: _i3,
-            value: value[_i3],
-            record: record,
-            index: index
-          }, {
-            resultMap: resultMap,
-            results: results,
-            tokenSearchers: tokenSearchers,
-            fullSearcher: fullSearcher
-          });
-        }
-      }
-    }
-  }, {
-    key: "_computeScore",
-    value: function _computeScore(weights, results) {
-      this._log('\n\nComputing score:\n');
-
-      for (var i = 0, len = results.length; i < len; i += 1) {
-        var output = results[i].output;
-        var scoreLen = output.length;
-        var currScore = 1;
-        var bestScore = 1;
-
-        for (var j = 0; j < scoreLen; j += 1) {
-          var weight = weights ? weights[output[j].key].weight : 1;
-          var score = weight === 1 ? output[j].score : output[j].score || 0.001;
-          var nScore = score * weight;
-
-          if (weight !== 1) {
-            bestScore = Math.min(bestScore, nScore);
-          } else {
-            output[j].nScore = nScore;
-            currScore *= nScore;
-          }
-        }
-
-        results[i].score = bestScore === 1 ? currScore : bestScore;
-
-        this._log(results[i]);
-      }
-    }
-  }, {
-    key: "_sort",
-    value: function _sort(results) {
-      this._log('\n\nSorting....');
-
-      results.sort(this.options.sortFn);
-    }
-  }, {
-    key: "_format",
-    value: function _format(results) {
-      var finalOutput = [];
-
-      if (this.options.verbose) {
-        var cache = [];
-
-        this._log('\n\nOutput:\n\n', JSON.stringify(results, function (key, value) {
-          if (_typeof(value) === 'object' && value !== null) {
-            if (cache.indexOf(value) !== -1) {
-              // Circular reference found, discard key
-              return;
-            } // Store value in our collection
-
-
-            cache.push(value);
-          }
-
-          return value;
-        }));
-
-        cache = null;
-      }
-
-      var transformers = [];
-
-      if (this.options.includeMatches) {
-        transformers.push(function (result, data) {
-          var output = result.output;
-          data.matches = [];
-
-          for (var i = 0, len = output.length; i < len; i += 1) {
-            var item = output[i];
-
-            if (item.matchedIndices.length === 0) {
-              continue;
-            }
-
-            var obj = {
-              indices: item.matchedIndices,
-              value: item.value
-            };
-
-            if (item.key) {
-              obj.key = item.key;
-            }
-
-            if (item.hasOwnProperty('arrayIndex') && item.arrayIndex > -1) {
-              obj.arrayIndex = item.arrayIndex;
-            }
-
-            data.matches.push(obj);
-          }
-        });
-      }
-
-      if (this.options.includeScore) {
-        transformers.push(function (result, data) {
-          data.score = result.score;
-        });
-      }
-
-      for (var i = 0, len = results.length; i < len; i += 1) {
-        var result = results[i];
-
-        if (this.options.id) {
-          result.item = this.options.getFn(result.item, this.options.id)[0];
-        }
-
-        if (!transformers.length) {
-          finalOutput.push(result.item);
-          continue;
-        }
-
-        var data = {
-          item: result.item
-        };
-
-        for (var j = 0, _len2 = transformers.length; j < _len2; j += 1) {
-          transformers[j](result, data);
-        }
-
-        finalOutput.push(data);
-      }
-
-      return finalOutput;
-    }
-  }, {
-    key: "_log",
-    value: function _log() {
-      if (this.options.verbose) {
-        var _console;
-
-        (_console = console).log.apply(_console, arguments);
-      }
-    }
-  }]);
-
-  return Fuse;
-}();
-
-module.exports = Fuse;
-
-/***/ })
-
-/******/ });
-});
-
-/***/ }),
-/* 12 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-var isMergeableObject = function isMergeableObject(value) {
-	return isNonNullObject(value)
-		&& !isSpecial(value)
-};
-
-function isNonNullObject(value) {
-	return !!value && typeof value === 'object'
-}
-
-function isSpecial(value) {
-	var stringValue = Object.prototype.toString.call(value);
-
-	return stringValue === '[object RegExp]'
-		|| stringValue === '[object Date]'
-		|| isReactElement(value)
-}
-
-// see https://github.com/facebook/react/blob/b5ac963fb791d1298e7f396236383bc955f916c1/src/isomorphic/classic/element/ReactElement.js#L21-L25
-var canUseSymbol = typeof Symbol === 'function' && Symbol.for;
-var REACT_ELEMENT_TYPE = canUseSymbol ? Symbol.for('react.element') : 0xeac7;
-
-function isReactElement(value) {
-	return value.$$typeof === REACT_ELEMENT_TYPE
-}
-
-function emptyTarget(val) {
-	return Array.isArray(val) ? [] : {}
-}
-
-function cloneUnlessOtherwiseSpecified(value, options) {
-	return (options.clone !== false && options.isMergeableObject(value))
-		? deepmerge(emptyTarget(value), value, options)
-		: value
-}
-
-function defaultArrayMerge(target, source, options) {
-	return target.concat(source).map(function(element) {
-		return cloneUnlessOtherwiseSpecified(element, options)
-	})
-}
-
-function mergeObject(target, source, options) {
-	var destination = {};
-	if (options.isMergeableObject(target)) {
-		Object.keys(target).forEach(function(key) {
-			destination[key] = cloneUnlessOtherwiseSpecified(target[key], options);
-		});
-	}
-	Object.keys(source).forEach(function(key) {
-		if (!options.isMergeableObject(source[key]) || !target[key]) {
-			destination[key] = cloneUnlessOtherwiseSpecified(source[key], options);
-		} else {
-			destination[key] = deepmerge(target[key], source[key], options);
-		}
-	});
-	return destination
-}
-
-function deepmerge(target, source, options) {
-	options = options || {};
-	options.arrayMerge = options.arrayMerge || defaultArrayMerge;
-	options.isMergeableObject = options.isMergeableObject || isMergeableObject;
-
-	var sourceIsArray = Array.isArray(source);
-	var targetIsArray = Array.isArray(target);
-	var sourceAndTargetTypesMatch = sourceIsArray === targetIsArray;
-
-	if (!sourceAndTargetTypesMatch) {
-		return cloneUnlessOtherwiseSpecified(source, options)
-	} else if (sourceIsArray) {
-		return options.arrayMerge(target, source, options)
-	} else {
-		return mergeObject(target, source, options)
-	}
-}
-
-deepmerge.all = function deepmergeAll(array, options) {
-	if (!Array.isArray(array)) {
-		throw new Error('first argument should be an array')
-	}
-
-	return array.reduce(function(prev, next) {
-		return deepmerge(prev, next, options)
-	}, {})
-};
-
-var deepmerge_1 = deepmerge;
-
-/* harmony default export */ __webpack_exports__["default"] = (deepmerge_1);
-
-
-/***/ }),
-/* 13 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5012,9 +2965,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _redux = __webpack_require__(6);
+var _redux = __webpack_require__(2);
 
-var _index = _interopRequireDefault(__webpack_require__(15));
+var _index = _interopRequireDefault(__webpack_require__(10));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5236,37 +3189,7 @@ function () {
 exports.default = Store;
 
 /***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-module.exports = function(originalModule) {
-	if (!originalModule.webpackPolyfill) {
-		var module = Object.create(originalModule);
-		// module.parent = undefined by default
-		if (!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function() {
-				return module.i;
-			}
-		});
-		Object.defineProperty(module, "exports", {
-			enumerable: true
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
-
-
-/***/ }),
-/* 15 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5277,15 +3200,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _redux = __webpack_require__(6);
+var _redux = __webpack_require__(2);
 
-var _items = _interopRequireDefault(__webpack_require__(16));
+var _items = _interopRequireDefault(__webpack_require__(11));
 
-var _groups = _interopRequireDefault(__webpack_require__(17));
+var _groups = _interopRequireDefault(__webpack_require__(12));
 
-var _choices = _interopRequireDefault(__webpack_require__(18));
+var _choices = _interopRequireDefault(__webpack_require__(13));
 
-var _general = _interopRequireDefault(__webpack_require__(19));
+var _general = _interopRequireDefault(__webpack_require__(14));
 
 var _utils = __webpack_require__(0);
 
@@ -5317,7 +3240,7 @@ var _default = rootReducer;
 exports.default = _default;
 
 /***/ }),
-/* 16 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5393,7 +3316,7 @@ function items() {
 }
 
 /***/ }),
-/* 17 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5435,7 +3358,7 @@ function groups() {
 }
 
 /***/ }),
-/* 18 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5567,7 +3490,7 @@ function choices() {
 }
 
 /***/ }),
-/* 19 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5605,7 +3528,7 @@ var _default = general;
 exports.default = _default;
 
 /***/ }),
-/* 20 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5651,22 +3574,22 @@ Object.defineProperty(exports, "WrappedSelect", {
   }
 });
 
-var _dropdown = _interopRequireDefault(__webpack_require__(21));
+var _dropdown = _interopRequireDefault(__webpack_require__(16));
 
-var _container = _interopRequireDefault(__webpack_require__(22));
+var _container = _interopRequireDefault(__webpack_require__(17));
 
-var _input = _interopRequireDefault(__webpack_require__(23));
+var _input = _interopRequireDefault(__webpack_require__(18));
 
-var _list = _interopRequireDefault(__webpack_require__(24));
+var _list = _interopRequireDefault(__webpack_require__(19));
 
-var _wrappedInput = _interopRequireDefault(__webpack_require__(25));
+var _wrappedInput = _interopRequireDefault(__webpack_require__(20));
 
-var _wrappedSelect = _interopRequireDefault(__webpack_require__(26));
+var _wrappedSelect = _interopRequireDefault(__webpack_require__(21));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 21 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5760,7 +3683,7 @@ function () {
 exports.default = Dropdown;
 
 /***/ }),
-/* 22 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6009,7 +3932,7 @@ function () {
 exports.default = Container;
 
 /***/ }),
-/* 23 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6216,7 +4139,7 @@ function () {
 exports.default = Input;
 
 /***/ }),
-/* 24 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6343,7 +4266,7 @@ function () {
 exports.default = List;
 
 /***/ }),
-/* 25 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6354,7 +4277,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _wrappedElement = _interopRequireDefault(__webpack_require__(4));
+var _wrappedElement = _interopRequireDefault(__webpack_require__(3));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6425,7 +4348,7 @@ function (_WrappedElement) {
 exports.default = WrappedInput;
 
 /***/ }),
-/* 26 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6436,9 +4359,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _wrappedElement = _interopRequireDefault(__webpack_require__(4));
+var _wrappedElement = _interopRequireDefault(__webpack_require__(3));
 
-var _templates = _interopRequireDefault(__webpack_require__(5));
+var _templates = _interopRequireDefault(__webpack_require__(4));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6523,64 +4446,13 @@ function (_WrappedElement) {
 exports.default = WrappedSelect;
 
 /***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 22 */
+/***/ (function(module, exports) {
 
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-  Copyright (c) 2017 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/classnames
-*/
-/* global define */
-
-(function () {
-	'use strict';
-
-	var hasOwn = {}.hasOwnProperty;
-
-	function classNames () {
-		var classes = [];
-
-		for (var i = 0; i < arguments.length; i++) {
-			var arg = arguments[i];
-			if (!arg) continue;
-
-			var argType = typeof arg;
-
-			if (argType === 'string' || argType === 'number') {
-				classes.push(arg);
-			} else if (Array.isArray(arg) && arg.length) {
-				var inner = classNames.apply(null, arg);
-				if (inner) {
-					classes.push(inner);
-				}
-			} else if (argType === 'object') {
-				for (var key in arg) {
-					if (hasOwn.call(arg, key) && arg[key]) {
-						classes.push(key);
-					}
-				}
-			}
-		}
-
-		return classes.join(' ');
-	}
-
-	if ( true && module.exports) {
-		classNames.default = classNames;
-		module.exports = classNames;
-	} else if (true) {
-		// register as 'classnames', consistent with npm package name
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
-			return classNames;
-		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	} else {}
-}());
-
+module.exports = __WEBPACK_EXTERNAL_MODULE__22__;
 
 /***/ }),
-/* 28 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6647,7 +4519,7 @@ var clearChoices = function clearChoices() {
 exports.clearChoices = clearChoices;
 
 /***/ }),
-/* 29 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6705,7 +4577,7 @@ var highlightItem = function highlightItem(id, highlighted) {
 exports.highlightItem = highlightItem;
 
 /***/ }),
-/* 30 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6732,7 +4604,7 @@ var addGroup = function addGroup(value, id, active, disabled) {
 exports.addGroup = addGroup;
 
 /***/ }),
-/* 31 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6761,7 +4633,7 @@ var resetTo = function resetTo(state) {
 exports.resetTo = resetTo;
 
 /***/ }),
-/* 32 */
+/* 27 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

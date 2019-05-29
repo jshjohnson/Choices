@@ -17,7 +17,7 @@
     "test:unit:watch": "npm run test:unit -- --watch --inspect=5556",
     "test:e2e": "run-p --race start cypress:run",
     "js:watch": "NODE_ENV=development node server.js",
-    "js:build": "webpack --config webpack.config.prod.js",
+    "js:build": "webpack --config webpack.config.prod.js && webpack --config webpack.config.prod.js --env.umd",
     "css:watch": "nodemon -e scss -x \"npm run css:build\"",
     "css:build": "run-p css:sass css:prefix css:min",
     "css:sass": "node-sass --output-style expanded --include-path  scss src/styles/base.scss public/assets/styles/base.css && node-sass --output-style expanded --include-path scss src/styles/choices.scss public/assets/styles/choices.css",
@@ -120,6 +120,10 @@
     ]
   },
   "bundlesize": [
+    {
+      "path": "public/assets/scripts/choices.browser.min.js",
+      "maxSize": "25 kB"
+    },
     {
       "path": "public/assets/scripts/choices.min.js",
       "maxSize": "25 kB"
