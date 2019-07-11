@@ -457,7 +457,8 @@
         request.send();
       });
 
-      var genericExamples = new Choices('[data-trigger]', {
+      const dataTriggerElements = document.querySelectorAll('[data-trigger]');
+      var genericExamples = new Choices(dataTriggerElements, {
         placeholderValue: 'This is a placeholder set in the config',
         searchPlaceholderValue: 'This is a search placeholder'
       });

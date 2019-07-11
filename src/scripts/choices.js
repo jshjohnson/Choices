@@ -52,6 +52,14 @@ class Choices {
       if (elements.length > 1) {
         return this._generateInstances(elements, userConfig);
       }
+    } else if (isType('NodeList', element)) {
+      const elements = Array.from(element);
+
+      // If there are multiple elements, create a new instance
+      // for each element besides the first one (as that already has an instance)
+      if (elements.length > 1) {
+        return this._generateInstances(elements, userConfig);
+      }
     }
 
     this.config = merge.all(
