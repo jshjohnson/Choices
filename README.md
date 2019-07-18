@@ -400,12 +400,14 @@ const example = new Choices(element, {
 
 ```html
 <select>
-  <option placeholder>This is a placeholder</option>
+  <option value="">This is a placeholder</option>
   <option>...</option>
   <option>...</option>
   <option>...</option>
 </select>
 ```
+
+For backward compatibility, `<option placeholder>This is a placeholder</option>` is also supported.
 
 ### placeholderValue
 **Type:** `String` **Default:** `null`
