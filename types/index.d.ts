@@ -145,15 +145,15 @@ declare namespace Choices {
   interface Templates {
     containerOuter?: (direction: string) => HTMLElement;
     containerInner?: () => HTMLElement;
-    itemList?: () => HTMLElement;
-    placeholder?: (value: string) => HTMLElement;
-    item?: (data: any) => HTMLElement;
-    choiceList?: () => HTMLElement;
-    choiceGroup?: (data: any) => HTMLElement;
-    choice?: (data: any) => HTMLElement;
-    input?: () => HTMLInputElement;
-    dropdown?: () => HTMLElement;
-    notice?: (label: string) => HTMLElement;
+    itemList?: (classNames: ClassNames, isSelectOneElement: boolean) => HTMLElement;
+    placeholder?: (classNames: ClassNames, value: string) => HTMLElement;
+    item?: (classNames: ClassNames, data: any, removeItemButton: boolean) => HTMLElement;
+    choiceList?: (classNames: ClassNames, isSelectOneElement: boolean) => HTMLElement;
+    choiceGroup?: (classNames: ClassNames, data: any) => HTMLElement;
+    choice?: (classNames: ClassNames, data: any) => HTMLElement;
+    input?: (classNames: ClassNames) => HTMLInputElement;
+    dropdown?: (classNames: ClassNames) => HTMLElement;
+    notice?: (classNames: ClassNames, label: string) => HTMLElement;
     option?: (data: any) => HTMLOptionElement;
   }
 
