@@ -143,8 +143,8 @@ declare namespace Choices {
   }
 
   interface Templates {
-    containerOuter?: (direction: string) => HTMLElement;
-    containerInner?: () => HTMLElement;
+    containerOuter?: (classNames: ClassNames, direction: string) => HTMLElement;
+    containerInner?: (classNames: ClassNames) => HTMLElement;
     itemList?: (classNames: ClassNames, isSelectOneElement: boolean) => HTMLElement;
     placeholder?: (classNames: ClassNames, value: string) => HTMLElement;
     item?: (classNames: ClassNames, data: any, removeItemButton: boolean) => HTMLElement;
