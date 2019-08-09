@@ -10,14 +10,14 @@
     "lint": "eslint src/scripts",
     "coverage": "nyc --reporter=lcov --reporter=text --reporter=text-summary mocha",
     "bundlesize": "bundlesize",
-    "cypress:run": "$(npm bin)/cypress run",
-    "cypress:open": "$(npm bin)/cypress open",
+    "cypress:run": "cypress run",
+    "cypress:open": "cypress open",
     "cypress:ci": "cypress run --record --group --ci-build-id $GITHUB_SHA",
     "test": "run-s test:unit test:e2e",
     "test:unit": "mocha",
     "test:unit:watch": "mocha --watch --inspect=5556",
     "test:e2e": "run-p --race start cypress:run",
-    "js:watch": "NODE_ENV=development node server.js",
+    "js:watch": "cross-env NODE_ENV=development node server.js",
     "js:build": "webpack --config webpack.config.prod.js",
     "css:watch": "nodemon -e scss -x \"npm run css:build\"",
     "css:build": "run-s css:sass css:prefix css:min",
@@ -88,6 +88,7 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
+    "cross-env": "^5.2.0",
     "deepmerge": "^4.2.0",
     "fuse.js": "^3.4.5",
     "redux": "^4.0.4"
