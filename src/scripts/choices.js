@@ -1401,9 +1401,16 @@ class Choices {
 
   _onMouseDown(event) {
     const { target, shiftKey } = event;
-    // If we have our mouse down on the scrollbar and are on IE11...
+
+    // If the target element is inside the choices list and we are on IE11...
     if (this.choiceList.element.contains(target) && isIE11()) {
-      this._isScrollingOnIe = true;
+      // ... but the click was on the right side of the items...
+      const firstItem = this.choiceList.getChild(
+        `.${this.config.classNames.item}`,
+      );
+      // then the click must have been on the scrollbar
+      const isOnScrollbar = event.offsetX >= firstItem.offsetWidth;
+      this._isScrollingOnIe = isOnScrollbar;
     }
 
     if (
