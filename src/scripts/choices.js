@@ -1392,7 +1392,7 @@ class Choices {
     if (
       this.choiceList.element.contains(target) &&
       isIE11() &&
-      event.offsetX >= target.clientWidth
+      event.offsetX >= target.parentNode.clientWidth
     ) {
       this._isScrollingOnIe = true;
     }
