@@ -3097,10 +3097,14 @@ function () {
     key: "_onMouseDown",
     value: function _onMouseDown(event) {
       var target = event.target,
-          shiftKey = event.shiftKey; // If we have our mouse down on the scrollbar and are on IE11...
+          shiftKey = event.shiftKey; // If the target element is inside the choices list and we are on IE11...
 
       if (this.choiceList.element.contains(target) && (0, _utils.isIE11)()) {
-        this._isScrollingOnIe = true;
+        // ... but the click was on the right side of the items...
+        var firstItem = this.choiceList.getChild(".".concat(this.config.classNames.item)); // then the click must have been on the scrollbar
+
+        var isOnScrollbar = event.offsetX >= firstItem.offsetWidth;
+        this._isScrollingOnIe = isOnScrollbar;
       }
 
       if (!this.containerOuter.element.contains(target) || target === this.input.element) {
