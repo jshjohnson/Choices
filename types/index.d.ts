@@ -1,8 +1,8 @@
-// Type definitions for Choices.js 3.0.2
+// Type definitions for Choices.js 7.0.0
 // Project: https://github.com/jshjohnson/Choices
 // Definitions by: Arthur vasconcelos <https://github.com/arthurvasconcelos>, Josh Johnson <https://github.com/jshjohnson>, Zack Schuster <https://github.com/zackschuster>
 // Definitions: https://github.com/jshjohnson/Choices
-// TypeScript Version: 2.6.2
+// TypeScript Version: 2.9.2
 
 // Choices Namespace
 declare namespace Choices {
@@ -14,6 +14,19 @@ declare namespace Choices {
     type noticeStringFunction = (value: string) => string;
     type noticeLimitFunction = (maxItemCount: number) => string;
     type callbackOnCreateTemplates = (template: strToEl) => Choices.Templates;
+  }
+
+  interface Choice {
+    customProperties?: { [prop: string]: any };
+    disabled?: boolean;
+    elementId?: string;
+    groupId?: string;
+    id?: string;
+    keyCode?: number;
+    label: string;
+    placeholder?: any;
+    selected?: boolean;
+    value: any;
   }
 
   /**
@@ -109,6 +122,24 @@ declare namespace Choices {
      * Arguments: -
      */
     "hideDropdown": CustomEvent;
+  }
+
+  interface Group {
+    active?: boolean;
+    disabled?: boolean;
+    id?: string;
+    value: any;
+  }
+
+  interface Item {
+    choiceId?: string;
+    customProperties?: { [prop: string]: any };
+    groupId?: string;
+    id?: string;
+    keyCode?: number;
+    label: string;
+    placeholder?: string;
+    value: any;
   }
 
   interface Templates {
@@ -682,8 +713,8 @@ export default class Choices {
   canSearch: boolean;
   placeholder: boolean;
 
-  presetChoices: any[];
-  presetItems: any[];
+  presetChoices: Choices.Choice[];
+  presetItems: Choices.Item[];
 
   readonly baseId: string;
 
@@ -849,7 +880,7 @@ export default class Choices {
   setChoiceByValue(value: string | string[]): this;
 
   /** Direct populate choices */
-  setChoices(choices: any[], value: string, label: string, replaceChoices?: boolean): this;
+  setChoices(choices: Choices.Choice[], value: string, label: string, replaceChoices?: boolean): this;
 
   /**
    * Removes all items, choices and groups. Use with caution.
@@ -904,13 +935,13 @@ export default class Choices {
   ajax(fn: (values: any) => any): this;
 
   /** Render group choices into a DOM fragment and append to choice list */
-  private createGroupsFragment(groups: any[], choices: any[], fragment: DocumentFragment): DocumentFragment;
+  private createGroupsFragment(groups: Choices.Group[], choices: Choices.Choice[], fragment: DocumentFragment): DocumentFragment;
 
   /** Render choices into a DOM fragment and append to choice list */
-  private createChoicesFragment(choices: any[], fragment: DocumentFragment, withinGroup?: boolean): DocumentFragment;
+  private createChoicesFragment(choices: Choices.Choice[], fragment: DocumentFragment, withinGroup?: boolean): DocumentFragment;
 
   /** Render items into a DOM fragment and append to items list */
-  private _createItemsFragment(items: any[], fragment?: DocumentFragment): void;
+  private _createItemsFragment(items: Choices.Item[], fragment?: DocumentFragment): void;
 
   /** Render DOM with values */
   private render(): void;

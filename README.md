@@ -30,7 +30,7 @@ yarn add choices.js
 
 From a [CDN](https://www.jsdelivr.com/package/npm/choices.js):
 
-**Note:** There is sometimes a delay before the latest version of Choices in reflected on the CDN.
+**Note:** There is sometimes a delay before the latest version of Choices is reflected on the CDN.
 
 ```html
 <!-- Include base CSS (optional) -->
@@ -155,9 +155,9 @@ will be returned. If you target one element, that instance will be returned.
 ## Terminology
 | Word   | Definition |
 | ------ | ---------- |
-| Choice | A choice is a value a user can select. A choice would be equivelant to the `<option></option>` element within a select input.  |
+| Choice | A choice is a value a user can select. A choice would be equivalent to the `<option></option>` element within a select input.  |
 | Group  | A group is a collection of choices. A group should be seen as equivalent to a `<optgroup></optgroup>` element within a select input.|
-| Item   | An item is an inputted value (text input) or a selected choice (select element). In the context of a select element, an item is equivelent to a selected option element: `<option value="Hello" selected></option>` whereas in the context of a text input an item is equivelant to `<input type="text" value="Hello">`|
+| Item   | An item is an inputted value (text input) or a selected choice (select element). In the context of a select element, an item is equivalent to a selected option element: `<option value="Hello" selected></option>` whereas in the context of a text input an item is equivalent to `<input type="text" value="Hello">`|
 
 
 ## Configuration options
