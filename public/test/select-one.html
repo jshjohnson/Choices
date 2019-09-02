@@ -54,10 +54,16 @@
         <div data-test-hook="disabled-choice">
           <label for="choices-disabled-choice">Disabled choice</label>
           <select class="form-control" name="choices-disabled-choice" id="choices-disabled-choice">
-            <option value="Choice 1">Choice 1</option>
-            <option value="Choice 2">Choice 2</option>
-            <option value="Choice 3">Choice 3</option>
-            <option value="Choice 4" disabled>Choice 4</option>
+              <option value="Choice 1">Choice 1</option>
+              <option value="Choice 2">Choice 2</option>
+              <option value="Choice 3">Choice 3</option>
+              <option value="Choice 4" disabled>Choice 4</option>
+          </select>
+        </div>
+
+        <div data-test-hook="disabled-first-choice-by-options">
+          <label for="choices-disabled-first-choice-by-options">Disabled first choice by options</label>
+          <select class="form-control" name="choices-disabled-first-choice-by-options" id="choices-disabled-first-choice-by-options">
           </select>
         </div>
 
@@ -228,6 +234,29 @@
 
         new Choices('#choices-disabled-choice', {
           removeItemButton: true,
+        });
+
+        new Choices('#choices-disabled-first-choice-by-options', {
+          removeItemButton: true,
+          choices: [
+          {
+              value: 'Choice 1',
+              label: 'Choice 1',
+              disabled: true
+            },
+            {
+              value: 'Choice 2',
+              label: 'Choice 2',
+            },
+            {
+              value: 'Choice 3',
+              label: 'Choice 3',
+            },
+            {
+              value: 'Choice 4',
+              label: 'Choice 4',
+            },
+          ]
         });
 
         new Choices('#choices-add-items-disabled', {

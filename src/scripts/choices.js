@@ -1934,17 +1934,22 @@ class Choices {
           } else {
             // If there is a selected choice already or the choice is not
             // the first in the array, add each choice normally
-            // Otherwise pre-select the first choice in the array if it's a single select
+            // Otherwise pre-select the first non-disabled in the array if it's a single select
             const shouldPreselect =
-              this._isSelectOneElement && !hasSelectedChoice && index === 0;
+              this._isSelectOneElement &&
+              !hasSelectedChoice &&
+              index ===
+                allChoices.findIndex(
+                  _choice =>
+                    _choice.disabled === undefined || !_choice.disabled,
+                );
             const isSelected = shouldPreselect ? true : choice.selected;
-            const isDisabled = shouldPreselect ? false : choice.disabled;
 
             this._addChoice({
               value,
               label,
               isSelected,
-              isDisabled,
+              isDisabled: choice.disabled,
               customProperties,
               placeholder,
             });
