@@ -188,15 +188,8 @@ export const dispatchEvent = (element, type, customArgs = null) => {
 };
 
 export const getWindowHeight = () => {
-  const body = document.body;
-  const html = document.documentElement;
-  return Math.max(
-    body.scrollHeight,
-    body.offsetHeight,
-    html.clientHeight,
-    html.scrollHeight,
-    html.offsetHeight,
-  );
+  const windowHeight = Math.ceil(window.devicePixelRatio * window.innerHeight);
+  return windowHeight + window.pageYOffset;
 };
 
 export const fetchFromObject = (object, path) => {
