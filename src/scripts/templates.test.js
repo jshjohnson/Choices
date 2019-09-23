@@ -508,9 +508,10 @@ describe('templates', () => {
           spellcheck="false"
           role="textbox"
           aria-autocomplete="list"
+          aria-label="test placeholder"
         >
       `);
-      const actualOutput = templates.input(classes);
+      const actualOutput = templates.input(classes, 'test placeholder');
 
       expect(getType(actualOutput)).to.equal('HTMLInputElement');
       expect(stripElement(actualOutput)).to.equal(stripElement(expectedOutput));
