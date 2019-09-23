@@ -1811,7 +1811,7 @@ class Choices {
     });
 
     this.input = new Input({
-      element: this._getTemplate('input'),
+      element: this._getTemplate('input', this._placeholderValue),
       classNames: this.config.classNames,
       type: this.passedElement.element.type,
     });

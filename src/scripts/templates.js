@@ -174,7 +174,7 @@ export const TEMPLATES = {
       </div>
     `);
   },
-  input(globalClasses) {
+  input(globalClasses, placeholderValue) {
     const localClasses = classNames(
       globalClasses.input,
       globalClasses.inputCloned,
@@ -189,6 +189,7 @@ export const TEMPLATES = {
         spellcheck="false"
         role="textbox"
         aria-autocomplete="list"
+        aria-label="${placeholderValue}"
         >
     `);
   },
