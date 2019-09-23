@@ -767,9 +767,9 @@ var TEMPLATES = {
     var localClasses = (0, _classnames.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.placeholder, data.placeholder), _classNames5));
     return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        data-select-text=\"").concat(itemSelectText, "\"\n        data-choice\n        data-id=\"").concat(data.id, "\"\n        data-value=\"").concat(data.value, "\"\n        ").concat(data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable', "\n        id=\"").concat(data.elementId, "\"\n        ").concat(role, "\n        >\n        ").concat(data.label, "\n      </div>\n    "));
   },
-  input: function input(globalClasses) {
+  input: function input(globalClasses, placeholderValue) {
     var localClasses = (0, _classnames.default)(globalClasses.input, globalClasses.inputCloned);
-    return (0, _utils.strToEl)("\n      <input\n        type=\"text\"\n        class=\"".concat(localClasses, "\"\n        autocomplete=\"off\"\n        autocapitalize=\"off\"\n        spellcheck=\"false\"\n        role=\"textbox\"\n        aria-autocomplete=\"list\"\n        >\n    "));
+    return (0, _utils.strToEl)("\n      <input\n        type=\"text\"\n        class=\"".concat(localClasses, "\"\n        autocomplete=\"off\"\n        autocapitalize=\"off\"\n        spellcheck=\"false\"\n        role=\"textbox\"\n        aria-autocomplete=\"list\"\n        aria-label=\"").concat(placeholderValue, "\"\n        >\n    "));
   },
   dropdown: function dropdown(globalClasses) {
     var localClasses = (0, _classnames.default)(globalClasses.list, globalClasses.listDropdown);
@@ -3538,7 +3538,7 @@ function () {
         position: this.config.position
       });
       this.input = new _components.Input({
-        element: this._getTemplate('input'),
+        element: this._getTemplate('input', this._placeholderValue),
         classNames: this.config.classNames,
         type: this.passedElement.element.type
       });
