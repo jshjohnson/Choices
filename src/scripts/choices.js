@@ -1,6 +1,7 @@
 import Fuse from 'fuse.js';
 import merge from 'deepmerge';
 
+import './lib/delegate-events';
 import Store from './store/store';
 import {
   Dropdown,
@@ -1072,13 +1073,13 @@ class Choices {
   }
 
   _addEventListeners() {
-    document.addEventListener('keyup', this._onKeyUp);
-    document.addEventListener('keydown', this._onKeyDown);
-    document.addEventListener('click', this._onClick);
-    document.addEventListener('touchmove', this._onTouchMove);
-    document.addEventListener('touchend', this._onTouchEnd);
-    document.addEventListener('mousedown', this._onMouseDown);
-    document.addEventListener('mouseover', this._onMouseOver);
+    window.delegateEvent.add('keyup', this._onKeyUp);
+    window.delegateEvent.add('keydown', this._onKeyDown);
+    window.delegateEvent.add('click', this._onClick);
+    window.delegateEvent.add('touchmove', this._onTouchMove);
+    window.delegateEvent.add('touchend', this._onTouchEnd);
+    window.delegateEvent.add('mousedown', this._onMouseDown);
+    window.delegateEvent.add('mouseover', this._onMouseOver);
 
     if (this._isSelectOneElement) {
       this.containerOuter.element.addEventListener('focus', this._onFocus);
@@ -1096,13 +1097,13 @@ class Choices {
   }
 
   _removeEventListeners() {
-    document.removeEventListener('keyup', this._onKeyUp);
-    document.removeEventListener('keydown', this._onKeyDown);
-    document.removeEventListener('click', this._onClick);
-    document.removeEventListener('touchmove', this._onTouchMove);
-    document.removeEventListener('touchend', this._onTouchEnd);
-    document.removeEventListener('mousedown', this._onMouseDown);
-    document.removeEventListener('mouseover', this._onMouseOver);
+    window.delegateEvent.remove('keyup', this._onKeyUp);
+    window.delegateEvent.remove('keydown', this._onKeyDown);
+    window.delegateEvent.remove('click', this._onClick);
+    window.delegateEvent.remove('touchmove', this._onTouchMove);
+    window.delegateEvent.remove('touchend', this._onTouchEnd);
+    window.delegateEvent.remove('mousedown', this._onMouseDown);
+    window.delegateEvent.remove('mouseover', this._onMouseOver);
 
     if (this._isSelectOneElement) {
       this.containerOuter.element.removeEventListener('focus', this._onFocus);
