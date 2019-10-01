@@ -1056,7 +1056,11 @@ class Choices {
     }
 
     // If new value matches the desired length and is not the same as the current value with a space
-    const haystack = this._store.searchableChoices;
+    const haystack = this._store.searchableChoices.map(_choice => {
+      const choice = Object.assign({}, _choice);
+      choice.label = choice.label.trim().replace(/\s\s+/g, ' ');
+      return choice;
+    });
     const needle = newValue;
     const keys = [...this.config.searchFields];
     const options = Object.assign(this.config.fuseOptions, { keys });

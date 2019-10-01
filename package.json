@@ -89,7 +89,7 @@
     "sinon": "^2.4.0",
     "unminified-webpack-plugin": "^2.0.0",
     "webpack": "^4.29.3",
-    "webpack-cli": "^3.2.3",
+    "webpack-cli": "^3.3.9",
     "webpack-dev-middleware": "^3.5.2",
     "webpack-hot-middleware": "^2.24.3",
     "whatwg-fetch": "^1.0.0",

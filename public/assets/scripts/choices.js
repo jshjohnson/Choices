@@ -2755,7 +2755,12 @@ function () {
       } // If new value matches the desired length and is not the same as the current value with a space
 
 
-      var haystack = this._store.searchableChoices;
+      var haystack = this._store.searchableChoices.map(function (_choice) {
+        var choice = Object.assign({}, _choice);
+        choice.label = choice.label.trim().replace(/\s\s+/g, ' ');
+        return choice;
+      });
+
       var needle = newValue;
       var keys = [].concat(this.config.searchFields);
       var options = Object.assign(this.config.fuseOptions, {
