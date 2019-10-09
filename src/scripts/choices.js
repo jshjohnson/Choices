@@ -1451,7 +1451,7 @@ class Choices {
         this.hideDropdown();
       }
     } else {
-      const hasHighlightedItems = this._store.highlightedActiveItems;
+      const hasHighlightedItems = this._store.highlightedActiveItems.length > 0;
 
       if (hasHighlightedItems) {
         this.unhighlightAll();

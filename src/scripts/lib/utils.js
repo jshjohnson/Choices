@@ -140,7 +140,8 @@ export const calcWidthOfInput = (input, callback) => {
         testEl.style.fontStyle = inputStyle.fontStyle;
         testEl.style.letterSpacing = inputStyle.letterSpacing;
         testEl.style.textTransform = inputStyle.textTransform;
-        testEl.style.padding = inputStyle.padding;
+        testEl.style.paddingLeft = inputStyle.paddingLeft;
+        testEl.style.paddingRight = inputStyle.paddingRight;
       }
     }
 
