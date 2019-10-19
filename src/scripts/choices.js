@@ -101,7 +101,7 @@ class Choices {
       this.passedElement = new WrappedSelect({
         element: passedElement,
         classNames: this.config.classNames,
-        templates: this.config.templates,
+        template: data => this.config.templates.option(data),
       });
     }
 
