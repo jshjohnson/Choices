@@ -3,7 +3,7 @@ import { stub, spy } from 'sinon';
 import WrappedElement from './wrapped-element';
 import WrappedSelect from './wrapped-select';
 import { DEFAULT_CLASSNAMES } from '../constants';
-import TEMPLATES from '../templates';
+import Templates from '../templates';
 
 describe('components/wrappedSelect', () => {
   let instance;
@@ -30,7 +30,7 @@ describe('components/wrappedSelect', () => {
       element: document.getElementById('target'),
       classNames: DEFAULT_CLASSNAMES,
       templates: {
-        option: spy(TEMPLATES.option),
+        option: spy(Templates.option),
       },
     });
   });
