@@ -20,11 +20,12 @@ export default class WrappedSelect extends WrappedElement {
 
   set options(options) {
     const fragment = document.createDocumentFragment();
+    const template = this.templates.option;
     const addOptionToFragment = data => {
       // Create a standard select option
-      const template = this.templates.option(data);
+      const option = template(data);
       // Append it to fragment
-      fragment.appendChild(template);
+      fragment.appendChild(option);
     };
 
     // Add each list item to list
