@@ -1,8 +1,9 @@
 import { expect } from 'chai';
-import { stub } from 'sinon';
+import { stub, spy } from 'sinon';
 import WrappedElement from './wrapped-element';
 import WrappedSelect from './wrapped-select';
 import { DEFAULT_CLASSNAMES } from '../constants';
+import TEMPLATES from '../templates';
 
 describe('components/wrappedSelect', () => {
   let instance;
@@ -28,6 +29,9 @@ describe('components/wrappedSelect', () => {
     instance = new WrappedSelect({
       element: document.getElementById('target'),
       classNames: DEFAULT_CLASSNAMES,
+      templates: {
+        option: spy(TEMPLATES.option),
+      },
     });
   });
 
@@ -133,6 +137,7 @@ describe('components/wrappedSelect', () => {
       selectElement.appendChild(fragment);
 
       expect(fragment).to.be.instanceOf(DocumentFragment);
+      expect(instance.templates.option.callCount).to.equal(2);
       expect(selectElement.options.length).to.equal(2);
       expect(selectElement.options[0].value).to.equal(options[0].value);
       expect(selectElement.options[1].value).to.equal(options[1].value);
