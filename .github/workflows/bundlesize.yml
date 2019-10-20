@@ -18,12 +18,13 @@ jobs:
         with:
           node-version: 10
 
-      - name: Install devDependencies
+      - name: Install dependencies and build
         run: |
                 npm ci
                 npm run build
         env:
-          CYPRESS_SKIP_BINARY_INSTALL: true
+          CYPRESS_INSTALL_BINARY: 0
+          HUSKY_SKIP_INSTALL: true
 
       - run: npx bundlesize
         env:

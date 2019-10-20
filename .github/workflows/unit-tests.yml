@@ -17,10 +17,11 @@ jobs:
         with:
           node-version: 10
 
-      - name: Install devDependencies
+      - name: Install dependencies
         run: npm install --no-optional --no-audit --ignore-scripts
         env:
-          CYPRESS_SKIP_BINARY_INSTALL: true
+          CYPRESS_INSTALL_BINARY: 0
+          HUSKY_SKIP_INSTALL: true
 
       - run: npm run coverage
         env:
