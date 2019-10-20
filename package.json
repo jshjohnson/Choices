@@ -8,7 +8,7 @@
     "start": "run-p js:watch css:watch",
     "build": "npm run js:build && npm run css:build",
     "lint": "eslint $(find src -name '*.js')",
-    "coverage": "nyc npm run test:unit",
+    "coverage": "nyc --reporter=lcov --reporter=text --reporter=text-summary npm run test:unit",
     "bundlesize": "bundlesize",
     "cypress:run": "$(npm bin)/cypress run",
     "cypress:open": "$(npm bin)/cypress open",

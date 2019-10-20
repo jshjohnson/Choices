@@ -16,9 +16,7 @@ jobs:
           node-version: 10
 
       - name: Build library
-        run: |
-              npm ci
-              npm run build
+        run: npm ci
 
       - name: run Cypress
         run: npm run test:e2e
