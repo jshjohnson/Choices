@@ -1,0 +1,86 @@
+name: Publish Package
+
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+      # run all tests
+      - run: |
+                npm ci
+                npm run build
+                npx bundlesize
+                npm run coverage
+                npm run test:e2e
+        env:
+          CI: true
+          CI_REPO_NAME: ${{ github.event.repository.name }}
+          CI_REPO_OWNER: ${{ github.event.organization.login }}
+          CI_COMMIT_SHA: ${{ github.sha }}
+          GIT_COMMIT: ${{ github.sha }}
+          CI_BRANCH: ${{ github.head_ref }}
+          FORCE_COLOR: 2
+          HUSKY_SKIP_INSTALL: true
+
+      - name: Upload coverage to Codecov
+        run: bash <(curl -s https://codecov.io/bash)
+          -f ./coverage/lcov.info
+          -B ${{ github.head_ref }}
+          -C ${{ github.sha }}
+          -Z || echo 'Codecov upload failed'
+        env:
+          CI: true
+          GITLAB_CI: true # pretend we are GitLab CI, while Codecov adding support for Github Actions
+          CODECOV_ENV: github-action
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+          HUSKY_SKIP_INSTALL: true
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+          registry-url: https://npm.pkg.github.com/
+          scope: "@jshjohnson"
+      - run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+          HUSKY_SKIP_INSTALL: true
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
