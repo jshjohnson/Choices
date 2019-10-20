@@ -23,6 +23,8 @@ jobs:
           CYPRESS_SKIP_BINARY_INSTALL: true
 
       - run: npm run coverage
+        env:
+          FORCE_COLOR: 2
 
       - name: Upload coverage to Codecov
         run: bash <(curl -s https://codecov.io/bash)

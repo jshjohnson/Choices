@@ -1,27 +1,12 @@
 {
-  "parser": "babel-eslint",
-  "extends": [
-    "airbnb",
-    "prettier"
-  ],
-  "plugins": [
-    "prettier",
-    "cypress"
-  ],
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "extends": ["airbnb-base", "prettier"],
+  "plugins": ["prettier"],
   "env": {
     "es6": true,
-    "browser": true,
-    "node": true,
-    "mocha": true,
-    "cypress/globals": true
-  },
-  "globals": {
-    "describe": true,
-    "it": true,
-    "before": true,
-    "after": true,
-    "beforeEach": true,
-    "afterEach": true
+    "browser": true
   },
   "rules": {
     "import/no-extraneous-dependencies": [
@@ -33,10 +18,7 @@
     "no-console": [
       "warn",
       {
-        "allow": [
-          "warn",
-          "error"
-        ]
+        "allow": ["warn", "error"]
       }
     ],
     "no-plusplus": "off",
@@ -49,6 +31,23 @@
         "singleQuote": true,
         "trailingComma": "all"
       }
-    ]
-  }
+    ],
+    "import/no-useless-path-segments": "warn",
+    "prefer-destructuring": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["*.test.js"],
+      "env": {
+        "mocha": true
+      }
+    },
+    {
+      "files": ["cypress/**/*.spec.js"],
+      "plugins": ["cypress"],
+      "env": {
+        "cypress/globals": true
+      }
+    }
+  ]
 }
