@@ -466,7 +466,7 @@ describe('Choices - select one', () => {
         });
 
         describe('on click', () => {
-          it('does not opens choice dropdown', () => {
+          it('does not open choice dropdown', () => {
             cy.get('[data-test-hook=remote-data]')
               .find('.choices')
               .click()

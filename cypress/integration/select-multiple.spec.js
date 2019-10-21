@@ -334,7 +334,7 @@ describe('Choices - select multiple', () => {
       });
 
       describe('on click', () => {
-        it('does not opens choice dropdown', () => {
+        it('does not open choice dropdown', () => {
           cy.get('[data-test-hook=disabled-via-attr]')
             .find('.choices')
             .click()
@@ -515,7 +515,7 @@ describe('Choices - select multiple', () => {
         });
 
         describe('on click', () => {
-          it('does not opens choice dropdown', () => {
+          it('does not open choice dropdown', () => {
             cy.get('[data-test-hook=remote-data]')
               .find('.choices')
               .click()
