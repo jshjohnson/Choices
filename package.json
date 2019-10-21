@@ -23,7 +23,6 @@
     "css:sass": "node-sass --output-style expanded --include-path  scss src/styles/base.scss public/assets/styles/base.css && node-sass --output-style expanded --include-path scss src/styles/choices.scss public/assets/styles/choices.css",
     "css:prefix": "postcss --use autoprefixer -b 'last 2 versions' public/assets/styles/*.css -d public/assets/styles",
     "css:min": "csso public/assets/styles/base.css public/assets/styles/base.min.css && csso public/assets/styles/choices.css public/assets/styles/choices.min.css",
-    "bump-cache": "node bump-cache.js --current $npm_package_version",
     "deploy": "git subtree push --prefix public origin gh-pages",
     "prepush": "run-p lint test:unit && npm run bundlesize",
     "preversion": "npm test",
