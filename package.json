@@ -1,6 +1,6 @@
 {
   "name": "choices.js",
-  "version": "7.0.2",
+  "version": "7.0.3",
   "description": "A vanilla JS customisable text input/select box plugin",
   "main": "./public/assets/scripts/choices.min.js",
   "types": "./types/index.d.ts",
@@ -66,7 +66,7 @@
     "bundlesize": "^0.18.0",
     "chai": "^4.2.0",
     "csso": "^1.8.2",
-    "cypress": "^3.2.0",
+    "cypress": "3.2.0",
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-config-prettier": "^6.4.0",
