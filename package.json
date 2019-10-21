@@ -12,7 +12,7 @@
     "bundlesize": "bundlesize",
     "cypress:run": "$(npm bin)/cypress run",
     "cypress:open": "$(npm bin)/cypress open",
-    "cypress:ci": "cypress run --record --ci-build-id $GITHUB_SHA",
+    "cypress:ci": "cypress run --record --group --ci-build-id $GITHUB_SHA",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "mocha",
     "test:unit:watch": "mocha --watch --inspect=5556",
