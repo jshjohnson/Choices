@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/scripts/**'
       - package-lock.json
+      - '.browserslistrc'
 
 jobs:
   eslint:
