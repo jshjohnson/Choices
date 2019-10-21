@@ -33,7 +33,10 @@
       }
     ],
     "import/no-useless-path-segments": "warn",
-    "prefer-destructuring": "warn"
+    "prefer-destructuring": ["warn", {
+      "array": false,
+      "object": true
+    }]
   },
   "overrides": [
     {
