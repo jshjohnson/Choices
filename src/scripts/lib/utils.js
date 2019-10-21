@@ -189,7 +189,7 @@ export const dispatchEvent = (element, type, customArgs = null) => {
 };
 
 export const getWindowHeight = () => {
-  const body = document.body;
+  const { body } = document;
   const html = document.documentElement;
   return Math.max(
     body.scrollHeight,

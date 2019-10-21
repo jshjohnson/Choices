@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import rootReducer from './../reducers/index';
+import rootReducer from '../reducers/index';
 
 export default class Store {
   constructor() {
@@ -73,7 +73,7 @@ export default class Store {
    * @return {Array} Option objects
    */
   get activeChoices() {
-    const choices = this.choices;
+    const { choices } = this;
     const values = choices.filter(choice => choice.active === true);
 
     return values;
@@ -118,8 +118,8 @@ export default class Store {
    * @return {Array} Group objects
    */
   get activeGroups() {
-    const groups = this.groups;
-    const choices = this.choices;
+    const { groups } = this;
+    const { choices } = this;
 
     return groups.filter(group => {
       const isActive = group.active === true && group.disabled === false;

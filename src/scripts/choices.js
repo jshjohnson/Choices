@@ -557,7 +557,7 @@ class Choices {
       choiceListFragment.childNodes &&
       choiceListFragment.childNodes.length > 0
     ) {
-      const activeItems = this._store.activeItems;
+      const { activeItems } = this._store;
       const canAddItem = this._canAddItem(activeItems, this.input.value);
 
       // ...and we can select them
@@ -747,7 +747,7 @@ class Choices {
   }
 
   _selectPlaceholderChoice() {
-    const placeholderChoice = this._store.placeholderChoice;
+    const { placeholderChoice } = this._store;
 
     if (placeholderChoice) {
       this._addItem({
@@ -927,7 +927,7 @@ class Choices {
       return;
     }
 
-    const choices = this._store.choices;
+    const { choices } = this._store;
     const { searchFloor, searchChoices } = this.config;
     const hasUnactiveChoices = choices.some(option => !option.active);
 
@@ -1131,7 +1131,7 @@ class Choices {
       return;
     }
 
-    const activeItems = this._store.activeItems;
+    const { activeItems } = this._store;
     const hasFocusedInput = this.input.isFocussed;
     const hasActiveDropdown = this.dropdown.isActive;
     const hasItems = this.itemList.hasChildren;
@@ -1189,8 +1189,8 @@ class Choices {
       return;
     }
 
-    const value = this.input.value;
-    const activeItems = this._store.activeItems;
+    const { value } = this.input;
+    const { activeItems } = this._store;
     const canAddItem = this._canAddItem(activeItems, value);
     const { BACK_KEY: backKey, DELETE_KEY: deleteKey } = KEY_CODES;
 
@@ -1243,7 +1243,7 @@ class Choices {
     const targetWasButton = target.hasAttribute('data-button');
 
     if (this._isTextElement && target.value) {
-      const value = this.input.value;
+      const { value } = this.input;
       const canAddItem = this._canAddItem(activeItems, value);
 
       if (canAddItem.response) {
@@ -1402,7 +1402,7 @@ class Choices {
       return;
     }
 
-    const activeItems = this._store.activeItems;
+    const { activeItems } = this._store;
     const hasShiftKey = shiftKey;
     const buttonTarget = findAncestorByAttrName(target, 'data-button');
     const itemTarget = findAncestorByAttrName(target, 'data-item');
@@ -1502,7 +1502,7 @@ class Choices {
     const blurWasWithinContainer = this.containerOuter.element.contains(target);
 
     if (blurWasWithinContainer && !this._isScrollingOnIe) {
-      const activeItems = this._store.activeItems;
+      const { activeItems } = this._store;
       const hasHighlightedItems = activeItems.some(item => item.highlighted);
       const blurActions = {
         text: () => {
@@ -1612,7 +1612,7 @@ class Choices {
 
     const passedKeyCode = keyCode;
     const passedCustomProperties = customProperties;
-    const items = this._store.items;
+    const { items } = this._store;
     const passedLabel = label || passedValue;
     const passedOptionId = parseInt(choiceId, 10) || -1;
     const group = groupId >= 0 ? this._store.getGroupById(groupId) : null;
@@ -1701,7 +1701,7 @@ class Choices {
     }
 
     // Generate unique id
-    const choices = this._store.choices;
+    const { choices } = this._store;
     const choiceLabel = label || value;
     const choiceId = choices ? choices.length + 1 : 1;
     const choiceElementId = `${this._baseId}-${
@@ -2040,7 +2040,7 @@ class Choices {
   }
 
   _findAndSelectChoiceByValue(val) {
-    const choices = this._store.choices;
+    const { choices } = this._store;
     // Check 'value' property exists and the choice isn't already selected
     const foundChoice = choices.find(choice =>
       this.config.itemComparer(choice.value, val),
