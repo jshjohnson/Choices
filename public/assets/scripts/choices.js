@@ -95,7 +95,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -338,7 +338,8 @@ var dispatchEvent = function dispatchEvent(element, type) {
 exports.dispatchEvent = dispatchEvent;
 
 var getWindowHeight = function getWindowHeight() {
-  var body = document.body;
+  var _document = document,
+      body = _document.body;
   var html = document.documentElement;
   return Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
 };
@@ -532,7 +533,7 @@ exports.SCROLLING_SPEED = SCROLLING_SPEED;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var _ponyfill_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(7);
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var _ponyfill_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6);
 /* global window */
 
 
@@ -551,7 +552,7 @@ if (typeof self !== 'undefined') {
 var result = Object(_ponyfill_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(root);
 /* harmony default export */ __webpack_exports__["a"] = (result);
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(15)(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3), __webpack_require__(14)(module)))
 
 /***/ }),
 /* 3 */
@@ -693,113 +694,13 @@ exports.default = WrappedElement;
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = exports.TEMPLATES = void 0;
-
-var _classnames = _interopRequireDefault(__webpack_require__(28));
-
-var _utils = __webpack_require__(0);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-var TEMPLATES = {
-  containerOuter: function containerOuter(globalClasses, direction, isSelectElement, isSelectOneElement, searchEnabled, passedElementType) {
-    var tabIndex = isSelectOneElement ? 'tabindex="0"' : '';
-    var role = isSelectElement ? 'role="listbox"' : '';
-    var ariaAutoComplete = '';
-
-    if (isSelectElement && searchEnabled) {
-      role = 'role="combobox"';
-      ariaAutoComplete = 'aria-autocomplete="list"';
-    }
-
-    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(globalClasses.containerOuter, "\"\n        data-type=\"").concat(passedElementType, "\"\n        ").concat(role, "\n        ").concat(tabIndex, "\n        ").concat(ariaAutoComplete, "\n        aria-haspopup=\"true\"\n        aria-expanded=\"false\"\n        dir=\"").concat(direction, "\"\n        >\n      </div>\n    "));
-  },
-  containerInner: function containerInner(globalClasses) {
-    return (0, _utils.strToEl)("\n      <div class=\"".concat(globalClasses.containerInner, "\"></div>\n    "));
-  },
-  itemList: function itemList(globalClasses, isSelectOneElement) {
-    var _classNames;
-
-    var localClasses = (0, _classnames.default)(globalClasses.list, (_classNames = {}, _defineProperty(_classNames, globalClasses.listSingle, isSelectOneElement), _defineProperty(_classNames, globalClasses.listItems, !isSelectOneElement), _classNames));
-    return (0, _utils.strToEl)("\n      <div class=\"".concat(localClasses, "\"></div>\n    "));
-  },
-  placeholder: function placeholder(globalClasses, value) {
-    return (0, _utils.strToEl)("\n      <div class=\"".concat(globalClasses.placeholder, "\">\n        ").concat(value, "\n      </div>\n    "));
-  },
-  item: function item(globalClasses, data, removeItemButton) {
-    var _classNames2;
-
-    var ariaSelected = data.active ? 'aria-selected="true"' : '';
-    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
-    var localClasses = (0, _classnames.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
-
-    if (removeItemButton) {
-      var _classNames3;
-
-      localClasses = (0, _classnames.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
-      return (0, _utils.strToEl)("\n        <div\n          class=\"".concat(localClasses, "\"\n          data-item\n          data-id=\"").concat(data.id, "\"\n          data-value=\"").concat(data.value, "\"\n          data-custom-properties='").concat(data.customProperties, "'\n          data-deletable\n          ").concat(ariaSelected, "\n          ").concat(ariaDisabled, "\n          >\n          ").concat(data.label, "<!--\n       --><button\n            type=\"button\"\n            class=\"").concat(globalClasses.button, "\"\n            data-button\n            aria-label=\"Remove item: '").concat(data.value, "'\"\n            >\n            Remove item\n          </button>\n        </div>\n      "));
-    }
-
-    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        data-item\n        data-id=\"").concat(data.id, "\"\n        data-value=\"").concat(data.value, "\"\n        ").concat(ariaSelected, "\n        ").concat(ariaDisabled, "\n        >\n        ").concat(data.label, "\n      </div>\n    "));
-  },
-  choiceList: function choiceList(globalClasses, isSelectOneElement) {
-    var ariaMultiSelectable = !isSelectOneElement ? 'aria-multiselectable="true"' : '';
-    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(globalClasses.list, "\"\n        dir=\"ltr\"\n        role=\"listbox\"\n        ").concat(ariaMultiSelectable, "\n        >\n      </div>\n    "));
-  },
-  choiceGroup: function choiceGroup(globalClasses, data) {
-    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
-    var localClasses = (0, _classnames.default)(globalClasses.group, _defineProperty({}, globalClasses.itemDisabled, data.disabled));
-    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        data-group\n        data-id=\"").concat(data.id, "\"\n        data-value=\"").concat(data.value, "\"\n        role=\"group\"\n        ").concat(ariaDisabled, "\n        >\n        <div class=\"").concat(globalClasses.groupHeading, "\">").concat(data.value, "</div>\n      </div>\n    "));
-  },
-  choice: function choice(globalClasses, data, itemSelectText) {
-    var _classNames5;
-
-    var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
-    var localClasses = (0, _classnames.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.placeholder, data.placeholder), _classNames5));
-    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        data-select-text=\"").concat(itemSelectText, "\"\n        data-choice\n        data-id=\"").concat(data.id, "\"\n        data-value=\"").concat(data.value, "\"\n        ").concat(data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable', "\n        id=\"").concat(data.elementId, "\"\n        ").concat(role, "\n        >\n        ").concat(data.label, "\n      </div>\n    "));
-  },
-  input: function input(globalClasses, placeholderValue) {
-    var localClasses = (0, _classnames.default)(globalClasses.input, globalClasses.inputCloned);
-    return (0, _utils.strToEl)("\n      <input\n        type=\"text\"\n        class=\"".concat(localClasses, "\"\n        autocomplete=\"off\"\n        autocapitalize=\"off\"\n        spellcheck=\"false\"\n        role=\"textbox\"\n        aria-autocomplete=\"list\"\n        aria-label=\"").concat(placeholderValue, "\"\n        >\n    "));
-  },
-  dropdown: function dropdown(globalClasses) {
-    var localClasses = (0, _classnames.default)(globalClasses.list, globalClasses.listDropdown);
-    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        aria-expanded=\"false\"\n        >\n      </div>\n    "));
-  },
-  notice: function notice(globalClasses, label) {
-    var _classNames6;
-
-    var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-    var localClasses = (0, _classnames.default)(globalClasses.item, globalClasses.itemChoice, (_classNames6 = {}, _defineProperty(_classNames6, globalClasses.noResults, type === 'no-results'), _defineProperty(_classNames6, globalClasses.noChoices, type === 'no-choices'), _classNames6));
-    return (0, _utils.strToEl)("\n      <div class=\"".concat(localClasses, "\">\n        ").concat(label, "\n      </div>\n    "));
-  },
-  option: function option(data) {
-    return (0, _utils.strToEl)("\n      <option value=\"".concat(data.value, "\" ").concat(data.active ? 'selected' : '', " ").concat(data.disabled ? 'disabled' : '', " ").concat(data.customProperties ? "data-custom-properties=".concat(data.customProperties) : '', ">").concat(data.label, "</option>\n    "));
-  }
-};
-exports.TEMPLATES = TEMPLATES;
-var _default = TEMPLATES;
-exports.default = _default;
-
-/***/ }),
-/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/lodash-es/_freeGlobal.js
-var _freeGlobal = __webpack_require__(8);
+var _freeGlobal = __webpack_require__(7);
 
 // CONCATENATED MODULE: ./node_modules/lodash-es/_root.js
 
@@ -1590,7 +1491,7 @@ if (false) {}
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1615,7 +1516,7 @@ function symbolObservablePonyfill(root) {
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1627,32 +1528,32 @@ var freeGlobal = typeof global == 'object' && global && global.Object === Object
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(3)))
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(10);
+module.exports = __webpack_require__(9);
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _fuse = _interopRequireDefault(__webpack_require__(11));
+var _fuse = _interopRequireDefault(__webpack_require__(10));
 
-var _deepmerge = _interopRequireDefault(__webpack_require__(12));
+var _deepmerge = _interopRequireDefault(__webpack_require__(11));
 
-__webpack_require__(13);
+__webpack_require__(12);
 
-var _store = _interopRequireDefault(__webpack_require__(14));
+var _store = _interopRequireDefault(__webpack_require__(13));
 
-var _components = __webpack_require__(21);
+var _components = __webpack_require__(20);
 
 var _constants = __webpack_require__(1);
 
-var _templates = __webpack_require__(5);
+var _templates = __webpack_require__(27);
 
 var _choices = __webpack_require__(29);
 
@@ -1684,6 +1585,8 @@ var Choices =
 /*#__PURE__*/
 function () {
   function Choices() {
+    var _this = this;
+
     var element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '[data-choice]';
     var userConfig = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -1736,7 +1639,10 @@ function () {
     } else if (this._isSelectElement) {
       this.passedElement = new _components.WrappedSelect({
         element: passedElement,
-        classNames: this.config.classNames
+        classNames: this.config.classNames,
+        template: function template(data) {
+          return _this.config.templates.option(data);
+        }
       });
     }
 
@@ -1950,10 +1856,10 @@ function () {
   }, {
     key: "highlightAll",
     value: function highlightAll() {
-      var _this = this;
+      var _this2 = this;
 
       this._store.items.forEach(function (item) {
-        return _this.highlightItem(item);
+        return _this2.highlightItem(item);
       });
 
       return this;
@@ -1961,10 +1867,10 @@ function () {
   }, {
     key: "unhighlightAll",
     value: function unhighlightAll() {
-      var _this2 = this;
+      var _this3 = this;
 
       this._store.items.forEach(function (item) {
-        return _this2.unhighlightItem(item);
+        return _this3.unhighlightItem(item);
       });
 
       return this;
@@ -1972,24 +1878,10 @@ function () {
   }, {
     key: "removeActiveItemsByValue",
     value: function removeActiveItemsByValue(value) {
-      var _this3 = this;
+      var _this4 = this;
 
       this._store.activeItems.filter(function (item) {
         return item.value === value;
-      }).forEach(function (item) {
-        return _this3._removeItem(item);
-      });
-
-      return this;
-    }
-  }, {
-    key: "removeActiveItems",
-    value: function removeActiveItems(excludedId) {
-      var _this4 = this;
-
-      this._store.activeItems.filter(function (_ref) {
-        var id = _ref.id;
-        return id !== excludedId;
       }).forEach(function (item) {
         return _this4._removeItem(item);
       });
@@ -1997,19 +1889,33 @@ function () {
       return this;
     }
   }, {
+    key: "removeActiveItems",
+    value: function removeActiveItems(excludedId) {
+      var _this5 = this;
+
+      this._store.activeItems.filter(function (_ref) {
+        var id = _ref.id;
+        return id !== excludedId;
+      }).forEach(function (item) {
+        return _this5._removeItem(item);
+      });
+
+      return this;
+    }
+  }, {
     key: "removeHighlightedItems",
     value: function removeHighlightedItems() {
-      var _this5 = this;
+      var _this6 = this;
 
       var runEvent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
       this._store.highlightedActiveItems.forEach(function (item) {
-        _this5._removeItem(item); // If this action was performed by the user
+        _this6._removeItem(item); // If this action was performed by the user
         // trigger the event
 
 
         if (runEvent) {
-          _this5._triggerChange(item.value);
+          _this6._triggerChange(item.value);
         }
       });
 
@@ -2018,46 +1924,46 @@ function () {
   }, {
     key: "showDropdown",
     value: function showDropdown(preventInputFocus) {
-      var _this6 = this;
+      var _this7 = this;
 
       if (this.dropdown.isActive) {
         return this;
       }
 
       requestAnimationFrame(function () {
-        _this6.dropdown.show();
+        _this7.dropdown.show();
 
-        _this6.containerOuter.open(_this6.dropdown.distanceFromTopWindow());
+        _this7.containerOuter.open(_this7.dropdown.distanceFromTopWindow());
 
-        if (!preventInputFocus && _this6._canSearch) {
-          _this6.input.focus();
+        if (!preventInputFocus && _this7._canSearch) {
+          _this7.input.focus();
         }
 
-        _this6.passedElement.triggerEvent(_constants.EVENTS.showDropdown, {});
+        _this7.passedElement.triggerEvent(_constants.EVENTS.showDropdown, {});
       });
       return this;
     }
   }, {
     key: "hideDropdown",
     value: function hideDropdown(preventInputBlur) {
-      var _this7 = this;
+      var _this8 = this;
 
       if (!this.dropdown.isActive) {
         return this;
       }
 
       requestAnimationFrame(function () {
-        _this7.dropdown.hide();
+        _this8.dropdown.hide();
 
-        _this7.containerOuter.close();
+        _this8.containerOuter.close();
 
-        if (!preventInputBlur && _this7._canSearch) {
-          _this7.input.removeActiveDescendant();
+        if (!preventInputBlur && _this8._canSearch) {
+          _this8.input.removeActiveDescendant();
 
-          _this7.input.blur();
+          _this8.input.blur();
         }
 
-        _this7.passedElement.triggerEvent(_constants.EVENTS.hideDropdown, {});
+        _this8.passedElement.triggerEvent(_constants.EVENTS.hideDropdown, {});
       });
       return this;
     }
@@ -2077,21 +1983,21 @@ function () {
   }, {
     key: "setValue",
     value: function setValue(args) {
-      var _this8 = this;
+      var _this9 = this;
 
       if (!this.initialised) {
         return this;
       }
 
       [].concat(args).forEach(function (value) {
-        return _this8._setChoiceOrItem(value);
+        return _this9._setChoiceOrItem(value);
       });
       return this;
     }
   }, {
     key: "setChoiceByValue",
     value: function setChoiceByValue(value) {
-      var _this9 = this;
+      var _this10 = this;
 
       if (!this.initialised || this._isTextElement) {
         return this;
@@ -2101,14 +2007,14 @@ function () {
       var choiceValue = (0, _utils.isType)('Array', value) ? value : [value]; // Loop through each value and
 
       choiceValue.forEach(function (val) {
-        return _this9._findAndSelectChoiceByValue(val);
+        return _this10._findAndSelectChoiceByValue(val);
       });
       return this;
     }
   }, {
     key: "setChoices",
     value: function setChoices() {
-      var _this10 = this;
+      var _this11 = this;
 
       var choices = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
       var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -2128,14 +2034,14 @@ function () {
 
       var addGroupsAndChoices = function addGroupsAndChoices(groupOrChoice) {
         if (groupOrChoice.choices) {
-          _this10._addGroup({
+          _this11._addGroup({
             group: groupOrChoice,
             id: groupOrChoice.id || null,
             valueKey: value,
             labelKey: label
           });
         } else {
-          _this10._addChoice({
+          _this11._addChoice({
             value: groupOrChoice[value],
             label: groupOrChoice[label],
             isSelected: groupOrChoice.selected,
@@ -2183,14 +2089,14 @@ function () {
   }, {
     key: "ajax",
     value: function ajax(fn) {
-      var _this11 = this;
+      var _this12 = this;
 
       if (!this.initialised || !this._isSelectElement || !fn) {
         return this;
       }
 
       requestAnimationFrame(function () {
-        return _this11._handleLoadingState(true);
+        return _this12._handleLoadingState(true);
       });
       fn(this._ajaxCallback());
       return this;
@@ -2230,7 +2136,7 @@ function () {
   }, {
     key: "_renderChoices",
     value: function _renderChoices() {
-      var _this12 = this;
+      var _this13 = this;
 
       var _this$_store = this._store,
           activeGroups = _this$_store.activeGroups,
@@ -2240,7 +2146,7 @@ function () {
 
       if (this.config.resetScrollPosition) {
         requestAnimationFrame(function () {
-          return _this12.choiceList.scrollToTop();
+          return _this13.choiceList.scrollToTop();
         });
       } // If we have grouped options
 
@@ -2309,17 +2215,17 @@ function () {
   }, {
     key: "_createGroupsFragment",
     value: function _createGroupsFragment(groups, choices, fragment) {
-      var _this13 = this;
+      var _this14 = this;
 
       var groupFragment = fragment || document.createDocumentFragment();
 
       var getGroupChoices = function getGroupChoices(group) {
         return choices.filter(function (choice) {
-          if (_this13._isSelectOneElement) {
+          if (_this14._isSelectOneElement) {
             return choice.groupId === group.id;
           }
 
-          return choice.groupId === group.id && (_this13.config.renderSelectedChoices === 'always' || !choice.selected);
+          return choice.groupId === group.id && (_this14.config.renderSelectedChoices === 'always' || !choice.selected);
         });
       }; // If sorting is enabled, filter groups
 
@@ -2332,11 +2238,11 @@ function () {
         var groupChoices = getGroupChoices(group);
 
         if (groupChoices.length >= 1) {
-          var dropdownGroup = _this13._getTemplate('choiceGroup', group);
+          var dropdownGroup = _this14._getTemplate('choiceGroup', group);
 
           groupFragment.appendChild(dropdownGroup);
 
-          _this13._createChoicesFragment(groupChoices, groupFragment, true);
+          _this14._createChoicesFragment(groupChoices, groupFragment, true);
         }
       });
       return groupFragment;
@@ -2344,7 +2250,7 @@ function () {
   }, {
     key: "_createChoicesFragment",
     value: function _createChoicesFragment(choices, fragment) {
-      var _this14 = this;
+      var _this15 = this;
 
       var withinGroup = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       // Create a fragment to store our list items (so we don't have to update the DOM for each item)
@@ -2356,10 +2262,10 @@ function () {
       var filter = this._isSearching ? _utils.sortByScore : this.config.sortFn;
 
       var appendChoice = function appendChoice(choice) {
-        var shouldRender = renderSelectedChoices === 'auto' ? _this14._isSelectOneElement || !choice.selected : true;
+        var shouldRender = renderSelectedChoices === 'auto' ? _this15._isSelectOneElement || !choice.selected : true;
 
         if (shouldRender) {
-          var dropdownItem = _this14._getTemplate('choice', choice, _this14.config.itemSelectText);
+          var dropdownItem = _this15._getTemplate('choice', choice, _this15.config.itemSelectText);
 
           choicesFragment.appendChild(dropdownItem);
         }
@@ -2416,7 +2322,7 @@ function () {
   }, {
     key: "_createItemsFragment",
     value: function _createItemsFragment(items) {
-      var _this15 = this;
+      var _this16 = this;
 
       var fragment = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
       // Create fragment to add elements to
@@ -2440,7 +2346,7 @@ function () {
 
       var addItemToFragment = function addItemToFragment(item) {
         // Create new list element
-        var listItem = _this15._getTemplate('item', item, removeItemButton); // Append it to list
+        var listItem = _this16._getTemplate('item', item, removeItemButton); // Append it to list
 
 
         itemListFragment.appendChild(listItem);
@@ -2503,7 +2409,7 @@ function () {
   }, {
     key: "_handleItemAction",
     value: function _handleItemAction(activeItems, element) {
-      var _this16 = this;
+      var _this17 = this;
 
       var hasShiftKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
@@ -2517,9 +2423,9 @@ function () {
 
       activeItems.forEach(function (item) {
         if (item.id === parseInt(passedId, 10) && !item.highlighted) {
-          _this16.highlightItem(item);
+          _this17.highlightItem(item);
         } else if (!hasShiftKey && item.highlighted) {
-          _this16.unhighlightItem(item);
+          _this17.unhighlightItem(item);
         }
       }); // Focus input as without focus, a user cannot do anything with a
       // highlighted item
@@ -2700,7 +2606,7 @@ function () {
   }, {
     key: "_ajaxCallback",
     value: function _ajaxCallback() {
-      var _this17 = this;
+      var _this18 = this;
 
       return function (results, value, label) {
         if (!results || !value) {
@@ -2711,21 +2617,21 @@ function () {
 
         if (parsedResults && (0, _utils.isType)('Array', parsedResults) && parsedResults.length) {
           // Remove loading states/text
-          _this17._handleLoadingState(false);
+          _this18._handleLoadingState(false);
 
-          _this17._setLoading(true); // Add each result as a choice
+          _this18._setLoading(true); // Add each result as a choice
 
 
           parsedResults.forEach(function (result) {
             if (result.choices) {
-              _this17._addGroup({
+              _this18._addGroup({
                 group: result,
                 id: result.id || null,
                 valueKey: value,
                 labelKey: label
               });
             } else {
-              _this17._addChoice({
+              _this18._addChoice({
                 value: (0, _utils.fetchFromObject)(result, value),
                 label: (0, _utils.fetchFromObject)(result, label),
                 isSelected: result.selected,
@@ -2736,14 +2642,14 @@ function () {
             }
           });
 
-          _this17._setLoading(false);
+          _this18._setLoading(false);
 
-          if (_this17._isSelectOneElement) {
-            _this17._selectPlaceholderChoice();
+          if (_this18._isSelectOneElement) {
+            _this18._selectPlaceholderChoice();
           }
         } else {
           // No results, remove loading state
-          _this17._handleLoadingState(false);
+          _this18._handleLoadingState(false);
         }
       };
     }
@@ -3170,7 +3076,7 @@ function () {
   }, {
     key: "_onFocus",
     value: function _onFocus(_ref11) {
-      var _this18 = this;
+      var _this19 = this;
 
       var target = _ref11.target;
       var focusWasWithinContainer = this.containerOuter.element.contains(target);
@@ -3181,24 +3087,24 @@ function () {
 
       var focusActions = {
         text: function text() {
-          if (target === _this18.input.element) {
-            _this18.containerOuter.addFocusState();
+          if (target === _this19.input.element) {
+            _this19.containerOuter.addFocusState();
           }
         },
         'select-one': function selectOne() {
-          _this18.containerOuter.addFocusState();
+          _this19.containerOuter.addFocusState();
 
-          if (target === _this18.input.element) {
-            _this18.showDropdown(true);
+          if (target === _this19.input.element) {
+            _this19.showDropdown(true);
           }
         },
         'select-multiple': function selectMultiple() {
-          if (target === _this18.input.element) {
-            _this18.showDropdown(true); // If element is a select box, the focused element is the container and the dropdown
+          if (target === _this19.input.element) {
+            _this19.showDropdown(true); // If element is a select box, the focused element is the container and the dropdown
             // isn't already open, focus and show dropdown
 
 
-            _this18.containerOuter.addFocusState();
+            _this19.containerOuter.addFocusState();
           }
         }
       };
@@ -3207,7 +3113,7 @@ function () {
   }, {
     key: "_onBlur",
     value: function _onBlur(_ref12) {
-      var _this19 = this;
+      var _this20 = this;
 
       var target = _ref12.target;
       var blurWasWithinContainer = this.containerOuter.element.contains(target);
@@ -3219,31 +3125,31 @@ function () {
         });
         var blurActions = {
           text: function text() {
-            if (target === _this19.input.element) {
-              _this19.containerOuter.removeFocusState();
+            if (target === _this20.input.element) {
+              _this20.containerOuter.removeFocusState();
 
               if (hasHighlightedItems) {
-                _this19.unhighlightAll();
+                _this20.unhighlightAll();
               }
 
-              _this19.hideDropdown(true);
+              _this20.hideDropdown(true);
             }
           },
           'select-one': function selectOne() {
-            _this19.containerOuter.removeFocusState();
+            _this20.containerOuter.removeFocusState();
 
-            if (target === _this19.input.element || target === _this19.containerOuter.element && !_this19._canSearch) {
-              _this19.hideDropdown(true);
+            if (target === _this20.input.element || target === _this20.containerOuter.element && !_this20._canSearch) {
+              _this20.hideDropdown(true);
             }
           },
           'select-multiple': function selectMultiple() {
-            if (target === _this19.input.element) {
-              _this19.containerOuter.removeFocusState();
+            if (target === _this20.input.element) {
+              _this20.containerOuter.removeFocusState();
 
-              _this19.hideDropdown(true);
+              _this20.hideDropdown(true);
 
               if (hasHighlightedItems) {
-                _this19.unhighlightAll();
+                _this20.unhighlightAll();
               }
             }
           }
@@ -3265,7 +3171,7 @@ function () {
   }, {
     key: "_highlightChoice",
     value: function _highlightChoice() {
-      var _this20 = this;
+      var _this21 = this;
 
       var el = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       var choices = Array.from(this.dropdown.element.querySelectorAll('[data-choice-selectable]'));
@@ -3278,7 +3184,7 @@ function () {
       var highlightedChoices = Array.from(this.dropdown.element.querySelectorAll(".".concat(this.config.classNames.highlightedState))); // Remove any highlighted choices
 
       highlightedChoices.forEach(function (choice) {
-        choice.classList.remove(_this20.config.classNames.highlightedState);
+        choice.classList.remove(_this21.config.classNames.highlightedState);
         choice.setAttribute('aria-selected', 'false');
       });
 
@@ -3460,7 +3366,7 @@ function () {
   }, {
     key: "_addGroup",
     value: function _addGroup(_ref15) {
-      var _this21 = this;
+      var _this22 = this;
 
       var group = _ref15.group,
           id = _ref15.id,
@@ -3478,7 +3384,7 @@ function () {
         var addGroupChoices = function addGroupChoices(choice) {
           var isOptDisabled = choice.disabled || choice.parentNode && choice.parentNode.disabled;
 
-          _this21._addChoice({
+          _this22._addChoice({
             value: choice[valueKey],
             label: (0, _utils.isType)('Object', choice) ? choice[labelKey] : choice.innerHTML,
             isSelected: choice.selected,
@@ -3597,7 +3503,7 @@ function () {
   }, {
     key: "_addPredefinedChoices",
     value: function _addPredefinedChoices() {
-      var _this22 = this;
+      var _this23 = this;
 
       var passedGroups = this.passedElement.optionGroups;
       this._highlightPosition = 0;
@@ -3620,7 +3526,7 @@ function () {
         }
 
         passedGroups.forEach(function (group) {
-          return _this22._addGroup({
+          return _this23._addGroup({
             group: group,
             id: group.id || null
           });
@@ -3653,10 +3559,10 @@ function () {
               customProperties = choice.customProperties,
               placeholder = choice.placeholder;
 
-          if (_this22._isSelectElement) {
+          if (_this23._isSelectElement) {
             // If the choice is actually a group
             if (choice.choices) {
-              _this22._addGroup({
+              _this23._addGroup({
                 group: choice,
                 id: choice.id || null
               });
@@ -3664,11 +3570,11 @@ function () {
               // If there is a selected choice already or the choice is not
               // the first in the array, add each choice normally
               // Otherwise pre-select the first choice in the array if it's a single select
-              var shouldPreselect = _this22._isSelectOneElement && !hasSelectedChoice && index === 0;
+              var shouldPreselect = _this23._isSelectOneElement && !hasSelectedChoice && index === 0;
               var isSelected = shouldPreselect ? true : choice.selected;
               var isDisabled = shouldPreselect ? false : choice.disabled;
 
-              _this22._addChoice({
+              _this23._addChoice({
                 value: value,
                 label: label,
                 isSelected: isSelected,
@@ -3678,7 +3584,7 @@ function () {
               });
             }
           } else {
-            _this22._addChoice({
+            _this23._addChoice({
               value: value,
               label: label,
               isSelected: choice.selected,
@@ -3700,13 +3606,13 @@ function () {
   }, {
     key: "_addPredefinedItems",
     value: function _addPredefinedItems() {
-      var _this23 = this;
+      var _this24 = this;
 
       var handlePresetItem = function handlePresetItem(item) {
         var itemType = (0, _utils.getType)(item);
 
         if (itemType === 'Object' && item.value) {
-          _this23._addItem({
+          _this24._addItem({
             value: item.value,
             label: item.label,
             choiceId: item.id,
@@ -3714,7 +3620,7 @@ function () {
             placeholder: item.placeholder
           });
         } else if (itemType === 'String') {
-          _this23._addItem({
+          _this24._addItem({
             value: item
           });
         }
@@ -3727,7 +3633,7 @@ function () {
   }, {
     key: "_setChoiceOrItem",
     value: function _setChoiceOrItem(item) {
-      var _this24 = this;
+      var _this25 = this;
 
       var itemType = (0, _utils.getType)(item).toLowerCase();
       var handleType = {
@@ -3738,8 +3644,8 @@ function () {
           // that is then selected. For text inputs we can just add items normally.
 
 
-          if (!_this24._isTextElement) {
-            _this24._addChoice({
+          if (!_this25._isTextElement) {
+            _this25._addChoice({
               value: item.value,
               label: item.label,
               isSelected: true,
@@ -3748,7 +3654,7 @@ function () {
               placeholder: item.placeholder
             });
           } else {
-            _this24._addItem({
+            _this25._addItem({
               value: item.value,
               label: item.label,
               choiceId: item.id,
@@ -3758,15 +3664,15 @@ function () {
           }
         },
         string: function string() {
-          if (!_this24._isTextElement) {
-            _this24._addChoice({
+          if (!_this25._isTextElement) {
+            _this25._addChoice({
               value: item,
               label: item,
               isSelected: true,
               isDisabled: false
             });
           } else {
-            _this24._addItem({
+            _this25._addItem({
               value: item
             });
           }
@@ -3777,12 +3683,12 @@ function () {
   }, {
     key: "_findAndSelectChoiceByValue",
     value: function _findAndSelectChoiceByValue(val) {
-      var _this25 = this;
+      var _this26 = this;
 
       var choices = this._store.choices; // Check 'value' property exists and the choice isn't already selected
 
       var foundChoice = choices.find(function (choice) {
-        return _this25.config.itemComparer(choice.value, val);
+        return _this26.config.itemComparer(choice.value, val);
       });
 
       if (foundChoice && !foundChoice.selected) {
@@ -3826,7 +3732,7 @@ Choices.userDefaults = {}; // We cannot export default here due to Webpack: http
 module.exports = Choices;
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -4907,7 +4813,7 @@ module.exports = Fuse;
 });
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5004,7 +4910,7 @@ var deepmerge_1 = deepmerge;
 
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5059,7 +4965,7 @@ window.delegateEvent = function delegateEvent() {
 }();
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5070,9 +4976,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _redux = __webpack_require__(6);
+var _redux = __webpack_require__(5);
 
-var _index = _interopRequireDefault(__webpack_require__(16));
+var _index = _interopRequireDefault(__webpack_require__(15));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5137,11 +5043,9 @@ function () {
     key: "getChoiceById",
     value: function getChoiceById(id) {
       if (id) {
-        var choices = this.activeChoices;
-        var foundChoice = choices.find(function (choice) {
+        return this.activeChoices.find(function (choice) {
           return choice.id === parseInt(id, 10);
         });
-        return foundChoice;
       }
 
       return false;
@@ -5276,8 +5180,8 @@ function () {
   }, {
     key: "activeGroups",
     get: function get() {
-      var groups = this.groups;
-      var choices = this.choices;
+      var groups = this.groups,
+          choices = this.choices;
       return groups.filter(function (group) {
         var isActive = group.active === true && group.disabled === false;
         var hasActiveOptions = choices.some(function (choice) {
@@ -5294,7 +5198,7 @@ function () {
 exports.default = Store;
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -5324,7 +5228,7 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5335,15 +5239,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _redux = __webpack_require__(6);
+var _redux = __webpack_require__(5);
 
-var _items = _interopRequireDefault(__webpack_require__(17));
+var _items = _interopRequireDefault(__webpack_require__(16));
 
-var _groups = _interopRequireDefault(__webpack_require__(18));
+var _groups = _interopRequireDefault(__webpack_require__(17));
 
-var _choices = _interopRequireDefault(__webpack_require__(19));
+var _choices = _interopRequireDefault(__webpack_require__(18));
 
-var _general = _interopRequireDefault(__webpack_require__(20));
+var _general = _interopRequireDefault(__webpack_require__(19));
 
 var _utils = __webpack_require__(0);
 
@@ -5375,7 +5279,7 @@ var _default = rootReducer;
 exports.default = _default;
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5451,7 +5355,7 @@ function items() {
 }
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5493,7 +5397,7 @@ function groups() {
 }
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5625,7 +5529,7 @@ function choices() {
 }
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5663,7 +5567,7 @@ var _default = general;
 exports.default = _default;
 
 /***/ }),
-/* 21 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5709,22 +5613,22 @@ Object.defineProperty(exports, "WrappedSelect", {
   }
 });
 
-var _dropdown = _interopRequireDefault(__webpack_require__(22));
+var _dropdown = _interopRequireDefault(__webpack_require__(21));
 
-var _container = _interopRequireDefault(__webpack_require__(23));
+var _container = _interopRequireDefault(__webpack_require__(22));
 
-var _input = _interopRequireDefault(__webpack_require__(24));
+var _input = _interopRequireDefault(__webpack_require__(23));
 
-var _list = _interopRequireDefault(__webpack_require__(25));
+var _list = _interopRequireDefault(__webpack_require__(24));
 
-var _wrappedInput = _interopRequireDefault(__webpack_require__(26));
+var _wrappedInput = _interopRequireDefault(__webpack_require__(25));
 
-var _wrappedSelect = _interopRequireDefault(__webpack_require__(27));
+var _wrappedSelect = _interopRequireDefault(__webpack_require__(26));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
-/* 22 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5818,7 +5722,7 @@ function () {
 exports.default = Dropdown;
 
 /***/ }),
-/* 23 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6067,7 +5971,7 @@ function () {
 exports.default = Container;
 
 /***/ }),
-/* 24 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6274,7 +6178,7 @@ function () {
 exports.default = Input;
 
 /***/ }),
-/* 25 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6401,7 +6305,7 @@ function () {
 exports.default = List;
 
 /***/ }),
-/* 26 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6483,7 +6387,7 @@ function (_WrappedElement) {
 exports.default = WrappedInput;
 
 /***/ }),
-/* 27 */
+/* 26 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6495,8 +6399,6 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _wrappedElement = _interopRequireDefault(__webpack_require__(4));
-
-var _templates = _interopRequireDefault(__webpack_require__(5));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6524,15 +6426,20 @@ function (_WrappedElement) {
   _inherits(WrappedSelect, _WrappedElement);
 
   function WrappedSelect(_ref) {
+    var _this;
+
     var element = _ref.element,
-        classNames = _ref.classNames;
+        classNames = _ref.classNames,
+        template = _ref.template;
 
     _classCallCheck(this, WrappedSelect);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(WrappedSelect).call(this, {
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(WrappedSelect).call(this, {
       element: element,
       classNames: classNames
     }));
+    _this.template = template;
+    return _this;
   }
 
   _createClass(WrappedSelect, [{
@@ -6557,14 +6464,16 @@ function (_WrappedElement) {
       return Array.from(this.element.options);
     },
     set: function set(options) {
+      var _this2 = this;
+
       var fragment = document.createDocumentFragment();
 
       var addOptionToFragment = function addOptionToFragment(data) {
         // Create a standard select option
-        var template = _templates.default.option(data); // Append it to fragment
+        var option = _this2.template(data); // Append it to fragment
 
 
-        fragment.appendChild(template);
+        fragment.appendChild(option);
       }; // Add each list item to list
 
 
@@ -6579,6 +6488,106 @@ function (_WrappedElement) {
 }(_wrappedElement.default);
 
 exports.default = WrappedSelect;
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = exports.TEMPLATES = void 0;
+
+var _classnames = _interopRequireDefault(__webpack_require__(28));
+
+var _utils = __webpack_require__(0);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var TEMPLATES = {
+  containerOuter: function containerOuter(globalClasses, direction, isSelectElement, isSelectOneElement, searchEnabled, passedElementType) {
+    var tabIndex = isSelectOneElement ? 'tabindex="0"' : '';
+    var role = isSelectElement ? 'role="listbox"' : '';
+    var ariaAutoComplete = '';
+
+    if (isSelectElement && searchEnabled) {
+      role = 'role="combobox"';
+      ariaAutoComplete = 'aria-autocomplete="list"';
+    }
+
+    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(globalClasses.containerOuter, "\"\n        data-type=\"").concat(passedElementType, "\"\n        ").concat(role, "\n        ").concat(tabIndex, "\n        ").concat(ariaAutoComplete, "\n        aria-haspopup=\"true\"\n        aria-expanded=\"false\"\n        dir=\"").concat(direction, "\"\n        >\n      </div>\n    "));
+  },
+  containerInner: function containerInner(globalClasses) {
+    return (0, _utils.strToEl)("\n      <div class=\"".concat(globalClasses.containerInner, "\"></div>\n    "));
+  },
+  itemList: function itemList(globalClasses, isSelectOneElement) {
+    var _classNames;
+
+    var localClasses = (0, _classnames.default)(globalClasses.list, (_classNames = {}, _defineProperty(_classNames, globalClasses.listSingle, isSelectOneElement), _defineProperty(_classNames, globalClasses.listItems, !isSelectOneElement), _classNames));
+    return (0, _utils.strToEl)("\n      <div class=\"".concat(localClasses, "\"></div>\n    "));
+  },
+  placeholder: function placeholder(globalClasses, value) {
+    return (0, _utils.strToEl)("\n      <div class=\"".concat(globalClasses.placeholder, "\">\n        ").concat(value, "\n      </div>\n    "));
+  },
+  item: function item(globalClasses, data, removeItemButton) {
+    var _classNames2;
+
+    var ariaSelected = data.active ? 'aria-selected="true"' : '';
+    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
+    var localClasses = (0, _classnames.default)(globalClasses.item, (_classNames2 = {}, _defineProperty(_classNames2, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames2, globalClasses.itemSelectable, !data.highlighted), _defineProperty(_classNames2, globalClasses.placeholder, data.placeholder), _classNames2));
+
+    if (removeItemButton) {
+      var _classNames3;
+
+      localClasses = (0, _classnames.default)(globalClasses.item, (_classNames3 = {}, _defineProperty(_classNames3, globalClasses.highlightedState, data.highlighted), _defineProperty(_classNames3, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames3, globalClasses.placeholder, data.placeholder), _classNames3));
+      return (0, _utils.strToEl)("\n        <div\n          class=\"".concat(localClasses, "\"\n          data-item\n          data-id=\"").concat(data.id, "\"\n          data-value=\"").concat(data.value, "\"\n          data-custom-properties='").concat(data.customProperties, "'\n          data-deletable\n          ").concat(ariaSelected, "\n          ").concat(ariaDisabled, "\n          >\n          ").concat(data.label, "<!--\n       --><button\n            type=\"button\"\n            class=\"").concat(globalClasses.button, "\"\n            data-button\n            aria-label=\"Remove item: '").concat(data.value, "'\"\n            >\n            Remove item\n          </button>\n        </div>\n      "));
+    }
+
+    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        data-item\n        data-id=\"").concat(data.id, "\"\n        data-value=\"").concat(data.value, "\"\n        ").concat(ariaSelected, "\n        ").concat(ariaDisabled, "\n        >\n        ").concat(data.label, "\n      </div>\n    "));
+  },
+  choiceList: function choiceList(globalClasses, isSelectOneElement) {
+    var ariaMultiSelectable = !isSelectOneElement ? 'aria-multiselectable="true"' : '';
+    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(globalClasses.list, "\"\n        dir=\"ltr\"\n        role=\"listbox\"\n        ").concat(ariaMultiSelectable, "\n        >\n      </div>\n    "));
+  },
+  choiceGroup: function choiceGroup(globalClasses, data) {
+    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
+    var localClasses = (0, _classnames.default)(globalClasses.group, _defineProperty({}, globalClasses.itemDisabled, data.disabled));
+    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        data-group\n        data-id=\"").concat(data.id, "\"\n        data-value=\"").concat(data.value, "\"\n        role=\"group\"\n        ").concat(ariaDisabled, "\n        >\n        <div class=\"").concat(globalClasses.groupHeading, "\">").concat(data.value, "</div>\n      </div>\n    "));
+  },
+  choice: function choice(globalClasses, data, itemSelectText) {
+    var _classNames5;
+
+    var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
+    var localClasses = (0, _classnames.default)(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _defineProperty(_classNames5, globalClasses.itemDisabled, data.disabled), _defineProperty(_classNames5, globalClasses.itemSelectable, !data.disabled), _defineProperty(_classNames5, globalClasses.placeholder, data.placeholder), _classNames5));
+    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        data-select-text=\"").concat(itemSelectText, "\"\n        data-choice\n        data-id=\"").concat(data.id, "\"\n        data-value=\"").concat(data.value, "\"\n        ").concat(data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable', "\n        id=\"").concat(data.elementId, "\"\n        ").concat(role, "\n        >\n        ").concat(data.label, "\n      </div>\n    "));
+  },
+  input: function input(globalClasses, placeholderValue) {
+    var localClasses = (0, _classnames.default)(globalClasses.input, globalClasses.inputCloned);
+    return (0, _utils.strToEl)("\n      <input\n        type=\"text\"\n        class=\"".concat(localClasses, "\"\n        autocomplete=\"off\"\n        autocapitalize=\"off\"\n        spellcheck=\"false\"\n        role=\"textbox\"\n        aria-autocomplete=\"list\"\n        aria-label=\"").concat(placeholderValue, "\"\n        >\n    "));
+  },
+  dropdown: function dropdown(globalClasses) {
+    var localClasses = (0, _classnames.default)(globalClasses.list, globalClasses.listDropdown);
+    return (0, _utils.strToEl)("\n      <div\n        class=\"".concat(localClasses, "\"\n        aria-expanded=\"false\"\n        >\n      </div>\n    "));
+  },
+  notice: function notice(globalClasses, label) {
+    var _classNames6;
+
+    var type = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+    var localClasses = (0, _classnames.default)(globalClasses.item, globalClasses.itemChoice, (_classNames6 = {}, _defineProperty(_classNames6, globalClasses.noResults, type === 'no-results'), _defineProperty(_classNames6, globalClasses.noChoices, type === 'no-choices'), _classNames6));
+    return (0, _utils.strToEl)("\n      <div class=\"".concat(localClasses, "\">\n        ").concat(label, "\n      </div>\n    "));
+  },
+  option: function option(data) {
+    return (0, _utils.strToEl)("\n      <option value=\"".concat(data.value, "\" ").concat(data.active ? 'selected' : '', " ").concat(data.disabled ? 'disabled' : '', " ").concat(data.customProperties ? "data-custom-properties=".concat(data.customProperties) : '', ">").concat(data.label, "</option>\n    "));
+  }
+};
+exports.TEMPLATES = TEMPLATES;
+var _default = TEMPLATES;
+exports.default = _default;
 
 /***/ }),
 /* 28 */
