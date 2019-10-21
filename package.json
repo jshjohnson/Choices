@@ -26,7 +26,7 @@
     "deploy": "git subtree push --prefix public origin gh-pages",
     "prepush": "run-p lint test:unit && npm run bundlesize",
     "preversion": "npm test",
-    "postversion": "npm run bump-cache && git commit --all --no-verify -m 'updated version to $npm_package_version' && git push --no-verify --atomic",
+    "postversion": "git commit --atomic",
     "prepublishOnly": "npm run build"
   },
   "repository": {
