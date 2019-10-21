@@ -29,7 +29,7 @@ jobs:
       - run: npx bundlesize
         env:
           CI: true
-          BUNDLESIZE_GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          BUNDLESIZE_GITHUB_TOKEN: ${{secrets.BUNDLESIZE_GITHUB_TOKEN}}
           CI_REPO_NAME: ${{ github.event.repository.name }}
           CI_REPO_OWNER: ${{ github.event.organization.login }}
           CI_COMMIT_SHA: ${{ github.sha }}
