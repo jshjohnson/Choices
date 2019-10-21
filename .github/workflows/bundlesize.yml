@@ -33,7 +33,7 @@ jobs:
           BUNDLESIZE_GITHUB_TOKEN: ${{secrets.BUNDLESIZE_GITHUB_TOKEN}}
           CI_REPO_NAME: ${{ github.event.repository.name }}
           CI_REPO_OWNER: ${{ github.event.organization.login }}
-          CI_COMMIT_SHA: ${{ github.sha }}
-          GIT_COMMIT: ${{ github.sha }}
+          CI_COMMIT_SHA: ${{ github.event.after }}
+          GIT_COMMIT: ${{ github.event.after }}
           CI_BRANCH: ${{ github.head_ref }}
           FORCE_COLOR: 2
