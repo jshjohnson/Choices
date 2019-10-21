@@ -19,7 +19,12 @@ jobs:
         run: npm ci
 
       - name: run Cypress
-        run: npm run test:e2e
+        run: npm run test:e2e -- --record --ci-build-id ${{ github.event.after }}
         env:
           CI: true
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           DEBUG: commit-info,cypress:server:record
+          # https://docs.cypress.io/guides/guides/continuous-integration.html#Environment-variables
+          COMMIT_INFO_BRANCH: ${{ github.head_ref }}
+          COMMIT_INFO_AUTHOR: ${{ github.event.sender.login }}
+          COMMIT_INFO_SHA: ${{ github.event.after }}
