@@ -5,6 +5,7 @@ on:
     paths:
       - 'src/scripts/**'
       - 'src/styles/**'
+      - package-lock.json
 
 jobs:
   measure:
