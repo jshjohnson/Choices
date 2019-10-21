@@ -23,6 +23,8 @@ jobs:
       - name: Install dependencies and build
         run: |
                 npm ci
+                # remove commited assets
+                rm -rf public/assets
                 npm run build
         env:
           CYPRESS_INSTALL_BINARY: 0
