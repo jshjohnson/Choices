@@ -551,10 +551,6 @@ describe('Choices - select multiple', () => {
           .then($choices => {
             choicesCount = $choices.length;
           });
-
-        cy.get('[data-test-hook=scrolling-dropdown]')
-          .find('.choices__input--cloned')
-          .focus();
       });
 
       it('highlights first choice on dropdown open', () => {
@@ -753,17 +749,16 @@ describe('Choices - select multiple', () => {
     describe('within form', () => {
       describe('selecting choice', () => {
         describe('on enter key', () => {
-          it('does not submit form', () => {
+          it('selects choice', () => {
             cy.get('[data-test-hook=within-form] form').then($form => {
               $form.submit(() => {
                 // this will fail the test if the form submits
                 throw new Error('Form submitted');
               });
             });
-
             cy.get('[data-test-hook=within-form]')
               .find('.choices__input--cloned')
-              .focus()
+              .click()
               .type('{enter}');
 
             cy.get('[data-test-hook=within-form]')
