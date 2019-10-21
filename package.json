@@ -25,7 +25,7 @@
     "css:min": "csso public/assets/styles/base.css public/assets/styles/base.min.css && csso public/assets/styles/choices.css public/assets/styles/choices.min.css",
     "bump-cache": "node bump-cache.js --current $npm_package_version",
     "deploy": "git subtree push --prefix public origin gh-pages",
-    "postversion": "npm run js:build && npm run bump-cache",
+    "postversion": "git push --follow-tags",
     "prepush": "run-p lint test:unit && npm run bundlesize",
     "prepublishOnly": "npm run build"
   },
