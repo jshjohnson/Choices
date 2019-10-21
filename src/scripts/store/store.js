@@ -118,8 +118,7 @@ export default class Store {
    * @return {Array} Group objects
    */
   get activeGroups() {
-    const { groups } = this;
-    const { choices } = this;
+    const { groups, choices } = this;
 
     return groups.filter(group => {
       const isActive = group.active === true && group.disabled === false;
@@ -144,11 +143,7 @@ export default class Store {
    */
   getChoiceById(id) {
     if (id) {
-      const choices = this.activeChoices;
-      const foundChoice = choices.find(
-        choice => choice.id === parseInt(id, 10),
-      );
-      return foundChoice;
+      return this.activeChoices.find(choice => choice.id === parseInt(id, 10));
     }
     return false;
   }
