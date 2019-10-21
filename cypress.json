@@ -1,4 +1,5 @@
 {
   "baseUrl": "http://localhost:3001/test",
-  "video": false
+  "video": false,
+  "projectId": "n7g5qp"
 }
