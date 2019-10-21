@@ -21,7 +21,7 @@
     "css:watch": "nodemon -e scss -x \"npm run css:build\"",
     "css:build": "run-p css:sass css:prefix css:min",
     "css:sass": "node-sass --output-style expanded --include-path  scss src/styles/base.scss public/assets/styles/base.css && node-sass --output-style expanded --include-path scss src/styles/choices.scss public/assets/styles/choices.css",
-    "css:prefix": "postcss  public/assets/styles/*.css --use autoprefixer --env prod --dir public/assets/styles",
+    "css:prefix": "postcss public/assets/styles/*.css --use autoprefixer --env prod --dir public/assets/styles",
     "css:min": "csso public/assets/styles/base.css public/assets/styles/base.min.css && csso public/assets/styles/choices.css public/assets/styles/choices.min.css",
     "deploy": "git subtree push --prefix public origin gh-pages",
     "prepush": "run-p lint test:unit && npm run bundlesize",
