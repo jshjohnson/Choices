@@ -79,10 +79,14 @@ class Choices {
       ? document.querySelector(element)
       : element;
 
-    if (!passedElement && !this.config.silent) {
-      return console.error(
-        'Could not find passed element or passed element was of an invalid type',
-      );
+    if (!passedElement) {
+      if (!this.config.silent) {
+        console.error(
+          'Could not find passed element or passed element was of an invalid type',
+        );
+      }
+
+      return;
     }
 
     this._isTextElement = passedElement.type === 'text';
