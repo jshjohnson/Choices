@@ -365,9 +365,7 @@ describe('templates', () => {
       it('returns expected html', () => {
         const expectedOutput = strToEl(`
           <div
-            class="${classes.item} ${classes.itemChoice} ${
-          classes.itemSelectable
-        }"
+            class="${classes.item} ${classes.itemChoice} ${classes.itemSelectable}"
             data-select-text="${itemSelectText}"
             data-choice
             data-id="${data.id}"
@@ -399,9 +397,7 @@ describe('templates', () => {
       it('returns expected html', () => {
         const expectedOutput = strToEl(`
           <div
-            class="${classes.item} ${classes.itemChoice} ${
-          classes.itemDisabled
-        }"
+            class="${classes.item} ${classes.itemChoice} ${classes.itemDisabled}"
             data-select-text="${itemSelectText}"
             data-choice
             data-id="${data.id}"
@@ -434,9 +430,7 @@ describe('templates', () => {
       it('returns expected html', () => {
         const expectedOutput = strToEl(`
           <div
-            class="${classes.item} ${classes.itemChoice} ${
-          classes.itemSelectable
-        } ${classes.placeholder}"
+            class="${classes.item} ${classes.itemChoice} ${classes.itemSelectable} ${classes.placeholder}"
             data-select-text="${itemSelectText}"
             data-choice
             data-id="${data.id}"
@@ -468,9 +462,7 @@ describe('templates', () => {
       it('returns expected html', () => {
         const expectedOutput = strToEl(`
           <div
-            class="${classes.item} ${classes.itemChoice} ${
-          classes.itemSelectable
-        }"
+            class="${classes.item} ${classes.itemChoice} ${classes.itemSelectable}"
             data-select-text="${itemSelectText}"
             data-choice
             data-id="${data.id}"
@@ -526,9 +518,7 @@ describe('templates', () => {
     it('returns expected html', () => {
       const value = 'test';
       const expectedOutput = strToEl(
-        `<div class="${classes.list} ${
-          classes.listDropdown
-        }" aria-expanded="false"></div>`,
+        `<div class="${classes.list} ${classes.listDropdown}" aria-expanded="false"></div>`,
       );
       const actualOutput = templates.dropdown(classes, value);
 
@@ -563,9 +553,7 @@ describe('templates', () => {
       describe('no results', () => {
         it('adds no results classname', () => {
           const expectedOutput = strToEl(`
-            <div class="${classes.item} ${classes.itemChoice} ${
-            classes.noResults
-          }">
+            <div class="${classes.item} ${classes.itemChoice} ${classes.noResults}">
               ${label}
             </div>
           `);
@@ -580,9 +568,7 @@ describe('templates', () => {
       describe('no choices', () => {
         it('adds no choices classname', () => {
           const expectedOutput = strToEl(`
-            <div class="${classes.item} ${classes.itemChoice} ${
-            classes.noChoices
-          }">
+            <div class="${classes.item} ${classes.itemChoice} ${classes.noChoices}">
               ${label}
             </div>
           `);
