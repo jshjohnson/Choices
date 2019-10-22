@@ -755,7 +755,7 @@ describe('Choices - select multiple', () => {
     describe('within form', () => {
       describe('selecting choice', () => {
         describe('on enter key', () => {
-          it('does not submit form', () => {
+          it('selects choice', () => {
             cy.get('[data-test-hook=within-form] form').then($form => {
               $form.submit(() => {
                 // this will fail the test if the form submits
@@ -765,7 +765,7 @@ describe('Choices - select multiple', () => {
 
             cy.get('[data-test-hook=within-form]')
               .find('.choices__input--cloned')
-              .focus()
+              .click()
               .type('{enter}');
 
             cy.get('[data-test-hook=within-form]')
