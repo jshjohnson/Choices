@@ -21,7 +21,7 @@ jobs:
           HUSKY_SKIP_INSTALL: true
 
       - name: run Cypress
-        run: npx run-p --race start "cypress:ci -- --key ${{ secrets.CYPRESS_RECORD_KEY }}"
+        run: npx run-p --race start cypress:run
         env:
           CI: true
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
