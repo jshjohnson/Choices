@@ -50,6 +50,7 @@ global.Element = window.Element;
 global.HTMLElement = window.HTMLElement;
 global.HTMLOptionElement = window.HTMLOptionElement;
 global.HTMLOptGroupElement = window.HTMLOptGroupElement;
+global.Option = window.Option;
 global.DocumentFragment = window.DocumentFragment;
 
 copyProps(window, global);
