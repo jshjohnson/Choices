@@ -27,4 +27,7 @@ jobs:
           HUSKY_SKIP_INSTALL: true
 
       - name: run eslint
-        run: npx eslint src/scripts
+        run: |
+          CHANGED_JS=$(git --no-pager diff --name-only ..origin/master | grep '^src\/scripts\/.*\.js$' | grep -v json)
+          echo $CHANGED_JS
+          node node_modules/eslint/bin/eslint.js $CHANGED_JS

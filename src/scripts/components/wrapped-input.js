@@ -14,8 +14,7 @@ export default class WrappedInput extends WrappedElement {
     this.element.value = joinedValues;
   }
 
-  // @todo figure out why we need this? Perhaps a babel issue
   get value() {
-    return super.value;
+    return this.element.value;
   }
 }

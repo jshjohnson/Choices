@@ -74,7 +74,7 @@ jobs:
         with:
           fetch-depth: 1
       - run: echo ${{ github.sha }} > RELEASE.txt
-      - run: cat Release.txt
+      - run: cat RELEASE.txt
       - uses: softprops/action-gh-release@v1
         with:
           files: RELEASE.txt

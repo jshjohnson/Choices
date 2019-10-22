@@ -1706,9 +1706,7 @@ class Choices {
     const { choices } = this._store;
     const choiceLabel = label || value;
     const choiceId = choices ? choices.length + 1 : 1;
-    const choiceElementId = `${this._baseId}-${
-      this._idNames.itemChoice
-    }-${choiceId}`;
+    const choiceElementId = `${this._baseId}-${this._idNames.itemChoice}-${choiceId}`;
 
     this._store.dispatch(
       addChoice({
@@ -2086,5 +2084,5 @@ class Choices {
 }
 
 Choices.userDefaults = {};
-// We cannot export default here due to Webpack: https://github.com/webpack/webpack/issues/3929
-module.exports = Choices;
+
+export default Choices;
