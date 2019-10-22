@@ -51,6 +51,48 @@ describe('choices', () => {
         });
       });
 
+      describe('init with SELECT element', () => {
+        it('works with empty select and choices array', () => {
+          const select = document.createElement('select');
+          document.body.appendChild(select);
+          const calledValues = [];
+          const choices = new Choices(select, {
+            choices: [
+              {
+                value: 'Option 1 value',
+                label: 'Option 1',
+                selected: false,
+              },
+              {
+                value: 'Option 2 value',
+                label: 'Option 2',
+                selected: true,
+              },
+            ],
+            callbackOnCreateTemplates: () => ({
+              option({ label, value, active }) {
+                calledValues.push(value);
+                return new Option(label, value, false, active);
+              },
+            }),
+          });
+          expect(choices.getValue(true)).to.equal('Option 2 value');
+          expect(select.value).to.equal('Option 2 value');
+          expect(select.childElementCount).to.equal(1);
+          expect(select.innerHTML).to.equal(
+            '<option value="Option 2 value">Option 2</option>',
+          );
+
+          choices.setChoiceByValue('Option 1 value');
+          expect(calledValues).to.deep.equal([
+            'Option 2 value',
+            'Option 2 value',
+            'Option 1 value',
+            'Option 1 value',
+          ]);
+        });
+      });
+
       describe('not already initialised', () => {
         let createTemplatesSpy;
         let createInputSpy;
