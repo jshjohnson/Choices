@@ -79,7 +79,7 @@ class Choices {
       ? document.querySelector(element)
       : element;
 
-    if (!passedElement) {
+    if (!passedElement && !this.config.silent) {
       return console.error(
         'Could not find passed element or passed element was of an invalid type',
       );
@@ -105,18 +105,16 @@ class Choices {
       });
     }
 
-    if (!this.passedElement) {
-      return console.error('Passed element was of an invalid type');
-    }
+    if (!this.config.silent) {
+      if (!this.passedElement) {
+        return console.error('Passed element was of an invalid type');
+      }
 
-    if (
-      this.config.shouldSortItems === true &&
-      this._isSelectOneElement &&
-      !this.config.silent
-    ) {
-      console.warn(
-        "shouldSortElements: Type of passed element is 'select-one', falling back to false.",
-      );
+      if (this.config.shouldSortItems === true && this._isSelectOneElement) {
+        console.warn(
+          "shouldSortElements: Type of passed element is 'select-one', falling back to false.",
+        );
+      }
     }
 
     this.initialised = false;
@@ -165,7 +163,10 @@ class Choices {
     this._onDeleteKey = this._onDeleteKey.bind(this);
 
     // If element has already been initialised with Choices, fail silently
-    if (this.passedElement.element.getAttribute('data-choice') === 'active') {
+    if (
+      this.passedElement.element.getAttribute('data-choice') === 'active' &&
+      !this.config.silent
+    ) {
       console.warn(
         'Trying to initialise Choices on element already initialised',
       );
