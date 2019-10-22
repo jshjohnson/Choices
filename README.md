@@ -1,5 +1,5 @@
 # Choices.js [![Actions Status](https://github.com/jshjohnson/Choices/workflows/Unit%20Tests/badge.svg)](https://github.com/jshjohnson/Choices/actions) [![npm](https://img.shields.io/npm/v/choices.js.svg)](https://www.npmjs.com/package/choices.js) [![codebeat badge](https://codebeat.co/badges/55120150-5866-42d8-8010-6aaaff5d3fa1)](https://codebeat.co/projects/github-com-jshjohnson-choices-master)
-A vanilla, lightweight (~22kb gzipped 🎉), configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.
+A vanilla, lightweight (~19kb gzipped 🎉), configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.
 
 [Demo](https://joshuajohnson.co.uk/Choices/)
 
@@ -153,11 +153,11 @@ will be returned. If you target one element, that instance will be returned.
 ```
 
 ## Terminology
-| Word   | Definition |
-| ------ | ---------- |
-| Choice | A choice is a value a user can select. A choice would be equivalent to the `<option></option>` element within a select input.  |
-| Group  | A group is a collection of choices. A group should be seen as equivalent to a `<optgroup></optgroup>` element within a select input.|
-| Item   | An item is an inputted value (text input) or a selected choice (select element). In the context of a select element, an item is equivalent to a selected option element: `<option value="Hello" selected></option>` whereas in the context of a text input an item is equivalent to `<input type="text" value="Hello">`|
+| Word   | Definition                                                                                                                                                                                                                                                                                                              |
+| ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Choice | A choice is a value a user can select. A choice would be equivalent to the `<option></option>` element within a select input.                                                                                                                                                                                           |
+| Group  | A group is a collection of choices. A group should be seen as equivalent to a `<optgroup></optgroup>` element within a select input.                                                                                                                                                                                    |
+| Item   | An item is an inputted value (text input) or a selected choice (select element). In the context of a select element, an item is equivalent to a selected option element: `<option value="Hello" selected></option>` whereas in the context of a text input an item is equivalent to `<input type="text" value="Hello">` |
 
 
 ## Configuration options
@@ -944,18 +944,18 @@ To setup a local environment: clone this repo, navigate into it's directory in a
 ```npm install```
 
 ### NPM tasks
-| Task                 | Usage                                                        |
-| -------------------- | ------------------------------------------------------------ |
-| `npm run start`      | Fire up local server for development                         |
-| `npm run test:unit`  | Run sequence of tests once                                   |
-| `npm run test:unit:watch` | Fire up test server and re-test on file change          |
-| `npm run test:e2e`    | Run sequence of e2e tests (with local server)               |
-| `npm run test`    | Run both unit and e2e tests                                     |
-| `npm run cypress:open`    | Run Cypress e2e tests (GUI)                        |
-| `npm run cypress:run`    | Run Cypress e2e tests (CLI)                                  |
-| `npm run js:build`   | Compile Choices to an uglified JavaScript file               |
-| `npm run css:watch`  | Watch SCSS files for changes. On a change, run build process |
-| `npm run css:build`  | Compile, minify and prefix SCSS files to CSS                 |
+| Task                      | Usage                                                        |
+| ------------------------- | ------------------------------------------------------------ |
+| `npm run start`           | Fire up local server for development                         |
+| `npm run test:unit`       | Run sequence of tests once                                   |
+| `npm run test:unit:watch` | Fire up test server and re-test on file change               |
+| `npm run test:e2e`        | Run sequence of e2e tests (with local server)                |
+| `npm run test`            | Run both unit and e2e tests                                  |
+| `npm run cypress:open`    | Run Cypress e2e tests (GUI)                                  |
+| `npm run cypress:run`     | Run Cypress e2e tests (CLI)                                  |
+| `npm run js:build`        | Compile Choices to an uglified JavaScript file               |
+| `npm run css:watch`       | Watch SCSS files for changes. On a change, run build process |
+| `npm run css:build`       | Compile, minify and prefix SCSS files to CSS                 |
 
 ## License
 MIT License
