@@ -28,6 +28,7 @@ jobs:
 
       - name: run eslint
         run: |
-          CHANGED_JS=$(git --no-pager diff --name-only ..origin/master | grep '^src\/scripts\/.*\.js$' | grep -v json)
+          CHANGED_JS=$(git --no-pager diff --name-only ..origin/master | grep '^src\/scripts\/.*\.js$' | paste -sd " " -)
+          if [[ -z $(sed -e 's/[[:space:]]*$//' <<<${CHANGED_JS}) ]]; then CHANGED_JS="src/scripts"; fi
           echo $CHANGED_JS
           node node_modules/eslint/bin/eslint.js $CHANGED_JS
