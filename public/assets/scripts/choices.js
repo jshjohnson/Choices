@@ -6451,7 +6451,8 @@ function (_WrappedElement) {
   }, {
     key: "placeholderOption",
     get: function get() {
-      return this.element.querySelector('option[placeholder]');
+      return this.element.querySelector('option[value=""]') || // Backward compatibility layer for the non-standard placeholder attribute supported in older versions.
+      this.element.querySelector('option[placeholder]');
     }
   }, {
     key: "optionGroups",

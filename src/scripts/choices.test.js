@@ -36,6 +36,7 @@ describe('choices', () => {
       beforeEach(() => {
         instance = new Choices(passedElement, {
           callbackOnInit: callbackOnInitSpy,
+          silent: true,
         });
       });
 
