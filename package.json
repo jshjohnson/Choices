@@ -85,8 +85,7 @@
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.9",
     "webpack-dev-middleware": "^3.7.2",
-    "webpack-hot-middleware": "^2.25.0",
-    "wrapper-webpack-plugin": "^2.1.0"
+    "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
     "classnames": "^2.2.6",

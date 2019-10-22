@@ -1,6 +1,6 @@
 const path = require('path');
 const deepMerge = require('deepmerge');
-const WrapperPlugin = require('wrapper-webpack-plugin');
+const { BannerPlugin } = require('webpack');
 
 const baseConfig = require('./webpack.config.base');
 const { name, version, author, homepage } = require('./package.json');
@@ -16,9 +16,9 @@ const prodConfig = deepMerge(
       publicPath: '/public/assets/scripts/',
     },
     plugins: [
-      new WrapperPlugin({
-        header: `/*! ${name} v${version} | © ${new Date().getFullYear()} ${author} | ${homepage} */ \n`,
-      }),
+      new BannerPlugin(
+        `${name} v${version} | © ${new Date().getFullYear()} ${author} | ${homepage}`,
+      ),
     ],
   },
   {
