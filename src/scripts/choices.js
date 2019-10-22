@@ -105,16 +105,8 @@ class Choices {
       });
     }
 
-    if (!this.config.silent) {
-      if (!this.passedElement) {
-        return console.error('Passed element was of an invalid type');
-      }
-
-      if (this.config.shouldSortItems === true && this._isSelectOneElement) {
-        console.warn(
-          "shouldSortElements: Type of passed element is 'select-one', falling back to false.",
-        );
-      }
+    if (!this.passedElement) {
+      return console.error('Passed element was of an invalid type');
     }
 
     this.initialised = false;
@@ -162,14 +154,19 @@ class Choices {
     this._onDirectionKey = this._onDirectionKey.bind(this);
     this._onDeleteKey = this._onDeleteKey.bind(this);
 
-    // If element has already been initialised with Choices, fail silently
-    if (
-      this.passedElement.element.getAttribute('data-choice') === 'active' &&
-      !this.config.silent
-    ) {
-      console.warn(
-        'Trying to initialise Choices on element already initialised',
-      );
+    if (!this.config.silent) {
+      if (this.config.shouldSortItems === true && this._isSelectOneElement) {
+        console.warn(
+          "shouldSortElements: Type of passed element is 'select-one', falling back to false.",
+        );
+      }
+
+      // If element has already been initialised with Choices, fail silently
+      if (this.passedElement.element.getAttribute('data-choice') === 'active') {
+        console.warn(
+          'Trying to initialise Choices on element already initialised',
+        );
+      }
     }
 
     // Let's go
