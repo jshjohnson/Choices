@@ -5,6 +5,8 @@ on:
     paths:
       - 'src/scripts/**'
       - 'src/styles/**'
+      - 'package-lock.json'
+      - '.browserslistrc'
 
 jobs:
   measure:
@@ -26,13 +28,15 @@ jobs:
           CYPRESS_INSTALL_BINARY: 0
           HUSKY_SKIP_INSTALL: true
 
+      # we don't need to build here, as even minized assets expected to be commited
+
       - run: npx bundlesize
         env:
           CI: true
           BUNDLESIZE_GITHUB_TOKEN: ${{secrets.BUNDLESIZE_GITHUB_TOKEN}}
           CI_REPO_NAME: ${{ github.event.repository.name }}
           CI_REPO_OWNER: ${{ github.event.organization.login }}
-          CI_COMMIT_SHA: ${{ github.sha }}
-          GIT_COMMIT: ${{ github.sha }}
+          CI_COMMIT_SHA: ${{ github.event.after }}
+          GIT_COMMIT: ${{ github.event.after }}
           CI_BRANCH: ${{ github.head_ref }}
           FORCE_COLOR: 2

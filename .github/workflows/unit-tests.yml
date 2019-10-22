@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - 'src/scripts/**'
+      - package-lock.json
+      - '.browserslistrc'
 
 jobs:
   test:
