@@ -15,6 +15,11 @@ export default class WrappedElement {
     return this.element.value;
   }
 
+  set value(value) {
+    // you must define setter here otherwise it will be readonly property
+    this.element.value = value;
+  }
+
   conceal() {
     // Hide passed input
     this.element.classList.add(this.classNames.input);
