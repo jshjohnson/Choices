@@ -19,7 +19,9 @@
 .choices.is-disabled .choices__input {
   background-color: #EAEAEA;
   cursor: not-allowed;
-  user-select: none;
+  -webkit-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 .choices.is-disabled .choices__item {
@@ -302,7 +304,9 @@
 
 .choices__item--disabled {
   cursor: not-allowed;
-  user-select: none;
+  -webkit-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
   opacity: .5;
 }
 
