@@ -724,7 +724,11 @@ export default class Choices {
   wasTap: boolean;
 
   constructor(
-    element: string | HTMLInputElement | HTMLSelectElement,
+    element:
+      | string
+      | HTMLInputElement
+      | HTMLSelectElement
+      | Array<string | HTMLInputElement | HTMLSelectElement>,
     userConfig?: Choices.Options
   );
 
