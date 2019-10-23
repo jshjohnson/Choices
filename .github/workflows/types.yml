@@ -1,0 +1,27 @@
+name: TypeScript Check
+
+on:
+  pull_request:
+    paths:
+      - 'types/index.d.ts'
+
+jobs:
+  tsc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install TypeScript
+        run: npm install -g typescript
+
+      - name: Install required dependencies
+        run: npm i --only=production --no-optional --no-audit --ignore-scripts
+
+      - name: Check typings file
+        run: tsc types/index.d.ts
