@@ -12,6 +12,7 @@ module.exports = {
     library: 'Choices',
     libraryTarget: 'umd',
     libraryExport: 'default',
+    globalObject: 'window',
   },
   module: {
     rules: [
