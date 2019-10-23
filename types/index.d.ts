@@ -1,8 +1,7 @@
-// Type definitions for Choices.js 7.0.0
+// Type definitions for Choices.js 7.1.x
 // Project: https://github.com/jshjohnson/Choices
 // Definitions by: Arthur vasconcelos <https://github.com/arthurvasconcelos>, Josh Johnson <https://github.com/jshjohnson>, Zack Schuster <https://github.com/zackschuster>
 // Definitions: https://github.com/jshjohnson/Choices
-// TypeScript Version: 2.9.2
 
 import { FuseOptions } from 'fuse.js';
 
@@ -21,7 +20,7 @@ declare namespace Choices {
   }
 
   interface Choice {
-    customProperties?: Record<sting, any>;
+    customProperties?: Record<string, any>;
     disabled?: boolean;
     elementId?: string;
     groupId?: string;
@@ -641,7 +640,7 @@ declare namespace Choices {
     /**
      * Choices uses the great Fuse library for searching. You can find more options here: https://github.com/krisk/Fuse#options
      */
-    fuseOptions?: FuseOptions;
+    fuseOptions?: FuseOptions<Choice>;
 
     /**
      * Function to run once Choices initialises.
@@ -724,13 +723,19 @@ export default class Choices {
   wasTap: boolean;
 
   constructor(
-    element:
-      | string
-      | HTMLInputElement
-      | HTMLSelectElement
-      | Array<string | HTMLInputElement | HTMLSelectElement>,
+    selectorOrElement: string | HTMLInputElement | HTMLSelectElement,
     userConfig?: Choices.Options
   );
+
+  /**
+   * It's impossible to declare in TypeScript what Choices constructor is actually doing:
+   * @see {@link https://github.com/Microsoft/TypeScript/issues/27594}
+   * it returns array of Choices in case if selectorOrElement is string
+   * and one instance of Choices otherwise
+   * This little hack will at least allow to use it in Typescript
+   *
+   */
+  [index: number]: this;
 
   /**
    * Creates a new instance of Choices, adds event listeners, creates templates and renders a Choices element to the DOM.
