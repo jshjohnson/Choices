@@ -30,7 +30,7 @@ module.exports = [
   deepMerge(
     prodConfig,
     {
-      output: { filename: 'choices.js' },
+      output: { filename: 'choices.js', libraryTarget: 'umd' },
       optimization: { minimize: false },
     },
     {

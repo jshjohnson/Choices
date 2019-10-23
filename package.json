@@ -2,7 +2,7 @@
   "name": "choices.js",
   "version": "7.1.5",
   "description": "A vanilla JS customisable text input/select box plugin",
-  "main": "./public/assets/scripts/choices.min.js",
+  "main": "./public/assets/scripts/choices.js",
   "types": "./types/index.d.ts",
   "scripts": {
     "start": "run-p js:watch css:watch",
