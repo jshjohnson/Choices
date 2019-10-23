@@ -33,8 +33,7 @@ jobs:
         run: bash <(curl -s https://codecov.io/bash)
           -f ./coverage/lcov.info
           -B ${{ github.head_ref }}
-          -C ${{ github.event.after }}
-          -P ${{ github.event.number }}
+          -C ${{ github.sha }}
           -Z || echo 'Codecov upload failed'
         env:
           CI: true
