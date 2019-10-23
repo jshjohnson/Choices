@@ -15,6 +15,22 @@ describe('choices', () => {
     });
   };
 
+  describe('constructor can return array of instances', () => {
+    it('should be the same as number of matched elements', () => {
+      document.body.innerHTML = `
+      <input data-choice type="text" id="inp1" />
+      <input data-choice type="text" id="inp2" />
+      <input data-choice type="text" id="inp3" />
+      `;
+
+      const inputs = document.querySelectorAll('[data-choice]');
+      expect(inputs.length).to.equal(3);
+
+      const choices = new Choices();
+      expect(choices.length).to.equal(inputs.length);
+    });
+  });
+
   describe('public methods', () => {
     beforeEach(() => {
       passedElement = document.createElement('input');
