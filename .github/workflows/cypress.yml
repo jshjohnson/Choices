@@ -3,7 +3,7 @@ name: Cypress
 on: [pull_request]
 
 jobs:
-  run-e2e:
+  test-e2e:
     name: integration tests
     runs-on: ubuntu-latest
     steps:
