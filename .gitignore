@@ -4,8 +4,8 @@ npm-debug.log
 .idea
 
 # Built assets
-public/styles
-public/scripts
+public/assets/styles
+public/assets/scripts
 
 # Test
 tests/reports
