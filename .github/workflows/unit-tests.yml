@@ -34,6 +34,7 @@ jobs:
           -f ./coverage/lcov.info
           -B ${{ github.head_ref }}
           -C ${{ github.sha }}
+          -P ${{ github.event.number }}
           -Z || echo 'Codecov upload failed'
         env:
           CI: true
