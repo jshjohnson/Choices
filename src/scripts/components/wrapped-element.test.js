@@ -53,10 +53,7 @@ describe('components/wrappedElement', () => {
       expect(
         instance.element.classList.contains(instance.classNames.input),
       ).to.equal(true);
-      expect(
-        instance.element.classList.contains(instance.classNames.hiddenState),
-      ).to.equal(true);
-      expect(instance.element.getAttribute('aria-hidden')).to.equal('true');
+      expect(instance.element.hidden).to.be.true;
       expect(instance.element.getAttribute('data-choice')).to.equal('active');
       expect(instance.element.getAttribute('data-choice-orig-style')).to.equal(
         originalStyling,
@@ -78,9 +75,7 @@ describe('components/wrappedElement', () => {
       expect(
         instance.element.classList.contains(instance.classNames.input),
       ).to.equal(false);
-      expect(
-        instance.element.classList.contains(instance.classNames.hiddenState),
-      ).to.equal(false);
+      expect(instance.element.hidden).to.be.false;
       expect(instance.element.getAttribute('style')).to.equal(originalStyling);
       expect(instance.element.getAttribute('aria-hidden')).to.equal(null);
       expect(instance.element.getAttribute('data-choice')).to.equal(null);

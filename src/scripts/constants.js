@@ -22,7 +22,6 @@ export const DEFAULT_CLASSNAMES = {
   openState: 'is-open',
   disabledState: 'is-disabled',
   highlightedState: 'is-highlighted',
-  hiddenState: 'is-hidden',
   flippedState: 'is-flipped',
   loadingState: 'is-loading',
   noResults: 'has-no-results',

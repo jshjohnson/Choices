@@ -79,7 +79,7 @@ describe('Choices - select multiple', () => {
 
           it('updates the value of the original input', () => {
             cy.get('[data-test-hook=basic]')
-              .find('.choices__input.is-hidden')
+              .find('.choices__input[hidden]')
               .should($select => {
                 expect($select.val()).to.contain(selectedChoiceText);
               });
@@ -150,7 +150,7 @@ describe('Choices - select multiple', () => {
 
           it('updates the value of the original input', () => {
             cy.get('[data-test-hook=basic]')
-              .find('.choices__input.is-hidden')
+              .find('.choices__input[hidden]')
               .should($select => {
                 const val = $select.val() || [];
                 expect(val).to.not.contain(removedChoiceText);
@@ -806,7 +806,7 @@ describe('Choices - select multiple', () => {
 
       it('updates the value of the original input', () => {
         cy.get('[data-test-hook=set-choice-by-value]')
-          .find('.choices__input.is-hidden')
+          .find('.choices__input[hidden]')
           .should($select => {
             const val = $select.val() || [];
             expect(val).to.contain(dynamicallySelectedChoiceValue);
