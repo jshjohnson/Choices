@@ -33,16 +33,22 @@
       }
     ],
     "import/no-useless-path-segments": "warn",
-    "prefer-destructuring": ["warn", {
-      "array": false,
-      "object": true
-    }]
+    "prefer-destructuring": [
+      "warn",
+      {
+        "array": false,
+        "object": true
+      }
+    ]
   },
   "overrides": [
     {
       "files": ["*.test.js"],
       "env": {
         "mocha": true
+      },
+      "rules": {
+        "no-restricted-syntax": "off"
       }
     },
     {
