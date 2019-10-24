@@ -1,15 +1,18 @@
 import { expect } from 'chai';
 import templates from './templates';
-import { getType, strToEl } from './lib/utils';
+import { strToEl } from './lib/utils';
 
 /**
  *
- * @param {Element} element1
- * @param {Element} element2
+ * @param {HTMLElement} element1
+ * @param {HTMLElement} element2
  */
 function expectEqualElements(element1, element2) {
   expect(element1.tagName).to.equal(element2.tagName);
   expect(element1.attributes.length).to.equal(element2.attributes.length);
+  expect(Object.keys(element1.dataset)).to.have.members(
+    Object.keys(element2.dataset),
+  );
   // compare attributes values
   for (const attribute of Object.values(element1.attributes)) {
     expect(element1.getAttribute(attribute)).to.equal(
