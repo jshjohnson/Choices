@@ -88,7 +88,6 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
-    "classnames": "^2.2.6",
     "deepmerge": "^4.2.0",
     "fuse.js": "^3.4.5",
     "redux": "^4.0.4"
