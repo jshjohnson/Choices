@@ -73,8 +73,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
     if (disabled) div.setAttribute('aria-disabled', 'true');
 
     if (isPlaceholder) div.classList.add(placeholder);
-    if (highlighted) div.classList.add(highlightedState);
-    else div.classList.add(itemSelectable);
+    div.classList.add(highlighted ? highlightedState : itemSelectable);
 
     if (removeItemButton) {
       if (disabled) div.classList.remove(itemSelectable);
