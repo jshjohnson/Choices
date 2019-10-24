@@ -1,4 +1,10 @@
-export const TEMPLATES = {
+/**
+ * Helpers to create HTML elements used by Choices
+ * Can be overridden by providing `callbackOnCreateTemplates` option
+ * @typedef {import('../../types/index').Choices.Templates} Templates
+ */
+
+export const TEMPLATES = /** @type {Templates} */ ({
   containerOuter(
     { containerOuter },
     dir,
@@ -170,16 +176,12 @@ export const TEMPLATES = {
     return div;
   },
   notice({ item, itemChoice, noResults, noChoices }, innerHTML, type = '') {
+    const classes = [item, itemChoice];
+    if (type === 'no-choices') classes.push(noChoices);
+    else if (type === 'no-results') classes.push(noResults);
     return Object.assign(document.createElement('div'), {
       innerHTML,
-      className: `${item} ${itemChoice} ${
-        // eslint-disable-next-line no-nested-ternary
-        type === 'no-results'
-          ? noResults
-          : type === 'no-choices'
-          ? noChoices
-          : ''
-      }`,
+      className: classes.join(' '),
     });
   },
   option({ label, value, customProperties, active, disabled }) {
@@ -188,6 +190,6 @@ export const TEMPLATES = {
     opt.disabled = disabled;
     return opt;
   },
-};
+});
 
 export default TEMPLATES;
