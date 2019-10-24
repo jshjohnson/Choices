@@ -1,3 +1,5 @@
 {
-  "eslint.enable": true
+  "eslint.enable": true,
+  // Javascript prettier runs via ESLint
+  "prettier.disableLanguages": ["javascript"]
 }
