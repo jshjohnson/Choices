@@ -3,6 +3,10 @@ npm-debug.log
 .DS_Store
 .idea
 
+# Built assets
+public/styles
+public/scripts
+
 # Test
 tests/reports
 tests/results
