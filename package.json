@@ -24,6 +24,7 @@
     "css:sass": "node-sass --output-style expanded --include-path scss src/styles/base.scss public/assets/styles/base.css && node-sass --output-style expanded --include-path scss src/styles/choices.scss public/assets/styles/choices.css",
     "css:prefix": "postcss public/assets/styles/*.css --use autoprefixer --no-map --env prod --dir public/assets/styles",
     "css:min": "csso public/assets/styles/base.css --output public/assets/styles/base.min.css && csso public/assets/styles/choices.css --output public/assets/styles/choices.min.css",
+    "predeploy": "npm run build",
     "deploy": "git subtree push --prefix public origin gh-pages",
     "prepush": "run-s lint test:unit bundlesize",
     "postversion": "git push --no-verify --atomic --follow-tags",
