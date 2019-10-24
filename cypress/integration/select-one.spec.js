@@ -208,7 +208,7 @@ describe('Choices - select one', () => {
 
           it('updates the value of the original input', () => {
             cy.get('[data-test-hook=remove-button]')
-              .find('.choices__input.is-hidden')
+              .find('.choices__input[hidden]')
               .should($select => {
                 const val = $select.val() || [];
 
@@ -818,7 +818,7 @@ describe('Choices - select one', () => {
 
       it('updates the value of the original input', () => {
         cy.get('[data-test-hook=set-choice-by-value]')
-          .find('.choices__input.is-hidden')
+          .find('.choices__input[hidden]')
           .should($select => {
             const val = $select.val() || [];
             expect(val).to.contain(dynamicallySelectedChoiceValue);

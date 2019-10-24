@@ -2,23 +2,23 @@
 =            Generic styling                  =
 =============================================*/
 
-$global-guttering : 24px;
-$global-font-size-h1 : 32px;
-$global-font-size-h2 : 24px;
-$global-font-size-h3 : 20px;
-$global-font-size-h4 : 18px;
-$global-font-size-h5 : 16px;
-$global-font-size-h6 : 14px;
+$global-guttering: 24px;
+$global-font-size-h1: 32px;
+$global-font-size-h2: 24px;
+$global-font-size-h3: 20px;
+$global-font-size-h4: 18px;
+$global-font-size-h5: 16px;
+$global-font-size-h6: 14px;
 
 * {
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale
+  -moz-osx-font-smoothing: grayscale;
 }
 
 *,
 *:before,
 *:after {
-  box-sizing: border-box
+  box-sizing: border-box;
 }
 
 html,
@@ -30,10 +30,10 @@ body {
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
   font-size: 16px;
   line-height: 1.4;
-  color: #FFFFFF;
+  color: #ffffff;
   background-color: #333;
   overflow-x: hidden;
 }
@@ -52,7 +52,7 @@ p {
 
 hr {
   display: block;
-  margin: $global-guttering*1.25 0;
+  margin: $global-guttering * 1.25 0;
   border: 0;
   border-bottom: 1px solid #eaeaea;
   height: 1px;
@@ -73,7 +73,7 @@ h6 {
 a,
 a:visited,
 a:focus {
-  color: #FFFFFF;
+  color: #ffffff;
   text-decoration: none;
   font-weight: 600;
 }
@@ -133,14 +133,14 @@ label + p {
   display: block;
   margin: auto;
   max-width: 40em;
-  padding: $global-guttering*2;
+  padding: $global-guttering * 2;
   @media (max-width: 620px) {
     padding: 0;
   }
 }
 
 .section {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding: $global-guttering;
   color: #333;
   a,
@@ -182,10 +182,6 @@ label + p {
 
 .text-center {
   text-align: center;
-}
-
-.is-hidden {
-  display: none;
 }
 
 [data-test-hook] {

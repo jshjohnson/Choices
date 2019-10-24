@@ -2,7 +2,7 @@
   "parserOptions": {
     "ecmaVersion": 2020
   },
-  "extends": ["airbnb-base", "prettier"],
+  "extends": ["airbnb-base", "plugin:prettier/recommended"],
   "plugins": ["prettier"],
   "env": {
     "es6": true,
@@ -25,13 +25,6 @@
     "no-unused-expressions": "off",
     "no-underscore-dangle": "off",
     "consistent-return": "off",
-    "prettier/prettier": [
-      "error",
-      {
-        "singleQuote": true,
-        "trailingComma": "all"
-      }
-    ],
     "import/no-useless-path-segments": "warn",
     "prefer-destructuring": [
       "warn",

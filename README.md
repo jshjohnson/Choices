@@ -136,7 +136,6 @@ will be returned. If you target one element, that instance will be returned.
       openState: 'is-open',
       disabledState: 'is-disabled',
       highlightedState: 'is-highlighted',
-      hiddenState: 'is-hidden',
       flippedState: 'is-flipped',
       loadingState: 'is-loading',
       noResults: 'has-no-results',
@@ -518,7 +517,6 @@ classNames: {
   openState: 'is-open',
   disabledState: 'is-disabled',
   highlightedState: 'is-highlighted',
-  hiddenState: 'is-hidden',
   flippedState: 'is-flipped',
   selectedState: 'is-highlighted',
 }
