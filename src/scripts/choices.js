@@ -822,7 +822,7 @@ class Choices {
     }
 
     // If we are clicking on an option
-    const id = element.getAttribute('data-id');
+    const { id } = element.dataset;
     const choice = this._store.getChoiceById(id);
     if (!choice) return;
     const passedKeyCode =
