@@ -1331,7 +1331,7 @@ describe('choices', () => {
           ...choices[0],
           choices,
         },
-        ...choices[1],
+        choices[1],
       ];
 
       beforeEach(() => {
