@@ -10,5 +10,5 @@ module.exports = {
   ],
   '.codecov.yml': () =>
     'curl -f --silent --data-binary @.codecov.yml https://codecov.io/validate',
-  'src/scripts/**/*.js': () => 'mocha',
+  'src/scripts/**/*.js': () => 'npm run test:unit',
 };
