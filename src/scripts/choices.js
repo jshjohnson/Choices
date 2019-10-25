@@ -1,7 +1,6 @@
 import Fuse from 'fuse.js';
 import merge from 'deepmerge';
 
-import './lib/delegate-events';
 import Store from './store/store';
 import {
   Dropdown,
@@ -1085,48 +1084,91 @@ class Choices {
   }
 
   _addEventListeners() {
-    window.delegateEvent.add('keyup', this._onKeyUp);
-    window.delegateEvent.add('keydown', this._onKeyDown);
-    window.delegateEvent.add('click', this._onClick);
-    window.delegateEvent.add('touchmove', this._onTouchMove);
-    window.delegateEvent.add('touchend', this._onTouchEnd);
-    window.delegateEvent.add('mousedown', this._onMouseDown);
-    window.delegateEvent.add('mouseover', this._onMouseOver);
+    const { documentElement } = document;
+
+    // capture events - can cancel event processing or propagation
+    documentElement.addEventListener('keydown', this._onKeyDown, true);
+    documentElement.addEventListener('touchend', this._onTouchEnd, true);
+    documentElement.addEventListener('mousedown', this._onMouseDown, true);
+
+    // passive events - doesn't call `preventDefault` or `stopPropagation`
+    documentElement.addEventListener('click', this._onClick, { passive: true });
+    documentElement.addEventListener('touchmove', this._onTouchMove, {
+      passive: true,
+    });
+    documentElement.addEventListener('mouseover', this._onMouseOver, {
+      passive: true,
+    });
 
     if (this._isSelectOneElement) {
-      this.containerOuter.element.addEventListener('focus', this._onFocus);
-      this.containerOuter.element.addEventListener('blur', this._onBlur);
+      this.containerOuter.element.addEventListener('focus', this._onFocus, {
+        passive: true,
+      });
+      this.containerOuter.element.addEventListener('blur', this._onBlur, {
+        passive: true,
+      });
     }
 
-    this.input.element.addEventListener('focus', this._onFocus);
-    this.input.element.addEventListener('blur', this._onBlur);
+    this.input.element.addEventListener('keyup', this._onKeyUp, {
+      passive: true,
+    });
+
+    this.input.element.addEventListener('focus', this._onFocus, {
+      passive: true,
+    });
+    this.input.element.addEventListener('blur', this._onBlur, {
+      passive: true,
+    });
 
     if (this.input.element.form) {
-      this.input.element.form.addEventListener('reset', this._onFormReset);
+      this.input.element.form.addEventListener('reset', this._onFormReset, {
+        passive: true,
+      });
     }
 
     this.input.addEventListeners();
   }
 
   _removeEventListeners() {
-    window.delegateEvent.remove('keyup', this._onKeyUp);
-    window.delegateEvent.remove('keydown', this._onKeyDown);
-    window.delegateEvent.remove('click', this._onClick);
-    window.delegateEvent.remove('touchmove', this._onTouchMove);
-    window.delegateEvent.remove('touchend', this._onTouchEnd);
-    window.delegateEvent.remove('mousedown', this._onMouseDown);
-    window.delegateEvent.remove('mouseover', this._onMouseOver);
+    const { documentElement } = document;
+
+    documentElement.removeEventListener('keydown', this._onKeyDown, true);
+    documentElement.removeEventListener('touchend', this._onTouchEnd, true);
+    documentElement.removeEventListener('mousedown', this._onMouseDown, true);
+
+    documentElement.removeEventListener('keyup', this._onKeyUp, {
+      passive: true,
+    });
+    documentElement.removeEventListener('click', this._onClick, {
+      passive: true,
+    });
+    documentElement.removeEventListener('touchmove', this._onTouchMove, {
+      passive: true,
+    });
+    documentElement.removeEventListener('mouseover', this._onMouseOver, {
+      passive: true,
+    });
 
     if (this._isSelectOneElement) {
-      this.containerOuter.element.removeEventListener('focus', this._onFocus);
-      this.containerOuter.element.removeEventListener('blur', this._onBlur);
+      this.containerOuter.element.removeEventListener('focus', this._onFocus, {
+        passive: true,
+      });
+      this.containerOuter.element.removeEventListener('blur', this._onBlur, {
+        passive: true,
+      });
     }
 
-    this.input.element.removeEventListener('focus', this._onFocus);
-    this.input.element.removeEventListener('blur', this._onBlur);
+    this.input.element.removeEventListener('focus', this._onFocus, {
+      passive: true,
+    });
+    this.input.element.removeEventListener('blur', this._onBlur, {
+      passive: true,
+    });
 
     if (this.input.element.form) {
-      this.input.element.form.removeEventListener('reset', this._onFormReset);
+      this.input.element.form.removeEventListener('reset', this._onFormReset, {
+        passive: true,
+      });
     }
 
     this.input.removeEventListeners();
@@ -1196,10 +1238,6 @@ class Choices {
   }
 
   _onKeyUp({ target, keyCode }) {
-    if (target !== this.input.element) {
-      return;
-    }
-
     const { value } = this.input;
     const { activeItems } = this._store;
     const canAddItem = this._canAddItem(activeItems, value);
