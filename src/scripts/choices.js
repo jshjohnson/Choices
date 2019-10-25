@@ -856,7 +856,7 @@ class Choices {
 
     this.clearInput();
 
-    // We wont to close the dropdown if we are dealing with a single select box
+    // We want to close the dropdown if we are dealing with a single select box
     if (hasActiveDropdown && this._isSelectOneElement) {
       this.hideDropdown(true);
       this.containerOuter.focus();
