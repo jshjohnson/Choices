@@ -11,11 +11,12 @@ declare namespace Choices {
     type renderSelected = 'auto' | 'always';
     type dropdownPosition = 'auto' | 'top';
     type strToEl = (
-      str: string
+      str: string,
     ) => HTMLElement | HTMLInputElement | HTMLOptionElement;
     type stringFunction = () => string;
     type noticeStringFunction = (value: string) => string;
     type noticeLimitFunction = (maxItemCount: number) => string;
+    type filterFunction = (value: string) => boolean;
     type callbackOnCreateTemplates = (template: strToEl) => Choices.Templates;
   }
 
@@ -135,17 +136,17 @@ declare namespace Choices {
     containerInner?: (classNames: ClassNames) => HTMLElement;
     itemList?: (
       classNames: ClassNames,
-      isSelectOneElement: boolean
+      isSelectOneElement: boolean,
     ) => HTMLElement;
     placeholder?: (classNames: ClassNames, value: string) => HTMLElement;
     item?: (
       classNames: ClassNames,
       data: Choice,
-      removeItemButton: boolean
+      removeItemButton: boolean,
     ) => HTMLElement;
     choiceList?: (
       classNames: ClassNames,
-      isSelectOneElement: boolean
+      isSelectOneElement: boolean,
     ) => HTMLElement;
     choiceGroup?: (classNames: ClassNames, data: Choice) => HTMLElement;
     choice?: (classNames: ClassNames, data: Choice) => HTMLElement;
@@ -217,9 +218,9 @@ declare namespace Choices {
         type: K,
         listener: (
           this: HTMLInputElement | HTMLSelectElement,
-          ev: Choices.EventMap[K]
+          ev: Choices.EventMap[K],
         ) => void,
-        options?: boolean | AddEventListenerOptions
+        options?: boolean | AddEventListenerOptions,
       ): void;
     };
     isDisabled: boolean;
@@ -339,7 +340,7 @@ declare namespace Choices {
      *
      * @default null
      */
-    addItemFilterFn?: (value: string) => boolean;
+    addItemFilter?: string | RegExp | Choices.Types.filterFunction;
 
     /**
      * The text that is shown when a user has inputted a new item but has not pressed the enter key. To access the current input value, pass a function with a `value` argument (see the **default config** [https://github.com/jshjohnson/Choices#setup] for an example), otherwise pass a string.
@@ -722,7 +723,7 @@ export default class Choices {
 
   constructor(
     selectorOrElement: string | HTMLInputElement | HTMLSelectElement,
-    userConfig?: Choices.Options
+    userConfig?: Choices.Options,
   );
 
   /**
@@ -895,7 +896,7 @@ export default class Choices {
     choices: Choices.Choice[],
     value: string,
     label: string,
-    replaceChoices?: boolean
+    replaceChoices?: boolean,
   ): this;
 
   /**
@@ -954,20 +955,20 @@ export default class Choices {
   private createGroupsFragment(
     groups: Choices.Group[],
     choices: Choices.Choice[],
-    fragment: DocumentFragment
+    fragment: DocumentFragment,
   ): DocumentFragment;
 
   /** Render choices into a DOM fragment and append to choice list */
   private createChoicesFragment(
     choices: Choices.Choice[],
     fragment: DocumentFragment,
-    withinGroup?: boolean
+    withinGroup?: boolean,
   ): DocumentFragment;
 
   /** Render items into a DOM fragment and append to items list */
   private _createItemsFragment(
     items: Choices.Item[],
-    fragment?: DocumentFragment
+    fragment?: DocumentFragment,
   ): void;
 
   /** Render DOM with values */

@@ -62,6 +62,18 @@ class Choices {
       { arrayMerge: (destinationArray, sourceArray) => [...sourceArray] },
     );
 
+    // Convert addItemFilter to function
+    if (
+      userConfig.addItemFilter &&
+      typeof userConfig.addItemFilter !== 'function'
+    ) {
+      const re =
+        userConfig.addItemFilter instanceof RegExp
+          ? userConfig.addItemFilter
+          : new RegExp(userConfig.addItemFilter);
+      this.config.addItemFilter = re.test.bind(re);
+    }
+
     const invalidConfigOptions = diff(this.config, DEFAULT_CONFIG);
     if (invalidConfigOptions.length) {
       console.warn(
@@ -993,13 +1005,14 @@ class Choices {
         this._isTextElement &&
         this.config.addItems &&
         canAddItem &&
-        isType('Function', this.config.addItemFilterFn) &&
-        !this.config.addItemFilterFn(value)
+        typeof this.config.addItemFilter === 'function' &&
+        !this.config.addItemFilter(value)
       ) {
         canAddItem = false;
-        notice = isType('Function', this.config.customAddItemText)
-          ? this.config.customAddItemText(value)
-          : this.config.customAddItemText;
+        notice =
+          typeof this.config.customAddItemText === 'function'
+            ? this.config.customAddItemText(value)
+            : this.config.customAddItemText;
       }
     }
 
