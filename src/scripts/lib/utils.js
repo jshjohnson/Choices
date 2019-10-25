@@ -39,19 +39,11 @@ export const wrap = (element, wrapper = document.createElement('div')) => {
   return wrapper.appendChild(element);
 };
 
-export const findAncestorByAttrName = (el, attr) => {
-  let target = el;
-
-  while (target) {
-    if (target.hasAttribute(attr)) {
-      return target;
-    }
-
-    target = target.parentElement;
-  }
-
-  return null;
-};
+/**
+ * @param {HTMLElement} el
+ * @param {string} attr
+ */
+export const findAncestorByAttrName = (el, attr) => el.closest(`[${attr}]`);
 
 export const getAdjacentEl = (startEl, className, direction = 1) => {
   if (!startEl || !className) {
