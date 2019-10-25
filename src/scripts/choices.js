@@ -32,7 +32,6 @@ import {
   sortByScore,
   generateId,
   findAncestorByAttrName,
-  fetchFromObject,
   isIE11,
   existsInArray,
   cloneObject,
@@ -178,7 +177,7 @@ class Choices {
   }
 
   /* ========================================
-  =            Public functions            =
+  =            Public methods              =
   ======================================== */
 
   init() {
@@ -475,18 +474,32 @@ class Choices {
     return this;
   }
 
-  ajax(fn) {
-    if (!this.initialised || !this._isSelectElement || !fn) {
-      return this;
-    }
+  /**
+   * @param {(this) => Promise<import('../../types/index').Choices.Choice[]>} fetcher
+   */
+  fetchItems(fetcher) {
+    if (!this.initialised)
+      throw new Error(
+        `fetchItems was called on non-initialized instance of Choices`,
+      );
+    if (!this._isSelectElement)
+      throw new TypeError(`fetchItems can't be used with INPUT based Choices`);
+    if (typeof fetcher !== 'function')
+      throw new TypeError(
+        `fetchItems expects a function that returns Promise as a parameter`,
+      );
 
     requestAnimationFrame(() => this._handleLoadingState(true));
-    fn(this._ajaxCallback());
-
-    return this;
+    return fetcher(this)
+      .then(choices => this.setChoices(choices))
+      .catch(err => {
+        if (!this.config.silent) console.error(err);
+      })
+      .then(() => this._handleLoadingState(false))
+      .then(() => this);
   }
 
-  /* =====  End of Public functions  ====== */
+  /* =====  End of Public methods  ====== */
 
   /* =============================================
   =                Private functions            =
@@ -1006,55 +1019,6 @@ class Choices {
     return {
       response: canAddItem,
       notice,
-    };
-  }
-
-  _ajaxCallback() {
-    return (results, value, label) => {
-      if (!results || !value) {
-        return;
-      }
-
-      const parsedResults = isType('Object', results) ? [results] : results;
-
-      if (
-        parsedResults &&
-        isType('Array', parsedResults) &&
-        parsedResults.length
-      ) {
-        // Remove loading states/text
-        this._handleLoadingState(false);
-        this._setLoading(true);
-        // Add each result as a choice
-        parsedResults.forEach(result => {
-          if (result.choices) {
-            this._addGroup({
-              group: result,
-              id: result.id || null,
-              valueKey: value,
-              labelKey: label,
-            });
-          } else {
-            this._addChoice({
-              value: fetchFromObject(result, value),
-              label: fetchFromObject(result, label),
-              isSelected: result.selected,
-              isDisabled: result.disabled,
-              customProperties: result.customProperties,
-              placeholder: result.placeholder,
-            });
-          }
-        });
-
-        this._setLoading(false);
-
-        if (this._isSelectOneElement) {
-          this._selectPlaceholderChoice();
-        }
-      } else {
-        // No results, remove loading state
-        this._handleLoadingState(false);
-      }
     };
   }
 

@@ -10,7 +10,6 @@ import {
   sanitise,
   sortByAlpha,
   sortByScore,
-  fetchFromObject,
   existsInArray,
   cloneObject,
   dispatchEvent,
@@ -94,6 +93,12 @@ describe('utils', () => {
     it('checks with given object type equals given type', () => {
       expect(isType('Object', {})).to.equal(true);
       expect(isType('String', {})).to.equal(false);
+      expect(isType('Function', async () => {})).to.equal(true);
+      expect(
+        isType('Function', function* gen() {
+          yield false;
+        }),
+      ).to.equal(true);
     });
   });
 
@@ -195,19 +200,6 @@ describe('utils', () => {
       expect(event.bubbles).to.equal(true);
       expect(event.cancelable).to.equal(true);
       expect(event.detail).to.equal(customArgs);
-    });
-  });
-
-  describe('fetchFromObject', () => {
-    it('fetches value from object using given path', () => {
-      const object = {
-        band: {
-          name: 'The Strokes',
-        },
-      };
-
-      const output = fetchFromObject(object, 'band.name');
-      expect(output).to.equal(object.band.name);
     });
   });
 

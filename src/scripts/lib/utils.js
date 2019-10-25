@@ -200,19 +200,6 @@ export const getWindowHeight = () => {
   );
 };
 
-export const fetchFromObject = (object, path) => {
-  const index = path.indexOf('.');
-
-  if (index > -1) {
-    return fetchFromObject(
-      object[path.substring(0, index)],
-      path.substr(index + 1),
-    );
-  }
-
-  return object[path];
-};
-
 export const isIE11 = () =>
   !!(
     navigator.userAgent.match(/Trident/) &&
