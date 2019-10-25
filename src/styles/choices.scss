@@ -343,12 +343,4 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
   opacity: 0.5;
 }
 
-.#{$choices-selector}__input[hidden],
-.#{$choices-selector}[data-type*='select-one']
-  .#{$choices-selector}__input[hidden],
-.#{$choices-selector}[data-type*='select-multiple']
-  .#{$choices-selector}__input[hidden] {
-  display: none;
-}
-
 /*=====  End of Choices  ======*/
