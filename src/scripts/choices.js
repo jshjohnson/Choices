@@ -824,6 +824,7 @@ class Choices {
     // If we are clicking on an option
     const id = element.getAttribute('data-id');
     const choice = this._store.getChoiceById(id);
+    if (!choice) return;
     const passedKeyCode =
       activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
     const hasActiveDropdown = this.dropdown.isActive;
@@ -835,7 +836,7 @@ class Choices {
       choice,
     });
 
-    if (choice && !choice.selected && !choice.disabled) {
+    if (!choice.selected && !choice.disabled) {
       const canAddItem = this._canAddItem(activeItems, choice.value);
 
       if (canAddItem.response) {
