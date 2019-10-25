@@ -39,6 +39,9 @@
       "files": ["*.test.js"],
       "env": {
         "mocha": true
+      },
+      "rules": {
+        "no-restricted-syntax": "off"
       }
     },
     {

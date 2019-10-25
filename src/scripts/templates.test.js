@@ -1,9 +1,25 @@
 import { expect } from 'chai';
 import templates from './templates';
-import { getType, strToEl } from './lib/utils';
+import { strToEl } from './lib/utils';
 
-const stripElement = element =>
-  element.outerHTML.replace(/(^|>)\s+|\s+(?=<|$)/g, '$1');
+/**
+ *
+ * @param {HTMLElement} element1
+ * @param {HTMLElement} element2
+ */
+function expectEqualElements(element1, element2) {
+  expect(element1.tagName).to.equal(element2.tagName);
+  expect(element1.attributes.length).to.equal(element2.attributes.length);
+  expect(Object.keys(element1.dataset)).to.have.members(
+    Object.keys(element2.dataset),
+  );
+  // compare attributes values
+  for (const attribute of Object.values(element1.attributes)) {
+    expect(element1.getAttribute(attribute)).to.equal(
+      element2.getAttribute(attribute),
+    );
+  }
+}
 
 describe('templates', () => {
   describe('containerOuter', () => {
@@ -40,11 +56,7 @@ describe('templates', () => {
             searchEnabled,
             passedElementType,
           );
-
-          expect(getType(actualOutput)).to.equal('HTMLDivElement');
-          expect(stripElement(actualOutput)).to.equal(
-            stripElement(expectedOutput),
-          );
+          expectEqualElements(actualOutput, expectedOutput);
         });
       });
 
@@ -75,10 +87,7 @@ describe('templates', () => {
             passedElementType,
           );
 
-          expect(getType(actualOutput)).to.equal('HTMLDivElement');
-          expect(stripElement(actualOutput)).to.equal(
-            stripElement(expectedOutput),
-          );
+          expectEqualElements(actualOutput, expectedOutput);
         });
       });
 
@@ -110,10 +119,7 @@ describe('templates', () => {
             passedElementType,
           );
 
-          expect(getType(actualOutput)).to.equal('HTMLDivElement');
-          expect(stripElement(actualOutput)).to.equal(
-            stripElement(expectedOutput),
-          );
+          expectEqualElements(actualOutput, expectedOutput);
         });
       });
     });
@@ -144,10 +150,7 @@ describe('templates', () => {
           passedElementType,
         );
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
   });
@@ -162,8 +165,7 @@ describe('templates', () => {
       );
       const actualOutput = templates.containerInner(classes);
 
-      expect(getType(actualOutput)).to.equal('HTMLDivElement');
-      expect(stripElement(actualOutput)).to.equal(stripElement(expectedOutput));
+      expectEqualElements(actualOutput, expectedOutput);
     });
   });
 
@@ -181,10 +183,7 @@ describe('templates', () => {
         );
         const actualOutput = templates.itemList(classes, true);
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
 
@@ -195,10 +194,7 @@ describe('templates', () => {
         );
         const actualOutput = templates.itemList(classes, false);
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
   });
@@ -213,14 +209,9 @@ describe('templates', () => {
         <div class="${classes.placeholder}">${value}</div>`);
       const actualOutput = templates.placeholder(classes, value);
 
-      expect(getType(actualOutput)).to.equal('HTMLDivElement');
-      expect(stripElement(actualOutput)).to.equal(stripElement(expectedOutput));
+      expectEqualElements(actualOutput, expectedOutput);
     });
   });
-
-  // describe('item', () => {
-
-  // });
 
   describe('choiceList', () => {
     const classes = {
@@ -239,10 +230,7 @@ describe('templates', () => {
         `);
         const actualOutput = templates.choiceList(classes, true);
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
 
@@ -259,10 +247,7 @@ describe('templates', () => {
         `);
         const actualOutput = templates.choiceList(classes, false);
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
   });
@@ -299,10 +284,7 @@ describe('templates', () => {
         `);
         const actualOutput = templates.choiceGroup(classes, data);
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
 
@@ -329,10 +311,7 @@ describe('templates', () => {
         `);
         const actualOutput = templates.choiceGroup(classes, data);
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
   });
@@ -379,10 +358,7 @@ describe('templates', () => {
         `);
         const actualOutput = templates.choice(classes, data, itemSelectText);
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
 
@@ -412,10 +388,7 @@ describe('templates', () => {
         `);
         const actualOutput = templates.choice(classes, data, itemSelectText);
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
 
@@ -444,10 +417,7 @@ describe('templates', () => {
         `);
         const actualOutput = templates.choice(classes, data, itemSelectText);
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
 
@@ -476,10 +446,7 @@ describe('templates', () => {
         `);
         const actualOutput = templates.choice(classes, data, itemSelectText);
 
-        expect(getType(actualOutput)).to.equal('HTMLDivElement');
-        expect(stripElement(actualOutput)).to.equal(
-          stripElement(expectedOutput),
-        );
+        expectEqualElements(actualOutput, expectedOutput);
       });
     });
   });
@@ -491,13 +458,16 @@ describe('templates', () => {
     };
 
     it('returns expected html', () => {
+      /*
+        Following attributes are not supported by JSDOM, so, can't compare
+          autocapitalize="off"
+          spellcheck="false"
+      */
       const expectedOutput = strToEl(`
         <input
           type="text"
           class="${classes.input} ${classes.inputCloned}"
           autocomplete="off"
-          autocapitalize="off"
-          spellcheck="false"
           role="textbox"
           aria-autocomplete="list"
           aria-label="test placeholder"
@@ -505,15 +475,14 @@ describe('templates', () => {
       `);
       const actualOutput = templates.input(classes, 'test placeholder');
 
-      expect(getType(actualOutput)).to.equal('HTMLInputElement');
-      expect(stripElement(actualOutput)).to.equal(stripElement(expectedOutput));
+      expectEqualElements(actualOutput, expectedOutput);
     });
   });
 
   describe('dropdown', () => {
     const classes = {
-      list: 'test 1',
-      listDropdown: 'test 2',
+      list: 'test-1',
+      listDropdown: 'test-2',
     };
     it('returns expected html', () => {
       const value = 'test';
@@ -522,17 +491,16 @@ describe('templates', () => {
       );
       const actualOutput = templates.dropdown(classes, value);
 
-      expect(getType(actualOutput)).to.equal('HTMLDivElement');
-      expect(stripElement(actualOutput)).to.equal(stripElement(expectedOutput));
+      expectEqualElements(actualOutput, expectedOutput);
     });
   });
 
   describe('notice', () => {
     const classes = {
-      item: 'test 1',
-      itemChoice: 'test 2',
-      noResults: 'test 3',
-      noChoices: 'test 4',
+      item: 'test-1',
+      itemChoice: 'test-2',
+      noResults: 'test-3',
+      noChoices: 'test-4',
     };
 
     const label = 'test';
@@ -545,8 +513,7 @@ describe('templates', () => {
       `);
       const actualOutput = templates.notice(classes, label);
 
-      expect(getType(actualOutput)).to.equal('HTMLDivElement');
-      expect(stripElement(actualOutput)).to.equal(stripElement(expectedOutput));
+      expectEqualElements(actualOutput, expectedOutput);
     });
 
     describe('passing a notice type', () => {
@@ -559,9 +526,7 @@ describe('templates', () => {
           `);
           const actualOutput = templates.notice(classes, label, 'no-results');
 
-          expect(stripElement(actualOutput)).to.equal(
-            stripElement(expectedOutput),
-          );
+          expectEqualElements(actualOutput, expectedOutput);
         });
       });
 
@@ -574,9 +539,7 @@ describe('templates', () => {
           `);
           const actualOutput = templates.notice(classes, label, 'no-choices');
 
-          expect(stripElement(actualOutput)).to.equal(
-            stripElement(expectedOutput),
-          );
+          expectEqualElements(actualOutput, expectedOutput);
         });
       });
     });
@@ -602,8 +565,7 @@ describe('templates', () => {
       );
       const actualOutput = templates.option(data);
 
-      expect(getType(actualOutput)).to.equal('HTMLOptionElement');
-      expect(stripElement(actualOutput)).to.equal(stripElement(expectedOutput));
+      expectEqualElements(actualOutput, expectedOutput);
     });
 
     describe('when selected', () => {
