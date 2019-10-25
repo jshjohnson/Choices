@@ -93,12 +93,6 @@ describe('utils', () => {
     it('checks with given object type equals given type', () => {
       expect(isType('Object', {})).to.equal(true);
       expect(isType('String', {})).to.equal(false);
-      expect(isType('Function', async () => {})).to.equal(true);
-      expect(
-        isType('Function', function* gen() {
-          yield false;
-        }),
-      ).to.equal(true);
     });
   });
 

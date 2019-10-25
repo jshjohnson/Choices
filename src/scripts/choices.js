@@ -475,23 +475,29 @@ class Choices {
   }
 
   /**
-   * @param {(this) => Promise<import('../../types/index').Choices.Choice[]>} fetcher
+   * Fetches additional Choices via provided async function
+   * Handles errors and loading states
+   *
+   * @param {(a: this) => Promise<import('../../types/index').Choices.Choice[]>} fetcher
+   * @returns {Promise<this>}
    */
-  fetchItems(fetcher) {
+  fetchChoices(fetcher) {
     if (!this.initialised)
-      throw new Error(
-        `fetchItems was called on non-initialized instance of Choices`,
+      throw new ReferenceError(
+        `fetchChoices was called on non-initialized instance of Choices`,
       );
     if (!this._isSelectElement)
-      throw new TypeError(`fetchItems can't be used with INPUT based Choices`);
+      throw new TypeError(
+        `fetchChoices can't be used with INPUT based Choices`,
+      );
     if (typeof fetcher !== 'function')
       throw new TypeError(
-        `fetchItems expects a function that returns Promise as a parameter`,
+        `fetchChoices expects a function that returns Promise as a parameter`,
       );
 
     requestAnimationFrame(() => this._handleLoadingState(true));
     return fetcher(this)
-      .then(choices => this.setChoices(choices))
+      .then(choices => this.setChoices(choices, 'value', 'label', false))
       .catch(err => {
         if (!this.config.silent) console.error(err);
       })

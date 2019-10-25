@@ -8,7 +8,7 @@
     "start": "run-p js:watch css:watch",
     "build": "run-p js:build css:build",
     "lint": "eslint src/scripts",
-    "coverage": "nyc --reporter=lcov --reporter=text --reporter=text-summary mocha",
+    "coverage": "NODE_ENV=test nyc --reporter=lcov --reporter=text --reporter=text-summary mocha",
     "bundlesize": "bundlesize",
     "cypress:run": "$(npm bin)/cypress run",
     "cypress:open": "$(npm bin)/cypress open",

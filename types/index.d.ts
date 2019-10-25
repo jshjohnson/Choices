@@ -982,7 +982,7 @@ export default class Choices {
    * ```js
    * const example = new Choices(element);
    *
-   * example.fetchItems(async () => {
+   * example.fetchChoices(async () => {
    *   try {
    *      const items = await fetch('/items');
    *      return items.json()
@@ -992,7 +992,7 @@ export default class Choices {
    * });
    * ```
    */
-  fetchItems(
+  fetchChoices(
     fetcher: (instance: this) => Promise<Choices.Choice[]>,
   ): Promise<this>;
 }

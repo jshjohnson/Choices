@@ -881,84 +881,77 @@ describe('choices', () => {
       });
     });
 
-    describe('ajax', () => {
-      const callbackoutput = 'worked';
-
-      let handleLoadingStateStub;
-      let ajaxCallbackStub;
-
-      const returnsEarly = () => {
-        it('returns early', () => {
-          expect(handleLoadingStateStub.called).to.equal(false);
-          expect(ajaxCallbackStub.called).to.equal(false);
-        });
-      };
-
-      beforeEach(() => {
-        handleLoadingStateStub = stub();
-        ajaxCallbackStub = stub().returns(callbackoutput);
-
-        instance._ajaxCallback = ajaxCallbackStub;
-        instance._handleLoadingState = handleLoadingStateStub;
-      });
-
-      afterEach(() => {
-        instance._ajaxCallback.reset();
-        instance._handleLoadingState.reset();
-      });
-
+    describe('fetchChoices', () => {
       describe('not initialised', () => {
         beforeEach(() => {
           instance.initialised = false;
-          output = instance.ajax(() => {});
         });
 
-        returnsInstance(output);
-        returnsEarly();
+        it('should throw', () => {
+          expect(() => instance.fetchChoices(null)).Throw(ReferenceError);
+        });
       });
 
       describe('text element', () => {
         beforeEach(() => {
           instance._isSelectElement = false;
-          output = instance.ajax(() => {});
         });
 
-        returnsInstance(output);
-        returnsEarly();
+        it('should throw', () => {
+          expect(() => instance.fetchChoices(null)).Throw(TypeError);
+        });
       });
 
       describe('passing invalid function', () => {
         beforeEach(() => {
-          output = instance.ajax(null);
+          instance._isSelectElement = true;
         });
 
-        returnsInstance(output);
-        returnsEarly();
+        it('should throw on non function', () => {
+          expect(() => instance.fetchChoices(null)).Throw(
+            TypeError,
+            /Promise/i,
+          );
+        });
+
+        it(`should throw on function that doesn't return promise`, () => {
+          expect(() => instance.fetchChoices(() => 'boo')).Throw(
+            TypeError,
+            '.then is not a function',
+          );
+        });
       });
 
       describe('select element', () => {
-        let callback;
+        it('fetches and sets choices', async () => {
+          document.body.innerHTML = '<select id="test" />';
+          const choice = new Choices('#test');
+          const handleLoadingStateSpy = spy(choice, '_handleLoadingState');
 
-        beforeEach(() => {
-          instance.initialised = true;
-          instance._isSelectElement = true;
-          ajaxCallbackStub = stub();
-          callback = stub();
-          output = instance.ajax(callback);
-        });
-
-        returnsInstance(output);
-
-        it('sets loading state', done => {
-          requestAnimationFrame(() => {
-            expect(handleLoadingStateStub.called).to.equal(true);
-            done();
-          });
-        });
-
-        it('calls passed function with ajax callback', () => {
-          expect(callback.called).to.equal(true);
-          expect(callback.lastCall.args[0]).to.eql(callbackoutput);
+          let fetcherCalled = false;
+          const fetcher = async inst => {
+            expect(inst).to.eq(choice);
+            fetcherCalled = true;
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return [
+              { label: 'l1', value: 'v1', customProperties: 'prop1' },
+              { label: 'l2', value: 'v2', customProperties: 'prop2' },
+            ];
+          };
+          expect(choice._store.choices.length).to.equal(0);
+          const promise = choice.fetchChoices(fetcher);
+          await new Promise(resolve =>
+            requestAnimationFrame(() => {
+              expect(handleLoadingStateSpy.callCount).to.equal(1);
+              resolve();
+            }),
+          );
+          expect(fetcherCalled).to.be.true;
+          const res = await promise;
+          expect(res).to.equal(choice);
+          expect(choice._store.choices[1].value).to.equal('v2');
+          expect(choice._store.choices[1].label).to.equal('l2');
+          expect(choice._store.choices[1].customProperties).to.equal('prop2');
         });
       });
     });
@@ -1331,7 +1324,7 @@ describe('choices', () => {
           ...choices[0],
           choices,
         },
-        ...choices[1],
+        choices[1],
       ];
 
       beforeEach(() => {
