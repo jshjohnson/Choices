@@ -1,10 +1,20 @@
 import { sanitise } from '../lib/utils';
 
 export default class Input {
-  constructor({ element, type, classNames, placeholderValue }) {
-    Object.assign(this, { element, type, classNames, placeholderValue });
-    this.element = element;
-    this.classNames = classNames;
+  /**
+   *
+   * @typedef {import('../../../types/index').Choices.passedElement} passedElement
+   * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
+   * @param {{element: HTMLInputElement, type: passedElement['type'], classNames: ClassNames, placeholderValue: string, preventPaste: boolean }} p
+   */
+  constructor({ element, type, classNames, placeholderValue, preventPaste }) {
+    Object.assign(this, {
+      element,
+      type,
+      classNames,
+      placeholderValue,
+      preventPaste,
+    });
     this.isFocussed = this.element === document.activeElement;
     this.isDisabled = false;
     this._onPaste = this._onPaste.bind(this);
