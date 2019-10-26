@@ -13,7 +13,7 @@ import { FuseOptions } from 'fuse.js';
 declare namespace Choices {
   namespace Types {
     type strToEl = (
-      str: string
+      str: string,
     ) => HTMLElement | HTMLInputElement | HTMLOptionElement;
     type stringFunction = () => string;
     type noticeStringFunction = (value: string) => string;
@@ -168,52 +168,52 @@ declare namespace Choices {
       isSelectElement: boolean,
       isSelectOneElement: boolean,
       searchEnabled: boolean,
-      passedElementType: passedElement['type']
+      passedElementType: passedElement['type'],
     ) => HTMLElement;
     containerInner: (this: Choices, classNames: ClassNames) => HTMLElement;
     itemList: (
       this: Choices,
       classNames: ClassNames,
-      isSelectOneElement: boolean
+      isSelectOneElement: boolean,
     ) => HTMLElement;
     placeholder: (
       this: Choices,
       classNames: ClassNames,
-      value: string
+      value: string,
     ) => HTMLElement;
     item: (
       this: Choices,
       classNames: ClassNames,
       data: Choice,
-      removeItemButton: boolean
+      removeItemButton: boolean,
     ) => HTMLElement;
     choiceList: (
       this: Choices,
       classNames: ClassNames,
-      isSelectOneElement: boolean
+      isSelectOneElement: boolean,
     ) => HTMLElement;
     choiceGroup: (
       this: Choices,
       classNames: ClassNames,
-      data: Choice
+      data: Choice,
     ) => HTMLElement;
     choice: (
       this: Choices,
       classNames: ClassNames,
       data: Choice,
-      selectText: string
+      selectText: string,
     ) => HTMLElement;
     input: (
       this: Choices,
       classNames: ClassNames,
-      placeholderValue: string
+      placeholderValue: string,
     ) => HTMLInputElement;
     dropdown: (this: Choices, classNames: ClassNames) => HTMLElement;
     notice: (
       this: Choices,
       classNames: ClassNames,
       label: string,
-      type: '' | 'no-results' | 'no-choices'
+      type: '' | 'no-results' | 'no-choices',
     ) => HTMLElement;
     option: (data: Choice) => HTMLOptionElement;
   }
@@ -280,9 +280,9 @@ declare namespace Choices {
         type: K,
         listener: (
           this: HTMLInputElement | HTMLSelectElement,
-          ev: Choices.EventMap[K]
+          ev: Choices.EventMap[K],
         ) => void,
-        options?: boolean | AddEventListenerOptions
+        options?: boolean | AddEventListenerOptions,
       ): void;
     };
     type: 'text' | 'select-one' | 'select-multiple';
@@ -750,7 +750,7 @@ declare namespace Choices {
      * @default null
      */
     callbackOnCreateTemplates: (
-      template: Choices.Types.strToEl
+      template: Choices.Types.strToEl,
     ) => Partial<Choices.Templates>;
   }
 }
@@ -758,6 +758,7 @@ declare namespace Choices {
 // Exporting default class
 export default class Choices {
   readonly config: Choices.Options;
+  static readonly Templates: Choices.Templates;
 
   // State Tracking
   initialised: boolean;
@@ -769,7 +770,7 @@ export default class Choices {
 
   constructor(
     selectorOrElement: string | HTMLInputElement | HTMLSelectElement,
-    userConfig?: Partial<Choices.Options>
+    userConfig?: Partial<Choices.Options>,
   );
 
   /**
@@ -942,7 +943,7 @@ export default class Choices {
     choices: Choices.Choice[],
     value: string,
     label: string,
-    replaceChoices?: boolean
+    replaceChoices?: boolean,
   ): this;
 
   /**
