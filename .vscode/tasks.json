@@ -7,7 +7,10 @@
       "type": "npm",
       "label": "buildAndWatch",
       "script": "js:watch",
-      "group": "build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
       "isBackground": true,
       "presentation": {
         "echo": true,
