@@ -40,7 +40,7 @@
       "type": "node",
       "request": "launch",
       "name": "Cypress Current File",
-      "runtimeExecutable": "${workspaceFolder}/node_modules/./bin/cypress",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/cypress",
       "windows": {
         "runtimeExecutable": "${workspaceFolder}\\node_modules\\.bin\\cypress.cmd"
       },
