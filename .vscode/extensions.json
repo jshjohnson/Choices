@@ -2,12 +2,13 @@
   // See http://go.microsoft.com/fwlink/?LinkId=827846
   // for the documentation about the extensions.json format
   "recommendations": [
-    // Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
     // we enforce ESLint rules, so, recommend extension
     "dbaeumer.vscode-eslint",
     // we use prettier, so, recommend extension
     "esbenp.prettier-vscode",
     // we are on GitHub, so, recommend extension
-    "github.vscode-pull-request-github"
+    "github.vscode-pull-request-github",
+    // needed for our configured debug configuration with Chrome
+    "msjsdiag.debugger-for-chrome"
   ]
 }
