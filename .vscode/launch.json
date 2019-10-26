@@ -16,10 +16,10 @@
       "type": "node",
       "request": "launch",
       "name": "Mocha Current File",
-      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-      "args": ["-u", "tdd", "--timeout", "999999", "--colors", "${file}"],
+      "program": "${workspaceFolder}/node_modules/mocha/bin/mocha",
+      "args": ["-u", "bdd", "--timeout", "999999", "--colors", "${file}"],
       "console": "integratedTerminal",
-      "internalConsoleOptions": "openOnSessionStart",
+      "internalConsoleOptions": "neverOpen",
       "env": {
         "NODE_ENV": "test"
       }
@@ -29,14 +29,7 @@
       "request": "launch",
       "name": "Mocha All",
       "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
-      "args": [
-        "-u",
-        "tdd",
-        "--timeout",
-        "999999",
-        "--colors",
-        "${workspaceFolder}/test"
-      ],
+      "args": ["-u", "bdd", "--timeout", "999999", "--colors"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "openOnSessionStart",
       "env": {
