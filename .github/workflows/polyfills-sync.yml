@@ -8,7 +8,7 @@ on:
       - '.eslintrc.json'
 
 jobs:
-  lint:
+  sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
