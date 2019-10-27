@@ -27,14 +27,13 @@
   },
   "mocha.files.glob": "src/scripts/**/*.test.js",
   "mocha.requires": ["@babel/register", "./config/jsdom.js"],
-
   // for Windows collaborators
   "files.eol": "\n",
   "files.encoding": "utf8",
   // associations for some files this project is using
   "files.associations": {
     ".browserslistrc": "gitignore",
-    ".huskyrc": "json",
+    ".huskyrc": "jsonc",
     ".npmrc": "ini"
   },
   // We use NPM as package manager
@@ -55,7 +54,7 @@
     },
     // Prettier config
     {
-      "fileMatch": [".prettierrc.js"],
+      "fileMatch": [".prettierrc.json"],
       "url": "http://json.schemastore.org/prettierrc"
     }
   ]
