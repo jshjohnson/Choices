@@ -2,13 +2,18 @@
   "parserOptions": {
     "ecmaVersion": 2020
   },
-  "extends": ["airbnb-base", "plugin:prettier/recommended"],
+  "extends": [
+    "airbnb-base",
+    "plugin:prettier/recommended",
+    "plugin:compat/recommended"
+  ],
   "plugins": ["prettier"],
   "env": {
     "es6": true,
     "browser": true
   },
   "rules": {
+    "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -41,7 +46,8 @@
         "mocha": true
       },
       "rules": {
-        "no-restricted-syntax": "off"
+        "no-restricted-syntax": "off",
+        "compat/compat": "off"
       }
     },
     {
@@ -51,5 +57,16 @@
         "cypress/globals": true
       }
     }
-  ]
+  ],
+  "settings": {
+    "polyfills": [
+      "Array.from",
+      "Symbol",
+      "Symbol.iterator",
+      "Array.prototype.find",
+      "Array.prototype.includes",
+      "Object.assign",
+      "CustomEvent"
+    ]
+  }
 }
