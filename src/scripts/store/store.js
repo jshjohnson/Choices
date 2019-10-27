@@ -139,11 +139,13 @@ export default class Store {
 
   /**
    * Get single choice by it's ID
-   * @return {Object} Found choice
+   * @param {id} string
+   * @return {import('../../../types/index').Choices.Choice | false} Found choice
    */
   getChoiceById(id) {
     if (id) {
-      return this.activeChoices.find(choice => choice.id === parseInt(id, 10));
+      const n = parseInt(id, 10);
+      return this.activeChoices.find(choice => choice.id === n);
     }
     return false;
   }

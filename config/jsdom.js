@@ -48,6 +48,7 @@ global.navigator = {
 global.CustomEvent = window.CustomEvent;
 global.Element = window.Element;
 global.HTMLElement = window.HTMLElement;
+global.Option = window.Option;
 global.HTMLOptionElement = window.HTMLOptionElement;
 global.HTMLOptGroupElement = window.HTMLOptGroupElement;
 global.DocumentFragment = window.DocumentFragment;
