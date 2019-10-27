@@ -840,7 +840,9 @@ choices.disable();
 
 **Input types affected:** `select-one`, `select-multiple`
 
-**Usage:** Set choices of select input via an array of objects, a value name and a label name. This behaves the same as passing items via the `choices` option but can be called after initialising Choices. This can also be used to add groups of choices (see example 2); Optionally pass a true `replaceChoices` value to remove any existing choices. Optionally pass a `customProperties` object to add additional data to your choices (useful when searching/filtering etc). Passing an empty array as the first parameter, and a true `replaceChoices` is the same as calling `clearChoices` (see below).
+**Usage:** Set choices of select input via an array of objects (or function that returns array of object or promise of it), a value field name and a label field name.
+
+This behaves the similar as passing items via the `choices` option but can be called after initialising Choices. This can also be used to add groups of choices (see example 3); Optionally pass a true `replaceChoices` value to remove any existing choices. Optionally pass a `customProperties` object to add additional data to your choices (useful when searching/filtering etc). Passing an empty array as the first parameter, and a true `replaceChoices` is the same as calling `clearChoices` (see below).
 
 **Example 1:**
 
@@ -860,6 +862,22 @@ example.setChoices(
 ```
 
 **Example 2:**
+
+```js
+const example = new Choices(element);
+
+// Passing a function that returns Promise of choices
+example.setChoices(async () => {
+  try {
+    const items = await fetch('/items');
+    return items.json();
+  } catch (err) {
+    console.error(err);
+  }
+});
+```
+
+**Example 3:**
 
 ```js
 const example = new Choices(element);
@@ -985,31 +1003,6 @@ example.setChoiceByValue('Two'); // Choice with value of 'Two' has now been sele
 **Input types affected:** `text`, `select-one`, `select-multiple`
 
 **Usage:** Enables input to accept new values/select further choices.
-
-### fetchChoices(fn);
-
-**Input types affected:** `select-one`, `select-multiple`
-
-**Usage:** Populate choices/groups via an async function (Promise).
-Passed function expect to return a Promise that resolves into array of choices,
-just like `.setChoices` argument.
-Choice will show loading placeholder and gracefully handle promise rejections.
-
-**Example:**
-
-```js
-const example = new Choices(element);
-
-example.fetchChoices(async () => {
-  const items = await fetch('/choices');
-  const data = await items.json();
-  return data.map(d => ({
-    value: d.value,
-    label: d.text,
-    customProperties: d.tag,
-  }));
-});
-```
 
 ## Browser compatibility
 
