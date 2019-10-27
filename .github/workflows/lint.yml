@@ -34,5 +34,5 @@ jobs:
 
       - name: Lint JS bundle
         run: |
-          npm run build
+          npm run js:build
           npx eslint public/assets/scripts
