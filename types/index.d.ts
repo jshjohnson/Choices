@@ -867,16 +867,47 @@ export default class Choices {
    */
   getValue(valueOnly?: boolean): string | string[];
 
+  /** Direct populate choices
+   *
+   * @param {string[] | Choices.Item[]} items
+   */
+  setValue(items: string[] | Choices.Item[]): this;
+
   /**
-   * Set choices of select input via an array of objects, a value name and a label name.
+   * Set value of input based on existing Choice. `value` can be either a single string or an array of strings
+   *
+   * **Input types affected:** select-one, select-multiple
+   *
+   * @example
+   * ```
+   * const example = new Choices(element, {
+   *   choices: [
+   *     {value: 'One', label: 'Label One'},
+   *     {value: 'Two', label: 'Label Two', disabled: true},
+   *     {value: 'Three', label: 'Label Three'},
+   *   ],
+   * });
+   *
+   * example.setChoiceByValue('Two'); // Choice with value of 'Two' has now been selected.
+   * ```
+   */
+  setChoiceByValue(value: string | string[]): this;
+
+  /**
+   * Set choices of select input via an array of objects (or function that returns array of object or promise of it),
+   * a value field name and a label field name.
    * This behaves the same as passing items via the choices option but can be called after initialising Choices.
    * This can also be used to add groups of choices (see example 2); Optionally pass a true `replaceChoices` value to remove any existing choices.
    * Optionally pass a `customProperties` object to add additional data to your choices (useful when searching/filtering etc).
    *
    * **Input types affected:** select-one, select-multiple
    *
-   * @example Example 1:
-   * ```
+   * @param {string} [value = 'value'] - name of `value` field
+   * @param {string} [label = 'label'] - name of 'label' field
+   * @param {boolean} [replaceChoices = false] - whether to replace of add choices
+   *
+   * @example
+   * ```js
    * const example = new Choices(element);
    *
    * example.setChoices([
@@ -886,8 +917,22 @@ export default class Choices {
    * ], 'value', 'label', false);
    * ```
    *
-   * @example Example 2:
+   * @example
+   * ```js
+   * const example = new Choices(element);
+   *
+   * example.setChoices(async () => {
+   *   try {
+   *      const items = await fetch('/items');
+   *      return items.json()
+   *   } catch(err) {
+   *      console.error(err)
+   *   }
+   * });
    * ```
+   *
+   * @example
+   * ```js
    * const example = new Choices(element);
    *
    * example.setChoices([{
@@ -915,35 +960,14 @@ export default class Choices {
    * }], 'value', 'label', false);
    * ```
    */
-  setValue(args: string[]): this;
-
-  /**
-   * Set value of input based on existing Choice. `value` can be either a single string or an array of strings
-   *
-   * **Input types affected:** select-one, select-multiple
-   *
-   * @example
-   * ```
-   * const example = new Choices(element, {
-   *   choices: [
-   *     {value: 'One', label: 'Label One'},
-   *     {value: 'Two', label: 'Label Two', disabled: true},
-   *     {value: 'Three', label: 'Label Three'},
-   *   ],
-   * });
-   *
-   * example.setChoiceByValue('Two'); // Choice with value of 'Two' has now been selected.
-   * ```
-   */
-  setChoiceByValue(value: string | string[]): this;
-
-  /** Direct populate choices */
-  setChoices(
-    choices: Choices.Choice[],
-    value: string,
-    label: string,
+  setChoices<
+    T extends object[] | ((instance: Choices) => object[] | Promise<object[]>)
+  >(
+    choices: T,
+    value?: string,
+    label?: string,
     replaceChoices?: boolean,
-  ): this;
+  ): T extends object[] ? this : Promise<this>;
 
   /**
    * Removes all items, choices and groups. Use with caution.
@@ -972,27 +996,4 @@ export default class Choices {
    * **Input types affected:** text, select-one, select-multiple
    */
   disable(): this;
-
-  /**
-   * Populate choices/groups via a promise.
-   *
-   * **Input types affected:** select-one, select-multiple
-   *
-   * @example
-   * ```js
-   * const example = new Choices(element);
-   *
-   * example.fetchChoices(async () => {
-   *   try {
-   *      const items = await fetch('/items');
-   *      return items.json()
-   *   } catch(err) {
-   *      console.error(err)
-   *   }
-   * });
-   * ```
-   */
-  fetchChoices(
-    fetcher: (instance: this) => Promise<Choices.Choice[]>,
-  ): Promise<this>;
 }

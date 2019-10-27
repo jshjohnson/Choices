@@ -42,6 +42,10 @@ import {
  * Choices
  * @author Josh Johnson<josh@joshuajohnson.co.uk>
  */
+
+/**
+ * @typedef {import('../../types/index').Choices.Choice} Choice
+ */
 class Choices {
   constructor(element = '[data-choice]', userConfig = {}) {
     if (isType('String', element)) {
@@ -415,14 +419,126 @@ class Choices {
     return this;
   }
 
-  setChoices(choices = [], value = '', label = '', replaceChoices = false) {
-    if (!this._isSelectElement || !value) {
-      return this;
+  /**
+   * Set choices of select input via an array of objects (or function that returns array of object or promise of it),
+   * a value field name and a label field name.
+   * This behaves the same as passing items via the choices option but can be called after initialising Choices.
+   * This can also be used to add groups of choices (see example 2); Optionally pass a true `replaceChoices` value to remove any existing choices.
+   * Optionally pass a `customProperties` object to add additional data to your choices (useful when searching/filtering etc).
+   *
+   * **Input types affected:** select-one, select-multiple
+   *
+   * @template {object[] | ((instance: Choices) => object[] | Promise<object[]>)} T
+   * @param {T} [choicesArrayOrFetcher]
+   * @param {string} [value = 'value'] - name of `value` field
+   * @param {string} [label = 'label'] - name of 'label' field
+   * @param {boolean} [replaceChoices = false] - whether to replace of add choices
+   * @returns {this | Promise<this>}
+   *
+   * @example
+   * ```js
+   * const example = new Choices(element);
+   *
+   * example.setChoices([
+   *   {value: 'One', label: 'Label One', disabled: true},
+   *   {value: 'Two', label: 'Label Two', selected: true},
+   *   {value: 'Three', label: 'Label Three'},
+   * ], 'value', 'label', false);
+   * ```
+   *
+   * @example
+   * ```js
+   * const example = new Choices(element);
+   *
+   * example.setChoices(async () => {
+   *   try {
+   *      const items = await fetch('/items');
+   *      return items.json()
+   *   } catch(err) {
+   *      console.error(err)
+   *   }
+   * });
+   * ```
+   *
+   * @example
+   * ```js
+   * const example = new Choices(element);
+   *
+   * example.setChoices([{
+   *   label: 'Group one',
+   *   id: 1,
+   *   disabled: false,
+   *   choices: [
+   *     {value: 'Child One', label: 'Child One', selected: true},
+   *     {value: 'Child Two', label: 'Child Two',  disabled: true},
+   *     {value: 'Child Three', label: 'Child Three'},
+   *   ]
+   * },
+   * {
+   *   label: 'Group two',
+   *   id: 2,
+   *   disabled: false,
+   *   choices: [
+   *     {value: 'Child Four', label: 'Child Four', disabled: true},
+   *     {value: 'Child Five', label: 'Child Five'},
+   *     {value: 'Child Six', label: 'Child Six', customProperties: {
+   *       description: 'Custom description about child six',
+   *       random: 'Another random custom property'
+   *     }},
+   *   ]
+   * }], 'value', 'label', false);
+   * ```
+   */
+  setChoices(
+    choicesArrayOrFetcher = [],
+    value = 'value',
+    label = 'label',
+    replaceChoices = false,
+  ) {
+    if (!this.initialised)
+      throw new ReferenceError(
+        `setChoices was called on a non-initialized instance of Choices`,
+      );
+    if (!this._isSelectElement)
+      throw new TypeError(`setChoices can't be used with INPUT based Choices`);
+
+    if (typeof value !== 'string' || !value) {
+      throw new TypeError(
+        `value parameter must be a name of 'value' field in passed objects`,
+      );
     }
 
     // Clear choices if needed
     if (replaceChoices) {
       this.clearChoices();
+    }
+
+    if (!Array.isArray(choicesArrayOrFetcher)) {
+      if (typeof choicesArrayOrFetcher !== 'function')
+        throw new TypeError(
+          `.setChoices must be called either with array of choices with a function resulting into Promise of array of choices`,
+        );
+
+      // it's a choices fetcher
+      requestAnimationFrame(() => this._handleLoadingState(true));
+      const fetcher = choicesArrayOrFetcher(this);
+      if (typeof fetcher === 'object' && typeof fetcher.then === 'function') {
+        // that's a promise
+        return fetcher
+          .then(data => this.setChoices(data, value, label, replaceChoices))
+          .catch(err => {
+            if (!this.config.silent) console.error(err);
+          })
+          .then(() => this._handleLoadingState(false))
+          .then(() => this);
+      }
+      // function returned something else than promise, let's check if it's an array of choices
+      if (!Array.isArray(fetcher))
+        throw new TypeError(
+          `.setChoices first argument function must return either array of choices or Promise, got: ${typeof fetcher}`,
+        );
+      // recursion with results, it's sync and choices were cleared already
+      return this.setChoices(fetcher, value, label, false);
     }
 
     this.containerOuter.removeLoadingState();
@@ -447,7 +563,7 @@ class Choices {
     };
 
     this._setLoading(true);
-    choices.forEach(addGroupsAndChoices);
+    choicesArrayOrFetcher.forEach(addGroupsAndChoices);
     this._setLoading(false);
 
     return this;
@@ -472,37 +588,6 @@ class Choices {
     }
 
     return this;
-  }
-
-  /**
-   * Fetches additional Choices via provided async function
-   * Handles errors and loading states
-   *
-   * @param {(a: this) => Promise<import('../../types/index').Choices.Choice[]>} fetcher
-   * @returns {Promise<this>}
-   */
-  fetchChoices(fetcher) {
-    if (!this.initialised)
-      throw new ReferenceError(
-        `fetchChoices was called on non-initialized instance of Choices`,
-      );
-    if (!this._isSelectElement)
-      throw new TypeError(
-        `fetchChoices can't be used with INPUT based Choices`,
-      );
-    if (typeof fetcher !== 'function')
-      throw new TypeError(
-        `fetchChoices expects a function that returns Promise as a parameter`,
-      );
-
-    requestAnimationFrame(() => this._handleLoadingState(true));
-    return fetcher(this)
-      .then(choices => this.setChoices(choices, 'value', 'label', false))
-      .catch(err => {
-        if (!this.config.silent) console.error(err);
-      })
-      .then(() => this._handleLoadingState(false))
-      .then(() => this);
   }
 
   /* =====  End of Public methods  ====== */

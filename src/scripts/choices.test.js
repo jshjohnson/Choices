@@ -881,14 +881,14 @@ describe('choices', () => {
       });
     });
 
-    describe('fetchChoices', () => {
+    describe('setChoices with callback/Promise', () => {
       describe('not initialised', () => {
         beforeEach(() => {
           instance.initialised = false;
         });
 
         it('should throw', () => {
-          expect(() => instance.fetchChoices(null)).Throw(ReferenceError);
+          expect(() => instance.setChoices(null)).Throw(ReferenceError);
         });
       });
 
@@ -898,7 +898,7 @@ describe('choices', () => {
         });
 
         it('should throw', () => {
-          expect(() => instance.fetchChoices(null)).Throw(TypeError);
+          expect(() => instance.setChoices(null)).Throw(TypeError);
         });
       });
 
@@ -908,16 +908,13 @@ describe('choices', () => {
         });
 
         it('should throw on non function', () => {
-          expect(() => instance.fetchChoices(null)).Throw(
-            TypeError,
-            /Promise/i,
-          );
+          expect(() => instance.setChoices(null)).Throw(TypeError, /Promise/i);
         });
 
         it(`should throw on function that doesn't return promise`, () => {
-          expect(() => instance.fetchChoices(() => 'boo')).Throw(
+          expect(() => instance.setChoices(() => 'boo')).to.throw(
             TypeError,
-            '.then is not a function',
+            /promise/i,
           );
         });
       });
@@ -939,7 +936,7 @@ describe('choices', () => {
             ];
           };
           expect(choice._store.choices.length).to.equal(0);
-          const promise = choice.fetchChoices(fetcher);
+          const promise = choice.setChoices(fetcher);
           await new Promise(resolve =>
             requestAnimationFrame(() => {
               expect(handleLoadingStateSpy.callCount).to.equal(1);
@@ -1346,31 +1343,29 @@ describe('choices', () => {
         instance.containerOuter.removeLoadingState.reset();
       });
 
-      const returnsEarly = () => {
-        it('returns early', () => {
-          expect(addGroupStub.called).to.equal(false);
-          expect(addChoiceStub.called).to.equal(false);
-          expect(clearChoicesStub.called).to.equal(false);
-        });
-      };
-
       describe('when element is not select element', () => {
         beforeEach(() => {
           instance._isSelectElement = false;
-          instance.setChoices(choices, value, label, false);
         });
 
-        returnsEarly();
+        it('throws', () => {
+          expect(() =>
+            instance.setChoices(choices, value, label, false),
+          ).to.throw(TypeError, /input/i);
+        });
       });
 
       describe('passing invalid arguments', () => {
         describe('passing no value', () => {
           beforeEach(() => {
             instance._isSelectElement = true;
-            instance.setChoices(choices, undefined, 'label', false);
           });
 
-          returnsEarly();
+          it('throws', () => {
+            expect(() =>
+              instance.setChoices(choices, null, 'label', false),
+            ).to.throw(TypeError, /value/i);
+          });
         });
       });
 

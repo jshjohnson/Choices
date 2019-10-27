@@ -627,7 +627,7 @@
           placeholder: true,
           placeholderValue: 'Pick an Strokes record',
           maxItemCount: 5,
-        }).fetchChoices(function() {
+        }).setChoices(function() {
           return fetch(
             'https://api.discogs.com/artists/55980/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
           )
@@ -686,7 +686,7 @@
         var singleFetch = new Choices('#choices-single-remote-fetch', {
           searchPlaceholderValue: 'Search for an Arctic Monkeys record',
         })
-          .fetchChoices(function() {
+          .setChoices(function() {
             return fetch(
               'https://api.discogs.com/artists/391170/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
             )
@@ -706,7 +706,7 @@
         var singleXhrRemove = new Choices('#choices-single-remove-xhr', {
           removeItemButton: true,
           searchPlaceholderValue: "Search for a Smiths' record",
-        }).fetchChoices(function(callback) {
+        }).setChoices(function(callback) {
           return fetch(
             'https://api.discogs.com/artists/83080/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
           )

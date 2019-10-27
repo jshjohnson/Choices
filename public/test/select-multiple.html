@@ -380,7 +380,7 @@
 
         new Choices('#choices-remote-data', {
           shouldSort: false,
-        }).fetchChoices(async () => {
+        }).setChoices(async () => {
           const data = await fetch('/data');
           return data.json();
         });
