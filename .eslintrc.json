@@ -61,12 +61,13 @@
   "settings": {
     "polyfills": [
       "Array.from",
-      "Symbol",
-      "Symbol.iterator",
       "Array.prototype.find",
       "Array.prototype.includes",
+      "Symbol",
+      "Symbol.iterator",
       "Object.assign",
-      "CustomEvent"
+      "CustomEvent",
+      "Element.prototype.classList"
     ]
   }
 }
