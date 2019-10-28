@@ -122,7 +122,7 @@ async function test() {
       width,
       height,
       {
-        threshold: 1,
+        threshold: 0.5,
       },
     );
     writeFileSync(path.join(artifactsPath, 'diff.png'), PNG.sync.write(diff));
@@ -147,7 +147,7 @@ async function test() {
     await driver.quit();
     await new Promise(resolve => server.close(resolve));
   }
-  if (pixelDifference > 100) {
+  if (pixelDifference > 200) {
     console.error(
       `Snapshot is different from screenshot by ${pixelDifference} pixels`,
     );
