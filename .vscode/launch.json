@@ -1,0 +1,70 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Chrome",
+      "preLaunchTask": "buildAndWatch",
+      "url": "http://localhost:3001",
+      "webRoot": "${workspaceFolder}",
+      "sourceMapPathOverrides": {
+        "webpack://Choices/*": "${workspaceFolder}/*"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Mocha Current File",
+      "program": "${workspaceFolder}/node_modules/mocha/bin/mocha",
+      "args": ["-u", "bdd", "--timeout", "999999", "--colors", "${file}"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "NODE_ENV": "test"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Mocha All",
+      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "args": ["-u", "bdd", "--timeout", "999999", "--colors"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "openOnSessionStart",
+      "env": {
+        "NODE_ENV": "test"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Cypress Current File",
+      "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/cypress",
+      "windows": {
+        "runtimeExecutable": "${workspaceFolder}\\node_modules\\.bin\\cypress.cmd"
+      },
+      "runtimeArgs": [
+        "run",
+        "--headed",
+        "--no-exit",
+        "--browser=electron",
+        "--port",
+        "9898",
+        "--spec"
+      ],
+      "protocol": "legacy",
+      "port": 9898,
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "preLaunchTask": "buildAndWatch",
+      "internalConsoleOptions": "openOnSessionStart",
+      "timeout": 999999999999999,
+      "autoAttachChildProcesses": false,
+      "env": {
+        "NODE_ENV": "test"
+        // "DEBUG": "cypress:*"
+      }
+    }
+  ]
+}

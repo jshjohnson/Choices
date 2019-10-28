@@ -92,68 +92,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-  Copyright (c) 2017 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/classnames
-*/
-/* global define */
-
-(function () {
-	'use strict';
-
-	var hasOwn = {}.hasOwnProperty;
-
-	function classNames () {
-		var classes = [];
-
-		for (var i = 0; i < arguments.length; i++) {
-			var arg = arguments[i];
-			if (!arg) continue;
-
-			var argType = typeof arg;
-
-			if (argType === 'string' || argType === 'number') {
-				classes.push(arg);
-			} else if (Array.isArray(arg) && arg.length) {
-				var inner = classNames.apply(null, arg);
-				if (inner) {
-					classes.push(inner);
-				}
-			} else if (argType === 'object') {
-				for (var key in arg) {
-					if (hasOwn.call(arg, key) && arg[key]) {
-						classes.push(key);
-					}
-				}
-			}
-		}
-
-		return classes.join(' ');
-	}
-
-	if ( true && module.exports) {
-		classNames.default = classNames;
-		module.exports = classNames;
-	} else if (true) {
-		// register as 'classnames', consistent with npm package name
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
-			return classNames;
-		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	} else {}
-}());
-
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -291,11 +234,11 @@ module.exports = deepmerge_1;
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var _ponyfill_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var _ponyfill_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 /* global window */
 
 
@@ -314,10 +257,10 @@ if (typeof self !== 'undefined') {
 var result = Object(_ponyfill_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(root);
 /* harmony default export */ __webpack_exports__["a"] = (result);
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(7), __webpack_require__(8)(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(6), __webpack_require__(7)(module)))
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
@@ -331,7 +274,7 @@ var result = Object(_ponyfill_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"]
 !function(e,t){ true?module.exports=t():undefined}(this,function(){return function(e){var t={};function n(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}return n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)n.d(r,o,function(t){return e[t]}.bind(null,o));return r},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=1)}([function(e,t){e.exports=function(e){return Array.isArray?Array.isArray(e):"[object Array]"===Object.prototype.toString.call(e)}},function(e,t,n){function r(e){return(r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function o(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}var i=n(2),a=n(8),s=n(0),c=function(){function e(t,n){var r=n.location,o=void 0===r?0:r,i=n.distance,s=void 0===i?100:i,c=n.threshold,h=void 0===c?.6:c,l=n.maxPatternLength,u=void 0===l?32:l,f=n.caseSensitive,d=void 0!==f&&f,v=n.tokenSeparator,p=void 0===v?/ +/g:v,g=n.findAllMatches,y=void 0!==g&&g,m=n.minMatchCharLength,k=void 0===m?1:m,S=n.id,x=void 0===S?null:S,b=n.keys,M=void 0===b?[]:b,_=n.shouldSort,L=void 0===_||_,w=n.getFn,A=void 0===w?a:w,C=n.sortFn,I=void 0===C?function(e,t){return e.score-t.score}:C,O=n.tokenize,j=void 0!==O&&O,P=n.matchAllTokens,F=void 0!==P&&P,T=n.includeMatches,z=void 0!==T&&T,E=n.includeScore,K=void 0!==E&&E,$=n.verbose,J=void 0!==$&&$;!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),this.options={location:o,distance:s,threshold:h,maxPatternLength:u,isCaseSensitive:d,tokenSeparator:p,findAllMatches:y,minMatchCharLength:k,id:x,keys:M,includeMatches:z,includeScore:K,shouldSort:L,getFn:A,sortFn:I,verbose:J,tokenize:j,matchAllTokens:F},this.setCollection(t)}var t,n,c;return t=e,(n=[{key:"setCollection",value:function(e){return this.list=e,e}},{key:"search",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{limit:!1};this._log('---------\nSearch pattern: "'.concat(e,'"'));var n=this._prepareSearchers(e),r=n.tokenSearchers,o=n.fullSearcher,i=this._search(r,o),a=i.weights,s=i.results;return this._computeScore(a,s),this.options.shouldSort&&this._sort(s),t.limit&&"number"==typeof t.limit&&(s=s.slice(0,t.limit)),this._format(s)}},{key:"_prepareSearchers",value:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",t=[];if(this.options.tokenize)for(var n=e.split(this.options.tokenSeparator),r=0,o=n.length;r<o;r+=1)t.push(new i(n[r],this.options));return{tokenSearchers:t,fullSearcher:new i(e,this.options)}}},{key:"_search",value:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:[],t=arguments.length>1?arguments[1]:void 0,n=this.list,r={},o=[];if("string"==typeof n[0]){for(var i=0,a=n.length;i<a;i+=1)this._analyze({key:"",value:n[i],record:i,index:i},{resultMap:r,results:o,tokenSearchers:e,fullSearcher:t});return{weights:null,results:o}}for(var s={},c=0,h=n.length;c<h;c+=1)for(var l=n[c],u=0,f=this.options.keys.length;u<f;u+=1){var d=this.options.keys[u];if("string"!=typeof d){if(s[d.name]={weight:1-d.weight||1},d.weight<=0||d.weight>1)throw new Error("Key weight has to be > 0 and <= 1");d=d.name}else s[d]={weight:1};this._analyze({key:d,value:this.options.getFn(l,d),record:l,index:c},{resultMap:r,results:o,tokenSearchers:e,fullSearcher:t})}return{weights:s,results:o}}},{key:"_analyze",value:function(e,t){var n=e.key,r=e.arrayIndex,o=void 0===r?-1:r,i=e.value,a=e.record,c=e.index,h=t.tokenSearchers,l=void 0===h?[]:h,u=t.fullSearcher,f=void 0===u?[]:u,d=t.resultMap,v=void 0===d?{}:d,p=t.results,g=void 0===p?[]:p;if(null!=i){var y=!1,m=-1,k=0;if("string"==typeof i){this._log("\nKey: ".concat(""===n?"-":n));var S=f.search(i);if(this._log('Full text: "'.concat(i,'", score: ').concat(S.score)),this.options.tokenize){for(var x=i.split(this.options.tokenSeparator),b=[],M=0;M<l.length;M+=1){var _=l[M];this._log('\nPattern: "'.concat(_.pattern,'"'));for(var L=!1,w=0;w<x.length;w+=1){var A=x[w],C=_.search(A),I={};C.isMatch?(I[A]=C.score,y=!0,L=!0,b.push(C.score)):(I[A]=1,this.options.matchAllTokens||b.push(1)),this._log('Token: "'.concat(A,'", score: ').concat(I[A]))}L&&(k+=1)}m=b[0];for(var O=b.length,j=1;j<O;j+=1)m+=b[j];m/=O,this._log("Token score average:",m)}var P=S.score;m>-1&&(P=(P+m)/2),this._log("Score average:",P);var F=!this.options.tokenize||!this.options.matchAllTokens||k>=l.length;if(this._log("\nCheck Matches: ".concat(F)),(y||S.isMatch)&&F){var T=v[c];T?T.output.push({key:n,arrayIndex:o,value:i,score:P,matchedIndices:S.matchedIndices}):(v[c]={item:a,output:[{key:n,arrayIndex:o,value:i,score:P,matchedIndices:S.matchedIndices}]},g.push(v[c]))}}else if(s(i))for(var z=0,E=i.length;z<E;z+=1)this._analyze({key:n,arrayIndex:z,value:i[z],record:a,index:c},{resultMap:v,results:g,tokenSearchers:l,fullSearcher:f})}}},{key:"_computeScore",value:function(e,t){this._log("\n\nComputing score:\n");for(var n=0,r=t.length;n<r;n+=1){for(var o=t[n].output,i=o.length,a=1,s=1,c=0;c<i;c+=1){var h=e?e[o[c].key].weight:1,l=(1===h?o[c].score:o[c].score||.001)*h;1!==h?s=Math.min(s,l):(o[c].nScore=l,a*=l)}t[n].score=1===s?a:s,this._log(t[n])}}},{key:"_sort",value:function(e){this._log("\n\nSorting...."),e.sort(this.options.sortFn)}},{key:"_format",value:function(e){var t=[];if(this.options.verbose){var n=[];this._log("\n\nOutput:\n\n",JSON.stringify(e,function(e,t){if("object"===r(t)&&null!==t){if(-1!==n.indexOf(t))return;n.push(t)}return t})),n=null}var o=[];this.options.includeMatches&&o.push(function(e,t){var n=e.output;t.matches=[];for(var r=0,o=n.length;r<o;r+=1){var i=n[r];if(0!==i.matchedIndices.length){var a={indices:i.matchedIndices,value:i.value};i.key&&(a.key=i.key),i.hasOwnProperty("arrayIndex")&&i.arrayIndex>-1&&(a.arrayIndex=i.arrayIndex),t.matches.push(a)}}}),this.options.includeScore&&o.push(function(e,t){t.score=e.score});for(var i=0,a=e.length;i<a;i+=1){var s=e[i];if(this.options.id&&(s.item=this.options.getFn(s.item,this.options.id)[0]),o.length){for(var c={item:s.item},h=0,l=o.length;h<l;h+=1)o[h](s,c);t.push(c)}else t.push(s.item)}return t}},{key:"_log",value:function(){var e;this.options.verbose&&(e=console).log.apply(e,arguments)}}])&&o(t.prototype,n),c&&o(t,c),e}();e.exports=c},function(e,t,n){function r(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}var o=n(3),i=n(4),a=n(7),s=function(){function e(t,n){var r=n.location,o=void 0===r?0:r,i=n.distance,s=void 0===i?100:i,c=n.threshold,h=void 0===c?.6:c,l=n.maxPatternLength,u=void 0===l?32:l,f=n.isCaseSensitive,d=void 0!==f&&f,v=n.tokenSeparator,p=void 0===v?/ +/g:v,g=n.findAllMatches,y=void 0!==g&&g,m=n.minMatchCharLength,k=void 0===m?1:m;!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),this.options={location:o,distance:s,threshold:h,maxPatternLength:u,isCaseSensitive:d,tokenSeparator:p,findAllMatches:y,minMatchCharLength:k},this.pattern=this.options.isCaseSensitive?t:t.toLowerCase(),this.pattern.length<=u&&(this.patternAlphabet=a(this.pattern))}var t,n,s;return t=e,(n=[{key:"search",value:function(e){if(this.options.isCaseSensitive||(e=e.toLowerCase()),this.pattern===e)return{isMatch:!0,score:0,matchedIndices:[[0,e.length-1]]};var t=this.options,n=t.maxPatternLength,r=t.tokenSeparator;if(this.pattern.length>n)return o(e,this.pattern,r);var a=this.options,s=a.location,c=a.distance,h=a.threshold,l=a.findAllMatches,u=a.minMatchCharLength;return i(e,this.pattern,this.patternAlphabet,{location:s,distance:c,threshold:h,findAllMatches:l,minMatchCharLength:u})}}])&&r(t.prototype,n),s&&r(t,s),e}();e.exports=s},function(e,t){var n=/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;e.exports=function(e,t){var r=arguments.length>2&&void 0!==arguments[2]?arguments[2]:/ +/g,o=new RegExp(t.replace(n,"\\$&").replace(r,"|")),i=e.match(o),a=!!i,s=[];if(a)for(var c=0,h=i.length;c<h;c+=1){var l=i[c];s.push([e.indexOf(l),l.length-1])}return{score:a?.5:1,isMatch:a,matchedIndices:s}}},function(e,t,n){var r=n(5),o=n(6);e.exports=function(e,t,n,i){for(var a=i.location,s=void 0===a?0:a,c=i.distance,h=void 0===c?100:c,l=i.threshold,u=void 0===l?.6:l,f=i.findAllMatches,d=void 0!==f&&f,v=i.minMatchCharLength,p=void 0===v?1:v,g=s,y=e.length,m=u,k=e.indexOf(t,g),S=t.length,x=[],b=0;b<y;b+=1)x[b]=0;if(-1!==k){var M=r(t,{errors:0,currentLocation:k,expectedLocation:g,distance:h});if(m=Math.min(M,m),-1!==(k=e.lastIndexOf(t,g+S))){var _=r(t,{errors:0,currentLocation:k,expectedLocation:g,distance:h});m=Math.min(_,m)}}k=-1;for(var L=[],w=1,A=S+y,C=1<<S-1,I=0;I<S;I+=1){for(var O=0,j=A;O<j;){r(t,{errors:I,currentLocation:g+j,expectedLocation:g,distance:h})<=m?O=j:A=j,j=Math.floor((A-O)/2+O)}A=j;var P=Math.max(1,g-j+1),F=d?y:Math.min(g+j,y)+S,T=Array(F+2);T[F+1]=(1<<I)-1;for(var z=F;z>=P;z-=1){var E=z-1,K=n[e.charAt(E)];if(K&&(x[E]=1),T[z]=(T[z+1]<<1|1)&K,0!==I&&(T[z]|=(L[z+1]|L[z])<<1|1|L[z+1]),T[z]&C&&(w=r(t,{errors:I,currentLocation:E,expectedLocation:g,distance:h}))<=m){if(m=w,(k=E)<=g)break;P=Math.max(1,2*g-k)}}if(r(t,{errors:I+1,currentLocation:g,expectedLocation:g,distance:h})>m)break;L=T}return{isMatch:k>=0,score:0===w?.001:w,matchedIndices:o(x,p)}}},function(e,t){e.exports=function(e,t){var n=t.errors,r=void 0===n?0:n,o=t.currentLocation,i=void 0===o?0:o,a=t.expectedLocation,s=void 0===a?0:a,c=t.distance,h=void 0===c?100:c,l=r/e.length,u=Math.abs(s-i);return h?l+u/h:u?1:l}},function(e,t){e.exports=function(){for(var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:[],t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:1,n=[],r=-1,o=-1,i=0,a=e.length;i<a;i+=1){var s=e[i];s&&-1===r?r=i:s||-1===r||((o=i-1)-r+1>=t&&n.push([r,o]),r=-1)}return e[i-1]&&i-r>=t&&n.push([r,i-1]),n}},function(e,t){e.exports=function(e){for(var t={},n=e.length,r=0;r<n;r+=1)t[e.charAt(r)]=0;for(var o=0;o<n;o+=1)t[e.charAt(o)]|=1<<n-o-1;return t}},function(e,t,n){var r=n(0);e.exports=function(e,t){return function e(t,n,o){if(n){var i=n.indexOf("."),a=n,s=null;-1!==i&&(a=n.slice(0,i),s=n.slice(i+1));var c=t[a];if(null!=c)if(s||"string"!=typeof c&&"number"!=typeof c)if(r(c))for(var h=0,l=c.length;h<l;h+=1)e(c[h],s,o);else s&&e(c,s,o);else o.push(c.toString())}else o.push(t);return o}(e,t,[])}}])});
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -356,14 +299,14 @@ function symbolObservablePonyfill(root) {
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(9);
+module.exports = __webpack_require__(8);
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 window.delegateEvent = function delegateEvent() {
@@ -415,7 +358,7 @@ window.delegateEvent = function delegateEvent() {
 }();
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 var g;
@@ -441,7 +384,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -471,25 +414,25 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/fuse.js/dist/fuse.js
-var dist_fuse = __webpack_require__(3);
+var dist_fuse = __webpack_require__(2);
 var fuse_default = /*#__PURE__*/__webpack_require__.n(dist_fuse);
 
 // EXTERNAL MODULE: ./node_modules/deepmerge/dist/cjs.js
-var cjs = __webpack_require__(1);
+var cjs = __webpack_require__(0);
 var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 
 // EXTERNAL MODULE: ./src/scripts/lib/delegate-events.js
-var delegate_events = __webpack_require__(6);
+var delegate_events = __webpack_require__(5);
 
 // EXTERNAL MODULE: ./node_modules/symbol-observable/es/index.js
-var es = __webpack_require__(2);
+var es = __webpack_require__(1);
 
 // CONCATENATED MODULE: ./node_modules/redux/es/redux.js
 
@@ -1378,8 +1321,6 @@ var general = function general(state, action) {
 
 /* harmony default export */ var reducers_general = (general);
 // CONCATENATED MODULE: ./src/scripts/lib/utils.js
-var utils_this = undefined;
-
 var getRandomNumber = function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
@@ -1491,52 +1432,6 @@ var strToEl = function () {
     return firldChild;
   };
 }();
-/**
- * Determines the width of a passed input based on its value and passes
- * it to the supplied callback function.
- */
-
-var calcWidthOfInput = function calcWidthOfInput(input, callback) {
-  var value = input.value || input.placeholder;
-  var width = input.offsetWidth;
-
-  if (value) {
-    var testEl = strToEl("<span>" + sanitise(value) + "</span>");
-    testEl.style.position = 'absolute';
-    testEl.style.padding = '0';
-    testEl.style.top = '-9999px';
-    testEl.style.left = '-9999px';
-    testEl.style.width = 'auto';
-    testEl.style.whiteSpace = 'pre';
-
-    if (document.body.contains(input) && window.getComputedStyle) {
-      var inputStyle = window.getComputedStyle(input);
-
-      if (inputStyle) {
-        testEl.style.fontSize = inputStyle.fontSize;
-        testEl.style.fontFamily = inputStyle.fontFamily;
-        testEl.style.fontWeight = inputStyle.fontWeight;
-        testEl.style.fontStyle = inputStyle.fontStyle;
-        testEl.style.letterSpacing = inputStyle.letterSpacing;
-        testEl.style.textTransform = inputStyle.textTransform;
-        testEl.style.paddingLeft = inputStyle.paddingLeft;
-        testEl.style.paddingRight = inputStyle.paddingRight;
-      }
-    }
-
-    document.body.appendChild(testEl);
-    requestAnimationFrame(function () {
-      if (value && testEl.offsetWidth !== input.offsetWidth) {
-        width = testEl.offsetWidth + 4;
-      }
-
-      document.body.removeChild(testEl);
-      callback.call(utils_this, width + "px");
-    });
-  } else {
-    callback.call(utils_this, width + "px");
-  }
-};
 var sortByAlpha = function sortByAlpha(a, b) {
   var labelA = ("" + (a.label || a.value)).toLowerCase();
   var labelB = ("" + (b.label || b.value)).toLowerCase();
@@ -1688,14 +1583,16 @@ function () {
   }
   /**
    * Get single choice by it's ID
-   * @return {Object} Found choice
+   * @param {id} string
+   * @return {import('../../../types/index').Choices.Choice | false} Found choice
    */
   ;
 
   _proto.getChoiceById = function getChoiceById(id) {
     if (id) {
+      var n = parseInt(id, 10);
       return this.activeChoices.find(function (choice) {
-        return choice.id === parseInt(id, 10);
+        return choice.id === n;
       });
     }
 
@@ -2229,33 +2126,17 @@ function () {
   /**
    * Set the correct input width based on placeholder
    * value or input value
-   * @return
    */
   ;
 
-  _proto.setWidth = function setWidth(enforceWidth) {
-    var _this = this;
-
-    var callback = function callback(width) {
-      _this.element.style.width = width;
-    };
-
-    if (this._placeholderValue) {
-      // If there is a placeholder, we only want to set the width of the input when it is a greater
-      // length than 75% of the placeholder. This stops the input jumping around.
-      var valueHasDesiredLength = this.element.value.length >= this._placeholderValue.length / 1.25;
-
-      if (this.element.value && valueHasDesiredLength || enforceWidth) {
-        this.calcWidth(callback);
-      }
-    } else {
-      // If there is no placeholder, resize input to contents
-      this.calcWidth(callback);
-    }
-  };
-
-  _proto.calcWidth = function calcWidth(callback) {
-    return calcWidthOfInput(this.element, callback);
+  _proto.setWidth = function setWidth() {
+    // Resize input to contents or placeholder
+    var _this$element = this.element,
+        style = _this$element.style,
+        value = _this$element.value,
+        placeholder = _this$element.placeholder;
+    style.minWidth = placeholder.length + 1 + "ch";
+    style.width = value.length + 1 + "ch";
   };
 
   _proto.setActiveDescendant = function setActiveDescendant(activeDescendantID) {
@@ -2331,7 +2212,6 @@ var DEFAULT_CLASSNAMES = {
   openState: 'is-open',
   disabledState: 'is-disabled',
   highlightedState: 'is-highlighted',
-  hiddenState: 'is-hidden',
   flippedState: 'is-flipped',
   loadingState: 'is-loading',
   noResults: 'has-no-results',
@@ -2551,7 +2431,7 @@ function () {
   _proto.conceal = function conceal() {
     // Hide passed input
     this.element.classList.add(this.classNames.input);
-    this.element.classList.add(this.classNames.hiddenState); // Remove element from tab index
+    this.element.hidden = true; // Remove element from tab index
 
     this.element.tabIndex = '-1'; // Backup original styles if any
 
@@ -2561,14 +2441,13 @@ function () {
       this.element.setAttribute('data-choice-orig-style', origStyle);
     }
 
-    this.element.setAttribute('aria-hidden', 'true');
     this.element.setAttribute('data-choice', 'active');
   };
 
   _proto.reveal = function reveal() {
     // Reinstate passed element
     this.element.classList.remove(this.classNames.input);
-    this.element.classList.remove(this.classNames.hiddenState);
+    this.element.hidden = false;
     this.element.removeAttribute('tabindex'); // Recover original styles if any
 
     var origStyle = this.element.getAttribute('data-choice-orig-style');
@@ -2580,7 +2459,6 @@ function () {
       this.element.removeAttribute('style');
     }
 
-    this.element.removeAttribute('aria-hidden');
     this.element.removeAttribute('data-choice'); // Re-assign values - this is weird, I know
 
     this.element.value = this.element.value;
@@ -2749,92 +2627,217 @@ function (_WrappedElement) {
 
 
 
-// EXTERNAL MODULE: ./node_modules/classnames/index.js
-var classnames = __webpack_require__(0);
-var classnames_default = /*#__PURE__*/__webpack_require__.n(classnames);
-
 // CONCATENATED MODULE: ./src/scripts/templates.js
+/**
+ * Helpers to create HTML elements used by Choices
+ * Can be overridden by providing `callbackOnCreateTemplates` option
+ * @typedef {import('../../types/index').Choices.Templates} Templates
+ */
+var TEMPLATES =
+/** @type {Templates} */
+{
+  containerOuter: function containerOuter(_ref, dir, isSelectElement, isSelectOneElement, searchEnabled, passedElementType) {
+    var _containerOuter = _ref.containerOuter;
+    var div = Object.assign(document.createElement('div'), {
+      className: _containerOuter,
+      dir: dir
+    });
+    div.dataset.type = passedElementType;
+    if (isSelectOneElement) div.tabIndex = 0;
 
-
-var TEMPLATES = {
-  containerOuter: function containerOuter(globalClasses, direction, isSelectElement, isSelectOneElement, searchEnabled, passedElementType) {
-    var tabIndex = isSelectOneElement ? 'tabindex="0"' : '';
-    var role = isSelectElement ? 'role="listbox"' : '';
-    var ariaAutoComplete = '';
-
-    if (isSelectElement && searchEnabled) {
-      role = 'role="combobox"';
-      ariaAutoComplete = 'aria-autocomplete="list"';
+    if (isSelectElement) {
+      div.setAttribute('role', searchEnabled ? 'combobox' : 'listbox');
+      if (searchEnabled) div.setAttribute('aria-autocomplete', 'list');
     }
 
-    return strToEl("\n      <div\n        class=\"" + globalClasses.containerOuter + "\"\n        data-type=\"" + passedElementType + "\"\n        " + role + "\n        " + tabIndex + "\n        " + ariaAutoComplete + "\n        aria-haspopup=\"true\"\n        aria-expanded=\"false\"\n        dir=\"" + direction + "\"\n        >\n      </div>\n    ");
+    div.setAttribute('aria-haspopup', 'true');
+    div.setAttribute('aria-expanded', 'false');
+    return div;
   },
-  containerInner: function containerInner(globalClasses) {
-    return strToEl("\n      <div class=\"" + globalClasses.containerInner + "\"></div>\n    ");
+  containerInner: function containerInner(_ref2) {
+    var _containerInner = _ref2.containerInner;
+    return Object.assign(document.createElement('div'), {
+      className: _containerInner
+    });
   },
-  itemList: function itemList(globalClasses, isSelectOneElement) {
-    var _classNames;
-
-    var localClasses = classnames_default()(globalClasses.list, (_classNames = {}, _classNames[globalClasses.listSingle] = isSelectOneElement, _classNames[globalClasses.listItems] = !isSelectOneElement, _classNames));
-    return strToEl("\n      <div class=\"" + localClasses + "\"></div>\n    ");
+  itemList: function itemList(_ref3, isSelectOneElement) {
+    var list = _ref3.list,
+        listSingle = _ref3.listSingle,
+        listItems = _ref3.listItems;
+    return Object.assign(document.createElement('div'), {
+      className: list + " " + (isSelectOneElement ? listSingle : listItems)
+    });
   },
-  placeholder: function placeholder(globalClasses, value) {
-    return strToEl("\n      <div class=\"" + globalClasses.placeholder + "\">\n        " + value + "\n      </div>\n    ");
+  placeholder: function placeholder(_ref4, value) {
+    var _placeholder = _ref4.placeholder;
+    return Object.assign(document.createElement('div'), {
+      className: _placeholder,
+      innerHTML: value
+    });
   },
-  item: function item(globalClasses, data, removeItemButton) {
-    var _classNames2;
-
-    var ariaSelected = data.active ? 'aria-selected="true"' : '';
-    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
-    var localClasses = classnames_default()(globalClasses.item, (_classNames2 = {}, _classNames2[globalClasses.highlightedState] = data.highlighted, _classNames2[globalClasses.itemSelectable] = !data.highlighted, _classNames2[globalClasses.placeholder] = data.placeholder, _classNames2));
+  item: function item(_ref5, _ref6, removeItemButton) {
+    var _item = _ref5.item,
+        button = _ref5.button,
+        highlightedState = _ref5.highlightedState,
+        itemSelectable = _ref5.itemSelectable,
+        placeholder = _ref5.placeholder;
+    var id = _ref6.id,
+        value = _ref6.value,
+        label = _ref6.label,
+        customProperties = _ref6.customProperties,
+        active = _ref6.active,
+        disabled = _ref6.disabled,
+        highlighted = _ref6.highlighted,
+        isPlaceholder = _ref6.placeholder;
+    var div = Object.assign(document.createElement('div'), {
+      className: _item,
+      innerHTML: label
+    });
+    Object.assign(div.dataset, {
+      item: '',
+      id: id,
+      value: value,
+      customProperties: customProperties
+    });
+    if (active) div.setAttribute('aria-selected', 'true');
+    if (disabled) div.setAttribute('aria-disabled', 'true');
+    if (isPlaceholder) div.classList.add(placeholder);
+    div.classList.add(highlighted ? highlightedState : itemSelectable);
 
     if (removeItemButton) {
-      var _classNames3;
+      if (disabled) div.classList.remove(itemSelectable);
+      div.dataset.deletable = '';
+      /** @todo This MUST be localizable, not hardcoded! */
 
-      localClasses = classnames_default()(globalClasses.item, (_classNames3 = {}, _classNames3[globalClasses.highlightedState] = data.highlighted, _classNames3[globalClasses.itemSelectable] = !data.disabled, _classNames3[globalClasses.placeholder] = data.placeholder, _classNames3));
-      return strToEl("\n        <div\n          class=\"" + localClasses + "\"\n          data-item\n          data-id=\"" + data.id + "\"\n          data-value=\"" + data.value + "\"\n          data-custom-properties='" + data.customProperties + "'\n          data-deletable\n          " + ariaSelected + "\n          " + ariaDisabled + "\n          >\n          " + data.label + "<!--\n       --><button\n            type=\"button\"\n            class=\"" + globalClasses.button + "\"\n            data-button\n            aria-label=\"Remove item: '" + data.value + "'\"\n            >\n            Remove item\n          </button>\n        </div>\n      ");
+      var REMOVE_ITEM_TEXT = 'Remove item';
+      var removeButton = Object.assign(document.createElement('button'), {
+        type: 'button',
+        className: button,
+        innerHTML: REMOVE_ITEM_TEXT
+      });
+      removeButton.setAttribute('aria-label', REMOVE_ITEM_TEXT + ": '" + value + "'");
+      removeButton.dataset.button = '';
+      div.appendChild(removeButton);
     }
 
-    return strToEl("\n      <div\n        class=\"" + localClasses + "\"\n        data-item\n        data-id=\"" + data.id + "\"\n        data-value=\"" + data.value + "\"\n        " + ariaSelected + "\n        " + ariaDisabled + "\n        >\n        " + data.label + "\n      </div>\n    ");
+    return div;
   },
-  choiceList: function choiceList(globalClasses, isSelectOneElement) {
-    var ariaMultiSelectable = !isSelectOneElement ? 'aria-multiselectable="true"' : '';
-    return strToEl("\n      <div\n        class=\"" + globalClasses.list + "\"\n        dir=\"ltr\"\n        role=\"listbox\"\n        " + ariaMultiSelectable + "\n        >\n      </div>\n    ");
+  choiceList: function choiceList(_ref7, isSelectOneElement) {
+    var list = _ref7.list;
+    var div = Object.assign(document.createElement('div'), {
+      className: list,
+      dir: 'ltr'
+    });
+    if (!isSelectOneElement) div.setAttribute('aria-multiselectable', 'true');
+    div.setAttribute('role', 'listbox');
+    return div;
   },
-  choiceGroup: function choiceGroup(globalClasses, data) {
-    var _classNames4;
+  choiceGroup: function choiceGroup(_ref8, _ref9) {
+    var group = _ref8.group,
+        groupHeading = _ref8.groupHeading,
+        itemDisabled = _ref8.itemDisabled;
+    var id = _ref9.id,
+        value = _ref9.value,
+        disabled = _ref9.disabled;
+    var div = Object.assign(document.createElement('div'), {
+      className: group + " " + (disabled ? itemDisabled : '')
+    });
+    div.setAttribute('role', 'group');
+    Object.assign(div.dataset, {
+      group: '',
+      id: id,
+      value: value
+    });
+    if (disabled) div.setAttribute('aria-disabled', 'true');
+    div.appendChild(Object.assign(document.createElement('div'), {
+      className: groupHeading,
+      innerHTML: value
+    }));
+    return div;
+  },
+  choice: function choice(_ref10, _ref11, selectText) {
+    var item = _ref10.item,
+        itemChoice = _ref10.itemChoice,
+        itemSelectable = _ref10.itemSelectable,
+        itemDisabled = _ref10.itemDisabled,
+        placeholder = _ref10.placeholder;
+    var id = _ref11.id,
+        value = _ref11.value,
+        label = _ref11.label,
+        groupId = _ref11.groupId,
+        elementId = _ref11.elementId,
+        disabled = _ref11.disabled,
+        isPlaceholder = _ref11.placeholder;
+    var div = Object.assign(document.createElement('div'), {
+      id: elementId,
+      innerHTML: label,
+      className: item + " " + itemChoice + " " + (disabled ? itemDisabled : itemSelectable) + " " + (isPlaceholder ? placeholder : '')
+    });
+    div.setAttribute('role', groupId > 0 ? 'treeitem' : 'option');
+    Object.assign(div.dataset, {
+      choice: '',
+      id: id,
+      value: value,
+      selectText: selectText
+    });
 
-    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
-    var localClasses = classnames_default()(globalClasses.group, (_classNames4 = {}, _classNames4[globalClasses.itemDisabled] = data.disabled, _classNames4));
-    return strToEl("\n      <div\n        class=\"" + localClasses + "\"\n        data-group\n        data-id=\"" + data.id + "\"\n        data-value=\"" + data.value + "\"\n        role=\"group\"\n        " + ariaDisabled + "\n        >\n        <div class=\"" + globalClasses.groupHeading + "\">" + data.value + "</div>\n      </div>\n    ");
-  },
-  choice: function choice(globalClasses, data, itemSelectText) {
-    var _classNames5;
+    if (disabled) {
+      div.dataset.choiceDisabled = '';
+      div.setAttribute('aria-disabled', 'true');
+    } else div.dataset.choiceSelectable = '';
 
-    var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
-    var localClasses = classnames_default()(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _classNames5[globalClasses.itemDisabled] = data.disabled, _classNames5[globalClasses.itemSelectable] = !data.disabled, _classNames5[globalClasses.placeholder] = data.placeholder, _classNames5));
-    return strToEl("\n      <div\n        class=\"" + localClasses + "\"\n        data-select-text=\"" + itemSelectText + "\"\n        data-choice\n        data-id=\"" + data.id + "\"\n        data-value=\"" + data.value + "\"\n        " + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + "\n        id=\"" + data.elementId + "\"\n        " + role + "\n        >\n        " + data.label + "\n      </div>\n    ");
+    return div;
   },
-  input: function input(globalClasses, placeholderValue) {
-    var localClasses = classnames_default()(globalClasses.input, globalClasses.inputCloned);
-    return strToEl("\n      <input\n        type=\"text\"\n        class=\"" + localClasses + "\"\n        autocomplete=\"off\"\n        autocapitalize=\"off\"\n        spellcheck=\"false\"\n        role=\"textbox\"\n        aria-autocomplete=\"list\"\n        aria-label=\"" + placeholderValue + "\"\n        >\n    ");
+  input: function input(_ref12, placeholderValue) {
+    var _input = _ref12.input,
+        inputCloned = _ref12.inputCloned;
+    var inp = Object.assign(document.createElement('input'), {
+      type: 'text',
+      className: _input + " " + inputCloned,
+      autocomplete: 'off',
+      autocapitalize: 'off',
+      spellcheck: false
+    });
+    inp.setAttribute('role', 'textbox');
+    inp.setAttribute('aria-autocomplete', 'list');
+    inp.setAttribute('aria-label', placeholderValue);
+    return inp;
   },
-  dropdown: function dropdown(globalClasses) {
-    var localClasses = classnames_default()(globalClasses.list, globalClasses.listDropdown);
-    return strToEl("\n      <div\n        class=\"" + localClasses + "\"\n        aria-expanded=\"false\"\n        >\n      </div>\n    ");
+  dropdown: function dropdown(_ref13) {
+    var list = _ref13.list,
+        listDropdown = _ref13.listDropdown;
+    var div = document.createElement('div');
+    div.classList.add(list, listDropdown);
+    div.setAttribute('aria-expanded', 'false');
+    return div;
   },
-  notice: function notice(globalClasses, label, type) {
-    var _classNames6;
+  notice: function notice(_ref14, innerHTML, type) {
+    var item = _ref14.item,
+        itemChoice = _ref14.itemChoice,
+        noResults = _ref14.noResults,
+        noChoices = _ref14.noChoices;
 
     if (type === void 0) {
       type = '';
     }
 
-    var localClasses = classnames_default()(globalClasses.item, globalClasses.itemChoice, (_classNames6 = {}, _classNames6[globalClasses.noResults] = type === 'no-results', _classNames6[globalClasses.noChoices] = type === 'no-choices', _classNames6));
-    return strToEl("\n      <div class=\"" + localClasses + "\">\n        " + label + "\n      </div>\n    ");
+    var classes = [item, itemChoice];
+    if (type === 'no-choices') classes.push(noChoices);else if (type === 'no-results') classes.push(noResults);
+    return Object.assign(document.createElement('div'), {
+      innerHTML: innerHTML,
+      className: classes.join(' ')
+    });
   },
-  option: function option(data) {
-    return strToEl("\n      <option value=\"" + data.value + "\" " + (data.active ? 'selected' : '') + " " + (data.disabled ? 'disabled' : '') + " " + (data.customProperties ? "data-custom-properties=" + data.customProperties : '') + ">" + data.label + "</option>\n    ");
+  option: function option(_ref15) {
+    var label = _ref15.label,
+        value = _ref15.value,
+        customProperties = _ref15.customProperties,
+        active = _ref15.active,
+        disabled = _ref15.disabled;
+    var opt = new Option(label, value, false, active);
+    if (customProperties) opt.dataset.customProperties = customProperties;
+    opt.disabled = disabled;
+    return opt;
   }
 };
 /* harmony default export */ var templates = (TEMPLATES);
@@ -3374,16 +3377,20 @@ function () {
     }, []);
 
     return this._isSelectOneElement ? values[0] : values;
-  };
+  }
+  /**
+   * @param {string[] | import('../../types/index').Choices.Item[]} items
+   */
+  ;
 
-  _proto.setValue = function setValue(args) {
+  _proto.setValue = function setValue(items) {
     var _this9 = this;
 
     if (!this.initialised) {
       return this;
     }
 
-    [].concat(args).forEach(function (value) {
+    items.forEach(function (value) {
       return _this9._setChoiceOrItem(value);
     });
     return this;
@@ -3612,7 +3619,9 @@ function () {
   _proto._createGroupsFragment = function _createGroupsFragment(groups, choices, fragment) {
     var _this14 = this;
 
-    var groupFragment = fragment || document.createDocumentFragment();
+    if (fragment === void 0) {
+      fragment = document.createDocumentFragment();
+    }
 
     var getGroupChoices = function getGroupChoices(group) {
       return choices.filter(function (choice) {
@@ -3635,23 +3644,26 @@ function () {
       if (groupChoices.length >= 1) {
         var dropdownGroup = _this14._getTemplate('choiceGroup', group);
 
-        groupFragment.appendChild(dropdownGroup);
+        fragment.appendChild(dropdownGroup);
 
-        _this14._createChoicesFragment(groupChoices, groupFragment, true);
+        _this14._createChoicesFragment(groupChoices, fragment, true);
       }
     });
-    return groupFragment;
+    return fragment;
   };
 
   _proto._createChoicesFragment = function _createChoicesFragment(choices, fragment, withinGroup) {
     var _this15 = this;
+
+    if (fragment === void 0) {
+      fragment = document.createDocumentFragment();
+    }
 
     if (withinGroup === void 0) {
       withinGroup = false;
     }
 
     // Create a fragment to store our list items (so we don't have to update the DOM for each item)
-    var choicesFragment = fragment || document.createDocumentFragment();
     var _this$config = this.config,
         renderSelectedChoices = _this$config.renderSelectedChoices,
         searchResultLimit = _this$config.searchResultLimit,
@@ -3664,7 +3676,7 @@ function () {
       if (shouldRender) {
         var dropdownItem = _this15._getTemplate('choice', choice, _this15.config.itemSelectText);
 
-        choicesFragment.appendChild(dropdownItem);
+        fragment.appendChild(dropdownItem);
       }
     };
 
@@ -3714,22 +3726,21 @@ function () {
       }
     }
 
-    return choicesFragment;
+    return fragment;
   };
 
   _proto._createItemsFragment = function _createItemsFragment(items, fragment) {
     var _this16 = this;
 
     if (fragment === void 0) {
-      fragment = null;
+      fragment = document.createDocumentFragment();
     }
 
     // Create fragment to add elements to
     var _this$config2 = this.config,
         shouldSortItems = _this$config2.shouldSortItems,
         sortFn = _this$config2.sortFn,
-        removeItemButton = _this$config2.removeItemButton;
-    var itemListFragment = fragment || document.createDocumentFragment(); // If sorting is enabled, filter items
+        removeItemButton = _this$config2.removeItemButton; // If sorting is enabled, filter items
 
     if (shouldSortItems && !this._isSelectOneElement) {
       items.sort(sortFn);
@@ -3748,14 +3759,14 @@ function () {
       var listItem = _this16._getTemplate('item', item, removeItemButton); // Append it to list
 
 
-      itemListFragment.appendChild(listItem);
+      fragment.appendChild(listItem);
     }; // Add each list item to list
 
 
     items.forEach(function (item) {
       return addItemToFragment(item);
     });
-    return itemListFragment;
+    return fragment;
   };
 
   _proto._triggerChange = function _triggerChange(value) {
@@ -3836,10 +3847,11 @@ function () {
     } // If we are clicking on an option
 
 
-    var id = element.getAttribute('data-id');
+    var id = element.dataset.id;
 
     var choice = this._store.getChoiceById(id);
 
+    if (!choice) return;
     var passedKeyCode = activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
     var hasActiveDropdown = this.dropdown.isActive; // Update choice keyCode
 
@@ -3848,7 +3860,7 @@ function () {
       choice: choice
     });
 
-    if (choice && !choice.selected && !choice.disabled) {
+    if (!choice.selected && !choice.disabled) {
       var canAddItem = this._canAddItem(activeItems, choice.value);
 
       if (canAddItem.response) {
@@ -3866,7 +3878,7 @@ function () {
       }
     }
 
-    this.clearInput(); // We wont to close the dropdown if we are dealing with a single select box
+    this.clearInput(); // We want to close the dropdown if we are dealing with a single select box
 
     if (hasActiveDropdown && this._isSelectOneElement) {
       this.hideDropdown(true);

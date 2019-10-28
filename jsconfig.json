@@ -1,9 +1,15 @@
 {
   "compilerOptions": {
-    "strict": true,
-    "baseUrl": "../node_modules",
+    "checkJs": true,
     "target": "es2020",
-    "lib": ["es5", "dom"],
-    "types": ["cypress"]
+    "lib": ["esnext", "dom"],
+    "types": ["cypress"],
+    "strict": true,
+    /* Additional Checks */
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   }
 }
