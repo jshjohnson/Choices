@@ -50,7 +50,10 @@ jobs:
 
       # install drivers
       - name: Enable Safari Driver
-        run: sudo safaridriver --enable
+        run: |
+          sudo defaults write com.apple.Safari IncludeDevelopMenu 1
+          sudo safaridriver --enable
+          sudo defaults write com.apple.Safari AllowRemoteAutomation 1
         if: matrix.browser == 'safari'
 
       # geskodriver - https://github.com/mozilla/geckodriver/releases/
