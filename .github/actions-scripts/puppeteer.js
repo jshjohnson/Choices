@@ -29,10 +29,11 @@ async function test() {
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('ArrowDown');
 
+    const snapshotName = `puppeteer-${process.platform}.png`
     const artifactsPath = 'screenshot';
     mkdirSync(artifactsPath, { recursive: true });
     const imageBuffer = await page.screenshot({
-      path: path.join(artifactsPath, 'screenshot.png'),
+      path: path.join(artifactsPath, snapshotName),
       fullPage: true,
     });
 
@@ -42,7 +43,7 @@ async function test() {
       readFileSync(
         path.resolve(
           __dirname,
-          `./__snapshots__/puppeteer-${process.platform}.png`,
+          `./__snapshots__/${snapshotName}`,
         ),
       ),
     );

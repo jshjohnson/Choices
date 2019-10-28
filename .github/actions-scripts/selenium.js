@@ -79,9 +79,11 @@ async function test() {
     const image = await driver.takeScreenshot();
     const imageBuffer = Buffer.from(image, 'base64');
 
+    const snapshotName = `${process.env.BROWSER}-${process.platform}.png`;
     const artifactsPath = 'screenshot';
     mkdirSync(artifactsPath, { recursive: true });
-    writeFileSync(path.join(artifactsPath, 'screenshot.png'), imageBuffer);
+
+    writeFileSync(path.join(artifactsPath, snapshotName), imageBuffer);
 
     // compare with snapshot
     const screenshot = PNG.sync.read(imageBuffer);
@@ -89,7 +91,7 @@ async function test() {
       readFileSync(
         path.resolve(
           __dirname,
-          `./__snapshots__/${process.env.BROWSER}-${process.platform}.png`,
+          `./__snapshots__/${snapshotName}`,
         ),
       ),
     );
