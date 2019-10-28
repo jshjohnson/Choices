@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
-        browser: ['ie', 'edge', 'safari', 'firefox']
+        browser: [ie, MicrosoftEdge, safari, firefox]
         exclude:
           # On Windows, run tests with only IE and Edge
           - os: windows-latest
@@ -23,14 +23,14 @@ jobs:
           - os: macOS-latest
             browser: ie
           - os: macOS-latest
-            browser: edge
+            browser: MicrosoftEdge
           - os: macOS-latest
             browser: firefox
           # Linux - just firefox
           - os: ubuntu-latest
             browser: ie
           - os: ubuntu-latest
-            browser: edge
+            browser: MicrosoftEdge
           - os: ubuntu-latest
             browser: safari
 
@@ -48,6 +48,8 @@ jobs:
           HUSKY_SKIP_INSTALL: true
 
       # install drivers
+      - name: Enable Safari Driver
+        run: sudo safaridriver --enable
       # geskodriver - https://github.com/mozilla/geckodriver/releases/
       - name: Install Firefox driver on Ubuntu
         if: matrix.browser == 'firefox'
