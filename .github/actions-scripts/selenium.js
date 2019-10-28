@@ -39,7 +39,7 @@ async function test() {
   let error;
 
   let capabilities;
-  switch (process.env.SELENIUM_BROWSER) {
+  switch (process.env.BROWSER) {
     case 'ie':
       {
         // HACK: include IEDriver path by nuget
@@ -130,7 +130,7 @@ async function test() {
       readFileSync(
         path.resolve(
           __dirname,
-          `./__screenshots__/${process.env.SELENIUM_BROWSER}-${process.platform}.png`,
+          `./__screenshots__/${process.env.BROWSER}-${process.platform}.png`,
         ),
       ),
     );
