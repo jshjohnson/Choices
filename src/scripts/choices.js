@@ -980,7 +980,9 @@ class Choices {
     // If we are clicking on an option
     const { id } = element.dataset;
     const choice = this._store.getChoiceById(id);
-    if (!choice) return;
+    if (!choice) {
+      return;
+    }
     const passedKeyCode =
       activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
     const hasActiveDropdown = this.dropdown.isActive;
@@ -2068,7 +2070,9 @@ class Choices {
       });
 
       // If sorting is enabled or the user is searching, filter choices
-      if (this.config.shouldSort) allChoices.sort(filter);
+      if (this.config.shouldSort) {
+        allChoices.sort(filter);
+      }
 
       // Determine whether there is a selected choice
       const hasSelectedChoice = allChoices.some(choice => choice.selected);

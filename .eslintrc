@@ -32,7 +32,8 @@
         "array": false,
         "object": true
       }
-    ]
+    ],
+    "curly": ["error", "all"]
   },
   "overrides": [
     {
