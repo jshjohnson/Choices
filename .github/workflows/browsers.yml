@@ -35,7 +35,9 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: npm ci
+      - run: |
+          npm ci
+          npm run build
         env:
           CYPRESS_INSTALL_BINARY: 0
           HUSKY_SKIP_INSTALL: true
@@ -86,16 +88,16 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - run: npm ci
+      - run: |
+          npm ci
+          npm run build
         env:
           CYPRESS_INSTALL_BINARY: 0
           HUSKY_SKIP_INSTALL: true
       - run: npm i puppeteer pixelmatch pngjs
       - run: node .github/actions-scripts/puppeteer.js
-        env:
-          BROWSER: ${{ matrix.browser }}
       - uses: actions/upload-artifact@master
         if: failure()
         with:
-          name: screenshot-puppeteer-${{ matrix.os }}
+          name: screenshot-puppeteer-darwin
           path: screenshot
