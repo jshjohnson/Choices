@@ -66,9 +66,7 @@ jobs:
         if: matrix.browser == 'firefox'
         env:
           GECKODRIVER_VERSION: '0.26.0'
-      - run: |
-          brew install geckodriver
-          geckodriver --version
+      - run: brew cask install firefox
         if: matrix.browser == 'firefox' && matrix.os == 'macOS-10.14'
 
       - run: npm i chromedriver --chromedriver_version=LATEST
