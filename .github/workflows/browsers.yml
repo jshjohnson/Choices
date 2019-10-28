@@ -50,6 +50,7 @@ jobs:
           defaults write com.apple.Safari IncludeDevelopMenu 1
           defaults write com.apple.Safari AllowJavaScriptFromAppleEvents 1
           defaults write com.apple.Safari IncludeInternalDebugMenu 1
+          brew tap homebrew/cask-versions
           brew cask install safari-technology-preview
           sudo safaridriver --enable
           defaults write com.apple.Safari AllowRemoteAutomation 1
