@@ -1,6 +1,6 @@
 const path = require('path');
 const { once } = require('events');
-const { readFileSync, writeFileSync } = require('fs');
+const { readFileSync, writeFileSync, mkdirSync } = require('fs');
 const pixelmatch = require('pixelmatch');
 const { PNG } = require('pngjs');
 
@@ -38,19 +38,35 @@ async function test() {
   let pixelDifference;
 
   let capabilities;
-  switch (process.env.SELENIUM_BROWSER) {
-    case 'ie': {
-      // HACK: include IEDriver path by nuget
-      // const driverPath = path.join(
-      //   __dirname,
-      //   '../Selenium.WebDriver.IEDriver.3.150.0/driver/',
-      // );
-      // process.env.PATH = `${process.env.PATH};${driverPath};`;
-      capabilities = Capabilities.ie();
-      capabilities.set('ignoreProtectedModeSettings', true);
-      capabilities.set('ignoreZoomSetting', true);
+  switch (process.env.BROWSER) {
+    case 'ie':
+      {
+        // HACK: include IEDriver path by nuget
+        const driverPath = path.join(
+          __dirname,
+          '../Selenium.WebDriver.IEDriver.3.150.1/driver/',
+        );
+        process.env.PATH = `${process.env.PATH};${driverPath};`;
+        capabilities = Capabilities.ie();
+        capabilities.set('ignoreProtectedModeSettings', true);
+        capabilities.set('ignoreZoomSetting', true);
+      }
       break;
-    }
+
+    case 'MicrosoftEdge':
+      {
+        // HACK: include IEDriver path by nuget
+        const driverPath = path.join(
+          __dirname,
+          '../Selenium.WebDriver.MicrosoftDriver.17.17134.0/driver/',
+        );
+        process.env.PATH = `${process.env.PATH};${driverPath};`;
+        capabilities = Capabilities.edge();
+        capabilities.set('ignoreProtectedModeSettings', true);
+        capabilities.set('ignoreZoomSetting', true);
+      }
+      break;
+
     case 'safari': {
       capabilities = Capabilities.safari();
       break;
@@ -102,7 +118,10 @@ async function test() {
     // take screenshot
     const image = await driver.takeScreenshot();
     const imageBuffer = Buffer.from(image, 'base64');
-    writeFileSync('screenshot.png', imageBuffer);
+
+    const artifactsPath = 'screenshot';
+    mkdirSync(artifactsPath, { recursive: true });
+    writeFileSync(path.join(artifactsPath, 'screenshot.png'), imageBuffer);
 
     // compare with snapshot
     const screenshot = PNG.sync.read(imageBuffer);
@@ -110,7 +129,7 @@ async function test() {
       readFileSync(
         path.resolve(
           __dirname,
-          `./__screenshots__/${process.env.SELENIUM_BROWSER}-${process.platform}.png`,
+          `./__screenshots__/${process.env.BROWSER}-${process.platform}.png`,
         ),
       ),
     );
@@ -126,7 +145,7 @@ async function test() {
         threshold: 0.1,
       },
     );
-    writeFileSync('diff.png', PNG.sync.write(diff));
+    writeFileSync(path.join(artifactsPath, 'diff.png'), PNG.sync.write(diff));
 
     // getting console logs
     // const entries = await driver

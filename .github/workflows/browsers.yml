@@ -41,6 +41,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - uses: warrenbuckley/Setup-Nuget@v1
+        if: matrix.os == 'windows-latest'
       - run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
@@ -61,12 +63,18 @@ jobs:
       - run: npm i chromedriver
         if: matrix.browser == 'chrome'
 
+      - run: nuget install Selenium.WebDriver.IEDriver -Version 3.150.1
+        if: matrix.browser == 'ie'
+
+      - run: nuget install Selenium.WebDriver.MicrosoftDriver -Version 17.17134.0
+        if: matrix.browser == 'MicrosoftEdge'
+
       - run: npm i selenium-webdriver pixelmatch pngjs
       - run: node .github/actions-scripts/selenium.js
         env:
-          SELENIUM_BROWSER: ${{ matrix.browser }}
+          BROWSER: ${{ matrix.browser }}
       - uses: actions/upload-artifact@master
         if: failure()
         with:
           name: screenshot-${{ matrix.browser }}-${{ matrix.os }}
-          path: '*.png'
+          path: screenshot
