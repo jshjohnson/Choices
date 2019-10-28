@@ -35,6 +35,11 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
@@ -63,10 +68,14 @@ jobs:
       - run: npm i chromedriver
         if: matrix.browser == 'chrome'
 
-      - run: nuget install Selenium.WebDriver.IEDriver -Version 3.150.1
+      - run: |
+          nuget install Selenium.WebDriver.IEDriver -Version 3.150.1
+          echo "::add-path::./Selenium.WebDriver.IEDriver.3.150.1/driver/"
         if: matrix.browser == 'ie'
 
-      - run: nuget install Selenium.WebDriver.MicrosoftDriver -Version 17.17134.0
+      - run: |
+          nuget install Selenium.WebDriver.MicrosoftDriver -Version 17.17134.0
+          echo "::add-path::./Selenium.WebDriver.MicrosoftDriver.17.17134.0/driver/"
         if: matrix.browser == 'MicrosoftEdge'
 
       - run: npm i selenium-webdriver pixelmatch pngjs
