@@ -3,7 +3,7 @@
     "ecmaVersion": 2020
   },
   "extends": ["airbnb-base", "plugin:prettier/recommended"],
-  "plugins": ["prettier"],
+  "plugins": ["prettier", "sort-class-members"],
   "env": {
     "es6": true,
     "browser": true
@@ -33,7 +33,23 @@
         "object": true
       }
     ],
-    "curly": ["error", "all"]
+    "curly": ["error", "all"],
+    "newline-before-return": "error",
+    "sort-class-members/sort-class-members": [
+      2,
+      {
+        "order": [
+          "[static-properties]",
+          "[static-methods]",
+          "[properties]",
+          "[conventional-private-properties]",
+          "constructor",
+          "[methods]",
+          "[conventional-private-methods]"
+        ],
+        "accessorPairPositioning": "getThenSet"
+      }
+    ]
   },
   "overrides": [
     {
