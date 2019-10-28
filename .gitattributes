@@ -25,40 +25,40 @@
 
 # Documentation
 *.md              text eol=lf
-*.txt             text
-AUTHORS           text
-CHANGELOG         text
-CHANGES           text
-CONTRIBUTING      text
-COPYING           text
-copyright         text
-*COPYRIGHT*       text
-INSTALL           text
-license           text
-LICENSE           text
-NEWS              text
-readme            text
-*README*          text
-TODO              text
+*.txt             text eol=lf
+AUTHORS           text eol=lf
+CHANGELOG         text eol=lf
+CHANGES           text eol=lf
+CONTRIBUTING      text eol=lf
+COPYING           text eol=lf
+copyright         text eol=lf
+*COPYRIGHT*       text eol=lf
+INSTALL           text eol=lf
+license           text eol=lf
+LICENSE           text eol=lf
+NEWS              text eol=lf
+readme            text eol=lf
+*README*          text eol=lf
+TODO              text eol=lf
 
 # Linters
-.eslintrc         text
-.stylelintrc      text
+.eslintrc         text eol=lf
+.stylelintrc      text eol=lf
 
 # Configs
-.babelrc          text
-.browserslistrc   text
-.editorconfig     text
-.env              text
-.gitattributes    text
-.gitconfig        text
-package-lock.json text -diff
-*.npmignore       text
-*.yaml            text
-*.yml             text
-browserslist      text
+.babelrc          text eol=lf
+.browserslistrc   text eol=lf
+.editorconfig     text eol=lf
+.env              text eol=lf
+.gitattributes    text eol=lf
+.gitconfig        text eol=lf
+package-lock.json text -diff eol=lf
+*.npmignore       text eol=lf
+*.yaml            text eol=lf
+*.yml             text eol=lf
+browserslist      text eol=lf
 
 # Graphics
 # SVG treated as an asset (binary) by default.
-*.svg             text
+*.svg             text eol=lf
 *.png             binary
