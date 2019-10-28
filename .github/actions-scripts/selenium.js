@@ -82,8 +82,12 @@ async function test() {
     await driver
       .manage()
       .window()
+      .maximize();
+    await driver
+      .manage()
+      .window()
       // magic numbers here to make sure all demo page are fit inside
-      .setRect({ width: 630, height: 4000 });
+      .setRect({ x: 0, y: 0, width: 630, height: 4000 });
 
     // and click on press space on it, so it should open choices
     await driver
