@@ -49,7 +49,7 @@ jobs:
           # brew cask install safari-technology-preview
           sudo safaridriver --enable
           defaults write -app Safari IncludeDevelopMenu 1
-          defaults wrtie -app Safari AllowJavaScriptFromAppleEvents 1
+          defaults write -app Safari AllowJavaScriptFromAppleEvents 1
           defaults write -app Safari IncludeInternalDebugMenu 1
           defaults write -app Safari AllowRemoteAutomation 1
           safaridriver -p 0 &
