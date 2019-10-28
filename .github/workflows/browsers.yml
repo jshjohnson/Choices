@@ -47,14 +47,14 @@ jobs:
       # install drivers
       - name: Enable Safari Driver
         run: |
-          defaults write com.apple.Safari IncludeDevelopMenu 1
-          defaults write com.apple.Safari AllowJavaScriptFromAppleEvents 1
-          defaults write com.apple.Safari IncludeInternalDebugMenu 1
+          defaults com.apple.SafariTechnologyPreview IncludeDevelopMenu 1
+          defaults com.apple.SafariTechnologyPreview AllowJavaScriptFromAppleEvents 1
+          defaults com.apple.SafariTechnologyPreview IncludeInternalDebugMenu 1
           brew tap homebrew/cask-versions
           brew cask install safari-technology-preview
           sudo safaridriver --enable
-          defaults write com.apple.Safari AllowRemoteAutomation 1
-          safaridriver -p 0 &
+          defaults write com.apple.SafariTechnologyPreview AllowRemoteAutomation 1
+          # safaridriver -p 0 &
         if: matrix.browser == 'safari'
 
       # https://github.com/mozilla/geckodriver/releases
@@ -68,13 +68,13 @@ jobs:
           brew install geckodriver
         if: matrix.browser == 'firefox' && matrix.os == 'macOS-10.14'
 
-      - run: echo "::add-path::$GeckoWebDriver"
+      - run: echo "::add-path::$env:GeckoWebDriver"
         if: matrix.browser == 'firefox' && matrix.os == 'windows-latest'
 
-      - run: echo "::add-path::$IEWebDriver"
+      - run: echo "::add-path::$env:IEWebDriver"
         if: matrix.browser == 'ie' && matrix.os == 'windows-latest'
 
-      - run: echo "::add-path::$ChromeWebDriver"
+      - run: echo "::add-path::$env:ChromeWebDriver"
         if: matrix.browser == 'chrome' && matrix.os == 'windows-latest'
 
       # - run: npm i chromedriver --chromedriver_version=LATEST

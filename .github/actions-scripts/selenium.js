@@ -126,7 +126,7 @@ async function test() {
       width,
       height,
       {
-        threshold: 0.4,
+        threshold: 0.5,
       },
     );
     writeFileSync(path.join(artifactsPath, 'diff.png'), PNG.sync.write(diff));
