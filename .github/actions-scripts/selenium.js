@@ -45,11 +45,6 @@ async function test() {
       capabilities = Capabilities.ie();
       capabilities.set('ignoreProtectedModeSettings', true);
       capabilities.set('ignoreZoomSetting', true);
-      if (process.env.IEWebDriver)
-        capabilities.set(
-          'webdriver.ie.driver',
-          `${process.env.IEWebDriver}\\IEDriverServer.exe`,
-        );
       break;
 
     case 'edge':
@@ -58,25 +53,15 @@ async function test() {
 
     case 'safari':
       capabilities = Capabilities.safari();
-      capabilities.set('safari.options', { technologyPreview: false });
+      capabilities.set('safari.options', { technologyPreview: true });
       break;
 
     case 'firefox': {
       capabilities = Capabilities.firefox();
-      if (process.env.GeckoWebDriver)
-        capabilities.set(
-          'webdriver.firefox.driver',
-          `${process.env.GeckoWebDriver}\\geckodriver.exe`,
-        );
       break;
     }
     case 'chrome': {
       capabilities = Capabilities.chrome();
-      if (process.env.ChromeWebDriver)
-        capabilities.set(
-          'webdriver.chrome.driver',
-          `${process.env.ChromeWebDriver}\\chromedriver.exe`,
-        );
       capabilities.set('chromeOptions', {
         args: [
           '--headless',
