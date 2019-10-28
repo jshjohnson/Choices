@@ -2,11 +2,10 @@
   "eslint.enable": true,
   // prevent watch task failures on lint errors
   "eslint.autoFixOnSave": true,
-  "editor.formatOnSave": true,
   // switch off default VSCode formatting rules
   "javascript.format.enable": false,
   // Javascript prettier runs via ESLint
-  // "prettier.disableLanguages": ["javascript"],
+  "prettier.disableLanguages": ["javascript"],
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -15,6 +14,9 @@
   },
   "[scss]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.formatOnSave": false
   },
   "search.exclude": {
     "**/node_modules": true,
