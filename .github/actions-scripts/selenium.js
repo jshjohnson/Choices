@@ -44,26 +44,34 @@ async function test() {
       capabilities = Capabilities.ie();
       capabilities.set('ignoreProtectedModeSettings', true);
       capabilities.set('ignoreZoomSetting', true);
+      if (process.env.IEWebDriver)
+        capabilities.set('webdriver.ie.driver', process.env.IEWebDriver);
       break;
 
     case 'edge':
       capabilities = Capabilities.edge();
-      // System.setProperty("webdriver.edge.driver", driverPath+"MicrosoftWebDriver.exe");
       break;
 
-    case 'safari': {
+    case 'safari':
       capabilities = Capabilities.safari();
       break;
-    }
+
     case 'firefox': {
-      // @ts-ignore
-      require('geckodriver');
       capabilities = Capabilities.firefox();
+      if (process.env.GeckoWebDriver)
+        capabilities.set(
+          'webdriver.firefox.driver',
+          process.env.GeckoWebDriver,
+        );
       break;
     }
     case 'chrome': {
-      require('chromedriver');
       capabilities = Capabilities.chrome();
+      if (process.env.ChromeWebDriver)
+        capabilities.set(
+          'webdriver.chrome.driver',
+          process.env.ChromeWebDriver,
+        );
       capabilities.set('chromeOptions', {
         args: [
           '--headless',
