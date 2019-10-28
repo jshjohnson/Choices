@@ -18,11 +18,13 @@ jobs:
           # On Windows, run tests with only IE and Edge
           - os: windows-latest
             browser: safari
-          # On macOS, run tests with only the latest environments.
+          # On macOS, run tests with only on safari
           - os: macOS-10.14
             browser: ie
           - os: macOS-10.14
             browser: chrome
+          - os: macOS-10.14
+            browser: firefox
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -37,8 +39,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      # - uses: warrenbuckley/Setup-Nuget@v1
-      #   if: matrix.os == 'windows-latest' && (matrix.browser == 'ie' || matrix.browser == 'edge')
       - run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
@@ -47,22 +47,16 @@ jobs:
       # install drivers
       - name: Enable Safari Driver
         run: |
-          defaults com.apple.SafariTechnologyPreview IncludeDevelopMenu 1
-          defaults com.apple.SafariTechnologyPreview AllowJavaScriptFromAppleEvents 1
-          defaults com.apple.SafariTechnologyPreview IncludeInternalDebugMenu 1
           brew tap homebrew/cask-versions
           brew cask install safari-technology-preview
           sudo safaridriver --enable
+          defaults com.apple.SafariTechnologyPreview IncludeDevelopMenu 1
+          defaults com.apple.SafariTechnologyPreview AllowJavaScriptFromAppleEvents 1
+          defaults com.apple.SafariTechnologyPreview IncludeInternalDebugMenu 1
           defaults write com.apple.SafariTechnologyPreview AllowRemoteAutomation 1
           # safaridriver -p 0 &
         if: matrix.browser == 'safari'
 
-      # https://github.com/mozilla/geckodriver/releases
-      # - run: |
-      #     npm i geckodriver
-      #   if: matrix.browser == 'firefox'
-      #   env:
-      #     GECKODRIVER_VERSION: "0.26.0"
       - run: |
           brew cask install firefox
           brew install geckodriver
@@ -76,24 +70,6 @@ jobs:
 
       - run: echo "::add-path::$env:ChromeWebDriver"
         if: matrix.browser == 'chrome' && matrix.os == 'windows-latest'
-
-      # - run: npm i chromedriver --chromedriver_version=LATEST
-      #   if: matrix.browser == 'chrome'
-      # - run: choco install googlechrome
-      #   if: matrix.browser == 'chrome' && matrix.os == 'windows-latest'
-
-      # - run: |
-      #     nuget install Selenium.WebDriver.IEDriver -Version 3.150.1
-      #     echo "::add-path::${{ github.workspace }}\\Selenium.WebDriver.IEDriver.3.150.1\\driver\\"
-      # - run: choco install selenium-ie-driver
-      #   if: matrix.browser == 'ie'
-
-      # - run: DISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0
-      # if: matrix.browser == 'edge'
-      # - run: |
-      #     nuget install Selenium.WebDriver.MicrosoftDriver -Version 17.17134.0
-      #     echo "::add-path::${{ github.workspace }}\\Selenium.WebDriver.MicrosoftDriver.17.17134.0\\driver\\"
-      #   if: matrix.browser == 'edge'
 
       - run: npm i selenium-webdriver pixelmatch pngjs
       - run: node .github/actions-scripts/selenium.js
