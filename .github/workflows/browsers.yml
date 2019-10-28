@@ -56,10 +56,10 @@ jobs:
         if: matrix.browser == 'safari'
 
       - run: npm i geckodriver
-        if: matrix.browser === 'firefox'
+        if: matrix.browser == 'firefox'
 
       - run: npm i chromedriver
-        if: matrix.browser === 'chrome'
+        if: matrix.browser == 'chrome'
 
       - run: npm i selenium-webdriver pixelmatch pngjs
       - run: node .github/actions-scripts/selenium.js
