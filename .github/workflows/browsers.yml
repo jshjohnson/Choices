@@ -3,13 +3,13 @@ name: Browsers
 on:
   pull_request:
     paths:
-      - 'src/'
+      - 'src/**'
       - 'package-lock.json'
       - '.browserslistrc'
       - '.babelrc'
       - 'webpack.config.*'
       - 'public/index.html'
-      - '.github/actions-scripts/__snapshots__'
+      - '.github/actions-scripts/__snapshots__/**'
 
 jobs:
   selenium:
