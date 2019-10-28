@@ -51,7 +51,9 @@ jobs:
       # install drivers
       - name: Enable Safari Driver
         run: |
+          sudo defaults write com.apple.Safari IncludeDevelopMenu 1
           sudo safaridriver --enable
+          sudo defaults write com.apple.Safari AllowRemoteAutomation 1
           safaridriver -p 0 &
         if: matrix.browser == 'safari'
 
