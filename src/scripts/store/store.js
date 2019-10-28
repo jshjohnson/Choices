@@ -125,6 +125,7 @@ export default class Store {
       const hasActiveOptions = choices.some(
         choice => choice.active === true && choice.disabled === false,
       );
+
       return isActive && hasActiveOptions;
     }, []);
   }
@@ -145,8 +146,10 @@ export default class Store {
   getChoiceById(id) {
     if (id) {
       const n = parseInt(id, 10);
+
       return this.activeChoices.find(choice => choice.id === n);
     }
+
     return false;
   }
 

@@ -6,15 +6,15 @@ export default class WrappedInput extends WrappedElement {
     this.delimiter = delimiter;
   }
 
+  get value() {
+    return this.element.value;
+  }
+
   set value(items) {
     const itemValues = items.map(({ value }) => value);
     const joinedValues = itemValues.join(this.delimiter);
 
     this.element.setAttribute('value', joinedValues);
     this.element.value = joinedValues;
-  }
-
-  get value() {
-    return this.element.value;
   }
 }
