@@ -1055,6 +1055,7 @@ Symbol.iterator
 Object.assign
 CustomEvent
 Element.prototype.classList
+Element.prototype.closest
 ```
 
 ## Development
