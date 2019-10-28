@@ -1,4 +1,4 @@
-import { calcWidthOfInput, sanitise } from '../lib/utils';
+import { sanitise } from '../lib/utils';
 
 export default class Input {
   constructor({ element, type, classNames, placeholderValue }) {
@@ -89,30 +89,12 @@ export default class Input {
   /**
    * Set the correct input width based on placeholder
    * value or input value
-   * @return
    */
-  setWidth(enforceWidth) {
-    const callback = width => {
-      this.element.style.width = width;
-    };
-
-    if (this._placeholderValue) {
-      // If there is a placeholder, we only want to set the width of the input when it is a greater
-      // length than 75% of the placeholder. This stops the input jumping around.
-      const valueHasDesiredLength =
-        this.element.value.length >= this._placeholderValue.length / 1.25;
-
-      if ((this.element.value && valueHasDesiredLength) || enforceWidth) {
-        this.calcWidth(callback);
-      }
-    } else {
-      // If there is no placeholder, resize input to contents
-      this.calcWidth(callback);
-    }
-  }
-
-  calcWidth(callback) {
-    return calcWidthOfInput(this.element, callback);
+  setWidth() {
+    // Resize input to contents or placeholder
+    const { style, value, placeholder } = this.element;
+    style.minWidth = `${placeholder.length + 1}ch`;
+    style.width = `${value.length + 1}ch`;
   }
 
   setActiveDescendant(activeDescendantID) {

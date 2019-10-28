@@ -100,9 +100,9 @@ declare namespace Choices {
      *
      * **Input types affected:** select-one, select-multiple
      *
-     * Arguments: value, keyCode
+     * Arguments: choice: Choice
      */
-    choice: CustomEvent<{ value: string; keyCode: string }>;
+    choice: CustomEvent<{ choice: Choices.Choice }>;
 
     /**
      * Triggered each time an item is added/removed **by a user**.
@@ -144,9 +144,9 @@ declare namespace Choices {
      * Triggered when a choice from the dropdown is highlighted.
      *
      * Input types affected: select-one, select-multiple
-     * Arguments: el is the HTML element node object that was affected.
+     * Arguments: el is the choice.passedElement that was affected.
      */
-    highlightChoice: CustomEvent<{ el: HTMLOptionElement }>;
+    highlightChoice: CustomEvent<{ el: Choices.passedElement }>;
   }
 
   interface Group {
@@ -169,7 +169,7 @@ declare namespace Choices {
       isSelectElement: boolean,
       isSelectOneElement: boolean,
       searchEnabled: boolean,
-      passedElementType: passedElement['type']
+      passedElementType: passedElement['type'],
     ) => HTMLElement;
     containerInner: (this: Choices, classNames: ClassNames) => HTMLElement;
     itemList: (
@@ -180,7 +180,7 @@ declare namespace Choices {
     placeholder: (
       this: Choices,
       classNames: ClassNames,
-      value: string
+      value: string,
     ) => HTMLElement;
     item: (
       this: Choices,
@@ -196,25 +196,25 @@ declare namespace Choices {
     choiceGroup: (
       this: Choices,
       classNames: ClassNames,
-      data: Choice
+      data: Choice,
     ) => HTMLElement;
     choice: (
       this: Choices,
       classNames: ClassNames,
       data: Choice,
-      selectText: string
+      selectText: string,
     ) => HTMLElement;
     input: (
       this: Choices,
       classNames: ClassNames,
-      placeholderValue: string
+      placeholderValue: string,
     ) => HTMLInputElement;
     dropdown: (this: Choices, classNames: ClassNames) => HTMLElement;
     notice: (
       this: Choices,
       classNames: ClassNames,
       label: string,
-      type: '' | 'no-results' | 'no-choices'
+      type: '' | 'no-results' | 'no-choices',
     ) => HTMLElement;
     option: (data: Choice) => HTMLOptionElement;
   }
@@ -751,7 +751,7 @@ declare namespace Choices {
      * @default null
      */
     callbackOnCreateTemplates: (
-      template: Choices.Types.strToEl
+      template: Choices.Types.strToEl,
     ) => Partial<Choices.Templates>;
   }
 }
@@ -770,7 +770,7 @@ export default class Choices {
 
   constructor(
     selectorOrElement: string | HTMLInputElement | HTMLSelectElement,
-    userConfig?: Partial<Choices.Options>
+    userConfig?: Partial<Choices.Options>,
   );
 
   /**

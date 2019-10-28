@@ -717,11 +717,12 @@ example.passedElement.element.addEventListener(
 
 ### choice
 
-**Arguments:** `value, keyCode`
+**Arguments:** `choice`
 
 **Input types affected:** `select-one`, `select-multiple`
 
 **Usage:** Triggered each time a choice is selected **by a user**, regardless if it changes the value of the input.
+`choice` is a Choice object here (see terminology or typings file)
 
 ### change
 
@@ -761,7 +762,8 @@ example.passedElement.element.addEventListener(
 
 **Input types affected:** `select-one`, `select-multiple`
 
-**Usage:** Triggered when a choice from the dropdown is highlighted. The `el` argument is the HTML element node object that was affected.
+**Usage:** Triggered when a choice from the dropdown is highlighted.
+The `el` argument is choices.passedElement object that was affected.
 
 ## Methods
 
@@ -1057,6 +1059,7 @@ Choices is compiled using [Babel](https://babeljs.io/) to enable support for [ES
 - Array.prototype.indexOf
 - Object.assign
 - Element.prototype.classList
+- Element.prototype.closest
 - window.requestAnimationFrame
 - CustomEvent
 
