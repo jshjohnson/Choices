@@ -61,3 +61,4 @@ browserslist      text
 # Graphics
 # SVG treated as an asset (binary) by default.
 *.svg             text
+*.png             binary
