@@ -1,0 +1,63 @@
+## GITATTRIBUTES FOR WEB PROJECTS
+#
+# These settings are for any web project.
+#
+# Details per file setting:
+#   text    These files should be normalized (i.e. convert CRLF to LF).
+#   binary  These files are binary and should be left untouched.
+#
+# Note that binary is a macro for -text -diff.
+######################################################################
+
+# Auto detect
+##   Handle line endings automatically for files detected as
+##   text and leave all files detected as binary untouched.
+##   This will handle all files NOT defined below.
+*                 text eol=lf
+
+# Source code
+*.css             text eol=lf
+*.html            text diff=html eol=lf
+*.js              text eol=lf
+*.json            text eol=lf
+*.scss            text diff=css eol=lf
+*.ts              text eol=lf
+
+# Documentation
+*.md              text eol=lf
+*.txt             text
+AUTHORS           text
+CHANGELOG         text
+CHANGES           text
+CONTRIBUTING      text
+COPYING           text
+copyright         text
+*COPYRIGHT*       text
+INSTALL           text
+license           text
+LICENSE           text
+NEWS              text
+readme            text
+*README*          text
+TODO              text
+
+# Linters
+.eslintrc         text
+.stylelintrc      text
+
+# Configs
+.babelrc          text
+.browserslistrc   text
+.editorconfig     text
+.env              text
+.gitattributes    text
+.gitconfig        text
+package-lock.json text -diff
+*.npmignore       text
+*.yaml            text
+*.yml             text
+browserslist      text
+
+# Graphics
+# SVG treated as an asset (binary) by default.
+*.svg             text
