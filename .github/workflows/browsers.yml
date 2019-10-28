@@ -73,6 +73,8 @@ jobs:
 
       - run: npm i chromedriver --chromedriver_version=LATEST
         if: matrix.browser == 'chrome'
+      - run: choco install googlechrome
+        if: matrix.browser == 'chrome' && matrix.os === 'windows-latest'
 
       - run: |
           nuget install Selenium.WebDriver.IEDriver -Version 3.150.1
