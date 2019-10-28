@@ -111,7 +111,7 @@ async function test() {
       readFileSync(
         path.resolve(
           __dirname,
-          `./__screenshots__/${process.env.BROWSER}-${process.platform}.png`,
+          `./__snapshots__/${process.env.BROWSER}-${process.platform}.png`,
         ),
       ),
     );
