@@ -11,6 +11,7 @@ const {
   Key,
   until,
   WebDriver,
+  Capabilities,
   Logs,
   logging,
 } = require('selenium-webdriver');
@@ -35,9 +36,47 @@ async function launchServer() {
 
 async function test() {
   let pixelDifference;
-  let driver = await new Builder()
-    .setLoggingPrefs({ browser: 'ALL' })
-    .build();
+
+  let capabilities;
+  switch (process.env.SELENIUM_BROWSER) {
+    case 'ie': {
+      // HACK: include IEDriver path by nuget
+      // const driverPath = path.join(
+      //   __dirname,
+      //   '../Selenium.WebDriver.IEDriver.3.150.0/driver/',
+      // );
+      // process.env.PATH = `${process.env.PATH};${driverPath};`;
+      capabilities = Capabilities.ie();
+      capabilities.set('ignoreProtectedModeSettings', true);
+      capabilities.set('ignoreZoomSetting', true);
+      break;
+    }
+    case 'safari': {
+      capabilities = Capabilities.safari();
+      break;
+    }
+    case 'firefox': {
+      // @ts-ignore
+      require('geckodriver');
+      capabilities = Capabilities.firefox();
+      break;
+    }
+    case 'chrome': {
+      require('chromedriver');
+      capabilities = Capabilities.chrome();
+      capabilities.set('chromeOptions', {
+        args: [
+          '--headless',
+          '--no-sandbox',
+          '--disable-gpu',
+          '--window-size=630,4000',
+        ],
+      });
+      break;
+    }
+  }
+
+  let driver = await new Builder().withCapabilities(capabilities).build();
   const server = await launchServer();
   try {
     await driver.get(`http://127.0.0.1:${PORT}`);
@@ -69,16 +108,25 @@ async function test() {
     const screenshot = PNG.sync.read(imageBuffer);
     const snapshot = PNG.sync.read(
       readFileSync(
-        path.resolve(__dirname, `./__screenshots__/${process.env.SELENIUM_BROWSER}-${process.platform}.png`),
+        path.resolve(
+          __dirname,
+          `./__screenshots__/${process.env.SELENIUM_BROWSER}-${process.platform}.png`,
+        ),
       ),
     );
     const { width, height } = screenshot;
     const diff = new PNG({ width, height });
-    pixelDifference = pixelmatch(screenshot.data, snapshot.data, diff.data, width, height, {
-      threshold: 0.1,
-    });
+    pixelDifference = pixelmatch(
+      screenshot.data,
+      snapshot.data,
+      diff.data,
+      width,
+      height,
+      {
+        threshold: 0.1,
+      },
+    );
     writeFileSync('diff.png', PNG.sync.write(diff));
-
 
     // getting console logs
     // const entries = await driver
@@ -94,18 +142,20 @@ async function test() {
     await driver.quit();
     await new Promise(resolve => server.close(resolve));
   }
-  if(pixelDifference > 100) {
-    console.error(`Snapshot is different from screenshot by ${pixelDifference} pixels`)
-    process.exit(1)
+  if (pixelDifference > 100) {
+    console.error(
+      `Snapshot is different from screenshot by ${pixelDifference} pixels`,
+    );
+    process.exit(1);
   }
 }
 
 process.on('unhandledRejection', err => {
   console.error(err);
-  process.exit(1)
-})
+  process.exit(1);
+});
 process.once('uncaughtException', err => {
   console.error(err);
-  process.exit(1)
-})
+  process.exit(1);
+});
 setImmediate(test);
