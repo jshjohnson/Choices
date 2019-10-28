@@ -69,13 +69,13 @@ jobs:
         if: matrix.browser == 'firefox' && matrix.os == 'macOS-10.14'
 
       - run: echo "::add-path::$GeckoWebDriver"
-        if: matrix.browser == 'firefox' && matrix.os == 'window-latest'
+        if: matrix.browser == 'firefox' && matrix.os == 'windows-latest'
 
       - run: echo "::add-path::$IEWebDriver"
-        if: matrix.browser == 'ie' && matrix.os == 'window-latest'
+        if: matrix.browser == 'ie' && matrix.os == 'windows-latest'
 
       - run: echo "::add-path::$ChromeWebDriver"
-        if: matrix.browser == 'chrome' && matrix.os == 'window-latest'
+        if: matrix.browser == 'chrome' && matrix.os == 'windows-latest'
 
       # - run: npm i chromedriver --chromedriver_version=LATEST
       #   if: matrix.browser == 'chrome'
