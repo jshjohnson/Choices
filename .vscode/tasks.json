@@ -1,0 +1,87 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "label": "buildAndWatch",
+      "script": "js:watch",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "isBackground": true,
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "dedicated",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": [
+        "$eslint-stylish",
+        {
+          "owner": "webpack",
+          "fileLocation": "absolute",
+          "pattern": [
+            {
+              "regexp": "^Module build failed \\(from (\\.+)\\)",
+              "file": 1,
+              "line": 2,
+              "column": 3
+            },
+            {
+              "regexp": "\\s*TS\\d+:\\s*(.*)",
+              "message": 1
+            }
+          ],
+          "severity": "error",
+          "source": "webpack",
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "^Listening at",
+            "endsPattern": "Compiled successfully\\."
+          }
+        }
+      ]
+    },
+    {
+      "type": "npm",
+      "script": "css:build",
+      "group": "build",
+      "problemMatcher": ["$node-sass"]
+    },
+    {
+      "type": "npm",
+      "script": "lint",
+      "problemMatcher": ["$eslint-stylish"]
+    },
+    {
+      "type": "npm",
+      "script": "build",
+      "group": "build"
+    },
+    {
+      "type": "npm",
+      "script": "test",
+      "group": "test"
+    },
+    {
+      "type": "npm",
+      "script": "test:e2e",
+      "group": "test"
+    },
+    {
+      "type": "npm",
+      "script": "test:unit",
+      "group": "test"
+    },
+    {
+      "type": "npm",
+      "script": "cypress:open",
+      "isBackground": true
+    }
+  ]
+}
