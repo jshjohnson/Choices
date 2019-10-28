@@ -46,7 +46,10 @@ async function test() {
       capabilities.set('ignoreProtectedModeSettings', true);
       capabilities.set('ignoreZoomSetting', true);
       if (process.env.IEWebDriver)
-        capabilities.set('webdriver.ie.driver', process.env.IEWebDriver);
+        capabilities.set(
+          'webdriver.ie.driver',
+          `${process.env.IEWebDriver}\\IEDriverServer.exe`,
+        );
       break;
 
     case 'edge':
@@ -63,7 +66,7 @@ async function test() {
       if (process.env.GeckoWebDriver)
         capabilities.set(
           'webdriver.firefox.driver',
-          process.env.GeckoWebDriver,
+          `${process.env.GeckoWebDriver}\\geckodriver.exe`,
         );
       break;
     }
@@ -72,7 +75,7 @@ async function test() {
       if (process.env.ChromeWebDriver)
         capabilities.set(
           'webdriver.chrome.driver',
-          process.env.ChromeWebDriver,
+          `${process.env.ChromeWebDriver}\\chromedriver.exe`,
         );
       capabilities.set('chromeOptions', {
         args: [
@@ -138,7 +141,7 @@ async function test() {
       width,
       height,
       {
-        threshold: 0.3,
+        threshold: 0.4,
       },
     );
     writeFileSync(path.join(artifactsPath, 'diff.png'), PNG.sync.write(diff));
