@@ -52,7 +52,7 @@ async function test() {
 
     case 'safari':
       capabilities = Capabilities.safari();
-      capabilities.set('safari.options', { technologyPreview: true });
+      capabilities.set('safari.options', { technologyPreview: false });
       break;
 
     case 'firefox': {
@@ -124,7 +124,7 @@ async function test() {
       width,
       height,
       {
-        threshold: 0.6,
+        threshold: 1,
       },
     );
     writeFileSync(path.join(artifactsPath, 'diff.png'), PNG.sync.write(diff));
