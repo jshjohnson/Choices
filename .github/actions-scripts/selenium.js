@@ -93,7 +93,7 @@ async function test() {
     await driver
       .findElement(By.css('#reset-multiple ~ .choices__list button'))
       .sendKeys(Key.SPACE);
-    await driver.sleep(500);
+    await driver.sleep(1000);
 
     // take screenshot
     const image = await driver.takeScreenshot();
@@ -122,7 +122,7 @@ async function test() {
       width,
       height,
       {
-        threshold: 0.7,
+        threshold: 1,
       },
     );
     writeFileSync(path.join(artifactsPath, 'diff.png'), PNG.sync.write(diff));
