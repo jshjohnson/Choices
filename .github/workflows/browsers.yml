@@ -10,6 +10,7 @@ jobs:
     name: Screenshots
 
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         browser: [ie, MicrosoftEdge, safari, firefox]
@@ -50,6 +51,8 @@ jobs:
       # install drivers
       - name: Enable Safari Driver
         run: sudo safaridriver --enable
+        if: matrix.browser == 'safari'
+
       # geskodriver - https://github.com/mozilla/geckodriver/releases/
       - name: Install Firefox driver on Ubuntu
         if: matrix.browser == 'firefox'
