@@ -41,31 +41,14 @@ async function test() {
   let capabilities;
   switch (process.env.BROWSER) {
     case 'ie':
-      {
-        // HACK: include IEDriver path by nuget
-        // const driverPath = path.join(
-        //   __dirname,
-        //   '../Selenium.WebDriver.IEDriver.3.150.1/driver/',
-        // );
-        // process.env.PATH = `${process.env.PATH};${driverPath};`;
-        capabilities = Capabilities.ie();
-        capabilities.set('ignoreProtectedModeSettings', true);
-        capabilities.set('ignoreZoomSetting', true);
-      }
+      capabilities = Capabilities.ie();
+      capabilities.set('ignoreProtectedModeSettings', true);
+      capabilities.set('ignoreZoomSetting', true);
       break;
 
     case 'MicrosoftEdge':
-      {
-        // HACK: include Microsoft Driver path by nuget
-        // const driverPath = path.join(
-        //   __dirname,
-        //   '../Selenium.WebDriver.MicrosoftDriver.17.17134.0/driver/',
-        // );
-        // process.env.PATH = `${process.env.PATH};${driverPath};`;
-        capabilities = Capabilities.edge();
-        capabilities.set('ignoreProtectedModeSettings', true);
-        capabilities.set('ignoreZoomSetting', true);
-      }
+      capabilities = Capabilities.edge();
+      // System.setProperty("webdriver.edge.driver", driverPath+"MicrosoftWebDriver.exe");
       break;
 
     case 'safari': {
@@ -74,7 +57,7 @@ async function test() {
     }
     case 'firefox': {
       // @ts-ignore
-      require('geckodriver');
+      // require('geckodriver');
       capabilities = Capabilities.firefox();
       break;
     }
