@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, macOS-10.14]
-        browser: [ie, firefox, safari, chrome]
+        browser: [ie, firefox, chrome]
         exclude:
           # On Windows, run tests with only IE and Edge
           - os: windows-latest
