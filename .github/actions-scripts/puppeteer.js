@@ -66,6 +66,23 @@ async function test() {
     await browser.close();
     await new Promise(resolve => server.close(resolve));
   }
+
+  if (pixelDifference > 200) {
+    console.error(
+      `Snapshot is different from screenshot by ${pixelDifference} pixels`,
+    );
+    process.exit(1);
+  }
+  if (error) process.exit(1);
 }
 
+
+process.on('unhandledRejection', err => {
+  console.error(err);
+  process.exit(1);
+});
+process.once('uncaughtException', err => {
+  console.error(err);
+  process.exit(1);
+});
 setImmediate(test);
