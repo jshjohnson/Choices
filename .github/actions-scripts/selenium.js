@@ -1,38 +1,18 @@
 const path = require('path');
-const { once } = require('events');
 const { readFileSync, writeFileSync, mkdirSync } = require('fs');
 const pixelmatch = require('pixelmatch');
 const { PNG } = require('pngjs');
 
-const express = require('express');
 const {
   Builder,
   By,
   Key,
   until,
-  WebDriver,
   Capabilities,
-  Logs,
   logging,
 } = require('selenium-webdriver');
 
-const PORT = 3001;
-async function launchServer() {
-  const DIST_DIR = path.join(__dirname, '../../public');
-
-  const app = express();
-  app.use(express.static(DIST_DIR));
-
-  const server = app.listen(PORT, err => {
-    if (err) {
-      console.log(err);
-    }
-
-    console.log(`Listening at http://localhost:${PORT} 👂`);
-  });
-  await once(server, 'listening');
-  return server;
-}
+const launchServer = require('./lib/run-server')
 
 async function test() {
   let pixelDifference;
@@ -71,7 +51,7 @@ async function test() {
   let driver = await new Builder().withCapabilities(capabilities).build();
   const server = await launchServer();
   try {
-    await driver.get(`http://127.0.0.1:${PORT}`);
+    await driver.get(`http://127.0.0.1:${server.address().port}`);
 
     // wait for last choice to init
     await driver.wait(

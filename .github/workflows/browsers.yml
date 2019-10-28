@@ -6,14 +6,12 @@ on:
       - master
 
 jobs:
-  screenshots:
-    name: Screenshots
-
+  selenium:
     strategy:
       fail-fast: false
       matrix:
         os: [windows-latest, macOS-10.14]
-        browser: [ie, firefox, chrome]
+        browser: [ie, firefox]
         exclude:
           # On Windows, run tests with only IE and Edge
           - os: windows-latest
@@ -77,4 +75,27 @@ jobs:
         if: failure()
         with:
           name: screenshot-${{ matrix.browser }}-${{ matrix.os }}
+          path: screenshot
+
+  puppeteer:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+          HUSKY_SKIP_INSTALL: true
+      - run: npm i puppeteer pixelmatch pngjs
+      - run: node .github/actions-scripts/puppeteer.js
+        env:
+          BROWSER: ${{ matrix.browser }}
+      - uses: actions/upload-artifact@master
+        if: failure()
+        with:
+          name: screenshot-puppeteer-${{ matrix.os }}
           path: screenshot
