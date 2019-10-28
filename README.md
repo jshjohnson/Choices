@@ -1041,7 +1041,7 @@ I suggest including a polyfill from the very good [polyfill.io](https://polyfill
 **Polyfill example used for the demo:**
 
 ```html
-<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=es5,es6,fetch,Array.prototype.includes,CustomEvent"></script>
+<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=es5,es6,fetch,Array.prototype.includes,CustomEvent,Element.prototype.closest"></script>
 ```
 
 **Features used in Choices:**
