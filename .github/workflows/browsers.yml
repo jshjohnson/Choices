@@ -52,12 +52,12 @@ jobs:
       # install drivers
       - name: Enable Safari Driver
         run: |
-          sudo defaults write com.apple.Safari IncludeDevelopMenu 1
-          sudo defaults write com.apple.Safari AllowJavaScriptFromAppleEvents 1
-          sudo defaults write com.apple.Safari IncludeInternalDebugMenu 1
+          defaults write com.apple.Safari IncludeDevelopMenu 1
+          defaults write com.apple.Safari AllowJavaScriptFromAppleEvents 1
+          defaults write com.apple.Safari IncludeInternalDebugMenu 1
           sudo safaridriver --enable
-          sudo defaults write com.apple.Safari AllowRemoteAutomation 1
-          safaridriver -p 0 &
+          defaults write com.apple.Safari AllowRemoteAutomation 1
+          # safaridriver -p 0 &
         if: matrix.browser == 'safari'
 
       # https://github.com/mozilla/geckodriver/releases
@@ -66,6 +66,10 @@ jobs:
         if: matrix.browser == 'firefox'
         env:
           GECKODRIVER_VERSION: '0.26.0'
+      - run: |
+          brew install geckodriver
+          geckodriver --version
+        if: matrix.browser == 'firefox' && matrix.os == 'macOS-10.14'
 
       - run: npm i chromedriver --chromedriver_version=LATEST
         if: matrix.browser == 'chrome'
@@ -75,8 +79,8 @@ jobs:
           echo "::add-path::${{ github.workspace }}\\Selenium.WebDriver.IEDriver.3.150.1\\driver\\"
         if: matrix.browser == 'ie'
 
-      - run: DISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0
-        if: matrix.browser == 'edge'
+      # - run: DISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0
+      # if: matrix.browser == 'edge'
       - run: |
           nuget install Selenium.WebDriver.MicrosoftDriver -Version 17.17134.0
           echo "::add-path::${{ github.workspace }}\\Selenium.WebDriver.MicrosoftDriver.17.17134.0\\driver\\"
