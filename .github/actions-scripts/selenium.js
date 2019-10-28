@@ -36,6 +36,7 @@ async function launchServer() {
 
 async function test() {
   let pixelDifference;
+  let error;
 
   let capabilities;
   switch (process.env.BROWSER) {
@@ -157,6 +158,7 @@ async function test() {
     // });
   } catch (err) {
     console.error(err);
+    error = err;
   } finally {
     await driver.quit();
     await new Promise(resolve => server.close(resolve));
@@ -167,6 +169,7 @@ async function test() {
     );
     process.exit(1);
   }
+  if (error) process.exit(1);
 }
 
 process.on('unhandledRejection', err => {
