@@ -39,6 +39,7 @@ async function test() {
   let error;
 
   let capabilities;
+  console.log('Env:', JSON.stringify(process.env, null, 2));
   switch (process.env.BROWSER) {
     case 'ie':
       capabilities = Capabilities.ie();
@@ -54,6 +55,7 @@ async function test() {
 
     case 'safari':
       capabilities = Capabilities.safari();
+      capabilities.set('safari.options', { technologyPreview: false });
       break;
 
     case 'firefox': {
@@ -136,7 +138,7 @@ async function test() {
       width,
       height,
       {
-        threshold: 0.2,
+        threshold: 0.3,
       },
     );
     writeFileSync(path.join(artifactsPath, 'diff.png'), PNG.sync.write(diff));
