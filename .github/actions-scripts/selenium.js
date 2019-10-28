@@ -62,11 +62,7 @@ async function test() {
     case 'chrome': {
       capabilities = Capabilities.chrome();
       capabilities.set('chromeOptions', {
-        args: [
-          '--headless',
-          '--no-sandbox',
-          '--disable-gpu',
-        ],
+        args: ['--headless', '--no-sandbox', '--disable-gpu'],
       });
       break;
     }
@@ -130,13 +126,13 @@ async function test() {
     writeFileSync(path.join(artifactsPath, 'diff.png'), PNG.sync.write(diff));
 
     // getting console logs
-    // const entries = await driver
-    //   .manage()
-    //   .logs()
-    //   .get(logging.Type.BROWSER);
-    // entries.forEach(entry => {
-    //   console.log('[%s] %s', entry.level.name, entry.message);
-    // });
+    // ensure no errors in console (only supported in Chrome and Firefox currently)
+    const entries = await driver
+      .manage()
+      .logs()
+      .get(logging.Type.BROWSER);
+    if (entries.some(entry => entry.level.name_ === 'SEVERE'))
+      throw new Error(JSON.stringify(entries));
   } catch (err) {
     console.error(err);
     error = err;
