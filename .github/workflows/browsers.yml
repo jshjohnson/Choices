@@ -12,26 +12,24 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macOS-latest]
+        os: [windows-latest, macOS-10.14]
         browser: [ie, MicrosoftEdge, safari, firefox]
         exclude:
           # On Windows, run tests with only IE and Edge
           - os: windows-latest
             browser: safari
           # On macOS, run tests with only the latest environments.
-          - os: macOS-latest
+          - os: macOS-10.14
             browser: ie
-          - os: macOS-latest
+          - os: macOS-10.14
             browser: MicrosoftEdge
-          - os: macOS-latest
+          - os: macOS-10.14
             browser: firefox
           # Linux - just firefox
           - os: ubuntu-latest
             browser: ie
           - os: ubuntu-latest
             browser: MicrosoftEdge
-          - os: ubuntu-latest
-            browser: safari
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -56,16 +54,21 @@ jobs:
       # install drivers
       - name: Enable Safari Driver
         run: |
-          sudo defaults write com.apple.Safari IncludeDevelopMenu 1
+          defaults write com.apple.Safari IncludeDevelopMenu 1
+          defaults write com.apple.Safari AllowJavaScriptFromAppleEvents 1
+          defaults write com.apple.Safari IncludeInternalDebugMenu 1
           sudo safaridriver --enable
-          sudo defaults write com.apple.Safari AllowRemoteAutomation 1
+          defaults write com.apple.Safari AllowRemoteAutomation 1
           safaridriver -p 0 &
         if: matrix.browser == 'safari'
 
+      # https://github.com/mozilla/geckodriver/releases
       - run: npm i geckodriver
         if: matrix.browser == 'firefox'
+        env:
+          GECKODRIVER_VERSION: '0.26.0'
 
-      - run: npm i chromedriver
+      - run: npm i chromedriver --chromedriver_version=LATEST
         if: matrix.browser == 'chrome'
 
       - run: |
@@ -81,7 +84,7 @@ jobs:
       - run: npm i selenium-webdriver pixelmatch pngjs
       - run: node .github/actions-scripts/selenium.js
         env:
-          BROWSER: ${{ matrix.browser }}
+          SELENIUM_BROWSER: ${{ matrix.browser }}
       - uses: actions/upload-artifact@master
         if: failure()
         with:
