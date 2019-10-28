@@ -590,6 +590,7 @@ class Choices {
     }
 
     this.containerOuter.removeLoadingState();
+
     const addGroupsAndChoices = groupOrChoice => {
       if (groupOrChoice.choices) {
         this._addGroup({
