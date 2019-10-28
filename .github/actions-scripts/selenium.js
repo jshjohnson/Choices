@@ -68,7 +68,10 @@ async function test() {
     }
   }
 
-  let driver = await new Builder().withCapabilities(capabilities).build();
+  let driver = await new Builder()
+    .withCapabilities(capabilities)
+    .setLoggingPrefs({ browser: 'ALL' })
+    .build();
   const server = await launchServer();
   try {
     console.info('Starting download demo page');
@@ -131,7 +134,10 @@ async function test() {
       .manage()
       .logs()
       .get(logging.Type.BROWSER);
-    if (entries.some(entry => entry.level.name_ === 'SEVERE'))
+    if (
+      Array.isArray(entries) &&
+      entries.some(entry => entry.level.name_ === 'SEVERE')
+    )
       throw new Error(JSON.stringify(entries));
   } catch (err) {
     console.error(err);
