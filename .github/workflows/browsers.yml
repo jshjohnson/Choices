@@ -73,7 +73,7 @@ jobs:
 
       - run: |
           nuget install Selenium.WebDriver.IEDriver -Version 3.150.1
-          echo "::add-path::./Selenium.WebDriver.IEDriver.3.150.1/driver/"
+          echo "::add-path::${{ github.workspace }}\\Selenium.WebDriver.IEDriver.3.150.1\\driver\\"
         if: matrix.browser == 'ie'
 
       - run: |
@@ -84,7 +84,7 @@ jobs:
       - run: npm i selenium-webdriver pixelmatch pngjs
       - run: node .github/actions-scripts/selenium.js
         env:
-          SELENIUM_BROWSER: ${{ matrix.browser }}
+          BROWSER: ${{ matrix.browser }}
       - uses: actions/upload-artifact@master
         if: failure()
         with:
