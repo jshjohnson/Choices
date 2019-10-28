@@ -44,8 +44,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - uses: warrenbuckley/Setup-Nuget@v1
-        if: matrix.os == 'windows-latest'
+      # - uses: warrenbuckley/Setup-Nuget@v1
+      #   if: matrix.os == 'windows-latest'
       - run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
@@ -78,7 +78,7 @@ jobs:
 
       - run: |
           nuget install Selenium.WebDriver.MicrosoftDriver -Version 17.17134.0
-          echo "::add-path::./Selenium.WebDriver.MicrosoftDriver.17.17134.0/driver/"
+          echo "::add-path::${{ github.workspace }}\\Selenium.WebDriver.MicrosoftDriver.17.17134.0\\driver\\"
         if: matrix.browser == 'MicrosoftEdge'
 
       - run: npm i selenium-webdriver pixelmatch pngjs
