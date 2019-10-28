@@ -23,8 +23,6 @@ jobs:
             browser: ie
           - os: macOS-10.14
             browser: chrome
-          - os: macOS-10.14
-            browser: firefox
 
     runs-on: ${{ matrix.os }}
     steps:
