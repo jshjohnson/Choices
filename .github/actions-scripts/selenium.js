@@ -128,16 +128,18 @@ async function test() {
     writeFileSync(path.join(artifactsPath, 'diff.png'), PNG.sync.write(diff));
 
     // getting console logs
-    // ensure no errors in console (only supported in Chrome and Firefox currently)
-    const entries = await driver
-      .manage()
-      .logs()
-      .get(logging.Type.BROWSER);
-    if (
-      Array.isArray(entries) &&
-      entries.some(entry => entry.level.name_ === 'SEVERE')
-    )
-      throw new Error(JSON.stringify(entries));
+    // ensure no errors in console (only supported in Chrome currently)
+    if (process.env.BROWSER === 'chrome') {
+      const entries = await driver
+        .manage()
+        .logs()
+        .get(logging.Type.BROWSER);
+      if (
+        Array.isArray(entries) &&
+        entries.some(entry => entry.level.name_ === 'SEVERE')
+      )
+        throw new Error(JSON.stringify(entries));
+    }
   } catch (err) {
     console.error(err);
     error = err;
