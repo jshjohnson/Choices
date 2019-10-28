@@ -13,7 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-latest, macOS-10.14]
-        browser: [ie, MicrosoftEdge, safari, firefox]
+        browser: [ie, edge, safari, firefox]
         exclude:
           # On Windows, run tests with only IE and Edge
           - os: windows-latest
@@ -22,12 +22,12 @@ jobs:
           - os: macOS-10.14
             browser: ie
           - os: macOS-10.14
-            browser: MicrosoftEdge
+            browser: edge
           # Linux - just firefox
           - os: ubuntu-latest
             browser: ie
           - os: ubuntu-latest
-            browser: MicrosoftEdge
+            browser: edge
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -42,8 +42,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      # - uses: warrenbuckley/Setup-Nuget@v1
-      #   if: matrix.os == 'windows-latest'
+      - uses: warrenbuckley/Setup-Nuget@v1
+        if: matrix.os == 'windows-latest' && (matrix.browser == 'ie' || matrix.browser == 'edge')
       - run: npm ci
         env:
           CYPRESS_INSTALL_BINARY: 0
@@ -63,12 +63,9 @@ jobs:
       # https://github.com/mozilla/geckodriver/releases
       - run: |
           npm i geckodriver
-          echo "::add-path::${{ github.workspace }}\\node_modules\\geckodriver\\bin\\"
-        if: matrix.browser == 'firefox' && matrix.os == 'windows-latest'
+        if: matrix.browser == 'firefox'
         env:
           GECKODRIVER_VERSION: '0.26.0'
-      - run: brew install geckodriver
-        if: matrix.browser == 'firefox' && matrix.os == 'macOS-10.14'
 
       - run: npm i chromedriver --chromedriver_version=LATEST
         if: matrix.browser == 'chrome'
@@ -78,11 +75,12 @@ jobs:
           echo "::add-path::${{ github.workspace }}\\Selenium.WebDriver.IEDriver.3.150.1\\driver\\"
         if: matrix.browser == 'ie'
 
-      # - run: |
-      #     nuget install Selenium.WebDriver.MicrosoftDriver -Version 17.17134.0
-      #     echo "::add-path::${{ github.workspace }}\\Selenium.WebDriver.MicrosoftDriver.17.17134.0\\driver\\"
       - run: DISM.exe /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0
-        if: matrix.browser == 'MicrosoftEdge'
+        if: matrix.browser == 'edge'
+      - run: |
+          nuget install Selenium.WebDriver.MicrosoftDriver -Version 17.17134.0
+          echo "::add-path::${{ github.workspace }}\\Selenium.WebDriver.MicrosoftDriver.17.17134.0\\driver\\"
+        if: failure() && matrix.browser == 'edge'
 
       - run: npm i selenium-webdriver pixelmatch pngjs
       - run: node .github/actions-scripts/selenium.js

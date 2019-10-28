@@ -46,7 +46,7 @@ async function test() {
       capabilities.set('ignoreZoomSetting', true);
       break;
 
-    case 'MicrosoftEdge':
+    case 'edge':
       capabilities = Capabilities.edge();
       // System.setProperty("webdriver.edge.driver", driverPath+"MicrosoftWebDriver.exe");
       break;
@@ -57,7 +57,7 @@ async function test() {
     }
     case 'firefox': {
       // @ts-ignore
-      // require('geckodriver');
+      require('geckodriver');
       capabilities = Capabilities.firefox();
       break;
     }
@@ -79,6 +79,8 @@ async function test() {
   let driver = await new Builder().withCapabilities(capabilities).build();
   const server = await launchServer();
   try {
+    console.info('Starting download demo page');
+
     await driver.get(`http://127.0.0.1:${PORT}`);
 
     // wait for last choice to init
