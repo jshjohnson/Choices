@@ -34,6 +34,7 @@ async function launchServer() {
 }
 
 async function test() {
+  let pixelDifference;
   let driver = await new Builder()
     .setLoggingPrefs({ browser: 'ALL' })
     .build();
@@ -73,13 +74,11 @@ async function test() {
     );
     const { width, height } = screenshot;
     const diff = new PNG({ width, height });
-    const pixelDifference = pixelmatch(screenshot.data, snapshot.data, diff.data, width, height, {
+    pixelDifference = pixelmatch(screenshot.data, snapshot.data, diff.data, width, height, {
       threshold: 0.1,
     });
-    if(pixelDifference > 100) {
-      writeFileSync('diff.png', PNG.sync.write(diff));
-      throw new Error(`Snapshot is different from screenshot by ${pixelDifference} pixels`)
-    }
+    writeFileSync('diff.png', PNG.sync.write(diff));
+
 
     // getting console logs
     // const entries = await driver
@@ -95,6 +94,18 @@ async function test() {
     await driver.quit();
     await new Promise(resolve => server.close(resolve));
   }
+  if(pixelDifference > 100) {
+    console.error(`Snapshot is different from screenshot by ${pixelDifference} pixels`)
+    process.exit(1)
+  }
 }
 
+process.on('unhandledRejection', err => {
+  console.error(err);
+  process.exit(1)
+})
+process.once('uncaughtException', err => {
+  console.error(err);
+  process.exit(1)
+})
 setImmediate(test);
