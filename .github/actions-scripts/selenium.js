@@ -56,11 +56,11 @@ async function test() {
       break;
 
     case 'firefox': {
-      capabilities = Capabilities.firefox();
+      capabilities = Capabilities.firefox().setLoggingPrefs({ browser: 'ALL' });
       break;
     }
     case 'chrome': {
-      capabilities = Capabilities.chrome();
+      capabilities = Capabilities.chrome().setLoggingPrefs({ browser: 'ALL' });
       capabilities.set('chromeOptions', {
         args: ['--headless', '--no-sandbox', '--disable-gpu'],
       });
@@ -68,14 +68,9 @@ async function test() {
     }
   }
 
-  let driver = await new Builder()
-    .withCapabilities(capabilities)
-    .setLoggingPrefs({ browser: 'ALL' })
-    .build();
+  let driver = await new Builder().withCapabilities(capabilities).build();
   const server = await launchServer();
   try {
-    console.info('Starting download demo page');
-
     await driver.get(`http://127.0.0.1:${PORT}`);
 
     // wait for last choice to init
