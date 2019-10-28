@@ -16,20 +16,23 @@ jobs:
         exclude:
           # On Windows, run tests with only IE and Edge
           - os: windows-latest
-            browser:
-              - safari
-              - firefox
+            browser: safari
+          - os: windows-latest
+            browser: firefox
           # On macOS, run tests with only the latest environments.
           - os: macOS-latest
-            browser:
-              - ie
-              - edge
-              - firefox
+            browser: ie
+          - os: macOS-latest
+            browser: edge
+          - os: macOS-latest
+            browser: firefox
+          # Linux - just firefox
           - os: ubuntu-latest
-            browser:
-              - ie
-              - edge
-              - safari
+            browser: ie
+          - os: ubuntu-latest
+            browser: edge
+          - os: ubuntu-latest
+            browser: safari
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -44,3 +47,8 @@ jobs:
       - run: node .github/actions-scripts/selenium.js
         env:
           SELENIUM_BROWSER: ${{ matrix.browser }}
+      - uses: actions/upload-artifact@master
+        if: failure()
+        with:
+          name: screenshot-${{ matrix.browser }}-${{ matrix.os }}
+          path: '*.png'
