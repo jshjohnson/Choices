@@ -74,7 +74,7 @@ jobs:
       - run: npm i chromedriver --chromedriver_version=LATEST
         if: matrix.browser == 'chrome'
       - run: choco install googlechrome
-        if: matrix.browser == 'chrome' && matrix.os === 'windows-latest'
+        if: matrix.browser == 'chrome' && matrix.os == 'windows-latest'
 
       - run: |
           nuget install Selenium.WebDriver.IEDriver -Version 3.150.1
@@ -86,7 +86,7 @@ jobs:
       - run: |
           nuget install Selenium.WebDriver.MicrosoftDriver -Version 17.17134.0
           echo "::add-path::${{ github.workspace }}\\Selenium.WebDriver.MicrosoftDriver.17.17134.0\\driver\\"
-        if: failure() && matrix.browser == 'edge'
+        if: matrix.browser == 'edge'
 
       - run: npm i selenium-webdriver pixelmatch pngjs
       - run: node .github/actions-scripts/selenium.js
