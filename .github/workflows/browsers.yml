@@ -9,6 +9,7 @@ on:
       - '.babelrc'
       - 'webpack.config.*'
       - 'public/index.html'
+      - '.github/actions-scripts/__snapshots__'
 
 jobs:
   selenium:
