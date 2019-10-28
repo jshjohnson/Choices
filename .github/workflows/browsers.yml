@@ -55,7 +55,7 @@ jobs:
 
       # geskodriver - https://github.com/mozilla/geckodriver/releases/
       - name: Install Firefox driver on Ubuntu
-        if: matrix.browser == 'firefox'
+        if: matrix.browser == 'firefox' && matrix.os == 'ubuntu-latest'
         run: |
           wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-linux64.tar.gz
           sudo sh -c 'tar -x geckodriver -zf geckodriver-v0.26.0-linux64.tar.gz -O > /usr/bin/geckodriver'
