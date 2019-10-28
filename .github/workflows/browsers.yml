@@ -1,0 +1,46 @@
+name: Browsers
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  screenshots:
+    name: Screenshots
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        browser: ['ie', 'edge', 'safari', 'firefox']
+        exclude:
+          # On Windows, run tests with only IE and Edge
+          - os: windows-latest
+            browser:
+              - safari
+              - firefox
+          # On macOS, run tests with only the latest environments.
+          - os: macOS-latest
+            browser:
+              - ie
+              - edge
+              - firefox
+          - os: ubuntu-latest
+            browser:
+              - ie
+              - edge
+              - safari
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - run: npm ci
+      - run: npm i selenium-webdriver pixelmatch pngjs
+      - run: node .github/actions-scripts/selenium.js
+        env:
+          SELENIUM_BROWSER: ${{ matrix.browser }}

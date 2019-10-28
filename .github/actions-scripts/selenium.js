@@ -1,6 +1,8 @@
 const path = require('path');
 const { once } = require('events');
-const { writeFile } = require('fs').promises;
+const { readFileSync, writeFileSync } = require('fs');
+const pixelmatch = require('pixelmatch');
+const { PNG } = require('pngjs');
 
 const express = require('express');
 const {
@@ -33,38 +35,60 @@ async function launchServer() {
 
 async function test() {
   let driver = await new Builder()
-    .forBrowser('safari')
     .setLoggingPrefs({ browser: 'ALL' })
     .build();
   const server = await launchServer();
   try {
     await driver.get(`http://127.0.0.1:${PORT}`);
-    // driver.
-    // await driver.findElement(By.name('q')).sendKeys('webdriver', Key.RETURN);
-    // await driver.wait(until.titleIs('webdriver - Google Search'), 1000);
 
-    // set the window inner size to 800 x 600
+    // wait for last choice to init
+    await driver.wait(
+      until.elementLocated(By.css('#reset-multiple ~ .choices__list')),
+    );
 
-    // quit
-    await driver.wait(By.)
-    await driver.sleep(1000);
+    // Resize window
     await driver
       .manage()
       .window()
-      .setRect({ width: 630, height: 3900 });
+      // magic numbers here to make sure all demo page are fit inside
+      .setRect({ width: 630, height: 4000 });
+
+    // and click on press space on it, so it should open choices
+    await driver
+      .findElement(By.css('#reset-multiple ~ .choices__list button'))
+      .sendKeys(Key.SPACE);
+    await driver.sleep(500);
 
     // take screenshot
     const image = await driver.takeScreenshot();
-    await writeFile('screenshot.png', image, 'base64');
+    const imageBuffer = Buffer.from(image, 'base64');
+    writeFileSync('screenshot.png', imageBuffer);
+
+    // compare with snapshot
+    const screenshot = PNG.sync.read(imageBuffer);
+    const snapshot = PNG.sync.read(
+      readFileSync(
+        path.resolve(__dirname, `./__screenshots__/${process.env.SELENIUM_BROWSER}-${process.platform}.png`),
+      ),
+    );
+    const { width, height } = screenshot;
+    const diff = new PNG({ width, height });
+    const pixelDifference = pixelmatch(screenshot.data, snapshot.data, diff.data, width, height, {
+      threshold: 0.1,
+    });
+    if(pixelDifference > 100) {
+      writeFileSync('diff.png', PNG.sync.write(diff));
+      throw new Error(`Snapshot is different from screenshot by ${pixelDifference} pixels`)
+    }
 
     // getting console logs
-    const entries = await driver
-      .manage()
-      .logs()
-      .get(logging.Type.BROWSER);
-    entries.forEach(entry => {
-      console.log('[%s] %s', entry.level.name, entry.message);
-    });
+    // const entries = await driver
+    //   .manage()
+    //   .logs()
+    //   .get(logging.Type.BROWSER);
+    // entries.forEach(entry => {
+    //   console.log('[%s] %s', entry.level.name, entry.message);
+    // });
   } catch (err) {
     console.error(err);
   } finally {
