@@ -99,9 +99,9 @@ declare namespace Choices {
      *
      * **Input types affected:** select-one, select-multiple
      *
-     * Arguments: value, keyCode
+     * Arguments: choice: Choice
      */
-    choice: CustomEvent<{ value: string; keyCode: string }>;
+    choice: CustomEvent<{ choice: Choices.Choice }>;
 
     /**
      * Triggered each time an item is added/removed **by a user**.
@@ -143,9 +143,9 @@ declare namespace Choices {
      * Triggered when a choice from the dropdown is highlighted.
      *
      * Input types affected: select-one, select-multiple
-     * Arguments: el is the HTML element node object that was affected.
+     * Arguments: el is the choice.passedElement that was affected.
      */
-    highlightChoice: CustomEvent<{ el: HTMLOptionElement }>;
+    highlightChoice: CustomEvent<{ el: Choices.passedElement }>;
   }
 
   interface Group {
