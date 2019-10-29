@@ -1029,29 +1029,30 @@ example.setChoiceByValue('Two'); // Choice with value of 'Two' has now been sele
 
 ## Browser compatibility
 
-Choices is compiled using [Babel](https://babeljs.io/) to enable support for [ES5 browsers](http://caniuse.com/#feat=es5). If you need to support a browser that does not support one of the features listed below, I suggest including a polyfill from the very good [polyfill.io](https://cdn.polyfill.io/v2/docs/):
+Choices is compiled using [Babel](https://babeljs.io/) targeting browsers [with more that 1% of global usage](https://github.com/jshjohnson/Choices/blob/master/.browserslistrc) and expecting that features [listed below](https://github.com/jshjohnson/Choices/blob/master/.eslintrc.json#L62) are available or polyfilled in browser.
+You may see exact list of target browsers by running `npx browserslist` withing this repository folder.
+If you need to support a browser that does not have one of the features listed below,
+I suggest including a polyfill from the very good [polyfill.io](https://polyfill.io/v3/):
 
 **Polyfill example used for the demo:**
 
 ```html
-<script src="https://cdn.polyfill.io/v2/polyfill.js?features=es5,fetch,Element.prototype.classList,requestAnimationFrame,Node.insertBefore,Node.firstChild,CustomEvent"></script>
+<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=es5,es6,fetch,Array.prototype.includes,CustomEvent,Element.prototype.closest"></script>
 ```
 
 **Features used in Choices:**
 
-- Array.prototype.forEach
-- Array.prototype.map
-- Array.prototype.find
-- Array.prototype.some
-- Array.prototype.includes
-- Array.from
-- Array.prototype.reduce
-- Array.prototype.indexOf
-- Object.assign
-- Element.prototype.classList
-- Element.prototype.closest
-- window.requestAnimationFrame
-- CustomEvent
+```polyfills
+Array.from
+Array.prototype.find
+Array.prototype.includes
+Symbol
+Symbol.iterator
+Object.assign
+CustomEvent
+Element.prototype.classList
+Element.prototype.closest
+```
 
 ## Development
 
