@@ -757,8 +757,11 @@ declare namespace Choices {
 
 // Exporting default class
 export default class Choices {
+  static readonly defaults: {
+    readonly options: Partial<Choices.Options>;
+    readonly templates: Choices.Templates;
+  };
   readonly config: Choices.Options;
-  static readonly Templates: Choices.Templates;
 
   // State Tracking
   initialised: boolean;

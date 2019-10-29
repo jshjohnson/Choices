@@ -39,11 +39,28 @@ import {
   diff,
 } from './lib/utils';
 
+const USER_DEFAULTS = /** @type {Partial<import('../../types/index').Choices.Options>} */ ({});
+
 /**
  * Choices
  * @author Josh Johnson<josh@joshuajohnson.co.uk>
  */
 class Choices {
+  /* ========================================
+  =            Static properties            =
+  ======================================== */
+
+  static get defaults() {
+    return Object.preventExtensions({
+      get options() {
+        return USER_DEFAULTS;
+      },
+      get templates() {
+        return TEMPLATES;
+      },
+    });
+  }
+
   constructor(element = '[data-choice]', userConfig = {}) {
     if (isType('String', element)) {
       const elements = Array.from(document.querySelectorAll(element));
@@ -56,7 +73,7 @@ class Choices {
     }
 
     this.config = merge.all(
-      [DEFAULT_CONFIG, Choices.userDefaults, userConfig],
+      [DEFAULT_CONFIG, Choices.defaults.options, userConfig],
       // When merging array configs, replace with a copy of the userConfig array,
       // instead of concatenating with the default array
       { arrayMerge: (destinationArray, sourceArray) => [...sourceArray] },
@@ -175,14 +192,6 @@ class Choices {
 
     // Let's go
     this.init();
-  }
-
-  /* ========================================
-  =            Static properties            =
-  ======================================== */
-
-  static get Templates() {
-    return TEMPLATES;
   }
 
   /* ========================================
@@ -2099,7 +2108,5 @@ class Choices {
 
   /* =====  End of Private functions  ====== */
 }
-
-Choices.userDefaults = {};
 
 export default Choices;
