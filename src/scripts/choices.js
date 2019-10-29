@@ -129,7 +129,23 @@ class Choices {
     this._wasTap = true;
     this._placeholderValue = this._generatePlaceholderValue();
     this._baseId = generateId(this.passedElement.element, 'choices-');
-    this._direction = this.passedElement.element.getAttribute('dir') || 'ltr';
+    /**
+     * setting direction in cases where it's explicitly set on passedElement
+     * or when calculated direction is different from the document
+     * @type {HTMLElement['dir']}
+     */
+    this._direction = this.passedElement.element.dir;
+    if (!this._direction) {
+      const { direction: elementDirection } = window.getComputedStyle(
+        this.passedElement.element,
+      );
+      const { direction: documentDirection } = window.getComputedStyle(
+        document.documentElement,
+      );
+      if (elementDirection !== documentDirection) {
+        this._direction = elementDirection;
+      }
+    }
     this._idNames = {
       itemChoice: 'item-choice',
     };

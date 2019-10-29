@@ -223,7 +223,6 @@ describe('templates', () => {
         const expectedOutput = strToEl(`
           <div
             class="${classes.list}"
-            dir="ltr"
             role="listbox"
             >
           </div>
@@ -239,7 +238,6 @@ describe('templates', () => {
         const expectedOutput = strToEl(`
           <div
             class="${classes.list}"
-            dir="ltr"
             role="listbox"
             aria-multiselectable="true"
             >
