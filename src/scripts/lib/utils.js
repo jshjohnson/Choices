@@ -143,11 +143,8 @@ export const getWindowHeight = () => {
   );
 };
 
-export const isIE11 = () =>
-  !!(
-    navigator.userAgent.match(/Trident/) &&
-    navigator.userAgent.match(/rv[ :]11/)
-  );
+export const isIE11 = userAgent =>
+  !!(userAgent.match(/Trident/) && userAgent.match(/rv[ :]11/));
 
 export const existsInArray = (array, value, key = 'value') =>
   array.some(item => {

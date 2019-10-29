@@ -1547,7 +1547,10 @@ class Choices {
   _onMouseDown(event) {
     const { target, shiftKey } = event;
     // If we have our mouse down on the scrollbar and are on IE11...
-    if (this.choiceList.element.contains(target) && isIE11()) {
+    if (
+      this.choiceList.element.contains(target) &&
+      isIE11(navigator.userAgent)
+    ) {
       this._isScrollingOnIe = true;
     }
 
