@@ -1,12 +1,20 @@
 import { sanitise } from '../lib/utils';
 
 export default class Input {
-  constructor({ element, type, classNames, placeholderValue }) {
-    Object.assign(this, { element, type, classNames, placeholderValue });
+  /**
+   *
+   * @typedef {import('../../../types/index').Choices.passedElement} passedElement
+   * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
+   * @param {{element: HTMLInputElement, type: passedElement['type'], classNames: ClassNames, preventPaste: boolean }} p
+   */
+  constructor({ element, type, classNames, preventPaste }) {
     this.element = element;
+    this.type = type;
     this.classNames = classNames;
+    this.preventPaste = preventPaste;
+
     this.isFocussed = this.element === document.activeElement;
-    this.isDisabled = false;
+    this.isDisabled = element.disabled;
     this._onPaste = this._onPaste.bind(this);
     this._onInput = this._onInput.bind(this);
     this._onFocus = this._onFocus.bind(this);
@@ -26,25 +34,29 @@ export default class Input {
   }
 
   addEventListeners() {
-    this.element.addEventListener('input', this._onInput);
     this.element.addEventListener('paste', this._onPaste);
-    this.element.addEventListener('focus', this._onFocus);
-    this.element.addEventListener('blur', this._onBlur);
-
-    if (this.element.form) {
-      this.element.form.addEventListener('reset', this._onFormReset);
-    }
+    this.element.addEventListener('input', this._onInput, {
+      passive: true,
+    });
+    this.element.addEventListener('focus', this._onFocus, {
+      passive: true,
+    });
+    this.element.addEventListener('blur', this._onBlur, {
+      passive: true,
+    });
   }
 
   removeEventListeners() {
-    this.element.removeEventListener('input', this._onInput);
+    this.element.removeEventListener('input', this._onInput, {
+      passive: true,
+    });
     this.element.removeEventListener('paste', this._onPaste);
-    this.element.removeEventListener('focus', this._onFocus);
-    this.element.removeEventListener('blur', this._onBlur);
-
-    if (this.element.form) {
-      this.element.form.removeEventListener('reset', this._onFormReset);
-    }
+    this.element.removeEventListener('focus', this._onFocus, {
+      passive: true,
+    });
+    this.element.removeEventListener('blur', this._onBlur, {
+      passive: true,
+    });
   }
 
   enable() {
@@ -112,8 +124,7 @@ export default class Input {
   }
 
   _onPaste(event) {
-    const { target } = event;
-    if (target === this.element && this.preventPaste) {
+    if (this.preventPaste) {
       event.preventDefault();
     }
   }

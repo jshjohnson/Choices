@@ -1,7 +1,6 @@
 import Fuse from 'fuse.js';
 import merge from 'deepmerge';
 
-import './lib/delegate-events';
 import Store from './store/store';
 import {
   Dropdown,
@@ -38,6 +37,8 @@ import {
   diff,
 } from './lib/utils';
 
+const USER_DEFAULTS = /** @type {Partial<import('../../types/index').Choices.Options>} */ ({});
+
 /**
  * Choices
  * @author Josh Johnson<josh@joshuajohnson.co.uk>
@@ -47,6 +48,21 @@ import {
  * @typedef {import('../../types/index').Choices.Choice} Choice
  */
 class Choices {
+  /* ========================================
+  =            Static properties            =
+  ======================================== */
+
+  static get defaults() {
+    return Object.preventExtensions({
+      get options() {
+        return USER_DEFAULTS;
+      },
+      get templates() {
+        return TEMPLATES;
+      },
+    });
+  }
+
   constructor(element = '[data-choice]', userConfig = {}) {
     if (isType('String', element)) {
       const elements = Array.from(document.querySelectorAll(element));
@@ -59,11 +75,23 @@ class Choices {
     }
 
     this.config = merge.all(
-      [DEFAULT_CONFIG, Choices.userDefaults, userConfig],
+      [DEFAULT_CONFIG, Choices.defaults.options, userConfig],
       // When merging array configs, replace with a copy of the userConfig array,
       // instead of concatenating with the default array
       { arrayMerge: (destinationArray, sourceArray) => [...sourceArray] },
     );
+
+    // Convert addItemFilter to function
+    if (
+      userConfig.addItemFilter &&
+      typeof userConfig.addItemFilter !== 'function'
+    ) {
+      const re =
+        userConfig.addItemFilter instanceof RegExp
+          ? userConfig.addItemFilter
+          : new RegExp(userConfig.addItemFilter);
+      this.config.addItemFilter = re.test.bind(re);
+    }
 
     const invalidConfigOptions = diff(this.config, DEFAULT_CONFIG);
     if (invalidConfigOptions.length) {
@@ -1113,13 +1141,14 @@ class Choices {
         this._isTextElement &&
         this.config.addItems &&
         canAddItem &&
-        isType('Function', this.config.addItemFilterFn) &&
-        !this.config.addItemFilterFn(value)
+        typeof this.config.addItemFilter === 'function' &&
+        !this.config.addItemFilter(value)
       ) {
         canAddItem = false;
-        notice = isType('Function', this.config.customAddItemText)
-          ? this.config.customAddItemText(value)
-          : this.config.customAddItemText;
+        notice =
+          typeof this.config.customAddItemText === 'function'
+            ? this.config.customAddItemText(value)
+            : this.config.customAddItemText;
       }
     }
 
@@ -1156,48 +1185,91 @@ class Choices {
   }
 
   _addEventListeners() {
-    window.delegateEvent.add('keyup', this._onKeyUp);
-    window.delegateEvent.add('keydown', this._onKeyDown);
-    window.delegateEvent.add('click', this._onClick);
-    window.delegateEvent.add('touchmove', this._onTouchMove);
-    window.delegateEvent.add('touchend', this._onTouchEnd);
-    window.delegateEvent.add('mousedown', this._onMouseDown);
-    window.delegateEvent.add('mouseover', this._onMouseOver);
+    const { documentElement } = document;
+
+    // capture events - can cancel event processing or propagation
+    documentElement.addEventListener('keydown', this._onKeyDown, true);
+    documentElement.addEventListener('touchend', this._onTouchEnd, true);
+    documentElement.addEventListener('mousedown', this._onMouseDown, true);
+
+    // passive events - doesn't call `preventDefault` or `stopPropagation`
+    documentElement.addEventListener('click', this._onClick, { passive: true });
+    documentElement.addEventListener('touchmove', this._onTouchMove, {
+      passive: true,
+    });
+    documentElement.addEventListener('mouseover', this._onMouseOver, {
+      passive: true,
+    });
 
     if (this._isSelectOneElement) {
-      this.containerOuter.element.addEventListener('focus', this._onFocus);
-      this.containerOuter.element.addEventListener('blur', this._onBlur);
+      this.containerOuter.element.addEventListener('focus', this._onFocus, {
+        passive: true,
+      });
+      this.containerOuter.element.addEventListener('blur', this._onBlur, {
+        passive: true,
+      });
     }
 
-    this.input.element.addEventListener('focus', this._onFocus);
-    this.input.element.addEventListener('blur', this._onBlur);
+    this.input.element.addEventListener('keyup', this._onKeyUp, {
+      passive: true,
+    });
+
+    this.input.element.addEventListener('focus', this._onFocus, {
+      passive: true,
+    });
+    this.input.element.addEventListener('blur', this._onBlur, {
+      passive: true,
+    });
 
     if (this.input.element.form) {
-      this.input.element.form.addEventListener('reset', this._onFormReset);
+      this.input.element.form.addEventListener('reset', this._onFormReset, {
+        passive: true,
+      });
     }
 
     this.input.addEventListeners();
   }
 
   _removeEventListeners() {
-    window.delegateEvent.remove('keyup', this._onKeyUp);
-    window.delegateEvent.remove('keydown', this._onKeyDown);
-    window.delegateEvent.remove('click', this._onClick);
-    window.delegateEvent.remove('touchmove', this._onTouchMove);
-    window.delegateEvent.remove('touchend', this._onTouchEnd);
-    window.delegateEvent.remove('mousedown', this._onMouseDown);
-    window.delegateEvent.remove('mouseover', this._onMouseOver);
+    const { documentElement } = document;
+
+    documentElement.removeEventListener('keydown', this._onKeyDown, true);
+    documentElement.removeEventListener('touchend', this._onTouchEnd, true);
+    documentElement.removeEventListener('mousedown', this._onMouseDown, true);
+
+    documentElement.removeEventListener('keyup', this._onKeyUp, {
+      passive: true,
+    });
+    documentElement.removeEventListener('click', this._onClick, {
+      passive: true,
+    });
+    documentElement.removeEventListener('touchmove', this._onTouchMove, {
+      passive: true,
+    });
+    documentElement.removeEventListener('mouseover', this._onMouseOver, {
+      passive: true,
+    });
 
     if (this._isSelectOneElement) {
-      this.containerOuter.element.removeEventListener('focus', this._onFocus);
-      this.containerOuter.element.removeEventListener('blur', this._onBlur);
+      this.containerOuter.element.removeEventListener('focus', this._onFocus, {
+        passive: true,
+      });
+      this.containerOuter.element.removeEventListener('blur', this._onBlur, {
+        passive: true,
+      });
     }
 
-    this.input.element.removeEventListener('focus', this._onFocus);
-    this.input.element.removeEventListener('blur', this._onBlur);
+    this.input.element.removeEventListener('focus', this._onFocus, {
+      passive: true,
+    });
+    this.input.element.removeEventListener('blur', this._onBlur, {
+      passive: true,
+    });
 
     if (this.input.element.form) {
-      this.input.element.form.removeEventListener('reset', this._onFormReset);
+      this.input.element.form.removeEventListener('reset', this._onFormReset, {
+        passive: true,
+      });
     }
 
     this.input.removeEventListeners();
@@ -1267,10 +1339,6 @@ class Choices {
   }
 
   _onKeyUp({ target, keyCode }) {
-    if (target !== this.input.element) {
-      return;
-    }
-
     const { value } = this.input;
     const { activeItems } = this._store;
     const canAddItem = this._canAddItem(activeItems, value);
@@ -1896,6 +1964,7 @@ class Choices {
       element: this._getTemplate('input', this._placeholderValue),
       classNames: this.config.classNames,
       type: this.passedElement.element.type,
+      preventPaste: !this.config.paste,
     });
 
     this.choiceList = new List({
@@ -2162,7 +2231,5 @@ class Choices {
 
   /* =====  End of Private functions  ====== */
 }
-
-Choices.userDefaults = {};
 
 export default Choices;

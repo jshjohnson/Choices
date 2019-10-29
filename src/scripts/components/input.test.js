@@ -46,11 +46,12 @@ describe('components/input', () => {
 
     it('adds event listeners', () => {
       instance.addEventListeners();
-      expect(addEventListenerStub.callCount).to.equal(4);
-      expect(addEventListenerStub.getCall(0).args[0]).to.equal('input');
-      expect(addEventListenerStub.getCall(1).args[0]).to.equal('paste');
-      expect(addEventListenerStub.getCall(2).args[0]).to.equal('focus');
-      expect(addEventListenerStub.getCall(3).args[0]).to.equal('blur');
+      expect(['input', 'paste', 'focus', 'blur']).to.have.members(
+        Array.from(
+          { length: addEventListenerStub.callCount },
+          (v, i) => addEventListenerStub.getCall(i).args[0],
+        ),
+      );
     });
   });
 

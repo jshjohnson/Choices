@@ -105,20 +105,18 @@ export const strToEl = (() => {
   };
 })();
 
-export const sortByAlpha = (a, b) => {
-  const labelA = `${a.label || a.value}`.toLowerCase();
-  const labelB = `${b.label || b.value}`.toLowerCase();
-
-  if (labelA < labelB) {
-    return -1;
-  }
-
-  if (labelA > labelB) {
-    return 1;
-  }
-
-  return 0;
-};
+export const sortByAlpha =
+  /**
+   * @param {{ label?: string, value: string }} a
+   * @param {{ label?: string, value: string }} b
+   * @returns {number}
+   */
+  ({ value, label = value }, { value: value2, label: label2 = value2 }) =>
+    label.localeCompare(label2, [], {
+      sensitivity: 'base',
+      ignorePunctuation: true,
+      numeric: true,
+    });
 
 export const sortByScore = (a, b) => a.score - b.score;
 

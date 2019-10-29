@@ -92,7 +92,7 @@ will be returned. If you target one element, that instance will be returned.
     renderChoiceLimit: -1,
     maxItemCount: -1,
     addItems: true,
-    addItemFilterFn: null,
+    addItemFilter: null,
     removeItems: true,
     removeItemButton: false,
     editItems: false,
@@ -370,23 +370,29 @@ Pass an array of objects:
 
 **Usage:** Whether the scroll position should reset after adding an item.
 
-### addItemFilterFn
+### addItemFilter
 
-**Type:** `Function` **Default:** `null`
+**Type:** `string | RegExp | Function` **Default:** `null`
 
 **Input types affected:** `text`
 
-**Usage:** A filter function that will need to return `true` for a user to successfully add an item.
+**Usage:** A RegExp or string (will be passed to RegExp constructor internally) or filter function that will need to return `true` for a user to successfully add an item.
 
 **Example:**
 
 ```js
 // Only adds items matching the text test
 new Choices(element, {
-  addItemFilterFn: (value) => {
-    return (value !== 'test');
+  addItemFilter: (value) => {
+    return ['orange', 'apple', 'banana'].includes(value);
   };
 });
+
+// only items ending to `-red`
+new Choices(element, {
+  addItemFilter: '-red$';
+});
+
 ```
 
 ### shouldSort
@@ -595,8 +601,23 @@ classNames: {
 **Input types affected:** `text`, `select-one`, `select-multiple`
 
 **Usage:** Function to run on template creation. Through this callback it is possible to provide custom templates for the various components of Choices (see terminology). For Choices to work with custom templates, it is important you maintain the various data attributes defined [here](https://github.com/jshjohnson/Choices/blob/master/src/scripts/templates.js).
+If you want just extend a little original template then you may use `Choices.defaults.templates` to get access to
+original template function.
 
 **Example:**
+
+```js
+const example = new Choices(element, {
+  callbackOnCreateTemplates: () => ({
+    input: (...args) =>
+      Object.assign(Choices.defaults.templates.input.call(this, ...args), {
+        type: 'email',
+      }),
+  }),
+});
+```
+
+or more complex:
 
 ```js
 const example = new Choices(element, {
