@@ -1,5 +1,5 @@
 import { createStore } from 'redux';
-import rootReducer from './../reducers/index';
+import rootReducer from '../reducers/index';
 
 export default class Store {
   constructor() {
@@ -73,7 +73,7 @@ export default class Store {
    * @return {Array} Option objects
    */
   get activeChoices() {
-    const choices = this.choices;
+    const { choices } = this;
     const values = choices.filter(choice => choice.active === true);
 
     return values;
@@ -118,14 +118,14 @@ export default class Store {
    * @return {Array} Group objects
    */
   get activeGroups() {
-    const groups = this.groups;
-    const choices = this.choices;
+    const { groups, choices } = this;
 
     return groups.filter(group => {
       const isActive = group.active === true && group.disabled === false;
       const hasActiveOptions = choices.some(
         choice => choice.active === true && choice.disabled === false,
       );
+
       return isActive && hasActiveOptions;
     }, []);
   }
@@ -140,16 +140,16 @@ export default class Store {
 
   /**
    * Get single choice by it's ID
-   * @return {Object} Found choice
+   * @param {id} string
+   * @return {import('../../../types/index').Choices.Choice | false} Found choice
    */
   getChoiceById(id) {
     if (id) {
-      const choices = this.activeChoices;
-      const foundChoice = choices.find(
-        choice => choice.id === parseInt(id, 10),
-      );
-      return foundChoice;
+      const n = parseInt(id, 10);
+
+      return this.activeChoices.find(choice => choice.id === n);
     }
+
     return false;
   }
 

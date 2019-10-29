@@ -1,3 +1,63 @@
 {
-  "eslint.enable": true
+  "eslint.enable": true,
+  // prevent watch task failures on lint errors
+  "eslint.autoFixOnSave": true,
+  // switch off default VSCode formatting rules
+  "javascript.format.enable": false,
+  // Javascript prettier runs via ESLint
+  "prettier.disableLanguages": ["javascript"],
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "public/assets": true,
+    "**/coverage": true
+  },
+  // Mocha Sidebar settings
+  "mocha.env": {
+    "NODE_ENV": "test"
+  },
+  "mocha.files.glob": "src/scripts/**/*.test.js",
+  "mocha.requires": ["@babel/register", "./config/jsdom.js"],
+  // for Windows collaborators
+  "files.eol": "\n",
+  "files.encoding": "utf8",
+  // associations for some files this project is using
+  "files.associations": {
+    ".browserslistrc": "gitignore",
+    ".huskyrc": "jsonc",
+    ".npmrc": "ini"
+  },
+  // We use NPM as package manager
+  "npm.packageManager": "npm",
+  "npm.autoDetect": "on",
+  "npm.fetchOnlinePackageInfo": true,
+  "eslint.packageManager": "npm",
+  "json.schemas": [
+    // Cypress related settings - https://docs.cypress.io/guides/tooling/intelligent-code-completion.html#Features-1
+    {
+      "fileMatch": ["cypress.json"],
+      "url": "https://on.cypress.io/cypress.schema.json"
+    },
+    // Husky config file
+    {
+      "fileMatch": [".huskyrc"],
+      "url": "http://json.schemastore.org/huskyrc"
+    },
+    // Prettier config
+    {
+      "fileMatch": [".prettierrc.json"],
+      "url": "http://json.schemastore.org/prettierrc"
+    }
+  ]
 }

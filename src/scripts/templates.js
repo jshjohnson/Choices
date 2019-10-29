@@ -1,238 +1,248 @@
-import classNames from 'classnames';
-import { strToEl } from './lib/utils';
+/**
+ * Helpers to create HTML elements used by Choices
+ * Can be overridden by providing `callbackOnCreateTemplates` option
+ * @typedef {import('../../types/index').Choices.Templates} Templates
+ */
 
-export const TEMPLATES = {
+export const TEMPLATES = /** @type {Templates} */ ({
   containerOuter(
-    globalClasses,
-    direction,
+    { containerOuter },
+    dir,
     isSelectElement,
     isSelectOneElement,
     searchEnabled,
     passedElementType,
   ) {
-    const tabIndex = isSelectOneElement ? 'tabindex="0"' : '';
-    let role = isSelectElement ? 'role="listbox"' : '';
-    let ariaAutoComplete = '';
+    const div = Object.assign(document.createElement('div'), {
+      className: containerOuter,
+    });
 
-    if (isSelectElement && searchEnabled) {
-      role = 'role="combobox"';
-      ariaAutoComplete = 'aria-autocomplete="list"';
+    div.dataset.type = passedElementType;
+
+    if (dir) {
+      div.dir = dir;
     }
 
-    return strToEl(`
-      <div
-        class="${globalClasses.containerOuter}"
-        data-type="${passedElementType}"
-        ${role}
-        ${tabIndex}
-        ${ariaAutoComplete}
-        aria-haspopup="true"
-        aria-expanded="false"
-        dir="${direction}"
-        >
-      </div>
-    `);
+    if (isSelectOneElement) {
+      div.tabIndex = 0;
+    }
+
+    if (isSelectElement) {
+      div.setAttribute('role', searchEnabled ? 'combobox' : 'listbox');
+      if (searchEnabled) {
+        div.setAttribute('aria-autocomplete', 'list');
+      }
+    }
+
+    div.setAttribute('aria-haspopup', 'true');
+    div.setAttribute('aria-expanded', 'false');
+
+    return div;
   },
-  containerInner(globalClasses) {
-    return strToEl(`
-      <div class="${globalClasses.containerInner}"></div>
-    `);
+  containerInner({ containerInner }) {
+    return Object.assign(document.createElement('div'), {
+      className: containerInner,
+    });
   },
-  itemList(globalClasses, isSelectOneElement) {
-    const localClasses = classNames(globalClasses.list, {
-      [globalClasses.listSingle]: isSelectOneElement,
-      [globalClasses.listItems]: !isSelectOneElement,
+  itemList({ list, listSingle, listItems }, isSelectOneElement) {
+    return Object.assign(document.createElement('div'), {
+      className: `${list} ${isSelectOneElement ? listSingle : listItems}`,
+    });
+  },
+  placeholder({ placeholder }, value) {
+    return Object.assign(document.createElement('div'), {
+      className: placeholder,
+      innerHTML: value,
+    });
+  },
+
+  item(
+    { item, button, highlightedState, itemSelectable, placeholder },
+    {
+      id,
+      value,
+      label,
+      customProperties,
+      active,
+      disabled,
+      highlighted,
+      placeholder: isPlaceholder,
+    },
+    removeItemButton,
+  ) {
+    const div = Object.assign(document.createElement('div'), {
+      className: item,
+      innerHTML: label,
     });
 
-    return strToEl(`
-      <div class="${localClasses}"></div>
-    `);
-  },
-  placeholder(globalClasses, value) {
-    return strToEl(`
-      <div class="${globalClasses.placeholder}">
-        ${value}
-      </div>
-    `);
-  },
-  item(globalClasses, data, removeItemButton) {
-    const ariaSelected = data.active ? 'aria-selected="true"' : '';
-    const ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
-
-    let localClasses = classNames(globalClasses.item, {
-      [globalClasses.highlightedState]: data.highlighted,
-      [globalClasses.itemSelectable]: !data.highlighted,
-      [globalClasses.placeholder]: data.placeholder,
+    Object.assign(div.dataset, {
+      item: '',
+      id,
+      value,
+      customProperties,
     });
+
+    if (active) {
+      div.setAttribute('aria-selected', 'true');
+    }
+
+    if (disabled) {
+      div.setAttribute('aria-disabled', 'true');
+    }
+
+    if (isPlaceholder) {
+      div.classList.add(placeholder);
+    }
+    div.classList.add(highlighted ? highlightedState : itemSelectable);
 
     if (removeItemButton) {
-      localClasses = classNames(globalClasses.item, {
-        [globalClasses.highlightedState]: data.highlighted,
-        [globalClasses.itemSelectable]: !data.disabled,
-        [globalClasses.placeholder]: data.placeholder,
+      if (disabled) {
+        div.classList.remove(itemSelectable);
+      }
+      div.dataset.deletable = '';
+      /** @todo This MUST be localizable, not hardcoded! */
+      const REMOVE_ITEM_TEXT = 'Remove item';
+      const removeButton = Object.assign(document.createElement('button'), {
+        type: 'button',
+        className: button,
+        innerHTML: REMOVE_ITEM_TEXT,
       });
-
-      return strToEl(`
-        <div
-          class="${localClasses}"
-          data-item
-          data-id="${data.id}"
-          data-value="${data.value}"
-          data-custom-properties='${data.customProperties}'
-          data-deletable
-          ${ariaSelected}
-          ${ariaDisabled}
-          >
-          ${data.label}<!--
-       --><button
-            type="button"
-            class="${globalClasses.button}"
-            data-button
-            aria-label="Remove item: '${data.value}'"
-            >
-            Remove item
-          </button>
-        </div>
-      `);
+      removeButton.setAttribute(
+        'aria-label',
+        `${REMOVE_ITEM_TEXT}: '${value}'`,
+      );
+      removeButton.dataset.button = '';
+      div.appendChild(removeButton);
     }
 
-    return strToEl(`
-      <div
-        class="${localClasses}"
-        data-item
-        data-id="${data.id}"
-        data-value="${data.value}"
-        ${ariaSelected}
-        ${ariaDisabled}
-        >
-        ${data.label}
-      </div>
-    `);
+    return div;
   },
-  choiceList(globalClasses, isSelectOneElement) {
-    const ariaMultiSelectable = !isSelectOneElement
-      ? 'aria-multiselectable="true"'
-      : '';
-
-    return strToEl(`
-      <div
-        class="${globalClasses.list}"
-        dir="ltr"
-        role="listbox"
-        ${ariaMultiSelectable}
-        >
-      </div>
-    `);
-  },
-  choiceGroup(globalClasses, data) {
-    const ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
-    const localClasses = classNames(globalClasses.group, {
-      [globalClasses.itemDisabled]: data.disabled,
+  choiceList({ list }, isSelectOneElement) {
+    const div = Object.assign(document.createElement('div'), {
+      className: list,
     });
 
-    return strToEl(`
-      <div
-        class="${localClasses}"
-        data-group
-        data-id="${data.id}"
-        data-value="${data.value}"
-        role="group"
-        ${ariaDisabled}
-        >
-        <div class="${globalClasses.groupHeading}">${data.value}</div>
-      </div>
-    `);
+    if (!isSelectOneElement) {
+      div.setAttribute('aria-multiselectable', 'true');
+    }
+    div.setAttribute('role', 'listbox');
+
+    return div;
   },
-  choice(globalClasses, data, itemSelectText) {
-    const role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
-    const localClasses = classNames(
-      globalClasses.item,
-      globalClasses.itemChoice,
-      {
-        [globalClasses.itemDisabled]: data.disabled,
-        [globalClasses.itemSelectable]: !data.disabled,
-        [globalClasses.placeholder]: data.placeholder,
-      },
+
+  choiceGroup({ group, groupHeading, itemDisabled }, { id, value, disabled }) {
+    const div = Object.assign(document.createElement('div'), {
+      className: `${group} ${disabled ? itemDisabled : ''}`,
+    });
+
+    div.setAttribute('role', 'group');
+
+    Object.assign(div.dataset, {
+      group: '',
+      id,
+      value,
+    });
+
+    if (disabled) {
+      div.setAttribute('aria-disabled', 'true');
+    }
+
+    div.appendChild(
+      Object.assign(document.createElement('div'), {
+        className: groupHeading,
+        innerHTML: value,
+      }),
     );
 
-    return strToEl(`
-      <div
-        class="${localClasses}"
-        data-select-text="${itemSelectText}"
-        data-choice
-        data-id="${data.id}"
-        data-value="${data.value}"
-        ${
-          data.disabled
-            ? 'data-choice-disabled aria-disabled="true"'
-            : 'data-choice-selectable'
-        }
-        id="${data.elementId}"
-        ${role}
-        >
-        ${data.label}
-      </div>
-    `);
+    return div;
   },
-  input(globalClasses) {
-    const localClasses = classNames(
-      globalClasses.input,
-      globalClasses.inputCloned,
-    );
 
-    return strToEl(`
-      <input
-        type="text"
-        class="${localClasses}"
-        autocomplete="off"
-        autocapitalize="off"
-        spellcheck="false"
-        role="textbox"
-        aria-autocomplete="list"
-        >
-    `);
-  },
-  dropdown(globalClasses) {
-    const localClasses = classNames(
-      globalClasses.list,
-      globalClasses.listDropdown,
-    );
+  choice(
+    { item, itemChoice, itemSelectable, itemDisabled, placeholder },
+    {
+      id,
+      value,
+      label,
+      groupId,
+      elementId,
+      disabled,
+      placeholder: isPlaceholder,
+    },
+    selectText,
+  ) {
+    const div = Object.assign(document.createElement('div'), {
+      id: elementId,
+      innerHTML: label,
+      className: `${item} ${itemChoice} ${
+        disabled ? itemDisabled : itemSelectable
+      } ${isPlaceholder ? placeholder : ''}`,
+    });
 
-    return strToEl(`
-      <div
-        class="${localClasses}"
-        aria-expanded="false"
-        >
-      </div>
-    `);
-  },
-  notice(globalClasses, label, type = '') {
-    const localClasses = classNames(
-      globalClasses.item,
-      globalClasses.itemChoice,
-      {
-        [globalClasses.noResults]: type === 'no-results',
-        [globalClasses.noChoices]: type === 'no-choices',
-      },
-    );
+    div.setAttribute('role', groupId > 0 ? 'treeitem' : 'option');
 
-    return strToEl(`
-      <div class="${localClasses}">
-        ${label}
-      </div>
-    `);
+    Object.assign(div.dataset, {
+      choice: '',
+      id,
+      value,
+      selectText,
+    });
+
+    if (disabled) {
+      div.dataset.choiceDisabled = '';
+      div.setAttribute('aria-disabled', 'true');
+    } else {
+      div.dataset.choiceSelectable = '';
+    }
+
+    return div;
   },
-  option(data) {
-    return strToEl(`
-      <option value="${data.value}" ${data.active ? 'selected' : ''} ${
-      data.disabled ? 'disabled' : ''
-    } ${
-      data.customProperties
-        ? `data-custom-properties=${data.customProperties}`
-        : ''
-    }>${data.label}</option>
-    `);
+  input({ input, inputCloned }, placeholderValue) {
+    const inp = Object.assign(document.createElement('input'), {
+      type: 'text',
+      className: `${input} ${inputCloned}`,
+      autocomplete: 'off',
+      autocapitalize: 'off',
+      spellcheck: false,
+    });
+
+    inp.setAttribute('role', 'textbox');
+    inp.setAttribute('aria-autocomplete', 'list');
+    inp.setAttribute('aria-label', placeholderValue);
+
+    return inp;
   },
-};
+  dropdown({ list, listDropdown }) {
+    const div = document.createElement('div');
+
+    div.classList.add(list, listDropdown);
+    div.setAttribute('aria-expanded', 'false');
+
+    return div;
+  },
+  notice({ item, itemChoice, noResults, noChoices }, innerHTML, type = '') {
+    const classes = [item, itemChoice];
+
+    if (type === 'no-choices') {
+      classes.push(noChoices);
+    } else if (type === 'no-results') {
+      classes.push(noResults);
+    }
+
+    return Object.assign(document.createElement('div'), {
+      innerHTML,
+      className: classes.join(' '),
+    });
+  },
+  option({ label, value, customProperties, active, disabled }) {
+    const opt = new Option(label, value, false, active);
+
+    if (customProperties) {
+      opt.dataset.customProperties = customProperties;
+    }
+    opt.disabled = disabled;
+
+    return opt;
+  },
+});
 
 export default TEMPLATES;

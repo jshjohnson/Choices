@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "target": "es2020",
+    "lib": ["esnext", "dom"],
+    "types": ["cypress"],
+    "strict": true,
+    "moduleResolution": "node",
+    /* Additional Checks */
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  }
+}

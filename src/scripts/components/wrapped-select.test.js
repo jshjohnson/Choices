@@ -1,8 +1,9 @@
 import { expect } from 'chai';
-import { stub } from 'sinon';
+import { stub, spy } from 'sinon';
 import WrappedElement from './wrapped-element';
 import WrappedSelect from './wrapped-select';
 import { DEFAULT_CLASSNAMES } from '../constants';
+import Templates from '../templates';
 
 describe('components/wrappedSelect', () => {
   let instance;
@@ -11,11 +12,16 @@ describe('components/wrappedSelect', () => {
   beforeEach(() => {
     element = document.createElement('select');
     element.id = 'target';
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 0; i <= 4; i++) {
       const option = document.createElement('option');
 
-      option.value = `Value ${i}`;
-      option.innerHTML = `Label ${i}`;
+      if (i === 0) {
+        option.value = '';
+        option.innerHTML = 'Placeholder label';
+      } else {
+        option.value = `Value ${i}`;
+        option.innerHTML = `Label ${i}`;
+      }
 
       if (i === 1) {
         option.setAttribute('placeholder', '');
@@ -28,6 +34,7 @@ describe('components/wrappedSelect', () => {
     instance = new WrappedSelect({
       element: document.getElementById('target'),
       classNames: DEFAULT_CLASSNAMES,
+      template: spy(Templates.option),
     });
   });
 
@@ -67,8 +74,16 @@ describe('components/wrappedSelect', () => {
   });
 
   describe('placeholderOption getter', () => {
-    it('returns option element with placeholder attribute', () => {
+    it('returns option element with empty value attribute', () => {
       expect(instance.placeholderOption).to.be.instanceOf(HTMLOptionElement);
+      expect(instance.placeholderOption.value).to.equal('');
+    });
+
+    it('returns option element with placeholder attribute as fallback', () => {
+      instance.element.removeChild(instance.element.firstChild);
+
+      expect(instance.placeholderOption).to.be.instanceOf(HTMLOptionElement);
+      expect(instance.placeholderOption.value).to.equal('Value 1');
     });
   });
 
@@ -133,6 +148,7 @@ describe('components/wrappedSelect', () => {
       selectElement.appendChild(fragment);
 
       expect(fragment).to.be.instanceOf(DocumentFragment);
+      expect(instance.template.callCount).to.equal(2);
       expect(selectElement.options.length).to.equal(2);
       expect(selectElement.options[0].value).to.equal(options[0].value);
       expect(selectElement.options[1].value).to.equal(options[1].value);
@@ -142,7 +158,7 @@ describe('components/wrappedSelect', () => {
   describe('appendDocFragment', () => {
     it('empties contents of element', () => {
       expect(instance.element.getElementsByTagName('option').length).to.equal(
-        4,
+        5,
       );
       instance.appendDocFragment(document.createDocumentFragment());
       expect(instance.element.getElementsByTagName('option').length).to.equal(

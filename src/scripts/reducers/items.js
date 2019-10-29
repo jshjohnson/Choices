@@ -23,6 +23,7 @@ export default function items(state = defaultState, action) {
       return newState.map(obj => {
         const item = obj;
         item.highlighted = false;
+
         return item;
       });
     }
@@ -34,6 +35,7 @@ export default function items(state = defaultState, action) {
         if (item.id === action.id) {
           item.active = false;
         }
+
         return item;
       });
     }
@@ -44,6 +46,7 @@ export default function items(state = defaultState, action) {
         if (item.id === action.id) {
           item.highlighted = action.highlighted;
         }
+
         return item;
       });
     }

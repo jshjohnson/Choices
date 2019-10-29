@@ -46,11 +46,12 @@ describe('components/input', () => {
 
     it('adds event listeners', () => {
       instance.addEventListeners();
-      expect(addEventListenerStub.callCount).to.equal(4);
-      expect(addEventListenerStub.getCall(0).args[0]).to.equal('input');
-      expect(addEventListenerStub.getCall(1).args[0]).to.equal('paste');
-      expect(addEventListenerStub.getCall(2).args[0]).to.equal('focus');
-      expect(addEventListenerStub.getCall(3).args[0]).to.equal('blur');
+      expect(['input', 'paste', 'focus', 'blur']).to.have.members(
+        Array.from(
+          { length: addEventListenerStub.callCount },
+          (v, i) => addEventListenerStub.getCall(i).args[0],
+        ),
+      );
     });
   });
 
@@ -264,61 +265,21 @@ describe('components/input', () => {
     });
   });
 
+  /**
+   * Blocked by lack of ch support in JSDOM
+   * @see {@link https://github.com/jsdom/cssstyle/pull/107}
+   *
   describe('setWidth', () => {
-    let calcWidthStub;
-    const inputWidth = '200px';
-
-    beforeEach(() => {
-      calcWidthStub = stub(instance, 'calcWidth').callsArgWith(0, inputWidth);
-    });
-
-    afterEach(() => {
-      calcWidthStub.restore();
-    });
-
-    describe('with a placeholder', () => {
-      describe('when value length is greater or equal to 75% of the placeholder length', () => {
-        it('sets the width of the element based on input value', () => {
-          instance._placeholderValue = 'This is a test';
-          instance.element.value = 'This is a test';
-          expect(instance.element.style.width).to.not.equal(inputWidth);
-          instance.setWidth();
-          expect(calcWidthStub.callCount).to.equal(1);
-          expect(instance.element.style.width).to.equal(inputWidth);
-        });
-      });
-
-      describe('when width is enforced', () => {
-        it('sets the width of the element based on input value', () => {
-          instance._placeholderValue = 'This is a test';
-          instance.element.value = '';
-          expect(instance.element.style.width).to.not.equal(inputWidth);
-          instance.setWidth(true);
-          expect(calcWidthStub.callCount).to.equal(1);
-          expect(instance.element.style.width).to.equal(inputWidth);
-        });
-      });
-
-      describe('when value length is less than 75% of the placeholder length', () => {
-        it('does not set the width of the element', () => {
-          instance._placeholderValue = 'This is a test';
-          instance.element.value = 'Test';
-          instance.setWidth();
-          expect(calcWidthStub.callCount).to.equal(0);
-        });
-      });
-    });
-
-    describe('without a placeholder', () => {
-      it('sets the width of the element based on input value', () => {
-        instance.placeholder = null;
-        expect(instance.element.style.width).to.not.equal(inputWidth);
-        instance.setWidth();
-        expect(calcWidthStub.callCount).to.equal(1);
-        expect(instance.element.style.width).to.equal(inputWidth);
-      });
+    it('sets the width of the element based on input value and placeholder', () => {
+      instance.placeholder = 'This is a placeholder';
+      instance.element.value = 'This is a value';
+      expect(instance.element.style.width).to.not.equal('16ch');
+      instance.setWidth();
+      expect(instance.element.style.width).to.equal('16ch');
+      expect(instance.element.style.minWidth).to.equal('22ch');
     });
   });
+  */
 
   describe('placeholder setter', () => {
     it('sets value of element to passed placeholder', () => {

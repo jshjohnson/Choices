@@ -1,0 +1,32 @@
+name: Cypress
+
+on: [pull_request]
+
+jobs:
+  test-e2e:
+    name: integration tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+
+      - name: Install dependencies
+        run: npm ci
+        env:
+          HUSKY_SKIP_INSTALL: true
+
+      - name: run Cypress
+        run: npx run-p --race start cypress:run
+        env:
+          CI: true
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          DEBUG: commit-info,cypress:server:record
+          # https://docs.cypress.io/guides/guides/continuous-integration.html#Environment-variables
+          COMMIT_INFO_BRANCH: ${{ github.head_ref }}
+          COMMIT_INFO_AUTHOR: ${{ github.event.sender.login }}
+          COMMIT_INFO_SHA: ${{ github.event.after }}

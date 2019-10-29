@@ -1,0 +1,38 @@
+name: Lint
+
+on:
+  pull_request:
+    paths:
+      - 'src/scripts/**'
+      - package-lock.json
+      - '.browserslistrc'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+
+      - name: Install dependencies
+        run: npm install --no-optional --no-audit --ignore-scripts
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+          HUSKY_SKIP_INSTALL: true
+
+      - name: run eslint
+        run: |
+          CHANGED_JS=$(git --no-pager diff --name-only ..origin/master | grep '^src\/scripts\/.*\.js$' | xargs ls -d 2>/dev/null | paste -sd " " -)
+          if [[ -z $(sed -e 's/[[:space:]]*$//' <<<${CHANGED_JS}) ]]; then CHANGED_JS="src/scripts"; fi
+          echo $CHANGED_JS
+          node node_modules/eslint/bin/eslint.js $CHANGED_JS
+
+      - name: Lint JS bundle
+        run: |
+          npm run js:build
+          npx eslint --no-ignore ./public/assets/scripts/*.js

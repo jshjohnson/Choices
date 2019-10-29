@@ -1,0 +1,42 @@
+name: BundleSize
+
+on:
+  pull_request:
+    paths:
+      - 'src/scripts/**'
+      - 'src/styles/**'
+      - 'package-lock.json'
+      - '.browserslistrc'
+
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+
+      - name: Install dependencies and build
+        run: |
+                npm ci
+                npm run build
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+          HUSKY_SKIP_INSTALL: true
+
+      # we don't need to build here, as even minized assets expected to be commited
+
+      - run: npx bundlesize
+        env:
+          CI: true
+          BUNDLESIZE_GITHUB_TOKEN: ${{secrets.BUNDLESIZE_GITHUB_TOKEN}}
+          CI_REPO_NAME: ${{ github.event.repository.name }}
+          CI_REPO_OWNER: ${{ github.event.organization.login }}
+          CI_COMMIT_SHA: ${{ github.event.after }}
+          GIT_COMMIT: ${{ github.event.after }}
+          CI_BRANCH: ${{ github.head_ref }}
+          FORCE_COLOR: 2

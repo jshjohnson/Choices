@@ -15,10 +15,15 @@ export default class WrappedElement {
     return this.element.value;
   }
 
+  set value(value) {
+    // you must define setter here otherwise it will be readonly property
+    this.element.value = value;
+  }
+
   conceal() {
     // Hide passed input
     this.element.classList.add(this.classNames.input);
-    this.element.classList.add(this.classNames.hiddenState);
+    this.element.hidden = true;
 
     // Remove element from tab index
     this.element.tabIndex = '-1';
@@ -30,14 +35,13 @@ export default class WrappedElement {
       this.element.setAttribute('data-choice-orig-style', origStyle);
     }
 
-    this.element.setAttribute('aria-hidden', 'true');
     this.element.setAttribute('data-choice', 'active');
   }
 
   reveal() {
     // Reinstate passed element
     this.element.classList.remove(this.classNames.input);
-    this.element.classList.remove(this.classNames.hiddenState);
+    this.element.hidden = false;
     this.element.removeAttribute('tabindex');
 
     // Recover original styles if any
@@ -49,11 +53,11 @@ export default class WrappedElement {
     } else {
       this.element.removeAttribute('style');
     }
-    this.element.removeAttribute('aria-hidden');
     this.element.removeAttribute('data-choice');
 
     // Re-assign values - this is weird, I know
-    this.element.value = this.element.value;
+    // @todo Figure out why we need to do this
+    this.element.value = this.element.value; // eslint-disable-line no-self-assign
   }
 
   enable() {

@@ -1,0 +1,42 @@
+name: Unit Tests
+
+on:
+  pull_request:
+    paths:
+      - 'src/scripts/**'
+      - package-lock.json
+      - '.browserslistrc'
+
+jobs:
+  test-unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 10
+
+      - name: Install dependencies
+        run: npm install --no-optional --no-audit --ignore-scripts
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+          HUSKY_SKIP_INSTALL: true
+
+      - run: npm run coverage
+        env:
+          FORCE_COLOR: 2
+
+      - name: Upload coverage to Codecov
+        run: bash <(curl -s https://codecov.io/bash)
+          -f ./coverage/lcov.info
+          -B ${{ github.head_ref }}
+          -C ${{ github.sha }}
+          -Z || echo 'Codecov upload failed'
+        env:
+          CI: true
+          GITLAB_CI: true # pretend we are GitLab CI, while Codecov adding support for Github Actions
+          CODECOV_ENV: github-action
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}

@@ -35,7 +35,6 @@ describe('constants', () => {
           'openState',
           'disabledState',
           'highlightedState',
-          'hiddenState',
           'flippedState',
           'loadingState',
           'noResults',
@@ -56,7 +55,7 @@ describe('constants', () => {
         expect(DEFAULT_CONFIG.renderChoiceLimit).to.be.a('number');
         expect(DEFAULT_CONFIG.maxItemCount).to.be.a('number');
         expect(DEFAULT_CONFIG.addItems).to.be.a('boolean');
-        expect(DEFAULT_CONFIG.addItemFilterFn).to.equal(null);
+        expect(DEFAULT_CONFIG.addItemFilter).to.equal(null);
         expect(DEFAULT_CONFIG.removeItems).to.be.a('boolean');
         expect(DEFAULT_CONFIG.removeItemButton).to.be.a('boolean');
         expect(DEFAULT_CONFIG.editItems).to.be.a('boolean');

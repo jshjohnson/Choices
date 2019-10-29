@@ -1,12 +1,20 @@
-import { calcWidthOfInput, sanitise } from '../lib/utils';
+import { sanitise } from '../lib/utils';
 
 export default class Input {
-  constructor({ element, type, classNames, placeholderValue }) {
-    Object.assign(this, { element, type, classNames, placeholderValue });
+  /**
+   *
+   * @typedef {import('../../../types/index').Choices.passedElement} passedElement
+   * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
+   * @param {{element: HTMLInputElement, type: passedElement['type'], classNames: ClassNames, preventPaste: boolean }} p
+   */
+  constructor({ element, type, classNames, preventPaste }) {
     this.element = element;
+    this.type = type;
     this.classNames = classNames;
+    this.preventPaste = preventPaste;
+
     this.isFocussed = this.element === document.activeElement;
-    this.isDisabled = false;
+    this.isDisabled = element.disabled;
     this._onPaste = this._onPaste.bind(this);
     this._onInput = this._onInput.bind(this);
     this._onFocus = this._onFocus.bind(this);
@@ -17,34 +25,38 @@ export default class Input {
     this.element.placeholder = placeholder;
   }
 
-  set value(value) {
-    this.element.value = value;
-  }
-
   get value() {
     return sanitise(this.element.value);
   }
 
-  addEventListeners() {
-    this.element.addEventListener('input', this._onInput);
-    this.element.addEventListener('paste', this._onPaste);
-    this.element.addEventListener('focus', this._onFocus);
-    this.element.addEventListener('blur', this._onBlur);
+  set value(value) {
+    this.element.value = value;
+  }
 
-    if (this.element.form) {
-      this.element.form.addEventListener('reset', this._onFormReset);
-    }
+  addEventListeners() {
+    this.element.addEventListener('paste', this._onPaste);
+    this.element.addEventListener('input', this._onInput, {
+      passive: true,
+    });
+    this.element.addEventListener('focus', this._onFocus, {
+      passive: true,
+    });
+    this.element.addEventListener('blur', this._onBlur, {
+      passive: true,
+    });
   }
 
   removeEventListeners() {
-    this.element.removeEventListener('input', this._onInput);
+    this.element.removeEventListener('input', this._onInput, {
+      passive: true,
+    });
     this.element.removeEventListener('paste', this._onPaste);
-    this.element.removeEventListener('focus', this._onFocus);
-    this.element.removeEventListener('blur', this._onBlur);
-
-    if (this.element.form) {
-      this.element.form.removeEventListener('reset', this._onFormReset);
-    }
+    this.element.removeEventListener('focus', this._onFocus, {
+      passive: true,
+    });
+    this.element.removeEventListener('blur', this._onBlur, {
+      passive: true,
+    });
   }
 
   enable() {
@@ -89,30 +101,12 @@ export default class Input {
   /**
    * Set the correct input width based on placeholder
    * value or input value
-   * @return
    */
-  setWidth(enforceWidth) {
-    const callback = width => {
-      this.element.style.width = width;
-    };
-
-    if (this._placeholderValue) {
-      // If there is a placeholder, we only want to set the width of the input when it is a greater
-      // length than 75% of the placeholder. This stops the input jumping around.
-      const valueHasDesiredLength =
-        this.element.value.length >= this._placeholderValue.length / 1.25;
-
-      if ((this.element.value && valueHasDesiredLength) || enforceWidth) {
-        this.calcWidth(callback);
-      }
-    } else {
-      // If there is no placeholder, resize input to contents
-      this.calcWidth(callback);
-    }
-  }
-
-  calcWidth(callback) {
-    return calcWidthOfInput(this.element, callback);
+  setWidth() {
+    // Resize input to contents or placeholder
+    const { style, value, placeholder } = this.element;
+    style.minWidth = `${placeholder.length + 1}ch`;
+    style.width = `${value.length + 1}ch`;
   }
 
   setActiveDescendant(activeDescendantID) {
@@ -130,8 +124,7 @@ export default class Input {
   }
 
   _onPaste(event) {
-    const { target } = event;
-    if (target === this.element && this.preventPaste) {
+    if (this.preventPaste) {
       event.preventDefault();
     }
   }

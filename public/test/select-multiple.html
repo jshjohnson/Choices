@@ -1,28 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=no"
+    />
+    <title>Choices</title>
+    <meta
+      name="description"
+      itemprop="description"
+      content="A lightweight, configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency."
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="../assets/images/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../assets/images/favicon-32x32.png"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../assets/images/favicon-16x16.png"
+      sizes="16x16"
+    />
+    <link rel="manifest" href="../assets/images/manifest.json" />
+    <link
+      rel="mask-icon"
+      href="../assets/images/safari-pinned-tab.svg"
+      color="#00bcd4"
+    />
+    <link rel="shortcut icon" href="../assets/images/favicon.ico" />
+    <meta
+      name="msapplication-config"
+      content="../assets/images/browserconfig.xml"
+    />
+    <meta name="theme-color" content="#ffffff" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-  <title>Choices</title>
-  <meta name=description itemprop=description content="A lightweight, configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.">
-  <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="../assets/images/favicon-32x32.png" sizes="32x32">
-  <link rel="icon" type="image/png" href="../assets/images/favicon-16x16.png" sizes="16x16">
-  <link rel="manifest" href="../assets/images/manifest.json">
-  <link rel="mask-icon" href="../assets/images/safari-pinned-tab.svg" color="#00bcd4">
-  <link rel="shortcut icon" href="../assets/images/favicon.ico">
-  <meta name="msapplication-config" content="../assets/images/browserconfig.xml">
-  <meta name="theme-color" content="#ffffff">
+    <!-- Ignore these -->
+    <link rel="stylesheet" href="../assets/styles/base.min.css?version=6.0.3" />
+    <!-- End ignore these -->
 
-  <!-- Ignore these -->
-  <link rel="stylesheet" href="../assets/styles/base.min.css?version=6.0.3">
-  <!-- End ignore these -->
-
-  <!-- Choices includes -->
-  <link rel="stylesheet" href="../assets/styles/choices.min.css?version=6.0.3">
-  <script src="../assets/scripts/choices.min.js?version=6.0.3"></script>
-  <!-- End Choices includes -->
+    <!-- Choices includes -->
+    <link
+      rel="stylesheet"
+      href="../assets/styles/choices.min.css?version=6.0.3"
+    />
+    <script src="../assets/scripts/choices.min.js?version=6.0.3"></script>
+    <!-- End Choices includes -->
   </head>
 
   <body>
@@ -33,7 +63,12 @@
           <label for="choices-basic">Basic</label>
           <button class="disable push-bottom">Disable</button>
           <button class="enable push-bottom">Enable</button>
-          <select class="form-control" name="choices-basic" id="choices-basic" multiple>
+          <select
+            class="form-control"
+            name="choices-basic"
+            id="choices-basic"
+            multiple
+          >
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Find me">Choice 3</option>
@@ -43,7 +78,12 @@
 
         <div data-test-hook="remove-button">
           <label for="choices-remove-button">Remove button</label>
-          <select class="form-control" name="choices-remove-button" id="choices-remove-button" multiple>
+          <select
+            class="form-control"
+            name="choices-remove-button"
+            id="choices-remove-button"
+            multiple
+          >
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -53,7 +93,12 @@
 
         <div data-test-hook="disabled-choice">
           <label for="choices-disabled-choice">Disabled choice</label>
-          <select class="form-control" name="choices-disabled-choice" id="choices-disabled-choice" multiple>
+          <select
+            class="form-control"
+            name="choices-disabled-choice"
+            id="choices-disabled-choice"
+            multiple
+          >
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -63,7 +108,12 @@
 
         <div data-test-hook="add-items-disabled">
           <label for="choices-add-items-disabled">Add items disabled</label>
-          <select class="form-control" name="choices-add-items-disabled" id="choices-add-items-disabled" multiple>
+          <select
+            class="form-control"
+            name="choices-add-items-disabled"
+            id="choices-add-items-disabled"
+            multiple
+          >
             <option value="Choice 1" selected>Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -72,7 +122,13 @@
 
         <div data-test-hook="disabled-via-attr">
           <label for="choices-disabled-via-attr">Disabled via attribute</label>
-          <select class="form-control" name="choices-disabled-via-attr" id="choices-disabled-via-attr" multiple disabled>
+          <select
+            class="form-control"
+            name="choices-disabled-via-attr"
+            id="choices-disabled-via-attr"
+            multiple
+            disabled
+          >
             <option value="Choice 1" selected>Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -81,7 +137,12 @@
 
         <div data-test-hook="selection-limit">
           <label for="choices-selection-limit">Input limit</label>
-          <select class="form-control" name="choices-selection-limit" id="choices-selection-limit" multiple>
+          <select
+            class="form-control"
+            name="choices-selection-limit"
+            id="choices-selection-limit"
+            multiple
+          >
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -93,7 +154,12 @@
 
         <div data-test-hook="prepend-append">
           <label for="choices-prepend-append">Prepend/append</label>
-          <select class="form-control" name="choices-prepend-append" id="choices-prepend-append" multiple>
+          <select
+            class="form-control"
+            name="choices-prepend-append"
+            id="choices-prepend-append"
+            multiple
+          >
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -102,7 +168,12 @@
 
         <div data-test-hook="render-choice-limit">
           <label for="choices-render-choice-limit">Render choice limit</label>
-          <select class="form-control" name="choices-render-choice-limit" id="choices-render-choice-limit" multiple>
+          <select
+            class="form-control"
+            name="choices-render-choice-limit"
+            id="choices-render-choice-limit"
+            multiple
+          >
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -111,7 +182,12 @@
 
         <div data-test-hook="search-floor">
           <label for="choices-search-floor">Search floor</label>
-          <select class="form-control" name="choices-search-floor" id="choices-search-floor" multiple>
+          <select
+            class="form-control"
+            name="choices-search-floor"
+            id="choices-search-floor"
+            multiple
+          >
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -120,7 +196,12 @@
 
         <div data-test-hook="placeholder">
           <label for="choices-placeholder">Placeholder</label>
-          <select class="form-control" name="choices-placeholder" id="choices-placeholder" multiple>
+          <select
+            class="form-control"
+            name="choices-placeholder"
+            id="choices-placeholder"
+            multiple
+          >
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -129,12 +210,22 @@
 
         <div data-test-hook="remote-data">
           <label for="choices-remote-data">Remote data</label>
-          <select class="form-control" name="choices-remote-data" id="choices-remote-data" multiple></select>
+          <select
+            class="form-control"
+            name="choices-remote-data"
+            id="choices-remote-data"
+            multiple
+          ></select>
         </div>
 
         <div data-test-hook="scrolling-dropdown">
           <label for="choices-scrolling-dropdown">Scrolling dropdown</label>
-          <select class="form-control" name="choices-scrolling-dropdown" id="choices-scrolling-dropdown" multiple>
+          <select
+            class="form-control"
+            name="choices-scrolling-dropdown"
+            id="choices-scrolling-dropdown"
+            multiple
+          >
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -155,7 +246,12 @@
 
         <div data-test-hook="groups">
           <label for="choices-groups">Choice groups</label>
-          <select class="form-control" name="choices-groups" id="choices-groups" multiple>
+          <select
+            class="form-control"
+            name="choices-groups"
+            id="choices-groups"
+            multiple
+          >
             <optgroup label="UK">
               <option value="London">London</option>
               <option value="Manchester">Manchester</option>
@@ -171,26 +267,47 @@
 
         <div data-test-hook="custom-properties">
           <label for="choices-custom-properties">Custom properties</label>
-          <select class="form-control" name="choices-custom-properties" id="choices-custom-properties" multiple></select>
+          <select
+            class="form-control"
+            name="choices-custom-properties"
+            id="choices-custom-properties"
+            multiple
+          ></select>
         </div>
 
         <div data-test-hook="non-string-values">
           <label for="choices-non-string-values">Non-string values</label>
-          <select class="form-control" name="choices-non-string-values" id="choices-non-string-values"></select>
+          <select
+            class="form-control"
+            name="choices-non-string-values"
+            id="choices-non-string-values"
+          ></select>
         </div>
 
         <div data-test-hook="within-form">
           <form>
             <label for="choices-within-form">Within form</label>
-            <select class="form-control" name="choices-within-form" id="choices-within-form" multiple>
+            <select
+              class="form-control"
+              name="choices-within-form"
+              id="choices-within-form"
+              multiple
+            >
               <option value="Choice 1">Choice 1</option>
             </select>
           </form>
         </div>
 
         <div data-test-hook="set-choice-by-value">
-          <label for="choices-set-choice-by-value">Dynamically set choice by value</label>
-          <select class="form-control" name="choices-set-choice-by-value" id="choices-set-choice-by-value" multiple>
+          <label for="choices-set-choice-by-value"
+            >Dynamically set choice by value</label
+          >
+          <select
+            class="form-control"
+            name="choices-set-choice-by-value"
+            id="choices-set-choice-by-value"
+            multiple
+          >
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -199,7 +316,12 @@
 
         <div data-test-hook="search-by-label">
           <label for="choices-search-by-label">Search by label</label>
-          <select class="form-control" name="choices-search-by-label" id="choices-search-by-label" multiple>
+          <select
+            class="form-control"
+            name="choices-search-by-label"
+            id="choices-search-by-label"
+            multiple
+          >
             <option value="value1">label1</option>
             <option value="value2">label2</option>
           </select>
@@ -210,13 +332,17 @@
       document.addEventListener('DOMContentLoaded', function() {
         const choicesBasic = new Choices('#choices-basic');
 
-        document.querySelector('button.disable').addEventListener('click', () => {
-          choicesBasic.disable();
-        });
+        document
+          .querySelector('button.disable')
+          .addEventListener('click', () => {
+            choicesBasic.disable();
+          });
 
-        document.querySelector('button.enable').addEventListener('click', () => {
-          choicesBasic.enable();
-        });
+        document
+          .querySelector('button.enable')
+          .addEventListener('click', () => {
+            choicesBasic.enable();
+          });
 
         new Choices('#choices-remove-button', {
           removeItemButton: true,
@@ -254,16 +380,9 @@
 
         new Choices('#choices-remote-data', {
           shouldSort: false,
-        }).ajax((callback) => {
-          fetch('/data')
-            .then((response) => {
-              response.json().then((data) => {
-                callback(data, 'value', 'label');
-              });
-            })
-            .catch((error) => {
-              console.error(error);
-            });
+        }).setChoices(async () => {
+          const data = await fetch('/data');
+          return data.json();
         });
 
         new Choices('#choices-scrolling-dropdown', {
@@ -331,10 +450,12 @@
 
         new Choices('#choices-within-form');
 
-        new Choices('#choices-set-choice-by-value').setChoiceByValue('Choice 2');
+        new Choices('#choices-set-choice-by-value').setChoiceByValue(
+          'Choice 2',
+        );
 
         new Choices('#choices-search-by-label', { searchFields: ['label'] });
       });
     </script>
   </body>
-  </html>
+</html>

@@ -36,22 +36,15 @@ export const wrap = (element, wrapper = document.createElement('div')) => {
   } else {
     element.parentNode.appendChild(wrapper);
   }
+
   return wrapper.appendChild(element);
 };
 
-export const findAncestorByAttrName = (el, attr) => {
-  let target = el;
-
-  while (target) {
-    if (target.hasAttribute(attr)) {
-      return target;
-    }
-
-    target = target.parentElement;
-  }
-
-  return null;
-};
+/**
+ * @param {HTMLElement} el
+ * @param {string} attr
+ */
+export const findAncestorByAttrName = (el, attr) => el.closest(`[${attr}]`);
 
 export const getAdjacentEl = (startEl, className, direction = 1) => {
   if (!startEl || !className) {
@@ -100,6 +93,7 @@ export const sanitise = value => {
 
 export const strToEl = (() => {
   const tmpEl = document.createElement('div');
+
   return str => {
     const cleanedInput = str.trim();
     tmpEl.innerHTML = cleanedInput;
@@ -113,67 +107,18 @@ export const strToEl = (() => {
   };
 })();
 
-/**
- * Determines the width of a passed input based on its value and passes
- * it to the supplied callback function.
- */
-export const calcWidthOfInput = (input, callback) => {
-  const value = input.value || input.placeholder;
-  let width = input.offsetWidth;
-
-  if (value) {
-    const testEl = strToEl(`<span>${sanitise(value)}</span>`);
-    testEl.style.position = 'absolute';
-    testEl.style.padding = '0';
-    testEl.style.top = '-9999px';
-    testEl.style.left = '-9999px';
-    testEl.style.width = 'auto';
-    testEl.style.whiteSpace = 'pre';
-
-    if (document.body.contains(input) && window.getComputedStyle) {
-      const inputStyle = window.getComputedStyle(input);
-
-      if (inputStyle) {
-        testEl.style.fontSize = inputStyle.fontSize;
-        testEl.style.fontFamily = inputStyle.fontFamily;
-        testEl.style.fontWeight = inputStyle.fontWeight;
-        testEl.style.fontStyle = inputStyle.fontStyle;
-        testEl.style.letterSpacing = inputStyle.letterSpacing;
-        testEl.style.textTransform = inputStyle.textTransform;
-        testEl.style.padding = inputStyle.padding;
-      }
-    }
-
-    document.body.appendChild(testEl);
-
-    requestAnimationFrame(() => {
-      if (value && testEl.offsetWidth !== input.offsetWidth) {
-        width = testEl.offsetWidth + 4;
-      }
-
-      document.body.removeChild(testEl);
-
-      callback.call(this, `${width}px`);
+export const sortByAlpha =
+  /**
+   * @param {{ label?: string, value: string }} a
+   * @param {{ label?: string, value: string }} b
+   * @returns {number}
+   */
+  ({ value, label = value }, { value: value2, label: label2 = value2 }) =>
+    label.localeCompare(label2, [], {
+      sensitivity: 'base',
+      ignorePunctuation: true,
+      numeric: true,
     });
-  } else {
-    callback.call(this, `${width}px`);
-  }
-};
-
-export const sortByAlpha = (a, b) => {
-  const labelA = `${a.label || a.value}`.toLowerCase();
-  const labelB = `${b.label || b.value}`.toLowerCase();
-
-  if (labelA < labelB) {
-    return -1;
-  }
-
-  if (labelA > labelB) {
-    return 1;
-  }
-
-  return 0;
-};
 
 export const sortByScore = (a, b) => a.score - b.score;
 
@@ -190,19 +135,6 @@ export const dispatchEvent = (element, type, customArgs = null) => {
 export const getWindowHeight = () => {
   const windowHeight = Math.ceil(window.devicePixelRatio * window.innerHeight);
   return windowHeight + window.pageYOffset;
-};
-
-export const fetchFromObject = (object, path) => {
-  const index = path.indexOf('.');
-
-  if (index > -1) {
-    return fetchFromObject(
-      object[path.substring(0, index)],
-      path.substr(index + 1),
-    );
-  }
-
-  return object[path];
 };
 
 export const isIE11 = () =>

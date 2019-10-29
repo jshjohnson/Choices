@@ -1,0 +1,17 @@
+{
+  // See http://go.microsoft.com/fwlink/?LinkId=827846
+  // for the documentation about the extensions.json format
+  "recommendations": [
+    // we enforce ESLint rules, so, recommend extension
+    "dbaeumer.vscode-eslint",
+    // we use prettier, so, recommend extension
+    "esbenp.prettier-vscode",
+    // we are on GitHub, so, recommend extension
+    "github.vscode-pull-request-github",
+    // needed for our configured debug configuration with Chrome
+    "msjsdiag.debugger-for-chrome"
+    // Mocha recommended - https://mochajs.org/#mocha-sidebar-vs-code,
+    // but it's buggy
+    // "maty.vscode-mocha-sidebar"
+  ]
+}

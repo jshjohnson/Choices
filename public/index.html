@@ -1,590 +1,928 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=no"
+    />
+    <title>Choices</title>
+    <meta
+      name="description"
+      itemprop="description"
+      content="A lightweight, configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency."
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="assets/images/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/images/favicon-32x32.png"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="assets/images/favicon-16x16.png"
+      sizes="16x16"
+    />
+    <link rel="manifest" href="assets/images/manifest.json" />
+    <link
+      rel="mask-icon"
+      href="assets/images/safari-pinned-tab.svg"
+      color="#00bcd4"
+    />
+    <link rel="shortcut icon" href="assets/images/favicon.ico" />
+    <meta
+      name="msapplication-config"
+      content="/assets/images/browserconfig.xml"
+    />
+    <meta name="theme-color" content="#ffffff" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-  <title>Choices</title>
-  <meta name=description itemprop=description content="A lightweight, configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/images/apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="assets/images/favicon-32x32.png" sizes="32x32">
-  <link rel="icon" type="image/png" href="assets/images/favicon-16x16.png" sizes="16x16">
-  <link rel="manifest" href="assets/images/manifest.json">
-  <link rel="mask-icon" href="assets/images/safari-pinned-tab.svg" color="#00bcd4">
-  <link rel="shortcut icon" href="assets/images/favicon.ico">
-  <meta name="msapplication-config" content="/assets/images/browserconfig.xml">
-  <meta name="theme-color" content="#ffffff">
+    <!-- Ignore these -->
+    <link rel="stylesheet" href="assets/styles/base.min.css" />
+    <!-- End ignore these -->
 
-  <!-- Ignore these -->
-  <link rel="stylesheet" href="assets/styles/base.min.css?version=7.0.0">
-  <!-- End ignore these -->
+    <!-- Optional includes -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es5%2Ces6%2CArray.prototype.includes%2Cfetch%2CCustomEvent%2CElement.prototype.closest"></script>
+    <!-- End optional includes -->
 
-  <!-- Optional includes -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es5%2Ces6%2CArray.prototype.includes%2Cfetch%2CCustomEvent"></script>
-  <!-- End optional includes -->
+    <!-- Choices includes -->
+    <link rel="stylesheet" href="assets/styles/choices.min.css" />
+    <script src="assets/scripts/choices.min.js"></script>
+    <!-- End Choices includes -->
 
-  <!-- Choices includes -->
-  <link rel="stylesheet" href="assets/styles/choices.min.css?version=7.0.0">
-  <script src="assets/scripts/choices.min.js?version=7.0.0"></script>
-  <!-- End Choices includes -->
-
-  <!--[if lt IE 9]>
-    <style>
-        .hidden-ie { display: none; }
-        .visible-ie { display: block; }
-    </style>
+    <!--[if lt IE 9]>
+      <style>
+        .hidden-ie {
+          display: none;
+        }
+        .visible-ie {
+          display: block;
+        }
+      </style>
     <![endif]-->
-</head>
+  </head>
 
-<body>
-  <div class="container">
-    <div class="section">
-      <a href="https://github.com/jshjohnson/Choices" class="logo">
-        <img src="assets/images/logo.svg" alt="Choices.js logo" class="logo__img hidden-ie">
-        <h1 class="visible-ie">Choices.js</h1>
-      </a>
-      <p>Choices.js is a lightweight, configurable select box/text input plugin. Similar to Select2 and Selectize but without
-        the jQuery dependency.</p>
-      <p>For all config options, visit the <a href="https://github.com/jshjohnson/Choices">GitHub repo</a>.</p>
-
-      <hr>
-        <p class="h4 text-center">
-          <strong>Interested in writing your own ES6 JavaScript plugins? Check out <a href="https://ES6.io/friend/JOHNSON">ES6.io</a> for great tutorials! 💪🏼</strong>
+  <body>
+    <div class="container">
+      <div class="section">
+        <a href="https://github.com/jshjohnson/Choices" class="logo">
+          <img
+            src="assets/images/logo.svg"
+            alt="Choices.js logo"
+            class="logo__img hidden-ie"
+          />
+          <h1 class="visible-ie">Choices.js</h1>
+        </a>
+        <p>
+          Choices.js is a lightweight, configurable select box/text input
+          plugin. Similar to Select2 and Selectize but without the jQuery
+          dependency.
         </p>
-      <hr>
+        <p>
+          For all config options, visit the
+          <a href="https://github.com/jshjohnson/Choices">GitHub repo</a>.
+        </p>
 
-      <h2>Text inputs</h2>
-      <label for="choices-text-remove-button">Limited to 5 values with remove button</label>
-      <input class="form-control" id="choices-text-remove-button" type="text" value="preset-1,preset-2" placeholder="Enter something">
+        <hr />
+        <p class="h4 text-center">
+          <strong
+            >Interested in writing your own ES6 JavaScript plugins? Check out
+            <a href="https://ES6.io/friend/JOHNSON">ES6.io</a> for great
+            tutorials! 💪🏼</strong
+          >
+        </p>
+        <hr />
 
-      <label for="choices-text-unique-values">Unique values only, no pasting</label>
-      <input class="form-control" id="choices-text-unique-values" type="text" value="preset-1, preset-2" placeholder="This is a placeholder"
-        class="custom class">
+        <h2>Text inputs</h2>
+        <label for="choices-text-remove-button"
+          >Limited to 5 values with remove button</label
+        >
+        <input
+          class="form-control"
+          id="choices-text-remove-button"
+          type="text"
+          value="preset-1,preset-2"
+          placeholder="Enter something"
+        />
 
-      <label for="choices-text-email-filter">Email addresses only</label>
-      <input class="form-control" id="choices-text-email-filter" type="text" placeholder="This is a placeholder">
+        <label for="choices-text-unique-values"
+          >Unique values only, no pasting</label
+        >
+        <input
+          class="form-control"
+          id="choices-text-unique-values"
+          type="text"
+          value="preset-1, preset-2"
+          placeholder="This is a placeholder"
+          class="custom class"
+        />
 
-      <label for="choices-text-disabled">Disabled</label>
-      <input class="form-control" id="choices-text-disabled" type="text" value="josh@joshuajohnson.co.uk, joe@bloggs.co.uk" placeholder="This is a placeholder">
+        <label for="choices-text-email-filter">Email addresses only</label>
+        <input
+          class="form-control"
+          id="choices-text-email-filter"
+          type="text"
+          placeholder="This is a placeholder"
+        />
 
-      <label for="choices-text-prepend-append-value">Prepends and appends a value to each items return value</label>
-      <input class="form-control" id="choices-text-prepend-append-value" type="text" value="preset-1, preset-2" placeholder="This is a placeholder">
+        <label for="choices-text-disabled">Disabled</label>
+        <input
+          class="form-control"
+          id="choices-text-disabled"
+          type="text"
+          value="josh@joshuajohnson.co.uk, joe@bloggs.co.uk"
+          placeholder="This is a placeholder"
+        />
 
-      <label for="choices-text-preset-values">Preset values passed through options</label>
-      <input class="form-control" id="choices-text-preset-values" type="text" value="Michael Smith" placeholder="This is a placeholder">
+        <label for="choices-text-prepend-append-value"
+          >Prepends and appends a value to each items return value</label
+        >
+        <input
+          class="form-control"
+          id="choices-text-prepend-append-value"
+          type="text"
+          value="preset-1, preset-2"
+          placeholder="This is a placeholder"
+        />
 
-      <label for="choices-text-i18n">I18N labels</label>
-      <input class="form-control" id="choices-text-i18n" type="text">
+        <label for="choices-text-preset-values"
+          >Preset values passed through options</label
+        >
+        <input
+          class="form-control"
+          id="choices-text-preset-values"
+          type="text"
+          value="Michael Smith"
+          placeholder="This is a placeholder"
+        />
 
-      <label for="choices-text-rtl">Right-to-left</label>
-      <input data-trigger class="form-control" id="choices-text-rtl" type="text" value="Value 1, Value 2" dir="rtl">
+        <label for="choices-text-i18n">I18N labels</label>
+        <input class="form-control" id="choices-text-i18n" type="text" />
 
-      <hr>
+        <label for="choices-text-rtl">Right-to-left</label>
+        <input
+          data-trigger
+          class="form-control"
+          id="choices-text-rtl"
+          type="text"
+          value="Value 1, Value 2"
+          dir="rtl"
+        />
 
-      <h2>Multiple select input</h2>
-      <label for="choices-multiple-default">Default</label>
-      <select class="form-control" data-trigger name="choices-multiple-default" id="choices-multiple-default" placeholder="This is a placeholder"
-        multiple>
-        <option value="Choice 1" selected>Choice 1</option>
-        <option value="Choice 2">Choice 2</option>
-        <option value="Choice 3">Choice 3</option>
-        <option value="Choice 4" disabled>Choice 4</option>
-      </select>
+        <hr />
 
-      <label for="choices-multiple-remove-button">With remove button</label>
-      <select class="form-control" name="choices-multiple-remove-button" id="choices-multiple-remove-button" placeholder="This is a placeholder"
-        multiple>
-        <option value="Choice 1" selected>Choice 1</option>
-        <option value="Choice 2">Choice 2</option>
-        <option value="Choice 3">Choice 3</option>
-        <option value="Choice 4">Choice 4</option>
-      </select>
-
-      <label for="choices-multiple-groups">Option groups</label>
-      <select class="form-control" name="choices-multiple-groups" id="choices-multiple-groups" placeholder="This is a placeholder"
-        multiple>
-        <optgroup label="UK">
-          <option value="London">London</option>
-          <option value="Manchester">Manchester</option>
-          <option value="Liverpool">Liverpool</option>
-        </optgroup>
-        <optgroup label="FR">
-          <option value="Paris">Paris</option>
-          <option value="Lyon">Lyon</option>
-          <option value="Marseille">Marseille</option>
-        </optgroup>
-        <optgroup label="DE" disabled>
-          <option value="Hamburg">Hamburg</option>
-          <option value="Munich">Munich</option>
-          <option value="Berlin">Berlin</option>
-        </optgroup>
-        <optgroup label="US">
-          <option value="New York">New York</option>
-          <option value="Washington" disabled>Washington</option>
-          <option value="Michigan">Michigan</option>
-        </optgroup>
-        <optgroup label="SP">
-          <option value="Madrid">Madrid</option>
-          <option value="Barcelona">Barcelona</option>
-          <option value="Malaga">Malaga</option>
-        </optgroup>
-        <optgroup label="CA">
-          <option value="Montreal">Montreal</option>
-          <option value="Toronto">Toronto</option>
-          <option value="Vancouver">Vancouver</option>
-        </optgroup>
-      </select>
-
-      <p><small>If the following example do not load, the Discogs rate limit has probably been reached. Try again later!</small></p>
-
-      <label for="choices-multiple-remote-fetch">Options from remote source (Fetch API) &amp; limited to 5</label>
-      <select class="form-control" name="choices-multiple-remote-fetch" id="choices-multiple-remote-fetch" multiple></select>
-
-      <label for="choices-multiple-rtl">Right-to-left</label>
-      <select class="form-control" data-trigger name="choices-multiple-rtl" id="choices-multiple-rtl" placeholder="This is a placeholder"
-        multiple dir="rtl">
-        <option value="Choice 1" selected>Choice 1</option>
-        <option value="Choice 2">Choice 2</option>
-        <option value="Choice 3">Choice 3</option>
-        <option value="Choice 4" disabled>Choice 4</option>
-      </select>
-
-      <label for="label-event">Use label in event (add/remove)</label>
-      <p id="message"></p>
-      <select id="choices-multiple-labels" multiple></select>
-      <hr>
-
-      <h2>Single select input</h2>
-      <label for="choices-single-default">Default</label>
-      <select class="form-control" data-trigger name="choices-single-default" id="choices-single-default" placeholder="This is a search placeholder">
-        <option placeholder>This is a placeholder</option>
-        <option value="Choice 1">Choice 1</option>
-        <option value="Choice 2">Choice 2</option>
-        <option value="Choice 3">Choice 3</option>
-      </select>
-
-      <p><small>If the following two examples do not load, the Discogs rate limit has probably been reached. Try again later!</small></p>
-
-      <label for="choices-single-remote-fetch">Options from remote source (Fetch API)</label>
-      <select class="form-control" name="choices-single-remote-fetch" id="choices-single-remote-fetch">
-        <option placeholder>Pick an Arctic Monkeys' record</option>
-      </select>
-
-      <label for="choices-single-remove-xhr">Options from remote source (XHR) &amp; remove button</label>
-      <select class="form-control" name="choices-single-remove-xhr" id="choices-single-remove-xhr">
-        <option placeholder>Pick a Smiths' record</option>
-      </select>
-
-      <label for="choices-single-groups">Option groups</label>
-      <select class="form-control" data-trigger name="choices-single-groups" id="choices-single-groups" placeholder="This is a placeholder">
-        <optgroup label="UK">
-          <option value="London">London</option>
-          <option value="Manchester">Manchester</option>
-          <option value="Liverpool">Liverpool</option>
-        </optgroup>
-        <optgroup label="FR">
-          <option value="Paris">Paris</option>
-          <option value="Lyon">Lyon</option>
-          <option value="Marseille">Marseille</option>
-        </optgroup>
-        <optgroup label="DE" disabled>
-          <option value="Hamburg">Hamburg</option>
-          <option value="Munich">Munich</option>
-          <option value="Berlin">Berlin</option>
-        </optgroup>
-        <optgroup label="US">
-          <option value="New York">New York</option>
-          <option value="Washington" disabled>Washington</option>
-          <option value="Michigan">Michigan</option>
-        </optgroup>
-        <optgroup label="SP">
-          <option value="Madrid">Madrid</option>
-          <option value="Barcelona">Barcelona</option>
-          <option value="Malaga">Malaga</option>
-        </optgroup>
-        <optgroup label="CA">
-          <option value="Montreal">Montreal</option>
-          <option value="Toronto">Toronto</option>
-          <option value="Vancouver">Vancouver</option>
-        </optgroup>
-      </select>
-
-      <label for="choices-single-rtl">Right-to-left</label>
-      <select class="form-control" data-trigger name="choices-single-rtl" id="choices-single-rtl" placeholder="This is a placeholder"
-        dir="rtl">
-        <option value="Choice 1">Choice 1</option>
-        <option value="Choice 2">Choice 2</option>
-        <option value="Choice 3">Choice 3</option>
-      </select>
-
-      <label for="choices-single-no-search">Options added via config with no search</label>
-      <select class="form-control" name="choices-single-no-search" id="choices-single-no-search">
-        <option value="0">Zero</option>
-      </select>
-
-      <label for="choices-single-preset-options">Option and option groups added via config</label>
-      <select class="form-control" name="choices-single-preset-options" id="choices-single-preset-options" placeholder="This is a placeholder"></select>
-
-      <label for="choices-single-selected-option">Option selected via config with custom properties</label>
-      <p><small>Try searching for 'fantastic', "Label 3" should display</small></p>
-      <select class="form-control" name="choices-single-selected-option" id="choices-single-selected-option" placeholder="This is a placeholder"></select>
-
-      <label for="choices-with-custom-props-via-html">Option searchable by custom properties via <code>data-custom-properties</code> attribute</label>
-      <p><small>Try searching for 'fantastic', "Label 3" should display</small></p>
-      <select class="form-control" id="choices-with-custom-props-via-html">
-        <option value="Dropdown item 1">Label One</option>
-        <option value="Dropdown item 2" selected disabled>Label Two</option>
-        <option value="Dropdown item 3" data-custom-properties='This option is fantastic'>Label Three</option>
-      </select>
-
-      <label for="choices-single-no-sorting">Options without sorting</label>
-      <select class="form-control" name="choices-single-no-sorting" id="choices-single-no-sorting" placeholder="This is a placeholder">
-        <option value="Madrid">Madrid</option>
-        <option value="Toronto">Toronto</option>
-        <option value="Vancouver">Vancouver</option>
-        <option value="London">London</option>
-        <option value="Manchester">Manchester</option>
-        <option value="Liverpool">Liverpool</option>
-        <option value="Paris">Paris</option>
-        <option value="Malaga">Malaga</option>
-        <option value="Washington" disabled>Washington</option>
-        <option value="Lyon">Lyon</option>
-        <option value="Marseille">Marseille</option>
-        <option value="Hamburg">Hamburg</option>
-        <option value="Munich">Munich</option>
-        <option value="Barcelona">Barcelona</option>
-        <option value="Berlin">Berlin</option>
-        <option value="Montreal">Montreal</option>
-        <option value="New York">New York</option>
-        <option value="Michigan">Michigan</option>
-      </select>
-
-      <label for="choices-single-custom-templates">Custom templates</label>
-      <select class="form-control" name="choices-single-custom-templates" id="choices-single-custom-templates" placeholder="This is a placeholder">
-        <option value="React">React</option>
-        <option value="Angular">Angular</option>
-        <option value="Ember">Ember</option>
-        <option value="Vue">Vue</option>
-      </select>
-
-      <p>Below is an example of how you could have two select inputs depend on eachother. 'Tube stations' will only be enabled if
-        the value of 'Cities' is 'London'</p>
-      <label for="cities">Cities</label>
-      <select class="form-control" name="cities" id="cities" placeholder="Choose a city">
-        <option value="Leeds">Leeds</option>
-        <option value="Manchester">Manchester</option>
-        <option value="London">London</option>
-        <option value="Sheffield">Sheffield</option>
-        <option value="Newcastle">Newcastle</option>
-      </select>
-
-      <label for="tube-stations">Tube stations</label>
-      <select class="form-control" name="tube-stations" id="tube-stations" placeholder="Choose a tube station">
-        <option value="Moorgate">Moorgate</option>
-        <option value="St Pauls">St Pauls</option>
-        <option value="Old Street">Old Street</option>
-        <option value="Liverpool Street">Liverpool Street</option>
-        <option value="Kings Cross St. Pancras">Kings Cross St. Pancras</option>
-      </select>
-
-      <hr>
-      <h2>Form interaction</h2>
-      <p>Change the values and press reset to restore to initial state.</p>
-      <form>
-        <label for="reset-simple">Change me!</label>
-        <select class="form-control" name="reset-simple" id="reset-simple" placeholder="Choose an option">
-          <option value="Option 1">Option 1</option>
-          <option value="Option 2" selected>Option 2</option>
-          <option value="Option 3">Option 3</option>
-          <option value="Option 4">Option 4</option>
-          <option value="Option 5">Option 5</option>
-        </select>
-
-        <label for="reset-multiple">And me!</label>
-        <select class="form-control" name="reset-multiple" id="reset-multiple" placeholder="This is a placeholder"
-          multiple>
+        <h2>Multiple select input</h2>
+        <label for="choices-multiple-default">Default</label>
+        <select
+          class="form-control"
+          data-trigger
+          name="choices-multiple-default"
+          id="choices-multiple-default"
+          placeholder="This is a placeholder"
+          multiple
+        >
           <option value="Choice 1" selected>Choice 1</option>
           <option value="Choice 2">Choice 2</option>
           <option value="Choice 3">Choice 3</option>
           <option value="Choice 4" disabled>Choice 4</option>
         </select>
 
-        <button type="reset">Reset</button>
-      </form>
+        <label for="choices-multiple-remove-button">With remove button</label>
+        <select
+          class="form-control"
+          name="choices-multiple-remove-button"
+          id="choices-multiple-remove-button"
+          placeholder="This is a placeholder"
+          multiple
+        >
+          <option value="Choice 1" selected>Choice 1</option>
+          <option value="Choice 2">Choice 2</option>
+          <option value="Choice 3">Choice 3</option>
+          <option value="Choice 4">Choice 4</option>
+        </select>
+
+        <label for="choices-multiple-groups">Option groups</label>
+        <select
+          class="form-control"
+          name="choices-multiple-groups"
+          id="choices-multiple-groups"
+          placeholder="This is a placeholder"
+          multiple
+        >
+          <optgroup label="UK">
+            <option value="London">London</option>
+            <option value="Manchester">Manchester</option>
+            <option value="Liverpool">Liverpool</option>
+          </optgroup>
+          <optgroup label="FR">
+            <option value="Paris">Paris</option>
+            <option value="Lyon">Lyon</option>
+            <option value="Marseille">Marseille</option>
+          </optgroup>
+          <optgroup label="DE" disabled>
+            <option value="Hamburg">Hamburg</option>
+            <option value="Munich">Munich</option>
+            <option value="Berlin">Berlin</option>
+          </optgroup>
+          <optgroup label="US">
+            <option value="New York">New York</option>
+            <option value="Washington" disabled>Washington</option>
+            <option value="Michigan">Michigan</option>
+          </optgroup>
+          <optgroup label="SP">
+            <option value="Madrid">Madrid</option>
+            <option value="Barcelona">Barcelona</option>
+            <option value="Malaga">Malaga</option>
+          </optgroup>
+          <optgroup label="CA">
+            <option value="Montreal">Montreal</option>
+            <option value="Toronto">Toronto</option>
+            <option value="Vancouver">Vancouver</option>
+          </optgroup>
+        </select>
+
+        <p>
+          <small
+            >If the following example do not load, the Discogs rate limit has
+            probably been reached. Try again later!</small
+          >
+        </p>
+
+        <label for="choices-multiple-remote-fetch"
+          >Options from remote source (Fetch API) &amp; limited to 5</label
+        >
+        <select
+          class="form-control"
+          name="choices-multiple-remote-fetch"
+          id="choices-multiple-remote-fetch"
+          multiple
+        ></select>
+
+        <label for="choices-multiple-rtl">Right-to-left</label>
+        <select
+          class="form-control"
+          data-trigger
+          name="choices-multiple-rtl"
+          id="choices-multiple-rtl"
+          placeholder="This is a placeholder"
+          multiple
+          dir="rtl"
+        >
+          <option value="Choice 1" selected>Choice 1</option>
+          <option value="Choice 2">Choice 2</option>
+          <option value="Choice 3">Choice 3</option>
+          <option value="Choice 4" disabled>Choice 4</option>
+        </select>
+
+        <label for="choices-multiple-labels"
+          >Use label in event (add/remove)</label
+        >
+        <p id="message"></p>
+        <select id="choices-multiple-labels" multiple></select>
+        <hr />
+
+        <h2>Single select input</h2>
+        <label for="choices-single-default">Default</label>
+        <select
+          class="form-control"
+          data-trigger
+          name="choices-single-default"
+          id="choices-single-default"
+          placeholder="This is a search placeholder"
+        >
+          <option value="">This is a placeholder</option>
+          <option value="Choice 1">Choice 1</option>
+          <option value="Choice 2">Choice 2</option>
+          <option value="Choice 3">Choice 3</option>
+        </select>
+
+        <p>
+          <small
+            >If the following two examples do not load, the Discogs rate limit
+            has probably been reached. Try again later!</small
+          >
+        </p>
+
+        <label for="choices-single-remote-fetch"
+          >Options from remote source (Fetch API)</label
+        >
+        <select
+          class="form-control"
+          name="choices-single-remote-fetch"
+          id="choices-single-remote-fetch"
+        >
+          <option value="">Pick an Arctic Monkeys' record</option>
+        </select>
+
+        <label for="choices-single-remove-xhr"
+          >Options from remote source (Fetch API) &amp; remove button</label
+        >
+        <select
+          class="form-control"
+          name="choices-single-remove-xhr"
+          id="choices-single-remove-xhr"
+        >
+          <option value="">Pick a Smiths' record</option>
+        </select>
+
+        <label for="choices-single-groups">Option groups</label>
+        <select
+          class="form-control"
+          data-trigger
+          name="choices-single-groups"
+          id="choices-single-groups"
+          placeholder="This is a placeholder"
+        >
+          <optgroup label="UK">
+            <option value="London">London</option>
+            <option value="Manchester">Manchester</option>
+            <option value="Liverpool">Liverpool</option>
+          </optgroup>
+          <optgroup label="FR">
+            <option value="Paris">Paris</option>
+            <option value="Lyon">Lyon</option>
+            <option value="Marseille">Marseille</option>
+          </optgroup>
+          <optgroup label="DE" disabled>
+            <option value="Hamburg">Hamburg</option>
+            <option value="Munich">Munich</option>
+            <option value="Berlin">Berlin</option>
+          </optgroup>
+          <optgroup label="US">
+            <option value="New York">New York</option>
+            <option value="Washington" disabled>Washington</option>
+            <option value="Michigan">Michigan</option>
+          </optgroup>
+          <optgroup label="SP">
+            <option value="Madrid">Madrid</option>
+            <option value="Barcelona">Barcelona</option>
+            <option value="Malaga">Malaga</option>
+          </optgroup>
+          <optgroup label="CA">
+            <option value="Montreal">Montreal</option>
+            <option value="Toronto">Toronto</option>
+            <option value="Vancouver">Vancouver</option>
+          </optgroup>
+        </select>
+
+        <label for="choices-single-rtl">Right-to-left</label>
+        <select
+          class="form-control"
+          data-trigger
+          name="choices-single-rtl"
+          id="choices-single-rtl"
+          placeholder="This is a placeholder"
+          dir="rtl"
+        >
+          <option value="Choice 1">Choice 1</option>
+          <option value="Choice 2">Choice 2</option>
+          <option value="Choice 3">Choice 3</option>
+        </select>
+
+        <label for="choices-single-no-search"
+          >Options added via config with no search</label
+        >
+        <select
+          class="form-control"
+          name="choices-single-no-search"
+          id="choices-single-no-search"
+        >
+          <option value="0">Zero</option>
+        </select>
+
+        <label for="choices-single-preset-options"
+          >Option and option groups added via config</label
+        >
+        <select
+          class="form-control"
+          name="choices-single-preset-options"
+          id="choices-single-preset-options"
+          placeholder="This is a placeholder"
+        ></select>
+
+        <label for="choices-single-selected-option"
+          >Option selected via config with custom properties</label
+        >
+        <p>
+          <small>Try searching for 'fantastic', "Label 3" should display</small>
+        </p>
+        <select
+          class="form-control"
+          name="choices-single-selected-option"
+          id="choices-single-selected-option"
+          placeholder="This is a placeholder"
+        ></select>
+
+        <label for="choices-with-custom-props-via-html"
+          >Option searchable by custom properties via
+          <code>data-custom-properties</code> attribute</label
+        >
+        <p>
+          <small>Try searching for 'fantastic', "Label 3" should display</small>
+        </p>
+        <select class="form-control" id="choices-with-custom-props-via-html">
+          <option value="Dropdown item 1">Label One</option>
+          <option value="Dropdown item 2" selected disabled>Label Two</option>
+          <option
+            value="Dropdown item 3"
+            data-custom-properties="This option is fantastic"
+            >Label Three</option
+          >
+        </select>
+
+        <label for="choices-single-no-sorting">Options without sorting</label>
+        <select
+          class="form-control"
+          name="choices-single-no-sorting"
+          id="choices-single-no-sorting"
+          placeholder="This is a placeholder"
+        >
+          <option value="Madrid">Madrid</option>
+          <option value="Toronto">Toronto</option>
+          <option value="Vancouver">Vancouver</option>
+          <option value="London">London</option>
+          <option value="Manchester">Manchester</option>
+          <option value="Liverpool">Liverpool</option>
+          <option value="Paris">Paris</option>
+          <option value="Malaga">Malaga</option>
+          <option value="Washington" disabled>Washington</option>
+          <option value="Lyon">Lyon</option>
+          <option value="Marseille">Marseille</option>
+          <option value="Hamburg">Hamburg</option>
+          <option value="Munich">Munich</option>
+          <option value="Barcelona">Barcelona</option>
+          <option value="Berlin">Berlin</option>
+          <option value="Montreal">Montreal</option>
+          <option value="New York">New York</option>
+          <option value="Michigan">Michigan</option>
+        </select>
+
+        <label for="choices-single-custom-templates">Custom templates</label>
+        <select
+          class="form-control"
+          name="choices-single-custom-templates"
+          id="choices-single-custom-templates"
+          placeholder="This is a placeholder"
+        >
+          <option value="React">React</option>
+          <option value="Angular">Angular</option>
+          <option value="Ember">Ember</option>
+          <option value="Vue">Vue</option>
+        </select>
+
+        <p>
+          Below is an example of how you could have two select inputs depend on
+          eachother. 'Tube stations' will only be enabled if the value of
+          'Cities' is 'London'
+        </p>
+        <label for="cities">Cities</label>
+        <select
+          class="form-control"
+          name="cities"
+          id="cities"
+          placeholder="Choose a city"
+        >
+          <option value="Leeds">Leeds</option>
+          <option value="Manchester">Manchester</option>
+          <option value="London">London</option>
+          <option value="Sheffield">Sheffield</option>
+          <option value="Newcastle">Newcastle</option>
+        </select>
+
+        <label for="tube-stations">Tube stations</label>
+        <select
+          class="form-control"
+          name="tube-stations"
+          id="tube-stations"
+          placeholder="Choose a tube station"
+        >
+          <option value="Moorgate">Moorgate</option>
+          <option value="St Pauls">St Pauls</option>
+          <option value="Old Street">Old Street</option>
+          <option value="Liverpool Street">Liverpool Street</option>
+          <option value="Kings Cross St. Pancras"
+            >Kings Cross St. Pancras</option
+          >
+        </select>
+
+        <hr />
+        <h2>Form interaction</h2>
+        <p>Change the values and press reset to restore to initial state.</p>
+        <form>
+          <label for="reset-simple">Change me!</label>
+          <select
+            class="form-control"
+            name="reset-simple"
+            id="reset-simple"
+            placeholder="Choose an option"
+          >
+            <option value="Option 1">Option 1</option>
+            <option value="Option 2" selected>Option 2</option>
+            <option value="Option 3">Option 3</option>
+            <option value="Option 4">Option 4</option>
+            <option value="Option 5">Option 5</option>
+          </select>
+
+          <label for="reset-multiple">And me!</label>
+          <select
+            class="form-control"
+            name="reset-multiple"
+            id="reset-multiple"
+            placeholder="This is a placeholder"
+            multiple
+          >
+            <option value="Choice 1" selected>Choice 1</option>
+            <option value="Choice 2">Choice 2</option>
+            <option value="Choice 3">Choice 3</option>
+            <option value="Choice 4" disabled>Choice 4</option>
+          </select>
+
+          <button type="reset">Reset</button>
+        </form>
+      </div>
     </div>
-  </div>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var textRemove = new Choices(document.getElementById('choices-text-remove-button'), {
-        delimiter: ',',
-        editItems: true,
-        maxItemCount: 5,
-        removeItemButton: true,
-      });
-
-      var textUniqueVals = new Choices('#choices-text-unique-values', {
-        paste: false,
-        duplicateItemsAllowed: false,
-        editItems: true,
-      });
-
-      var texti18n = new Choices('#choices-text-i18n', {
-        paste: false,
-        duplicateItemsAllowed: false,
-        editItems: true,
-        maxItemCount: 5,
-        addItemText: function(value) {
-          return 'Appuyez sur Entrée pour ajouter <b>"' + String(value) + '"</b>';
-        },
-        maxItemText: function(maxItemCount) {
-          return String(maxItemCount) + 'valeurs peuvent être ajoutées';
-        },
-        uniqueItemText: 'Cette valeur est déjà présente',
-      });
-
-      var textEmailFilter = new Choices('#choices-text-email-filter', {
-        editItems: true,
-        addItemFilterFn: function (value) {
-          if (!value) {
-            return false;
-          }
-
-          const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          const expression = new RegExp(regex.source, 'i');
-          return expression.test(value);
-        },
-      }).setValue(['joe@bloggs.com']);
-
-      var textDisabled = new Choices('#choices-text-disabled', {
-        addItems: false,
-        removeItems: false,
-      }).disable();
-
-      var textPrependAppendVal = new Choices('#choices-text-prepend-append-value', {
-        prependValue: 'item-',
-        appendValue: '-' + Date.now(),
-      }).removeActiveItems();
-
-      var textPresetVal = new Choices('#choices-text-preset-values', {
-        items: ['Josh Johnson', {
-          value: 'joe@bloggs.co.uk',
-          label: 'Joe Bloggs',
-          customProperties: {
-            description: 'Joe Blogg is such a generic name'
-          }
-        }],
-      });
-
-      var multipleDefault = new Choices(document.getElementById('choices-multiple-groups'));
-
-      var multipleFetch = new Choices('#choices-multiple-remote-fetch', {
-        placeholder: true,
-        placeholderValue: 'Pick an Strokes record',
-        maxItemCount: 5,
-      }).ajax(function(callback) {
-        fetch('https://api.discogs.com/artists/55980/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW')
-          .then(function(response) {
-            response.json().then(function(data) {
-              callback(data.releases, 'title', 'title');
-            });
-          })
-          .catch(function(error) {
-            console.error(error);
-          });
-      });
-
-      var multipleCancelButton = new Choices('#choices-multiple-remove-button', {
-        removeItemButton: true,
-      });
-
-      /* Use label on event */
-      var choicesSelect = new Choices('#choices-multiple-labels', {
-        removeItemButton: true,
-        choices: [
-          { value: 'One', label: 'Label One' },
-          { value: 'Two', label: 'Label Two', disabled: true },
-          { value: 'Three', label: 'Label Three' },
-        ],
-      }).setChoices([
-        { value: 'Four', label: 'Label Four', disabled: true },
-        { value: 'Five', label: 'Label Five' },
-        { value: 'Six', label: 'Label Six', selected: true },
-      ], 'value', 'label', false);
-
-      choicesSelect.passedElement.element.addEventListener('addItem', function(event) {
-        document.getElementById('message').innerHTML = 'You just added "' + event.detail.label + '"';
-      });
-
-      choicesSelect.passedElement.element.addEventListener('removeItem', function(event) {
-        document.getElementById('message').innerHTML = 'You just removed "' + event.detail.label + '"';
-      });
-
-      var singleFetch = new Choices('#choices-single-remote-fetch', {
-        searchPlaceholderValue: 'Search for an Arctic Monkeys record',
-      }).ajax(function(callback) {
-        fetch('https://api.discogs.com/artists/391170/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW')
-          .then(function(response) {
-            response.json().then(function(data) {
-              callback(data.releases, 'title', 'title');
-              singleFetch.setChoiceByValue('Fake Tales Of San Francisco');
-            });
-          })
-          .catch(function(error) {
-            console.error(error);
-          });
-      });
-
-      var singleXhrRemove = new Choices('#choices-single-remove-xhr', {
-        removeItemButton: true,
-        searchPlaceholderValue: 'Search for a Smiths\' record'
-      }).ajax(function(callback) {
-        var request = new XMLHttpRequest();
-        request.open('get', 'https://api.discogs.com/artists/83080/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW', true);
-        request.onreadystatechange = function() {
-          var status;
-          var data;
-          if (request.readyState === 4) {
-            status = request.status;
-            if (status === 200) {
-              data = JSON.parse(request.responseText);
-              callback(data.releases, 'title', 'title');
-              singleXhrRemove.setChoiceByValue('How Soon Is Now?');
-            } else {
-              console.error(status);
-            }
-          }
-        }
-        request.send();
-      });
-
-      var genericExamples = new Choices('[data-trigger]', {
-        placeholderValue: 'This is a placeholder set in the config',
-        searchPlaceholderValue: 'This is a search placeholder'
-      });
-
-      var singleNoSearch = new Choices('#choices-single-no-search', {
-        searchEnabled: false,
-        removeItemButton: true,
-        choices: [
-          { value: 'One', label: 'Label One' },
-          { value: 'Two', label: 'Label Two', disabled: true },
-          { value: 'Three', label: 'Label Three' },
-        ],
-      }).setChoices([
-        { value: 'Four', label: 'Label Four', disabled: true },
-        { value: 'Five', label: 'Label Five' },
-        { value: 'Six', label: 'Label Six', selected: true },
-      ], 'value', 'label', false);
-
-      var singlePresetOpts = new Choices('#choices-single-preset-options', {
-        placeholder: true,
-      }).setChoices([{
-        label: 'Group one',
-        id: 1,
-        disabled: false,
-        choices: [
-          { value: 'Child One', label: 'Child One', selected: true },
-          { value: 'Child Two', label: 'Child Two', disabled: true },
-          { value: 'Child Three', label: 'Child Three' },
-        ]
-      },
-      {
-        label: 'Group two',
-        id: 2,
-        disabled: false,
-        choices: [
-          { value: 'Child Four', label: 'Child Four', disabled: true },
-          { value: 'Child Five', label: 'Child Five' },
-          { value: 'Child Six', label: 'Child Six' },
-        ]
-      }], 'value', 'label');
-
-      var singleSelectedOpt = new Choices('#choices-single-selected-option', {
-        searchFields: ['label', 'value', 'customProperties.description'],
-        choices: [
-          { value: 'One', label: 'Label One', selected: true },
-          { value: 'Two', label: 'Label Two', disabled: true },
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var textRemove = new Choices(
+          document.getElementById('choices-text-remove-button'),
           {
-            value: 'Three', label: 'Label Three', customProperties: {
-              description: 'This option is fantastic'
-            }
+            delimiter: ',',
+            editItems: true,
+            maxItemCount: 5,
+            removeItemButton: true,
           },
-        ],
-      }).setChoiceByValue('Two');
+        );
 
-      var customChoicesPropertiesViaDataAttributes = new Choices('#choices-with-custom-props-via-html', {
-       searchFields: ['label', 'value', 'customProperties']
-      })
+        var textUniqueVals = new Choices('#choices-text-unique-values', {
+          paste: false,
+          duplicateItemsAllowed: false,
+          editItems: true,
+        });
 
-      var singleNoSorting = new Choices('#choices-single-no-sorting', {
-        shouldSort: false,
-      });
+        var texti18n = new Choices('#choices-text-i18n', {
+          paste: false,
+          duplicateItemsAllowed: false,
+          editItems: true,
+          maxItemCount: 5,
+          addItemText: function(value) {
+            return (
+              'Appuyez sur Entrée pour ajouter <b>"' + String(value) + '"</b>'
+            );
+          },
+          maxItemText: function(maxItemCount) {
+            return String(maxItemCount) + 'valeurs peuvent être ajoutées';
+          },
+          uniqueItemText: 'Cette valeur est déjà présente',
+        });
 
-      var cities = new Choices(document.getElementById('cities'));
-      var tubeStations = new Choices(document.getElementById('tube-stations')).disable();
+        var textEmailFilter = new Choices('#choices-text-email-filter', {
+          editItems: true,
+          addItemFilter: function(value) {
+            if (!value) {
+              return false;
+            }
 
-      cities.passedElement.element.addEventListener('change', function(e) {
-        if (e.detail.value === 'London') {
-          tubeStations.enable();
-        } else {
-          tubeStations.disable();
-        }
-      });
+            const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            const expression = new RegExp(regex.source, 'i');
+            return expression.test(value);
+          },
+        }).setValue(['joe@bloggs.com']);
 
-      var customTemplates = new Choices(document.getElementById('choices-single-custom-templates'), {
-        callbackOnCreateTemplates: function(strToEl) {
-          var classNames = this.config.classNames;
-          var itemSelectText = this.config.itemSelectText;
-          return {
-            item: function(classNames, data) {
-              return strToEl('\
+        var textDisabled = new Choices('#choices-text-disabled', {
+          addItems: false,
+          removeItems: false,
+        }).disable();
+
+        var textPrependAppendVal = new Choices(
+          '#choices-text-prepend-append-value',
+          {
+            prependValue: 'item-',
+            appendValue: '-' + Date.now(),
+          },
+        ).removeActiveItems();
+
+        var textPresetVal = new Choices('#choices-text-preset-values', {
+          items: [
+            'Josh Johnson',
+            {
+              value: 'joe@bloggs.co.uk',
+              label: 'Joe Bloggs',
+              customProperties: {
+                description: 'Joe Blogg is such a generic name',
+              },
+            },
+          ],
+        });
+
+        var multipleDefault = new Choices(
+          document.getElementById('choices-multiple-groups'),
+        );
+
+        var multipleFetch = new Choices('#choices-multiple-remote-fetch', {
+          placeholder: true,
+          placeholderValue: 'Pick an Strokes record',
+          maxItemCount: 5,
+        }).setChoices(function() {
+          return fetch(
+            'https://api.discogs.com/artists/55980/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
+          )
+            .then(function(response) {
+              return response.json();
+            })
+            .then(function(data) {
+              return data.releases.map(function(release) {
+                return { value: release.title, label: release.title };
+              });
+            });
+        });
+
+        var multipleCancelButton = new Choices(
+          '#choices-multiple-remove-button',
+          {
+            removeItemButton: true,
+          },
+        );
+
+        /* Use label on event */
+        var choicesSelect = new Choices('#choices-multiple-labels', {
+          removeItemButton: true,
+          choices: [
+            { value: 'One', label: 'Label One' },
+            { value: 'Two', label: 'Label Two', disabled: true },
+            { value: 'Three', label: 'Label Three' },
+          ],
+        }).setChoices(
+          [
+            { value: 'Four', label: 'Label Four', disabled: true },
+            { value: 'Five', label: 'Label Five' },
+            { value: 'Six', label: 'Label Six', selected: true },
+          ],
+          'value',
+          'label',
+          false,
+        );
+
+        choicesSelect.passedElement.element.addEventListener(
+          'addItem',
+          function(event) {
+            document.getElementById('message').innerHTML =
+              'You just added "' + event.detail.label + '"';
+          },
+        );
+
+        choicesSelect.passedElement.element.addEventListener(
+          'removeItem',
+          function(event) {
+            document.getElementById('message').innerHTML =
+              'You just removed "' + event.detail.label + '"';
+          },
+        );
+
+        var singleFetch = new Choices('#choices-single-remote-fetch', {
+          searchPlaceholderValue: 'Search for an Arctic Monkeys record',
+        })
+          .setChoices(function() {
+            return fetch(
+              'https://api.discogs.com/artists/391170/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
+            )
+              .then(function(response) {
+                return response.json();
+              })
+              .then(function(data) {
+                return data.releases.map(function(release) {
+                  return { label: release.title, value: release.title };
+                });
+              });
+          })
+          .then(function(instance) {
+            instance.setChoiceByValue('Fake Tales Of San Francisco');
+          });
+
+        var singleXhrRemove = new Choices('#choices-single-remove-xhr', {
+          removeItemButton: true,
+          searchPlaceholderValue: "Search for a Smiths' record",
+        }).setChoices(function(callback) {
+          return fetch(
+            'https://api.discogs.com/artists/83080/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
+          )
+            .then(function(res) {
+              return res.json();
+            })
+            .then(function(data) {
+              return data.releases.map(function(release) {
+                return { label: release.title, value: release.title };
+              });
+            });
+        });
+
+        var genericExamples = new Choices('[data-trigger]', {
+          placeholderValue: 'This is a placeholder set in the config',
+          searchPlaceholderValue: 'This is a search placeholder',
+        });
+
+        var singleNoSearch = new Choices('#choices-single-no-search', {
+          searchEnabled: false,
+          removeItemButton: true,
+          choices: [
+            { value: 'One', label: 'Label One' },
+            { value: 'Two', label: 'Label Two', disabled: true },
+            { value: 'Three', label: 'Label Three' },
+          ],
+        }).setChoices(
+          [
+            { value: 'Four', label: 'Label Four', disabled: true },
+            { value: 'Five', label: 'Label Five' },
+            { value: 'Six', label: 'Label Six', selected: true },
+          ],
+          'value',
+          'label',
+          false,
+        );
+
+        var singlePresetOpts = new Choices('#choices-single-preset-options', {
+          placeholder: true,
+        }).setChoices(
+          [
+            {
+              label: 'Group one',
+              id: 1,
+              disabled: false,
+              choices: [
+                { value: 'Child One', label: 'Child One', selected: true },
+                { value: 'Child Two', label: 'Child Two', disabled: true },
+                { value: 'Child Three', label: 'Child Three' },
+              ],
+            },
+            {
+              label: 'Group two',
+              id: 2,
+              disabled: false,
+              choices: [
+                { value: 'Child Four', label: 'Child Four', disabled: true },
+                { value: 'Child Five', label: 'Child Five' },
+                { value: 'Child Six', label: 'Child Six' },
+              ],
+            },
+          ],
+          'value',
+          'label',
+        );
+
+        var singleSelectedOpt = new Choices('#choices-single-selected-option', {
+          searchFields: ['label', 'value', 'customProperties.description'],
+          choices: [
+            { value: 'One', label: 'Label One', selected: true },
+            { value: 'Two', label: 'Label Two', disabled: true },
+            {
+              value: 'Three',
+              label: 'Label Three',
+              customProperties: {
+                description: 'This option is fantastic',
+              },
+            },
+          ],
+        }).setChoiceByValue('Two');
+
+        var customChoicesPropertiesViaDataAttributes = new Choices(
+          '#choices-with-custom-props-via-html',
+          {
+            searchFields: ['label', 'value', 'customProperties'],
+          },
+        );
+
+        var singleNoSorting = new Choices('#choices-single-no-sorting', {
+          shouldSort: false,
+        });
+
+        var cities = new Choices(document.getElementById('cities'));
+        var tubeStations = new Choices(
+          document.getElementById('tube-stations'),
+        ).disable();
+
+        cities.passedElement.element.addEventListener('change', function(e) {
+          if (e.detail.value === 'London') {
+            tubeStations.enable();
+          } else {
+            tubeStations.disable();
+          }
+        });
+
+        var customTemplates = new Choices(
+          document.getElementById('choices-single-custom-templates'),
+          {
+            callbackOnCreateTemplates: function(strToEl) {
+              var classNames = this.config.classNames;
+              var itemSelectText = this.config.itemSelectText;
+              return {
+                item: function(classNames, data) {
+                  return strToEl(
+                    '\
                 <div\
-                  class="'+ String(classNames.item) + ' ' + String(data.highlighted ? classNames.highlightedState : classNames.itemSelectable) + '"\
+                  class="' +
+                      String(classNames.item) +
+                      ' ' +
+                      String(
+                        data.highlighted
+                          ? classNames.highlightedState
+                          : classNames.itemSelectable,
+                      ) +
+                      '"\
                   data-item\
-                  data-id="'+ String(data.id) + '"\
-                  data-value="'+ String(data.value) + '"\
-                  '+ String(data.active ? 'aria-selected="true"' : '') + '\
-                  '+ String(data.disabled ? 'aria-disabled="true"' : '') + '\
+                  data-id="' +
+                      String(data.id) +
+                      '"\
+                  data-value="' +
+                      String(data.value) +
+                      '"\
+                  ' +
+                      String(data.active ? 'aria-selected="true"' : '') +
+                      '\
+                  ' +
+                      String(data.disabled ? 'aria-disabled="true"' : '') +
+                      '\
                   >\
-                  <span style="margin-right:10px;">🎉</span> ' + String(data.label) + '\
+                  <span style="margin-right:10px;">🎉</span> ' +
+                      String(data.label) +
+                      '\
                 </div>\
-              ');
-            },
-            choice: function(classNames, data) {
-              return strToEl('\
+              ',
+                  );
+                },
+                choice: function(classNames, data) {
+                  return strToEl(
+                    '\
                 <div\
-                  class="'+ String(classNames.item) + ' ' + String(classNames.itemChoice) + ' ' + String(data.disabled ? classNames.itemDisabled : classNames.itemSelectable) + '"\
-                  data-select-text="'+ String(itemSelectText) + '"\
+                  class="' +
+                      String(classNames.item) +
+                      ' ' +
+                      String(classNames.itemChoice) +
+                      ' ' +
+                      String(
+                        data.disabled
+                          ? classNames.itemDisabled
+                          : classNames.itemSelectable,
+                      ) +
+                      '"\
+                  data-select-text="' +
+                      String(itemSelectText) +
+                      '"\
                   data-choice \
-                  '+ String(data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + '\
-                  data-id="'+ String(data.id) + '"\
-                  data-value="'+ String(data.value) + '"\
-                  '+ String(data.groupId > 0 ? 'role="treeitem"' : 'role="option"') + '\
+                  ' +
+                      String(
+                        data.disabled
+                          ? 'data-choice-disabled aria-disabled="true"'
+                          : 'data-choice-selectable',
+                      ) +
+                      '\
+                  data-id="' +
+                      String(data.id) +
+                      '"\
+                  data-value="' +
+                      String(data.value) +
+                      '"\
+                  ' +
+                      String(
+                        data.groupId > 0 ? 'role="treeitem"' : 'role="option"',
+                      ) +
+                      '\
                   >\
-                  <span style="margin-right:10px;">👉🏽</span> ' + String(data.label) + '\
+                  <span style="margin-right:10px;">👉🏽</span> ' +
+                      String(data.label) +
+                      '\
                 </div>\
-              ');
+              ',
+                  );
+                },
+              };
             },
-          };
-        }
+          },
+        );
+
+        var resetSimple = new Choices(document.getElementById('reset-simple'));
+
+        var resetMultiple = new Choices('#reset-multiple', {
+          removeItemButton: true,
+        });
       });
+    </script>
 
-      var resetSimple = new Choices(document.getElementById('reset-simple'));
-
-      var resetMultiple = new Choices('#reset-multiple', {
-        removeItemButton: true,
-      });
-    });
-  </script>
-
-  <!-- Google Analytics - Ignore me -->
-  <script>
-    window.ga = window.ga || function() { (ga.q = ga.q || []).push(arguments) }; ga.l = +new Date;
-    ga('create', 'UA-31575166-1', 'auto');
-    ga('send', 'pageview');
-  </script>
-  <script async src='https://www.google-analytics.com/analytics.js'></script>
-  <!-- End Google Analytics -->
-</body>
-
+    <!-- Google Analytics - Ignore me -->
+    <script>
+      window.ga =
+        window.ga ||
+        function() {
+          (ga.q = ga.q || []).push(arguments);
+        };
+      ga.l = +new Date();
+      ga('create', 'UA-31575166-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    <script async src="https://www.google-analytics.com/analytics.js"></script>
+    <!-- End Google Analytics -->
+  </body>
 </html>
