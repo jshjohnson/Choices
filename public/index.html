@@ -582,7 +582,7 @@
 
         var textEmailFilter = new Choices('#choices-text-email-filter', {
           editItems: true,
-          addItemFilterFn: function(value) {
+          addItemFilter: function(value) {
             if (!value) {
               return false;
             }

@@ -15,9 +15,9 @@ export const TEMPLATES = /** @type {Templates} */ ({
   ) {
     const div = Object.assign(document.createElement('div'), {
       className: containerOuter,
-      dir,
     });
     div.dataset.type = passedElementType;
+    if (dir) div.dir = dir;
     if (isSelectOneElement) div.tabIndex = 0;
     if (isSelectElement) {
       div.setAttribute('role', searchEnabled ? 'combobox' : 'listbox');
@@ -98,7 +98,6 @@ export const TEMPLATES = /** @type {Templates} */ ({
   choiceList({ list }, isSelectOneElement) {
     const div = Object.assign(document.createElement('div'), {
       className: list,
-      dir: 'ltr',
     });
     if (!isSelectOneElement) div.setAttribute('aria-multiselectable', 'true');
     div.setAttribute('role', 'listbox');

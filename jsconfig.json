@@ -5,6 +5,7 @@
     "lib": ["esnext", "dom"],
     "types": ["cypress"],
     "strict": true,
+    "moduleResolution": "node",
     /* Additional Checks */
     "noImplicitAny": false,
     "noUnusedLocals": true,

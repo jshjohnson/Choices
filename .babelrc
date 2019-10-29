@@ -1,3 +1,17 @@
 {
-  "presets": [["@babel/preset-env", { "loose": true }]]
+  "presets": [["@babel/preset-env", { "loose": true }]],
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "@babel/preset-env",
+          {
+            "targets": {
+              "node": true
+            }
+          }
+        ]
+      ]
+    }
+  }
 }
