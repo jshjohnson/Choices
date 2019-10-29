@@ -953,6 +953,7 @@ describe('choices', () => {
             expect(inst).to.eq(choice);
             fetcherCalled = true;
             await new Promise(resolve => setTimeout(resolve, 1000));
+
             return [
               { label: 'l1', value: 'v1', customProperties: 'prop1' },
               { label: 'l2', value: 'v2', customProperties: 'prop2' },

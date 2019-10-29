@@ -543,12 +543,14 @@ class Choices {
     label = 'label',
     replaceChoices = false,
   ) {
-    if (!this.initialised)
+    if (!this.initialised) {
       throw new ReferenceError(
         `setChoices was called on a non-initialized instance of Choices`,
       );
-    if (!this._isSelectElement)
+    }
+    if (!this._isSelectElement) {
       throw new TypeError(`setChoices can't be used with INPUT based Choices`);
+    }
 
     if (typeof value !== 'string' || !value) {
       throw new TypeError(
@@ -562,10 +564,11 @@ class Choices {
     }
 
     if (!Array.isArray(choicesArrayOrFetcher)) {
-      if (typeof choicesArrayOrFetcher !== 'function')
+      if (typeof choicesArrayOrFetcher !== 'function') {
         throw new TypeError(
           `.setChoices must be called either with array of choices with a function resulting into Promise of array of choices`,
         );
+      }
 
       // it's a choices fetcher
       requestAnimationFrame(() => this._handleLoadingState(true));
@@ -575,16 +578,20 @@ class Choices {
         return fetcher
           .then(data => this.setChoices(data, value, label, replaceChoices))
           .catch(err => {
-            if (!this.config.silent) console.error(err);
+            if (!this.config.silent) {
+              console.error(err);
+            }
           })
           .then(() => this._handleLoadingState(false))
           .then(() => this);
       }
       // function returned something else than promise, let's check if it's an array of choices
-      if (!Array.isArray(fetcher))
+      if (!Array.isArray(fetcher)) {
         throw new TypeError(
           `.setChoices first argument function must return either array of choices or Promise, got: ${typeof fetcher}`,
         );
+      }
+
       // recursion with results, it's sync and choices were cleared already
       return this.setChoices(fetcher, value, label, false);
     }
