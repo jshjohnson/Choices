@@ -1,3 +1,5 @@
+token: xxxxx-xxxxx-xxxxxx-xxxxxx
+
 coverage:
   parsers:
     javascript:
