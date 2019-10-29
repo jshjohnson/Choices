@@ -13,11 +13,12 @@ import { FuseOptions } from 'fuse.js';
 declare namespace Choices {
   namespace Types {
     type strToEl = (
-      str: string
+      str: string,
     ) => HTMLElement | HTMLInputElement | HTMLOptionElement;
     type stringFunction = () => string;
     type noticeStringFunction = (value: string) => string;
     type noticeLimitFunction = (maxItemCount: number) => string;
+    type filterFunction = (value: string) => boolean;
   }
 
   interface Choice {
@@ -99,9 +100,9 @@ declare namespace Choices {
      *
      * **Input types affected:** select-one, select-multiple
      *
-     * Arguments: value, keyCode
+     * Arguments: choice: Choice
      */
-    choice: CustomEvent<{ value: string; keyCode: string }>;
+    choice: CustomEvent<{ choice: Choices.Choice }>;
 
     /**
      * Triggered each time an item is added/removed **by a user**.
@@ -143,9 +144,9 @@ declare namespace Choices {
      * Triggered when a choice from the dropdown is highlighted.
      *
      * Input types affected: select-one, select-multiple
-     * Arguments: el is the HTML element node object that was affected.
+     * Arguments: el is the choice.passedElement that was affected.
      */
-    highlightChoice: CustomEvent<{ el: HTMLOptionElement }>;
+    highlightChoice: CustomEvent<{ el: Choices.passedElement }>;
   }
 
   interface Group {
@@ -168,52 +169,52 @@ declare namespace Choices {
       isSelectElement: boolean,
       isSelectOneElement: boolean,
       searchEnabled: boolean,
-      passedElementType: passedElement['type']
+      passedElementType: passedElement['type'],
     ) => HTMLElement;
     containerInner: (this: Choices, classNames: ClassNames) => HTMLElement;
     itemList: (
       this: Choices,
       classNames: ClassNames,
-      isSelectOneElement: boolean
+      isSelectOneElement: boolean,
     ) => HTMLElement;
     placeholder: (
       this: Choices,
       classNames: ClassNames,
-      value: string
+      value: string,
     ) => HTMLElement;
     item: (
       this: Choices,
       classNames: ClassNames,
       data: Choice,
-      removeItemButton: boolean
+      removeItemButton: boolean,
     ) => HTMLElement;
     choiceList: (
       this: Choices,
       classNames: ClassNames,
-      isSelectOneElement: boolean
+      isSelectOneElement: boolean,
     ) => HTMLElement;
     choiceGroup: (
       this: Choices,
       classNames: ClassNames,
-      data: Choice
+      data: Choice,
     ) => HTMLElement;
     choice: (
       this: Choices,
       classNames: ClassNames,
       data: Choice,
-      selectText: string
+      selectText: string,
     ) => HTMLElement;
     input: (
       this: Choices,
       classNames: ClassNames,
-      placeholderValue: string
+      placeholderValue: string,
     ) => HTMLInputElement;
     dropdown: (this: Choices, classNames: ClassNames) => HTMLElement;
     notice: (
       this: Choices,
       classNames: ClassNames,
       label: string,
-      type: '' | 'no-results' | 'no-choices'
+      type: '' | 'no-results' | 'no-choices',
     ) => HTMLElement;
     option: (data: Choice) => HTMLOptionElement;
   }
@@ -280,9 +281,9 @@ declare namespace Choices {
         type: K,
         listener: (
           this: HTMLInputElement | HTMLSelectElement,
-          ev: Choices.EventMap[K]
+          ev: Choices.EventMap[K],
         ) => void,
-        options?: boolean | AddEventListenerOptions
+        options?: boolean | AddEventListenerOptions,
       ): void;
     };
     type: 'text' | 'select-one' | 'select-multiple';
@@ -403,7 +404,7 @@ declare namespace Choices {
      *
      * @default null
      */
-    addItemFilterFn: (value: string) => boolean;
+    addItemFilter: string | RegExp | Choices.Types.filterFunction;
 
     /**
      * The text that is shown when a user has inputted a new item but has not pressed the enter key. To access the current input value, pass a function with a `value` argument (see the **default config** [https://github.com/jshjohnson/Choices#setup] for an example), otherwise pass a string.
@@ -750,13 +751,17 @@ declare namespace Choices {
      * @default null
      */
     callbackOnCreateTemplates: (
-      template: Choices.Types.strToEl
+      template: Choices.Types.strToEl,
     ) => Partial<Choices.Templates>;
   }
 }
 
 // Exporting default class
 export default class Choices {
+  static readonly defaults: {
+    readonly options: Partial<Choices.Options>;
+    readonly templates: Choices.Templates;
+  };
   readonly config: Choices.Options;
 
   // State Tracking
@@ -769,7 +774,7 @@ export default class Choices {
 
   constructor(
     selectorOrElement: string | HTMLInputElement | HTMLSelectElement,
-    userConfig?: Partial<Choices.Options>
+    userConfig?: Partial<Choices.Options>,
   );
 
   /**
@@ -942,8 +947,15 @@ export default class Choices {
     choices: Choices.Choice[],
     value: string,
     label: string,
-    replaceChoices?: boolean
+    replaceChoices?: boolean,
   ): this;
+
+  /**
+   * Clear all choices from select.
+   *
+   * **Input types affected:** select-one, select-multiple
+   */
+  clearChoices(): this;
 
   /**
    * Removes all items, choices and groups. Use with caution.

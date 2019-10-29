@@ -38,11 +38,28 @@ import {
   diff,
 } from './lib/utils';
 
+const USER_DEFAULTS = /** @type {Partial<import('../../types/index').Choices.Options>} */ ({});
+
 /**
  * Choices
  * @author Josh Johnson<josh@joshuajohnson.co.uk>
  */
 class Choices {
+  /* ========================================
+  =            Static properties            =
+  ======================================== */
+
+  static get defaults() {
+    return Object.preventExtensions({
+      get options() {
+        return USER_DEFAULTS;
+      },
+      get templates() {
+        return TEMPLATES;
+      },
+    });
+  }
+
   constructor(element = '[data-choice]', userConfig = {}) {
     if (isType('String', element)) {
       const elements = Array.from(document.querySelectorAll(element));
@@ -55,11 +72,23 @@ class Choices {
     }
 
     this.config = merge.all(
-      [DEFAULT_CONFIG, Choices.userDefaults, userConfig],
+      [DEFAULT_CONFIG, Choices.defaults.options, userConfig],
       // When merging array configs, replace with a copy of the userConfig array,
       // instead of concatenating with the default array
       { arrayMerge: (destinationArray, sourceArray) => [...sourceArray] },
     );
+
+    // Convert addItemFilter to function
+    if (
+      userConfig.addItemFilter &&
+      typeof userConfig.addItemFilter !== 'function'
+    ) {
+      const re =
+        userConfig.addItemFilter instanceof RegExp
+          ? userConfig.addItemFilter
+          : new RegExp(userConfig.addItemFilter);
+      this.config.addItemFilter = re.test.bind(re);
+    }
 
     const invalidConfigOptions = diff(this.config, DEFAULT_CONFIG);
     if (invalidConfigOptions.length) {
@@ -125,7 +154,23 @@ class Choices {
     this._wasTap = true;
     this._placeholderValue = this._generatePlaceholderValue();
     this._baseId = generateId(this.passedElement.element, 'choices-');
-    this._direction = this.passedElement.element.getAttribute('dir') || 'ltr';
+    /**
+     * setting direction in cases where it's explicitly set on passedElement
+     * or when calculated direction is different from the document
+     * @type {HTMLElement['dir']}
+     */
+    this._direction = this.passedElement.element.dir;
+    if (!this._direction) {
+      const { direction: elementDirection } = window.getComputedStyle(
+        this.passedElement.element,
+      );
+      const { direction: documentDirection } = window.getComputedStyle(
+        document.documentElement,
+      );
+      if (elementDirection !== documentDirection) {
+        this._direction = elementDirection;
+      }
+    }
     this._idNames = {
       itemChoice: 'item-choice',
     };
@@ -992,13 +1037,14 @@ class Choices {
         this._isTextElement &&
         this.config.addItems &&
         canAddItem &&
-        isType('Function', this.config.addItemFilterFn) &&
-        !this.config.addItemFilterFn(value)
+        typeof this.config.addItemFilter === 'function' &&
+        !this.config.addItemFilter(value)
       ) {
         canAddItem = false;
-        notice = isType('Function', this.config.customAddItemText)
-          ? this.config.customAddItemText(value)
-          : this.config.customAddItemText;
+        notice =
+          typeof this.config.customAddItemText === 'function'
+            ? this.config.customAddItemText(value)
+            : this.config.customAddItemText;
       }
     }
 
@@ -1863,6 +1909,7 @@ class Choices {
       element: this._getTemplate('input', this._placeholderValue),
       classNames: this.config.classNames,
       type: this.passedElement.element.type,
+      preventPaste: !this.config.paste,
     });
 
     this.choiceList = new List({
@@ -2129,7 +2176,5 @@ class Choices {
 
   /* =====  End of Private functions  ====== */
 }
-
-Choices.userDefaults = {};
 
 export default Choices;

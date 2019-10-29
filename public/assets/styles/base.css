@@ -21,10 +21,10 @@ body {
 }
 
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
   font-size: 16px;
   line-height: 1.4;
-  color: #FFFFFF;
+  color: #ffffff;
   background-color: #333;
   overflow-x: hidden;
 }
@@ -64,7 +64,7 @@ h6 {
 a,
 a:visited,
 a:focus {
-  color: #FFFFFF;
+  color: #ffffff;
   text-decoration: none;
   font-weight: 600;
 }
@@ -134,7 +134,7 @@ label + p {
 }
 
 .section {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding: 24px;
   color: #333;
 }
@@ -177,10 +177,6 @@ label + p {
 
 .text-center {
   text-align: center;
-}
-
-.is-hidden {
-  display: none;
 }
 
 [data-test-hook] {

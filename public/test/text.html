@@ -1,28 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=no"
+    />
+    <title>Choices</title>
+    <meta
+      name="description"
+      itemprop="description"
+      content="A lightweight, configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency."
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="../assets/images/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../assets/images/favicon-32x32.png"
+      sizes="32x32"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="../assets/images/favicon-16x16.png"
+      sizes="16x16"
+    />
+    <link rel="manifest" href="../assets/images/manifest.json" />
+    <link
+      rel="mask-icon"
+      href="../assets/images/safari-pinned-tab.svg"
+      color="#00bcd4"
+    />
+    <link rel="shortcut icon" href="../assets/images/favicon.ico" />
+    <meta
+      name="msapplication-config"
+      content="../assets/images/browserconfig.xml"
+    />
+    <meta name="theme-color" content="#ffffff" />
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-  <title>Choices</title>
-  <meta name=description itemprop=description content="A lightweight, configurable select box/text input plugin. Similar to Select2 and Selectize but without the jQuery dependency.">
-  <link rel="apple-touch-icon" sizes="180x180" href="../assets/images/apple-touch-icon.png">
-  <link rel="icon" type="image/png" href="../assets/images/favicon-32x32.png" sizes="32x32">
-  <link rel="icon" type="image/png" href="../assets/images/favicon-16x16.png" sizes="16x16">
-  <link rel="manifest" href="../assets/images/manifest.json">
-  <link rel="mask-icon" href="../assets/images/safari-pinned-tab.svg" color="#00bcd4">
-  <link rel="shortcut icon" href="../assets/images/favicon.ico">
-  <meta name="msapplication-config" content="../assets/images/browserconfig.xml">
-  <meta name="theme-color" content="#ffffff">
+    <!-- Ignore these -->
+    <link rel="stylesheet" href="../assets/styles/base.min.css?version=6.0.3" />
+    <!-- End ignore these -->
 
-  <!-- Ignore these -->
-  <link rel="stylesheet" href="../assets/styles/base.min.css?version=6.0.3">
-  <!-- End ignore these -->
-
-  <!-- Choices includes -->
-  <link rel="stylesheet" href="../assets/styles/choices.min.css?version=6.0.3">
-  <script src="../assets/scripts/choices.min.js?version=6.0.3"></script>
-  <!-- End Choices includes -->
+    <!-- Choices includes -->
+    <link
+      rel="stylesheet"
+      href="../assets/styles/choices.min.css?version=6.0.3"
+    />
+    <script src="../assets/scripts/choices.min.js?version=6.0.3"></script>
+    <!-- End Choices includes -->
   </head>
 
   <body>
@@ -31,63 +61,76 @@
         <h2>Text inputs</h2>
         <div data-test-hook="basic">
           <label for="choices-basic">Basic</label>
-          <input class="form-control" id="choices-basic" type="text">
+          <input class="form-control" id="choices-basic" type="text" />
         </div>
 
         <div data-test-hook="edit-items">
           <label for="choices-edit-items">Edit items</label>
-          <input class="form-control" id="choices-edit-items" type="text">
+          <input class="form-control" id="choices-edit-items" type="text" />
         </div>
 
         <div data-test-hook="remove-button">
           <label for="choices-remove-button">Remove button</label>
-          <input class="form-control" id="choices-remove-button" type="text">
+          <input class="form-control" id="choices-remove-button" type="text" />
         </div>
 
         <div data-test-hook="unique-values">
           <label for="choices-unique-values">Unique values</label>
-          <input class="form-control" id="choices-unique-values" type="text">
+          <input class="form-control" id="choices-unique-values" type="text" />
         </div>
 
         <div data-test-hook="input-limit">
           <label for="choices-input-limit">Input limit</label>
-          <input class="form-control" id="choices-input-limit" type="text">
+          <input class="form-control" id="choices-input-limit" type="text" />
         </div>
 
         <div data-test-hook="add-item-filter">
           <label for="choices-add-item-filter">Add item filter</label>
-          <input class="form-control" id="choices-add-item-filter" type="text">
+          <input
+            class="form-control"
+            id="choices-add-item-filter"
+            type="text"
+          />
         </div>
 
         <div data-test-hook="adding-items-disabled">
           <label for="choices-adding-items-disabled">Add items disabled</label>
-          <input class="form-control" id="choices-adding-items-disabled" type="text">
+          <input
+            class="form-control"
+            id="choices-adding-items-disabled"
+            type="text"
+          />
         </div>
 
         <div data-test-hook="disabled-via-attr">
           <label for="choices-disabled-via-attr">Disabled via attribute</label>
-          <input class="form-control" id="choices-disabled-via-attr" type="text" disabled>
+          <input
+            class="form-control"
+            id="choices-disabled-via-attr"
+            type="text"
+            disabled
+          />
         </div>
 
         <div data-test-hook="prepend-append">
           <label for="choices-prepend-append">Prepend/append</label>
-          <input class="form-control" id="choices-prepend-append" type="text">
+          <input class="form-control" id="choices-prepend-append" type="text" />
         </div>
 
         <div data-test-hook="prepopulated">
           <label for="choices-prepopulated">Pre-populated choices</label>
-          <input class="form-control" id="choices-prepopulated" type="text">
+          <input class="form-control" id="choices-prepopulated" type="text" />
         </div>
 
         <div data-test-hook="placeholder">
           <label for="choices-placeholder">Placeholder</label>
-          <input class="form-control" id="choices-placeholder" type="text">
+          <input class="form-control" id="choices-placeholder" type="text" />
         </div>
 
         <div data-test-hook="within-form">
           <form>
             <label for="choices-within-form">Within form</label>
-            <input class="form-control" id="choices-within-form" type="text">
+            <input class="form-control" id="choices-within-form" type="text" />
           </form>
         </div>
       </div>
@@ -114,8 +157,8 @@
 
         new Choices('#choices-add-item-filter', {
           addItems: true,
-          addItemFilterFn: (value) => {
-            const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          addItemFilter: value => {
+            const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             const expression = new RegExp(regex.source, 'i');
             return expression.test(value);
           },
@@ -133,13 +176,16 @@
         });
 
         new Choices('#choices-prepopulated', {
-          items: ['Josh Johnson', {
-            value: 'joe@bloggs.co.uk',
-            label: 'Joe Bloggs',
-            customProperties: {
-              description: 'Joe Blogg is such a generic name',
-            }
-          }],
+          items: [
+            'Josh Johnson',
+            {
+              value: 'joe@bloggs.co.uk',
+              label: 'Joe Bloggs',
+              customProperties: {
+                description: 'Joe Blogg is such a generic name',
+              },
+            },
+          ],
         });
 
         new Choices('#choices-placeholder', {
@@ -151,4 +197,4 @@
       });
     </script>
   </body>
-  </html>
+</html>
