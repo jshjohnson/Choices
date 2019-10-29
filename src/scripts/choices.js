@@ -1825,6 +1825,7 @@ class Choices {
       element: this._getTemplate('input', this._placeholderValue),
       classNames: this.config.classNames,
       type: this.passedElement.element.type,
+      preventPaste: !this.config.paste,
     });
 
     this.choiceList = new List({

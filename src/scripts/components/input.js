@@ -5,18 +5,16 @@ export default class Input {
    *
    * @typedef {import('../../../types/index').Choices.passedElement} passedElement
    * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
-   * @param {{element: HTMLInputElement, type: passedElement['type'], classNames: ClassNames, placeholderValue: string, preventPaste: boolean }} p
+   * @param {{element: HTMLInputElement, type: passedElement['type'], classNames: ClassNames, preventPaste: boolean }} p
    */
-  constructor({ element, type, classNames, placeholderValue, preventPaste }) {
-    Object.assign(this, {
-      element,
-      type,
-      classNames,
-      placeholderValue,
-      preventPaste,
-    });
+  constructor({ element, type, classNames, preventPaste }) {
+    this.element = element;
+    this.type = type;
+    this.classNames = classNames;
+    this.preventPaste = preventPaste;
+
     this.isFocussed = this.element === document.activeElement;
-    this.isDisabled = false;
+    this.isDisabled = element.disabled;
     this._onPaste = this._onPaste.bind(this);
     this._onInput = this._onInput.bind(this);
     this._onFocus = this._onFocus.bind(this);
@@ -122,8 +120,7 @@ export default class Input {
   }
 
   _onPaste(event) {
-    const { target } = event;
-    if (target === this.element && this.preventPaste) {
+    if (this.preventPaste) {
       event.preventDefault();
     }
   }
