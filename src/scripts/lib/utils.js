@@ -80,7 +80,7 @@ export const isScrolledIntoView = (el, parent, direction = 1) => {
 };
 
 export const sanitise = value => {
-  if (!isType('String', value)) {
+  if (typeof value !== 'string') {
     return value;
   }
 
@@ -153,7 +153,7 @@ export const isIE11 = () =>
 
 export const existsInArray = (array, value, key = 'value') =>
   array.some(item => {
-    if (isType('String', value)) {
+    if (typeof value === 'string') {
       return item[key] === value.trim();
     }
 

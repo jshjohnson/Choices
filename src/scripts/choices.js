@@ -96,9 +96,8 @@ class Choices {
       this.config.renderSelectedChoices = 'auto';
     }
 
-    const passedElement = isType('String', element)
-      ? document.querySelector(element)
-      : element;
+    const passedElement =
+      typeof element === 'string' ? document.querySelector(element) : element;
 
     if (
       !(
@@ -245,7 +244,7 @@ class Choices {
 
     const { callbackOnInit } = this.config;
     // Run callback if it is a function
-    if (callbackOnInit && isType('Function', callbackOnInit)) {
+    if (callbackOnInit && typeof callbackOnInit === 'function') {
       callbackOnInit.call(this);
     }
   }
@@ -447,7 +446,7 @@ class Choices {
     }
 
     // If only one value has been passed, convert to array
-    const choiceValue = isType('Array', value) ? value : [value];
+    const choiceValue = Array.isArray(value) ? value : [value];
 
     // Loop through each value and
     choiceValue.forEach(val => this._findAndSelectChoiceByValue(val));
@@ -725,15 +724,17 @@ class Choices {
       let notice;
 
       if (this._isSearching) {
-        notice = isType('Function', this.config.noResultsText)
-          ? this.config.noResultsText()
-          : this.config.noResultsText;
+        notice =
+          typeof this.config.noResultsText === 'function'
+            ? this.config.noResultsText()
+            : this.config.noResultsText;
 
         dropdownItem = this._getTemplate('notice', notice, 'no-results');
       } else {
-        notice = isType('Function', this.config.noChoicesText)
-          ? this.config.noChoicesText()
-          : this.config.noChoicesText;
+        notice =
+          typeof this.config.noChoicesText === 'function'
+            ? this.config.noChoicesText()
+            : this.config.noChoicesText;
 
         dropdownItem = this._getTemplate('notice', notice, 'no-choices');
       }
@@ -1108,9 +1109,10 @@ class Choices {
 
   _canAddItem(activeItems, value) {
     let canAddItem = true;
-    let notice = isType('Function', this.config.addItemText)
-      ? this.config.addItemText(value)
-      : this.config.addItemText;
+    let notice =
+      typeof this.config.addItemText === 'function'
+        ? this.config.addItemText(value)
+        : this.config.addItemText;
 
     if (!this._isSelectOneElement) {
       const isDuplicateValue = existsInArray(activeItems, value);
@@ -1122,9 +1124,10 @@ class Choices {
         // If there is a max entry limit and we have reached that limit
         // don't update
         canAddItem = false;
-        notice = isType('Function', this.config.maxItemText)
-          ? this.config.maxItemText(this.config.maxItemCount)
-          : this.config.maxItemText;
+        notice =
+          typeof this.config.maxItemText === 'function'
+            ? this.config.maxItemText(this.config.maxItemCount)
+            : this.config.maxItemText;
       }
 
       if (
@@ -1133,9 +1136,10 @@ class Choices {
         canAddItem
       ) {
         canAddItem = false;
-        notice = isType('Function', this.config.uniqueItemText)
-          ? this.config.uniqueItemText(value)
-          : this.config.uniqueItemText;
+        notice =
+          typeof this.config.uniqueItemText === 'function'
+            ? this.config.uniqueItemText(value)
+            : this.config.uniqueItemText;
       }
 
       if (
@@ -1160,10 +1164,11 @@ class Choices {
   }
 
   _searchChoices(value) {
-    const newValue = isType('String', value) ? value.trim() : value;
-    const currentValue = isType('String', this._currentValue)
-      ? this._currentValue.trim()
-      : this._currentValue;
+    const newValue = typeof value === 'string' ? value.trim() : value;
+    const currentValue =
+      typeof this._currentValue === 'string'
+        ? this._currentValue.trim()
+        : this._currentValue;
 
     if (newValue.length < 1 && newValue === `${currentValue} `) {
       return 0;
@@ -1759,7 +1764,7 @@ class Choices {
     placeholder = false,
     keyCode = null,
   }) {
-    let passedValue = isType('String', value) ? value.trim() : value;
+    let passedValue = typeof value === 'string' ? value.trim() : value;
 
     const passedKeyCode = keyCode;
     const passedCustomProperties = customProperties;
@@ -1932,7 +1937,7 @@ class Choices {
 
     if (
       callbackOnCreateTemplates &&
-      isType('Function', callbackOnCreateTemplates)
+      typeof callbackOnCreateTemplates === 'function'
     ) {
       userTemplates = callbackOnCreateTemplates.call(this, strToEl);
     }
