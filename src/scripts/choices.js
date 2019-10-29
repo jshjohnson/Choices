@@ -77,6 +77,7 @@ class Choices {
         userConfig.addItemFilter instanceof RegExp
           ? userConfig.addItemFilter
           : new RegExp(userConfig.addItemFilter);
+
       this.config.addItemFilter = re.test.bind(re);
     }
 
@@ -129,7 +130,7 @@ class Choices {
 
     this.initialised = false;
 
-    this._store = new Store(this.render);
+    this._store = new Store();
     this._initialState = {};
     this._currentState = {};
     this._prevState = {};
