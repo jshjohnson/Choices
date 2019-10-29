@@ -906,14 +906,15 @@ class Choices {
 
   _selectPlaceholderChoice() {
     const { placeholderChoice } = this._store;
+    const { id, value, label, groupId, placeholder } = placeholderChoice;
 
     if (placeholderChoice) {
       this._addItem({
-        value: placeholderChoice.value,
-        label: placeholderChoice.label,
-        choiceId: placeholderChoice.id,
-        groupId: placeholderChoice.groupId,
-        placeholder: placeholderChoice.placeholder,
+        choiceId: id,
+        value,
+        label,
+        groupId,
+        placeholder,
       });
 
       this._triggerChange(placeholderChoice.value);
@@ -980,9 +981,11 @@ class Choices {
     // If we are clicking on an option
     const { id } = element.dataset;
     const choice = this._store.getChoiceById(id);
+
     if (!choice) {
       return;
     }
+
     const passedKeyCode =
       activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
     const hasActiveDropdown = this.dropdown.isActive;
@@ -1050,9 +1053,9 @@ class Choices {
   }
 
   _handleLoadingState(setLoading = true) {
-    let placeholderItem = this.itemList.getChild(
-      `.${this.config.classNames.placeholder}`,
-    );
+    const { classNames, loadingText } = this.config;
+
+    let placeholderItem = this.itemList.getChild(`.${classNames.placeholder}`);
 
     if (setLoading) {
       this.disable();
@@ -1060,16 +1063,13 @@ class Choices {
 
       if (this._isSelectOneElement) {
         if (!placeholderItem) {
-          placeholderItem = this._getTemplate(
-            'placeholder',
-            this.config.loadingText,
-          );
+          placeholderItem = this._getTemplate('placeholder', loadingText);
           this.itemList.append(placeholderItem);
         } else {
-          placeholderItem.innerHTML = this.config.loadingText;
+          placeholderItem.innerHTML = loadingText;
         }
       } else {
-        this.input.placeholder = this.config.loadingText;
+        this.input.placeholder = loadingText;
       }
     } else {
       this.enable();
@@ -1108,52 +1108,54 @@ class Choices {
   }
 
   _canAddItem(activeItems, value) {
+    const {
+      addItems,
+      addItemText,
+      addItemFilter,
+      customAddItemText,
+      uniqueItemText,
+      maxItemText,
+      maxItemCount,
+      duplicateItemsAllowed,
+    } = this.config;
+
     let canAddItem = true;
     let notice =
-      typeof this.config.addItemText === 'function'
-        ? this.config.addItemText(value)
-        : this.config.addItemText;
+      typeof addItemText === 'function' ? addItemText(value) : addItemText;
 
     if (!this._isSelectOneElement) {
       const isDuplicateValue = existsInArray(activeItems, value);
 
-      if (
-        this.config.maxItemCount > 0 &&
-        this.config.maxItemCount <= activeItems.length
-      ) {
+      if (maxItemCount > 0 && maxItemCount <= activeItems.length) {
         // If there is a max entry limit and we have reached that limit
         // don't update
         canAddItem = false;
         notice =
-          typeof this.config.maxItemText === 'function'
-            ? this.config.maxItemText(this.config.maxItemCount)
-            : this.config.maxItemText;
+          typeof maxItemText === 'function'
+            ? maxItemText(maxItemCount)
+            : maxItemText;
       }
 
-      if (
-        !this.config.duplicateItemsAllowed &&
-        isDuplicateValue &&
-        canAddItem
-      ) {
+      if (!duplicateItemsAllowed && isDuplicateValue && canAddItem) {
         canAddItem = false;
         notice =
-          typeof this.config.uniqueItemText === 'function'
-            ? this.config.uniqueItemText(value)
-            : this.config.uniqueItemText;
+          typeof uniqueItemText === 'function'
+            ? uniqueItemText(value)
+            : uniqueItemText;
       }
 
       if (
         this._isTextElement &&
-        this.config.addItems &&
+        addItems &&
         canAddItem &&
-        typeof this.config.addItemFilter === 'function' &&
-        !this.config.addItemFilter(value)
+        typeof addItemFilter === 'function' &&
+        !addItemFilter(value)
       ) {
         canAddItem = false;
         notice =
-          typeof this.config.customAddItemText === 'function'
-            ? this.config.customAddItemText(value)
-            : this.config.customAddItemText;
+          typeof customAddItemText === 'function'
+            ? customAddItemText(value)
+            : customAddItemText;
       }
     }
 
