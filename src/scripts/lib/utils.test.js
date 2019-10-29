@@ -6,7 +6,6 @@ import {
   generateId,
   getType,
   isType,
-  isElement,
   sanitise,
   sortByAlpha,
   sortByScore,
@@ -93,14 +92,6 @@ describe('utils', () => {
     it('checks with given object type equals given type', () => {
       expect(isType('Object', {})).to.equal(true);
       expect(isType('String', {})).to.equal(false);
-    });
-  });
-
-  describe('isElement', () => {
-    it('checks with given object is an element', () => {
-      const element = document.createElement('div');
-      expect(isElement(element)).to.equal(true);
-      expect(isElement({})).to.equal(false);
     });
   });
 

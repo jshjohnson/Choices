@@ -28,8 +28,6 @@ export const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
 export const isType = (type, obj) =>
   obj !== undefined && obj !== null && getType(obj) === type;
 
-export const isElement = element => element instanceof Element;
-
 export const wrap = (element, wrapper = document.createElement('div')) => {
   if (element.nextSibling) {
     element.parentNode.insertBefore(wrapper, element.nextSibling);

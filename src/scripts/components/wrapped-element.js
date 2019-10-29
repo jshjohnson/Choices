@@ -1,10 +1,10 @@
-import { dispatchEvent, isElement } from '../lib/utils';
+import { dispatchEvent } from '../lib/utils';
 
 export default class WrappedElement {
   constructor({ element, classNames }) {
     Object.assign(this, { element, classNames });
 
-    if (!isElement(element)) {
+    if (!(element instanceof Element)) {
       throw new TypeError('Invalid element passed');
     }
 
