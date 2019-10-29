@@ -16,7 +16,9 @@ export const TEMPLATES = /** @type {Templates} */ ({
     const div = Object.assign(document.createElement('div'), {
       className: containerOuter,
     });
+
     div.dataset.type = passedElementType;
+
     if (dir) {
       div.dir = dir;
     }
@@ -72,15 +74,18 @@ export const TEMPLATES = /** @type {Templates} */ ({
       className: item,
       innerHTML: label,
     });
+
     Object.assign(div.dataset, {
       item: '',
       id,
       value,
       customProperties,
     });
+
     if (active) {
       div.setAttribute('aria-selected', 'true');
     }
+
     if (disabled) {
       div.setAttribute('aria-disabled', 'true');
     }
@@ -116,6 +121,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
     const div = Object.assign(document.createElement('div'), {
       className: list,
     });
+
     if (!isSelectOneElement) {
       div.setAttribute('aria-multiselectable', 'true');
     }
@@ -128,11 +134,19 @@ export const TEMPLATES = /** @type {Templates} */ ({
     const div = Object.assign(document.createElement('div'), {
       className: `${group} ${disabled ? itemDisabled : ''}`,
     });
+
     div.setAttribute('role', 'group');
-    Object.assign(div.dataset, { group: '', id, value });
+
+    Object.assign(div.dataset, {
+      group: '',
+      id,
+      value,
+    });
+
     if (disabled) {
       div.setAttribute('aria-disabled', 'true');
     }
+
     div.appendChild(
       Object.assign(document.createElement('div'), {
         className: groupHeading,
@@ -163,13 +177,16 @@ export const TEMPLATES = /** @type {Templates} */ ({
         disabled ? itemDisabled : itemSelectable
       } ${isPlaceholder ? placeholder : ''}`,
     });
+
     div.setAttribute('role', groupId > 0 ? 'treeitem' : 'option');
+
     Object.assign(div.dataset, {
       choice: '',
       id,
       value,
       selectText,
     });
+
     if (disabled) {
       div.dataset.choiceDisabled = '';
       div.setAttribute('aria-disabled', 'true');
@@ -187,6 +204,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
       autocapitalize: 'off',
       spellcheck: false,
     });
+
     inp.setAttribute('role', 'textbox');
     inp.setAttribute('aria-autocomplete', 'list');
     inp.setAttribute('aria-label', placeholderValue);
@@ -195,6 +213,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
   },
   dropdown({ list, listDropdown }) {
     const div = document.createElement('div');
+
     div.classList.add(list, listDropdown);
     div.setAttribute('aria-expanded', 'false');
 
@@ -202,6 +221,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
   },
   notice({ item, itemChoice, noResults, noChoices }, innerHTML, type = '') {
     const classes = [item, itemChoice];
+
     if (type === 'no-choices') {
       classes.push(noChoices);
     } else if (type === 'no-results') {
@@ -215,6 +235,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
   },
   option({ label, value, customProperties, active, disabled }) {
     const opt = new Option(label, value, false, active);
+
     if (customProperties) {
       opt.dataset.customProperties = customProperties;
     }
