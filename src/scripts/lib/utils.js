@@ -39,19 +39,11 @@ export const wrap = (element, wrapper = document.createElement('div')) => {
   return wrapper.appendChild(element);
 };
 
-export const findAncestorByAttrName = (el, attr) => {
-  let target = el;
-
-  while (target) {
-    if (target.hasAttribute(attr)) {
-      return target;
-    }
-
-    target = target.parentElement;
-  }
-
-  return null;
-};
+/**
+ * @param {HTMLElement} el
+ * @param {string} attr
+ */
+export const findAncestorByAttrName = (el, attr) => el.closest(`[${attr}]`);
 
 export const getAdjacentEl = (startEl, className, direction = 1) => {
   if (!startEl || !className) {
@@ -112,54 +104,6 @@ export const strToEl = (() => {
     return firldChild;
   };
 })();
-
-/**
- * Determines the width of a passed input based on its value and passes
- * it to the supplied callback function.
- */
-export const calcWidthOfInput = (input, callback) => {
-  const value = input.value || input.placeholder;
-  let width = input.offsetWidth;
-
-  if (value) {
-    const testEl = strToEl(`<span>${sanitise(value)}</span>`);
-    testEl.style.position = 'absolute';
-    testEl.style.padding = '0';
-    testEl.style.top = '-9999px';
-    testEl.style.left = '-9999px';
-    testEl.style.width = 'auto';
-    testEl.style.whiteSpace = 'pre';
-
-    if (document.body.contains(input) && window.getComputedStyle) {
-      const inputStyle = window.getComputedStyle(input);
-
-      if (inputStyle) {
-        testEl.style.fontSize = inputStyle.fontSize;
-        testEl.style.fontFamily = inputStyle.fontFamily;
-        testEl.style.fontWeight = inputStyle.fontWeight;
-        testEl.style.fontStyle = inputStyle.fontStyle;
-        testEl.style.letterSpacing = inputStyle.letterSpacing;
-        testEl.style.textTransform = inputStyle.textTransform;
-        testEl.style.paddingLeft = inputStyle.paddingLeft;
-        testEl.style.paddingRight = inputStyle.paddingRight;
-      }
-    }
-
-    document.body.appendChild(testEl);
-
-    requestAnimationFrame(() => {
-      if (value && testEl.offsetWidth !== input.offsetWidth) {
-        width = testEl.offsetWidth + 4;
-      }
-
-      document.body.removeChild(testEl);
-
-      callback.call(this, `${width}px`);
-    });
-  } else {
-    callback.call(this, `${width}px`);
-  }
-};
 
 export const sortByAlpha =
   /**

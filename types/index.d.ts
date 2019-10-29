@@ -1,6 +1,10 @@
 // Type definitions for Choices.js 7.1.x
 // Project: https://github.com/jshjohnson/Choices
-// Definitions by: Arthur vasconcelos <https://github.com/arthurvasconcelos>, Josh Johnson <https://github.com/jshjohnson>, Zack Schuster <https://github.com/zackschuster>
+// Definitions by:
+//         Arthur vasconcelos <https://github.com/arthurvasconcelos>,
+//         Josh Johnson <https://github.com/jshjohnson>,
+//         Zack Schuster <https://github.com/zackschuster>
+//         Konstantin Vyatkin <https://github.com/tinovyatkin>
 // Definitions: https://github.com/jshjohnson/Choices
 
 import { FuseOptions } from 'fuse.js';
@@ -8,15 +12,12 @@ import { FuseOptions } from 'fuse.js';
 // Choices Namespace
 declare namespace Choices {
   namespace Types {
-    type renderSelected = 'auto' | 'always';
-    type dropdownPosition = 'auto' | 'top';
     type strToEl = (
-      str: string
+      str: string,
     ) => HTMLElement | HTMLInputElement | HTMLOptionElement;
     type stringFunction = () => string;
     type noticeStringFunction = (value: string) => string;
     type noticeLimitFunction = (maxItemCount: number) => string;
-    type callbackOnCreateTemplates = (template: strToEl) => Choices.Templates;
   }
 
   interface Choice {
@@ -43,7 +44,13 @@ declare namespace Choices {
      *
      * Arguments: id, value, label, groupValue, keyCode
      */
-    addItem: CustomEvent;
+    addItem: CustomEvent<{
+      id: string;
+      value: string;
+      label: string;
+      groupValue: string;
+      keyCode: string;
+    }>;
 
     /**
      * Triggered each time an item is removed (programmatically or by the user).
@@ -52,7 +59,12 @@ declare namespace Choices {
      *
      * Arguments: id, value, label, groupValue
      */
-    removeItem: CustomEvent;
+    removeItem: CustomEvent<{
+      id: string;
+      value: string;
+      label: string;
+      groupValue: string;
+    }>;
 
     /**
      * Triggered each time an item is highlighted.
@@ -61,7 +73,12 @@ declare namespace Choices {
      *
      * Arguments: id, value, label, groupValue
      */
-    highlightItem: CustomEvent;
+    highlightItem: CustomEvent<{
+      id: string;
+      value: string;
+      label: string;
+      groupValue: string;
+    }>;
 
     /**
      * Triggered each time an item is unhighlighted.
@@ -70,16 +87,21 @@ declare namespace Choices {
      *
      * Arguments: id, value, label, groupValue
      */
-    unhighlightItem: CustomEvent;
+    unhighlightItem: CustomEvent<{
+      id: string;
+      value: string;
+      label: string;
+      groupValue: string;
+    }>;
 
     /**
      * Triggered each time a choice is selected **by a user**, regardless if it changes the value of the input.
      *
      * **Input types affected:** select-one, select-multiple
      *
-     * Arguments: value, keyCode
+     * Arguments: choice: Choice
      */
-    choice: CustomEvent;
+    choice: CustomEvent<{ choice: Choices.Choice }>;
 
     /**
      * Triggered each time an item is added/removed **by a user**.
@@ -88,7 +110,7 @@ declare namespace Choices {
      *
      * Arguments: value
      */
-    change: CustomEvent;
+    change: CustomEvent<{ value: string }>;
 
     /**
      * Triggered when a user types into an input to search choices.
@@ -97,7 +119,7 @@ declare namespace Choices {
      *
      * Arguments: value, resultCount
      */
-    search: CustomEvent;
+    search: CustomEvent<{ value: string; resultCount: number }>;
 
     /**
      * Triggered when the dropdown is shown.
@@ -106,7 +128,7 @@ declare namespace Choices {
      *
      * Arguments: -
      */
-    showDropdown: CustomEvent;
+    showDropdown: CustomEvent<undefined>;
 
     /**
      * Triggered when the dropdown is hidden.
@@ -115,7 +137,15 @@ declare namespace Choices {
      *
      * Arguments: -
      */
-    hideDropdown: CustomEvent;
+    hideDropdown: CustomEvent<undefined>;
+
+    /**
+     * Triggered when a choice from the dropdown is highlighted.
+     *
+     * Input types affected: select-one, select-multiple
+     * Arguments: el is the choice.passedElement that was affected.
+     */
+    highlightChoice: CustomEvent<{ el: Choices.passedElement }>;
   }
 
   interface Group {
@@ -131,82 +161,115 @@ declare namespace Choices {
   }
 
   interface Templates {
-    containerOuter?: (classNames: ClassNames, direction: string) => HTMLElement;
-    containerInner?: (classNames: ClassNames) => HTMLElement;
-    itemList?: (
+    containerOuter: (
+      this: Choices,
       classNames: ClassNames,
-      isSelectOneElement: boolean
+      direction: HTMLElement['dir'],
+      isSelectElement: boolean,
+      isSelectOneElement: boolean,
+      searchEnabled: boolean,
+      passedElementType: passedElement['type'],
     ) => HTMLElement;
-    placeholder?: (classNames: ClassNames, value: string) => HTMLElement;
-    item?: (
+    containerInner: (this: Choices, classNames: ClassNames) => HTMLElement;
+    itemList: (
+      this: Choices,
+      classNames: ClassNames,
+      isSelectOneElement: boolean,
+    ) => HTMLElement;
+    placeholder: (
+      this: Choices,
+      classNames: ClassNames,
+      value: string,
+    ) => HTMLElement;
+    item: (
+      this: Choices,
       classNames: ClassNames,
       data: Choice,
-      removeItemButton: boolean
+      removeItemButton: boolean,
     ) => HTMLElement;
-    choiceList?: (
+    choiceList: (
+      this: Choices,
       classNames: ClassNames,
-      isSelectOneElement: boolean
+      isSelectOneElement: boolean,
     ) => HTMLElement;
-    choiceGroup?: (classNames: ClassNames, data: Choice) => HTMLElement;
-    choice?: (classNames: ClassNames, data: Choice) => HTMLElement;
-    input?: (classNames: ClassNames) => HTMLInputElement;
-    dropdown?: (classNames: ClassNames) => HTMLElement;
-    notice?: (classNames: ClassNames, label: string) => HTMLElement;
-    option?: (data: Choice) => HTMLOptionElement;
+    choiceGroup: (
+      this: Choices,
+      classNames: ClassNames,
+      data: Choice,
+    ) => HTMLElement;
+    choice: (
+      this: Choices,
+      classNames: ClassNames,
+      data: Choice,
+      selectText: string,
+    ) => HTMLElement;
+    input: (
+      this: Choices,
+      classNames: ClassNames,
+      placeholderValue: string,
+    ) => HTMLInputElement;
+    dropdown: (this: Choices, classNames: ClassNames) => HTMLElement;
+    notice: (
+      this: Choices,
+      classNames: ClassNames,
+      label: string,
+      type: '' | 'no-results' | 'no-choices',
+    ) => HTMLElement;
+    option: (data: Choice) => HTMLOptionElement;
   }
 
   /** Classes added to HTML generated by Choices. By default classnames follow the BEM notation. */
   interface ClassNames {
     /** @default 'choices' */
-    containerOuter?: string;
+    containerOuter: string;
     /** @default 'choices__inner' */
-    containerInner?: string;
+    containerInner: string;
     /** @default 'choices__input' */
-    input?: string;
+    input: string;
     /** @default 'choices__input--cloned' */
-    inputCloned?: string;
+    inputCloned: string;
     /** @default 'choices__list' */
-    list?: string;
+    list: string;
     /** @default 'choices__list--multiple' */
-    listItems?: string;
+    listItems: string;
     /** @default 'choices__list--single' */
-    listSingle?: string;
+    listSingle: string;
     /** @default 'choices__list--dropdown' */
-    listDropdown?: string;
+    listDropdown: string;
     /** @default 'choices__item' */
-    item?: string;
+    item: string;
     /** @default 'choices__item--selectable' */
-    itemSelectable?: string;
+    itemSelectable: string;
     /** @default 'choices__item--disabled' */
-    itemDisabled?: string;
+    itemDisabled: string;
     /** @default 'choices__item--choice' */
-    itemChoice?: string;
+    itemChoice: string;
     /** @default 'choices__placeholder' */
-    placeholder?: string;
+    placeholder: string;
     /** @default 'choices__group' */
-    group?: string;
+    group: string;
     /** @default 'choices__heading' */
-    groupHeading?: string;
+    groupHeading: string;
     /** @default 'choices__button' */
-    button?: string;
+    button: string;
     /** @default 'is-active' */
-    activeState?: string;
+    activeState: string;
     /** @default 'is-focused' */
-    focusState?: string;
+    focusState: string;
     /** @default 'is-open' */
-    openState?: string;
+    openState: string;
     /** @default 'is-disabled' */
-    disabledState?: string;
+    disabledState: string;
     /** @default 'is-highlighted' */
-    highlightedState?: string;
+    highlightedState: string;
     /** @default 'is-flipped' */
-    flippedState?: string;
+    flippedState: string;
     /** @default 'is-loading' */
-    loadingState?: string;
+    loadingState: string;
     /** @default 'has-no-results' */
-    noResults?: string;
+    noResults: string;
     /** @default 'has-no-choices' */
-    noChoices?: string;
+    noChoices: string;
   }
 
   interface passedElement {
@@ -217,11 +280,12 @@ declare namespace Choices {
         type: K,
         listener: (
           this: HTMLInputElement | HTMLSelectElement,
-          ev: Choices.EventMap[K]
+          ev: Choices.EventMap[K],
         ) => void,
-        options?: boolean | AddEventListenerOptions
+        options?: boolean | AddEventListenerOptions,
       ): void;
     };
+    type: 'text' | 'select-one' | 'select-multiple';
     isDisabled: boolean;
     parentInstance: Choices;
   }
@@ -243,7 +307,7 @@ declare namespace Choices {
      *
      * @default false
      */
-    silent?: boolean;
+    silent: boolean;
 
     /**
      * Add pre-selected items (see terminology) to text input.
@@ -274,7 +338,7 @@ declare namespace Choices {
      *
      * @default []
      */
-    items?: string[] | Choice[];
+    items: string[] | Choice[];
 
     /**
      * Add choices (see terminology) to select input.
@@ -303,7 +367,7 @@ declare namespace Choices {
      *
      * @default []
      */
-    choices?: Choice[];
+    choices: Choice[];
 
     /**
      * The amount of choices to be rendered within the dropdown list `("-1" indicates no limit)`. This is useful if you have a lot of choices where it is easier for a user to use the search area to find a choice.
@@ -312,7 +376,7 @@ declare namespace Choices {
      *
      * @default -1
      */
-    renderChoiceLimit?: number;
+    renderChoiceLimit: number;
 
     /**
      * The amount of items a user can input/select `("-1" indicates no limit)`.
@@ -321,7 +385,7 @@ declare namespace Choices {
      *
      * @default -1
      */
-    maxItemCount?: number;
+    maxItemCount: number;
 
     /**
      * Whether a user can add items.
@@ -330,7 +394,7 @@ declare namespace Choices {
      *
      * @default true
      */
-    addItems?: boolean;
+    addItems: boolean;
 
     /**
      * A filter that will need to pass for a user to successfully add an item.
@@ -339,7 +403,7 @@ declare namespace Choices {
      *
      * @default null
      */
-    addItemFilterFn?: (value: string) => boolean;
+    addItemFilterFn: (value: string) => boolean;
 
     /**
      * The text that is shown when a user has inputted a new item but has not pressed the enter key. To access the current input value, pass a function with a `value` argument (see the **default config** [https://github.com/jshjohnson/Choices#setup] for an example), otherwise pass a string.
@@ -351,7 +415,7 @@ declare namespace Choices {
      * (value) => `Press Enter to add <b>"${value}"</b>`;
      * ```
      */
-    addItemText?: string | Choices.Types.noticeStringFunction;
+    addItemText: string | Choices.Types.noticeStringFunction;
 
     /**
      * Whether a user can remove items.
@@ -360,7 +424,7 @@ declare namespace Choices {
      *
      * @default true
      */
-    removeItems?: boolean;
+    removeItems: boolean;
 
     /**
      * Whether each item should have a remove button.
@@ -369,7 +433,7 @@ declare namespace Choices {
      *
      * @default false
      */
-    removeItemButton?: boolean;
+    removeItemButton: boolean;
 
     /**
      * Whether a user can edit items. An item's value can be edited by pressing the backspace.
@@ -378,7 +442,7 @@ declare namespace Choices {
      *
      * @default false
      */
-    editItems?: boolean;
+    editItems: boolean;
 
     /**
      * Whether each inputted/chosen item should be unique.
@@ -387,7 +451,7 @@ declare namespace Choices {
      *
      * @default true
      */
-    duplicateItemsAllowed?: boolean;
+    duplicateItemsAllowed: boolean;
 
     /**
      * What divides each value. The default delimiter separates each value with a comma: `"Value 1, Value 2, Value 3"`.
@@ -396,7 +460,7 @@ declare namespace Choices {
      *
      * @default ','
      */
-    delimiter?: string;
+    delimiter: string;
 
     /**
      * Whether a user can paste into the input.
@@ -405,7 +469,7 @@ declare namespace Choices {
      *
      * @default true
      */
-    paste?: boolean;
+    paste: boolean;
 
     /**
      * Whether a search area should be shown.
@@ -416,7 +480,7 @@ declare namespace Choices {
      *
      * @default true
      */
-    searchEnabled?: boolean;
+    searchEnabled: boolean;
 
     /**
      * Whether choices should be filtered by input or not. If `false`, the search event will still emit, but choices will not be filtered.
@@ -425,7 +489,7 @@ declare namespace Choices {
      *
      * @default true
      */
-    searchChoices?: boolean;
+    searchChoices: boolean;
 
     /**
      * The minimum length a search value should be before choices are searched.
@@ -434,7 +498,7 @@ declare namespace Choices {
      *
      * @default 1
      */
-    searchFloor?: number;
+    searchFloor: number;
 
     /**
      * The maximum amount of search results to show.
@@ -443,7 +507,7 @@ declare namespace Choices {
      *
      * @default 4
      */
-    searchResultLimit?: number;
+    searchResultLimit: number;
 
     /**
      * Specify which fields should be used when a user is searching. If you have added custom properties to your choices, you can add these values thus: `['label', 'value', 'customProperties.example']`.
@@ -452,7 +516,7 @@ declare namespace Choices {
      *
      * @default ['label', 'value']
      */
-    searchFields?: string[];
+    searchFields: string[];
 
     /**
      * Whether the dropdown should appear above `(top)` or below `(bottom)` the input. By default, if there is not enough space within the window the dropdown will appear above the input, otherwise below it.
@@ -461,7 +525,7 @@ declare namespace Choices {
      *
      * @default 'auto'
      */
-    position?: Choices.Types.dropdownPosition;
+    position: 'auto' | 'top';
 
     /**
      * Whether the scroll position should reset after adding an item.
@@ -470,7 +534,7 @@ declare namespace Choices {
      *
      * @default true
      */
-    resetScrollPosition?: boolean;
+    resetScrollPosition: boolean;
 
     /**
      * Whether choices and groups should be sorted. If false, choices/groups will appear in the order they were given.
@@ -479,7 +543,7 @@ declare namespace Choices {
      *
      * @default true
      */
-    shouldSort?: boolean;
+    shouldSort: boolean;
 
     /**
      * Whether items should be sorted. If false, items will appear in the order they were selected.
@@ -488,7 +552,7 @@ declare namespace Choices {
      *
      * @default false
      */
-    shouldSortItems?: boolean;
+    shouldSortItems: boolean;
 
     /**
      * The function that will sort choices and items before they are displayed (unless a user is searching). By default choices and items are sorted by alphabetical order.
@@ -507,7 +571,7 @@ declare namespace Choices {
      *
      * @default sortByAlpha
      */
-    sortFilter?: (current: Choice, next: Choice) => number;
+    sortFilter: (current: Choice, next: Choice) => number;
 
     /**
      * Whether the input should show a placeholder. Used in conjunction with `placeholderValue`. If `placeholder` is set to true and no value is passed to `placeholderValue`, the passed input's placeholder attribute will be used as the placeholder value.
@@ -526,7 +590,7 @@ declare namespace Choices {
      *
      * @default true
      */
-    placeholder?: boolean;
+    placeholder: boolean;
 
     /**
      * The value of the inputs placeholder.
@@ -535,7 +599,7 @@ declare namespace Choices {
      *
      * @default null
      */
-    placeholderValue?: string;
+    placeholderValue: string;
 
     /**
      * The value of the search inputs placeholder.
@@ -544,7 +608,7 @@ declare namespace Choices {
      *
      * @default null
      */
-    searchPlaceholderValue?: string;
+    searchPlaceholderValue: string;
 
     /**
      * Prepend a value to each item added/selected.
@@ -553,7 +617,7 @@ declare namespace Choices {
      *
      * @default null
      */
-    prependValue?: string;
+    prependValue: string;
 
     /**
      * Append a value to each item added/selected.
@@ -562,7 +626,7 @@ declare namespace Choices {
      *
      * @default null
      */
-    appendValue?: string;
+    appendValue: string;
 
     /**
      * Whether selected choices should be removed from the list. By default choices are removed when they are selected in multiple select box. To always render choices pass `always`.
@@ -571,7 +635,7 @@ declare namespace Choices {
      *
      * @default 'auto';
      */
-    renderSelectedChoices?: Choices.Types.renderSelected;
+    renderSelectedChoices: 'auto' | 'always';
 
     /**
      * The text that is shown whilst choices are being populated via AJAX.
@@ -580,7 +644,7 @@ declare namespace Choices {
      *
      * @default 'Loading...'
      */
-    loadingText?: string;
+    loadingText: string;
 
     /**
      * The text that is shown when a user's search has returned no results. Optionally pass a function returning a string.
@@ -589,7 +653,7 @@ declare namespace Choices {
      *
      * @default 'No results found'
      */
-    noResultsText?: string | Choices.Types.stringFunction;
+    noResultsText: string | Choices.Types.stringFunction;
 
     /**
      * The text that is shown when a user has selected all possible choices. Optionally pass a function returning a string.
@@ -598,7 +662,7 @@ declare namespace Choices {
      *
      * @default 'No choices to choose from'
      */
-    noChoicesText?: string | Choices.Types.stringFunction;
+    noChoicesText: string | Choices.Types.stringFunction;
 
     /**
      * The text that is shown when a user hovers over a selectable choice.
@@ -607,7 +671,7 @@ declare namespace Choices {
      *
      * @default 'Press to select'
      */
-    itemSelectText?: string;
+    itemSelectText: string;
 
     /**
      * The text that is shown when a user has focus on the input but has already reached the **max item count** [https://github.com/jshjohnson/Choices#maxitemcount]. To access the max item count, pass a function with a `maxItemCount` argument (see the **default config** [https://github.com/jshjohnson/Choices#setup] for an example), otherwise pass a string.
@@ -619,26 +683,26 @@ declare namespace Choices {
      * (maxItemCount) => `Only ${maxItemCount} values can be added.`;
      * ```
      */
-    maxItemText?: string | Choices.Types.noticeLimitFunction;
+    maxItemText: string | Choices.Types.noticeLimitFunction;
 
     /**
      * If no duplicates are allowed, and the value already exists in the array.
      *
      * @default 'Only unique values can be added.'
      */
-    uniqueItemText?: string | Choices.Types.noticeStringFunction;
+    uniqueItemText: string | Choices.Types.noticeStringFunction;
 
     /**
      * Classes added to HTML generated by Choices. By default classnames follow the BEM notation.
      *
      * **Input types affected:** text, select-one, select-multiple
      */
-    classNames?: Choices.ClassNames;
+    classNames: Partial<Choices.ClassNames>;
 
     /**
      * Choices uses the great Fuse library for searching. You can find more options here: https://github.com/krisk/Fuse#options
      */
-    fuseOptions?: FuseOptions<Choice>;
+    fuseOptions: FuseOptions<Choice>;
 
     /**
      * Function to run once Choices initialises.
@@ -649,7 +713,7 @@ declare namespace Choices {
      *
      * @default null
      */
-    callbackOnInit?: (this: Choices) => void;
+    callbackOnInit: (this: Choices) => void;
 
     /**
      * Function to run on template creation. Through this callback it is possible to provide custom templates for the various components of Choices (see terminology). For Choices to work with custom templates, it is important you maintain the various data attributes defined here [https://github.com/jshjohnson/Choices/blob/67f29c286aa21d88847adfcd6304dc7d068dc01f/assets/scripts/src/choices.js#L1993-L2067].
@@ -685,44 +749,27 @@ declare namespace Choices {
      *
      * @default null
      */
-    callbackOnCreateTemplates?: Choices.Types.callbackOnCreateTemplates;
+    callbackOnCreateTemplates: (
+      template: Choices.Types.strToEl,
+    ) => Partial<Choices.Templates>;
   }
 }
 
 // Exporting default class
 export default class Choices {
-  idNames: any;
-  config: Choices.Options;
+  readonly config: Choices.Options;
 
   // State Tracking
   initialised: boolean;
 
   // Element
-  passedElement: Choices.passedElement;
+  readonly passedElement: Choices.passedElement;
 
-  // Checks
-  isTextElement: boolean;
-  isSelectOneElement: boolean;
-  isSelectMultipleElement: boolean;
-  isSelectElement: boolean;
-  isValidElementType: boolean;
-  isIe11: boolean;
-  isScrollingOnIe: boolean;
-
-  highlightPosition: number;
-  canSearch: boolean;
   placeholder: boolean;
-
-  presetChoices: Choices.Choice[];
-  presetItems: Choices.Item[];
-
-  readonly baseId: string;
-
-  wasTap: boolean;
 
   constructor(
     selectorOrElement: string | HTMLInputElement | HTMLSelectElement,
-    userConfig?: Choices.Options
+    userConfig?: Partial<Choices.Options>,
   );
 
   /**
@@ -895,7 +942,7 @@ export default class Choices {
     choices: Choices.Choice[],
     value: string,
     label: string,
-    replaceChoices?: boolean
+    replaceChoices?: boolean,
   ): this;
 
   /**
@@ -949,27 +996,4 @@ export default class Choices {
    * ```
    */
   ajax(fn: (values: any) => any): this;
-
-  /** Render group choices into a DOM fragment and append to choice list */
-  private createGroupsFragment(
-    groups: Choices.Group[],
-    choices: Choices.Choice[],
-    fragment: DocumentFragment
-  ): DocumentFragment;
-
-  /** Render choices into a DOM fragment and append to choice list */
-  private createChoicesFragment(
-    choices: Choices.Choice[],
-    fragment: DocumentFragment,
-    withinGroup?: boolean
-  ): DocumentFragment;
-
-  /** Render items into a DOM fragment and append to items list */
-  private _createItemsFragment(
-    items: Choices.Item[],
-    fragment?: DocumentFragment
-  ): void;
-
-  /** Render DOM with values */
-  private render(): void;
 }

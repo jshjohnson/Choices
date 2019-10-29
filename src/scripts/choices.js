@@ -390,12 +390,15 @@ class Choices {
     return this._isSelectOneElement ? values[0] : values;
   }
 
-  setValue(args) {
+  /**
+   * @param {string[] | import('../../types/index').Choices.Item[]} items
+   */
+  setValue(items) {
     if (!this.initialised) {
       return this;
     }
 
-    [...args].forEach(value => this._setChoiceOrItem(value));
+    items.forEach(value => this._setChoiceOrItem(value));
     return this;
   }
 
@@ -608,8 +611,11 @@ class Choices {
     }
   }
 
-  _createGroupsFragment(groups, choices, fragment) {
-    const groupFragment = fragment || document.createDocumentFragment();
+  _createGroupsFragment(
+    groups,
+    choices,
+    fragment = document.createDocumentFragment(),
+  ) {
     const getGroupChoices = group =>
       choices.filter(choice => {
         if (this._isSelectOneElement) {
@@ -630,17 +636,20 @@ class Choices {
       const groupChoices = getGroupChoices(group);
       if (groupChoices.length >= 1) {
         const dropdownGroup = this._getTemplate('choiceGroup', group);
-        groupFragment.appendChild(dropdownGroup);
-        this._createChoicesFragment(groupChoices, groupFragment, true);
+        fragment.appendChild(dropdownGroup);
+        this._createChoicesFragment(groupChoices, fragment, true);
       }
     });
 
-    return groupFragment;
+    return fragment;
   }
 
-  _createChoicesFragment(choices, fragment, withinGroup = false) {
+  _createChoicesFragment(
+    choices,
+    fragment = document.createDocumentFragment(),
+    withinGroup = false,
+  ) {
     // Create a fragment to store our list items (so we don't have to update the DOM for each item)
-    const choicesFragment = fragment || document.createDocumentFragment();
     const {
       renderSelectedChoices,
       searchResultLimit,
@@ -658,7 +667,7 @@ class Choices {
           choice,
           this.config.itemSelectText,
         );
-        choicesFragment.appendChild(dropdownItem);
+        fragment.appendChild(dropdownItem);
       }
     };
 
@@ -704,13 +713,12 @@ class Choices {
       }
     }
 
-    return choicesFragment;
+    return fragment;
   }
 
-  _createItemsFragment(items, fragment = null) {
+  _createItemsFragment(items, fragment = document.createDocumentFragment()) {
     // Create fragment to add elements to
     const { shouldSortItems, sortFn, removeItemButton } = this.config;
-    const itemListFragment = fragment || document.createDocumentFragment();
 
     // If sorting is enabled, filter items
     if (shouldSortItems && !this._isSelectOneElement) {
@@ -729,13 +737,13 @@ class Choices {
       // Create new list element
       const listItem = this._getTemplate('item', item, removeItemButton);
       // Append it to list
-      itemListFragment.appendChild(listItem);
+      fragment.appendChild(listItem);
     };
 
     // Add each list item to list
     items.forEach(item => addItemToFragment(item));
 
-    return itemListFragment;
+    return fragment;
   }
 
   _triggerChange(value) {
@@ -822,8 +830,9 @@ class Choices {
     }
 
     // If we are clicking on an option
-    const id = element.getAttribute('data-id');
+    const { id } = element.dataset;
     const choice = this._store.getChoiceById(id);
+    if (!choice) return;
     const passedKeyCode =
       activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
     const hasActiveDropdown = this.dropdown.isActive;
@@ -835,7 +844,7 @@ class Choices {
       choice,
     });
 
-    if (choice && !choice.selected && !choice.disabled) {
+    if (!choice.selected && !choice.disabled) {
       const canAddItem = this._canAddItem(activeItems, choice.value);
 
       if (canAddItem.response) {
@@ -855,7 +864,7 @@ class Choices {
 
     this.clearInput();
 
-    // We wont to close the dropdown if we are dealing with a single select box
+    // We want to close the dropdown if we are dealing with a single select box
     if (hasActiveDropdown && this._isSelectOneElement) {
       this.hideDropdown(true);
       this.containerOuter.focus();
