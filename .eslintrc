@@ -41,7 +41,8 @@
         "mocha": true
       },
       "rules": {
-        "no-new": "off"
+        "no-new": "off",
+        "no-restricted-syntax": "off"
       }
     },
     {

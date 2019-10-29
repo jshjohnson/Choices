@@ -548,15 +548,6 @@
     </div>
     <script>
       document.addEventListener('DOMContentLoaded', function() {
-        var genericExamples = document.querySelectorAll('[data-trigger]');
-        for (i = 0; i < genericExamples.length; ++i) {
-          var element = genericExamples[i];
-          new Choices(element, {
-            placeholderValue: 'This is a placeholder set in the config',
-            searchPlaceholderValue: 'This is a search placeholder',
-          });
-        }
-
         var textRemove = new Choices(
           document.getElementById('choices-text-remove-button'),
           {
@@ -591,7 +582,7 @@
 
         var textEmailFilter = new Choices('#choices-text-email-filter', {
           editItems: true,
-          addItemFilterFn: function(value) {
+          addItemFilter: function(value) {
             if (!value) {
               return false;
             }
@@ -734,6 +725,11 @@
             }
           };
           request.send();
+        });
+
+        var genericExamples = new Choices('[data-trigger]', {
+          placeholderValue: 'This is a placeholder set in the config',
+          searchPlaceholderValue: 'This is a search placeholder',
         });
 
         var singleNoSearch = new Choices('#choices-single-no-search', {

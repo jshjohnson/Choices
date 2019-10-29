@@ -10,8 +10,9 @@ module.exports = {
   entry: ['./src/scripts/choices'],
   output: {
     library: 'Choices',
-    libraryTarget: 'umd',
+    libraryTarget: 'window',
     libraryExport: 'default',
+    globalObject: 'window',
   },
   module: {
     rules: [

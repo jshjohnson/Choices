@@ -1,4 +1,4 @@
-/*! choices.js v7.1.1 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v7.1.5 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -92,68 +92,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
-  Copyright (c) 2017 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/classnames
-*/
-/* global define */
-
-(function () {
-	'use strict';
-
-	var hasOwn = {}.hasOwnProperty;
-
-	function classNames () {
-		var classes = [];
-
-		for (var i = 0; i < arguments.length; i++) {
-			var arg = arguments[i];
-			if (!arg) continue;
-
-			var argType = typeof arg;
-
-			if (argType === 'string' || argType === 'number') {
-				classes.push(arg);
-			} else if (Array.isArray(arg) && arg.length) {
-				var inner = classNames.apply(null, arg);
-				if (inner) {
-					classes.push(inner);
-				}
-			} else if (argType === 'object') {
-				for (var key in arg) {
-					if (hasOwn.call(arg, key) && arg[key]) {
-						classes.push(key);
-					}
-				}
-			}
-		}
-
-		return classes.join(' ');
-	}
-
-	if ( true && module.exports) {
-		classNames.default = classNames;
-		module.exports = classNames;
-	} else if (true) {
-		// register as 'classnames', consistent with npm package name
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
-			return classNames;
-		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
-				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	} else {}
-}());
-
-
-/***/ }),
-/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -291,11 +234,11 @@ module.exports = deepmerge_1;
 
 
 /***/ }),
-/* 2 */
+/* 1 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var _ponyfill_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
+/* WEBPACK VAR INJECTION */(function(global, module) {/* harmony import */ var _ponyfill_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
 /* global window */
 
 
@@ -314,1091 +257,24 @@ if (typeof self !== 'undefined') {
 var result = Object(_ponyfill_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(root);
 /* harmony default export */ __webpack_exports__["a"] = (result);
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(7), __webpack_require__(8)(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(6), __webpack_require__(7)(module)))
 
 /***/ }),
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*!
- * Fuse.js v3.4.2 - Lightweight fuzzy-search (http://fusejs.io)
+ * Fuse.js v3.4.5 - Lightweight fuzzy-search (http://fusejs.io)
  * 
  * Copyright (c) 2012-2017 Kirollos Risk (http://kiro.me)
  * All Rights Reserved. Apache Software License 2.0
  * 
  * http://www.apache.org/licenses/LICENSE-2.0
  */
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(true)
-		module.exports = factory();
-	else {}
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId]) {
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			i: moduleId,
-/******/ 			l: false,
-/******/ 			exports: {}
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.l = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = "./src/index.js");
-/******/ })
-/************************************************************************/
-/******/ ({
-
-/***/ "./src/bitap/bitap_matched_indices.js":
-/*!********************************************!*\
-  !*** ./src/bitap/bitap_matched_indices.js ***!
-  \********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function () {
-  var matchmask = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-  var minMatchCharLength = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-  var matchedIndices = [];
-  var start = -1;
-  var end = -1;
-  var i = 0;
-
-  for (var len = matchmask.length; i < len; i += 1) {
-    var match = matchmask[i];
-
-    if (match && start === -1) {
-      start = i;
-    } else if (!match && start !== -1) {
-      end = i - 1;
-
-      if (end - start + 1 >= minMatchCharLength) {
-        matchedIndices.push([start, end]);
-      }
-
-      start = -1;
-    }
-  } // (i-1 - start) + 1 => i - start
-
-
-  if (matchmask[i - 1] && i - start >= minMatchCharLength) {
-    matchedIndices.push([start, i - 1]);
-  }
-
-  return matchedIndices;
-};
+!function(e,t){ true?module.exports=t():undefined}(this,function(){return function(e){var t={};function n(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}return n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)n.d(r,o,function(t){return e[t]}.bind(null,o));return r},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=1)}([function(e,t){e.exports=function(e){return Array.isArray?Array.isArray(e):"[object Array]"===Object.prototype.toString.call(e)}},function(e,t,n){function r(e){return(r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function o(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}var i=n(2),a=n(8),s=n(0),c=function(){function e(t,n){var r=n.location,o=void 0===r?0:r,i=n.distance,s=void 0===i?100:i,c=n.threshold,h=void 0===c?.6:c,l=n.maxPatternLength,u=void 0===l?32:l,f=n.caseSensitive,d=void 0!==f&&f,v=n.tokenSeparator,p=void 0===v?/ +/g:v,g=n.findAllMatches,y=void 0!==g&&g,m=n.minMatchCharLength,k=void 0===m?1:m,S=n.id,x=void 0===S?null:S,b=n.keys,M=void 0===b?[]:b,_=n.shouldSort,L=void 0===_||_,w=n.getFn,A=void 0===w?a:w,C=n.sortFn,I=void 0===C?function(e,t){return e.score-t.score}:C,O=n.tokenize,j=void 0!==O&&O,P=n.matchAllTokens,F=void 0!==P&&P,T=n.includeMatches,z=void 0!==T&&T,E=n.includeScore,K=void 0!==E&&E,$=n.verbose,J=void 0!==$&&$;!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),this.options={location:o,distance:s,threshold:h,maxPatternLength:u,isCaseSensitive:d,tokenSeparator:p,findAllMatches:y,minMatchCharLength:k,id:x,keys:M,includeMatches:z,includeScore:K,shouldSort:L,getFn:A,sortFn:I,verbose:J,tokenize:j,matchAllTokens:F},this.setCollection(t)}var t,n,c;return t=e,(n=[{key:"setCollection",value:function(e){return this.list=e,e}},{key:"search",value:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{limit:!1};this._log('---------\nSearch pattern: "'.concat(e,'"'));var n=this._prepareSearchers(e),r=n.tokenSearchers,o=n.fullSearcher,i=this._search(r,o),a=i.weights,s=i.results;return this._computeScore(a,s),this.options.shouldSort&&this._sort(s),t.limit&&"number"==typeof t.limit&&(s=s.slice(0,t.limit)),this._format(s)}},{key:"_prepareSearchers",value:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:"",t=[];if(this.options.tokenize)for(var n=e.split(this.options.tokenSeparator),r=0,o=n.length;r<o;r+=1)t.push(new i(n[r],this.options));return{tokenSearchers:t,fullSearcher:new i(e,this.options)}}},{key:"_search",value:function(){var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:[],t=arguments.length>1?arguments[1]:void 0,n=this.list,r={},o=[];if("string"==typeof n[0]){for(var i=0,a=n.length;i<a;i+=1)this._analyze({key:"",value:n[i],record:i,index:i},{resultMap:r,results:o,tokenSearchers:e,fullSearcher:t});return{weights:null,results:o}}for(var s={},c=0,h=n.length;c<h;c+=1)for(var l=n[c],u=0,f=this.options.keys.length;u<f;u+=1){var d=this.options.keys[u];if("string"!=typeof d){if(s[d.name]={weight:1-d.weight||1},d.weight<=0||d.weight>1)throw new Error("Key weight has to be > 0 and <= 1");d=d.name}else s[d]={weight:1};this._analyze({key:d,value:this.options.getFn(l,d),record:l,index:c},{resultMap:r,results:o,tokenSearchers:e,fullSearcher:t})}return{weights:s,results:o}}},{key:"_analyze",value:function(e,t){var n=e.key,r=e.arrayIndex,o=void 0===r?-1:r,i=e.value,a=e.record,c=e.index,h=t.tokenSearchers,l=void 0===h?[]:h,u=t.fullSearcher,f=void 0===u?[]:u,d=t.resultMap,v=void 0===d?{}:d,p=t.results,g=void 0===p?[]:p;if(null!=i){var y=!1,m=-1,k=0;if("string"==typeof i){this._log("\nKey: ".concat(""===n?"-":n));var S=f.search(i);if(this._log('Full text: "'.concat(i,'", score: ').concat(S.score)),this.options.tokenize){for(var x=i.split(this.options.tokenSeparator),b=[],M=0;M<l.length;M+=1){var _=l[M];this._log('\nPattern: "'.concat(_.pattern,'"'));for(var L=!1,w=0;w<x.length;w+=1){var A=x[w],C=_.search(A),I={};C.isMatch?(I[A]=C.score,y=!0,L=!0,b.push(C.score)):(I[A]=1,this.options.matchAllTokens||b.push(1)),this._log('Token: "'.concat(A,'", score: ').concat(I[A]))}L&&(k+=1)}m=b[0];for(var O=b.length,j=1;j<O;j+=1)m+=b[j];m/=O,this._log("Token score average:",m)}var P=S.score;m>-1&&(P=(P+m)/2),this._log("Score average:",P);var F=!this.options.tokenize||!this.options.matchAllTokens||k>=l.length;if(this._log("\nCheck Matches: ".concat(F)),(y||S.isMatch)&&F){var T=v[c];T?T.output.push({key:n,arrayIndex:o,value:i,score:P,matchedIndices:S.matchedIndices}):(v[c]={item:a,output:[{key:n,arrayIndex:o,value:i,score:P,matchedIndices:S.matchedIndices}]},g.push(v[c]))}}else if(s(i))for(var z=0,E=i.length;z<E;z+=1)this._analyze({key:n,arrayIndex:z,value:i[z],record:a,index:c},{resultMap:v,results:g,tokenSearchers:l,fullSearcher:f})}}},{key:"_computeScore",value:function(e,t){this._log("\n\nComputing score:\n");for(var n=0,r=t.length;n<r;n+=1){for(var o=t[n].output,i=o.length,a=1,s=1,c=0;c<i;c+=1){var h=e?e[o[c].key].weight:1,l=(1===h?o[c].score:o[c].score||.001)*h;1!==h?s=Math.min(s,l):(o[c].nScore=l,a*=l)}t[n].score=1===s?a:s,this._log(t[n])}}},{key:"_sort",value:function(e){this._log("\n\nSorting...."),e.sort(this.options.sortFn)}},{key:"_format",value:function(e){var t=[];if(this.options.verbose){var n=[];this._log("\n\nOutput:\n\n",JSON.stringify(e,function(e,t){if("object"===r(t)&&null!==t){if(-1!==n.indexOf(t))return;n.push(t)}return t})),n=null}var o=[];this.options.includeMatches&&o.push(function(e,t){var n=e.output;t.matches=[];for(var r=0,o=n.length;r<o;r+=1){var i=n[r];if(0!==i.matchedIndices.length){var a={indices:i.matchedIndices,value:i.value};i.key&&(a.key=i.key),i.hasOwnProperty("arrayIndex")&&i.arrayIndex>-1&&(a.arrayIndex=i.arrayIndex),t.matches.push(a)}}}),this.options.includeScore&&o.push(function(e,t){t.score=e.score});for(var i=0,a=e.length;i<a;i+=1){var s=e[i];if(this.options.id&&(s.item=this.options.getFn(s.item,this.options.id)[0]),o.length){for(var c={item:s.item},h=0,l=o.length;h<l;h+=1)o[h](s,c);t.push(c)}else t.push(s.item)}return t}},{key:"_log",value:function(){var e;this.options.verbose&&(e=console).log.apply(e,arguments)}}])&&o(t.prototype,n),c&&o(t,c),e}();e.exports=c},function(e,t,n){function r(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}var o=n(3),i=n(4),a=n(7),s=function(){function e(t,n){var r=n.location,o=void 0===r?0:r,i=n.distance,s=void 0===i?100:i,c=n.threshold,h=void 0===c?.6:c,l=n.maxPatternLength,u=void 0===l?32:l,f=n.isCaseSensitive,d=void 0!==f&&f,v=n.tokenSeparator,p=void 0===v?/ +/g:v,g=n.findAllMatches,y=void 0!==g&&g,m=n.minMatchCharLength,k=void 0===m?1:m;!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),this.options={location:o,distance:s,threshold:h,maxPatternLength:u,isCaseSensitive:d,tokenSeparator:p,findAllMatches:y,minMatchCharLength:k},this.pattern=this.options.isCaseSensitive?t:t.toLowerCase(),this.pattern.length<=u&&(this.patternAlphabet=a(this.pattern))}var t,n,s;return t=e,(n=[{key:"search",value:function(e){if(this.options.isCaseSensitive||(e=e.toLowerCase()),this.pattern===e)return{isMatch:!0,score:0,matchedIndices:[[0,e.length-1]]};var t=this.options,n=t.maxPatternLength,r=t.tokenSeparator;if(this.pattern.length>n)return o(e,this.pattern,r);var a=this.options,s=a.location,c=a.distance,h=a.threshold,l=a.findAllMatches,u=a.minMatchCharLength;return i(e,this.pattern,this.patternAlphabet,{location:s,distance:c,threshold:h,findAllMatches:l,minMatchCharLength:u})}}])&&r(t.prototype,n),s&&r(t,s),e}();e.exports=s},function(e,t){var n=/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;e.exports=function(e,t){var r=arguments.length>2&&void 0!==arguments[2]?arguments[2]:/ +/g,o=new RegExp(t.replace(n,"\\$&").replace(r,"|")),i=e.match(o),a=!!i,s=[];if(a)for(var c=0,h=i.length;c<h;c+=1){var l=i[c];s.push([e.indexOf(l),l.length-1])}return{score:a?.5:1,isMatch:a,matchedIndices:s}}},function(e,t,n){var r=n(5),o=n(6);e.exports=function(e,t,n,i){for(var a=i.location,s=void 0===a?0:a,c=i.distance,h=void 0===c?100:c,l=i.threshold,u=void 0===l?.6:l,f=i.findAllMatches,d=void 0!==f&&f,v=i.minMatchCharLength,p=void 0===v?1:v,g=s,y=e.length,m=u,k=e.indexOf(t,g),S=t.length,x=[],b=0;b<y;b+=1)x[b]=0;if(-1!==k){var M=r(t,{errors:0,currentLocation:k,expectedLocation:g,distance:h});if(m=Math.min(M,m),-1!==(k=e.lastIndexOf(t,g+S))){var _=r(t,{errors:0,currentLocation:k,expectedLocation:g,distance:h});m=Math.min(_,m)}}k=-1;for(var L=[],w=1,A=S+y,C=1<<S-1,I=0;I<S;I+=1){for(var O=0,j=A;O<j;){r(t,{errors:I,currentLocation:g+j,expectedLocation:g,distance:h})<=m?O=j:A=j,j=Math.floor((A-O)/2+O)}A=j;var P=Math.max(1,g-j+1),F=d?y:Math.min(g+j,y)+S,T=Array(F+2);T[F+1]=(1<<I)-1;for(var z=F;z>=P;z-=1){var E=z-1,K=n[e.charAt(E)];if(K&&(x[E]=1),T[z]=(T[z+1]<<1|1)&K,0!==I&&(T[z]|=(L[z+1]|L[z])<<1|1|L[z+1]),T[z]&C&&(w=r(t,{errors:I,currentLocation:E,expectedLocation:g,distance:h}))<=m){if(m=w,(k=E)<=g)break;P=Math.max(1,2*g-k)}}if(r(t,{errors:I+1,currentLocation:g,expectedLocation:g,distance:h})>m)break;L=T}return{isMatch:k>=0,score:0===w?.001:w,matchedIndices:o(x,p)}}},function(e,t){e.exports=function(e,t){var n=t.errors,r=void 0===n?0:n,o=t.currentLocation,i=void 0===o?0:o,a=t.expectedLocation,s=void 0===a?0:a,c=t.distance,h=void 0===c?100:c,l=r/e.length,u=Math.abs(s-i);return h?l+u/h:u?1:l}},function(e,t){e.exports=function(){for(var e=arguments.length>0&&void 0!==arguments[0]?arguments[0]:[],t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:1,n=[],r=-1,o=-1,i=0,a=e.length;i<a;i+=1){var s=e[i];s&&-1===r?r=i:s||-1===r||((o=i-1)-r+1>=t&&n.push([r,o]),r=-1)}return e[i-1]&&i-r>=t&&n.push([r,i-1]),n}},function(e,t){e.exports=function(e){for(var t={},n=e.length,r=0;r<n;r+=1)t[e.charAt(r)]=0;for(var o=0;o<n;o+=1)t[e.charAt(o)]|=1<<n-o-1;return t}},function(e,t,n){var r=n(0);e.exports=function(e,t){return function e(t,n,o){if(n){var i=n.indexOf("."),a=n,s=null;-1!==i&&(a=n.slice(0,i),s=n.slice(i+1));var c=t[a];if(null!=c)if(s||"string"!=typeof c&&"number"!=typeof c)if(r(c))for(var h=0,l=c.length;h<l;h+=1)e(c[h],s,o);else s&&e(c,s,o);else o.push(c.toString())}else o.push(t);return o}(e,t,[])}}])});
 
 /***/ }),
-
-/***/ "./src/bitap/bitap_pattern_alphabet.js":
-/*!*********************************************!*\
-  !*** ./src/bitap/bitap_pattern_alphabet.js ***!
-  \*********************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function (pattern) {
-  var mask = {};
-  var len = pattern.length;
-
-  for (var i = 0; i < len; i += 1) {
-    mask[pattern.charAt(i)] = 0;
-  }
-
-  for (var _i = 0; _i < len; _i += 1) {
-    mask[pattern.charAt(_i)] |= 1 << len - _i - 1;
-  }
-
-  return mask;
-};
-
-/***/ }),
-
-/***/ "./src/bitap/bitap_regex_search.js":
-/*!*****************************************!*\
-  !*** ./src/bitap/bitap_regex_search.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var SPECIAL_CHARS_REGEX = /[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g;
-
-module.exports = function (text, pattern) {
-  var tokenSeparator = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : / +/g;
-  var regex = new RegExp(pattern.replace(SPECIAL_CHARS_REGEX, '\\$&').replace(tokenSeparator, '|'));
-  var matches = text.match(regex);
-  var isMatch = !!matches;
-  var matchedIndices = [];
-
-  if (isMatch) {
-    for (var i = 0, matchesLen = matches.length; i < matchesLen; i += 1) {
-      var match = matches[i];
-      matchedIndices.push([text.indexOf(match), match.length - 1]);
-    }
-  }
-
-  return {
-    // TODO: revisit this score
-    score: isMatch ? 0.5 : 1,
-    isMatch: isMatch,
-    matchedIndices: matchedIndices
-  };
-};
-
-/***/ }),
-
-/***/ "./src/bitap/bitap_score.js":
-/*!**********************************!*\
-  !*** ./src/bitap/bitap_score.js ***!
-  \**********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function (pattern, _ref) {
-  var _ref$errors = _ref.errors,
-      errors = _ref$errors === void 0 ? 0 : _ref$errors,
-      _ref$currentLocation = _ref.currentLocation,
-      currentLocation = _ref$currentLocation === void 0 ? 0 : _ref$currentLocation,
-      _ref$expectedLocation = _ref.expectedLocation,
-      expectedLocation = _ref$expectedLocation === void 0 ? 0 : _ref$expectedLocation,
-      _ref$distance = _ref.distance,
-      distance = _ref$distance === void 0 ? 100 : _ref$distance;
-  var accuracy = errors / pattern.length;
-  var proximity = Math.abs(expectedLocation - currentLocation);
-
-  if (!distance) {
-    // Dodge divide by zero error.
-    return proximity ? 1.0 : accuracy;
-  }
-
-  return accuracy + proximity / distance;
-};
-
-/***/ }),
-
-/***/ "./src/bitap/bitap_search.js":
-/*!***********************************!*\
-  !*** ./src/bitap/bitap_search.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var bitapScore = __webpack_require__(/*! ./bitap_score */ "./src/bitap/bitap_score.js");
-
-var matchedIndices = __webpack_require__(/*! ./bitap_matched_indices */ "./src/bitap/bitap_matched_indices.js");
-
-module.exports = function (text, pattern, patternAlphabet, _ref) {
-  var _ref$location = _ref.location,
-      location = _ref$location === void 0 ? 0 : _ref$location,
-      _ref$distance = _ref.distance,
-      distance = _ref$distance === void 0 ? 100 : _ref$distance,
-      _ref$threshold = _ref.threshold,
-      threshold = _ref$threshold === void 0 ? 0.6 : _ref$threshold,
-      _ref$findAllMatches = _ref.findAllMatches,
-      findAllMatches = _ref$findAllMatches === void 0 ? false : _ref$findAllMatches,
-      _ref$minMatchCharLeng = _ref.minMatchCharLength,
-      minMatchCharLength = _ref$minMatchCharLeng === void 0 ? 1 : _ref$minMatchCharLeng;
-  var expectedLocation = location; // Set starting location at beginning text and initialize the alphabet.
-
-  var textLen = text.length; // Highest score beyond which we give up.
-
-  var currentThreshold = threshold; // Is there a nearby exact match? (speedup)
-
-  var bestLocation = text.indexOf(pattern, expectedLocation);
-  var patternLen = pattern.length; // a mask of the matches
-
-  var matchMask = [];
-
-  for (var i = 0; i < textLen; i += 1) {
-    matchMask[i] = 0;
-  }
-
-  if (bestLocation !== -1) {
-    var score = bitapScore(pattern, {
-      errors: 0,
-      currentLocation: bestLocation,
-      expectedLocation: expectedLocation,
-      distance: distance
-    });
-    currentThreshold = Math.min(score, currentThreshold); // What about in the other direction? (speed up)
-
-    bestLocation = text.lastIndexOf(pattern, expectedLocation + patternLen);
-
-    if (bestLocation !== -1) {
-      var _score = bitapScore(pattern, {
-        errors: 0,
-        currentLocation: bestLocation,
-        expectedLocation: expectedLocation,
-        distance: distance
-      });
-
-      currentThreshold = Math.min(_score, currentThreshold);
-    }
-  } // Reset the best location
-
-
-  bestLocation = -1;
-  var lastBitArr = [];
-  var finalScore = 1;
-  var binMax = patternLen + textLen;
-  var mask = 1 << patternLen - 1;
-
-  for (var _i = 0; _i < patternLen; _i += 1) {
-    // Scan for the best match; each iteration allows for one more error.
-    // Run a binary search to determine how far from the match location we can stray
-    // at this error level.
-    var binMin = 0;
-    var binMid = binMax;
-
-    while (binMin < binMid) {
-      var _score3 = bitapScore(pattern, {
-        errors: _i,
-        currentLocation: expectedLocation + binMid,
-        expectedLocation: expectedLocation,
-        distance: distance
-      });
-
-      if (_score3 <= currentThreshold) {
-        binMin = binMid;
-      } else {
-        binMax = binMid;
-      }
-
-      binMid = Math.floor((binMax - binMin) / 2 + binMin);
-    } // Use the result from this iteration as the maximum for the next.
-
-
-    binMax = binMid;
-    var start = Math.max(1, expectedLocation - binMid + 1);
-    var finish = findAllMatches ? textLen : Math.min(expectedLocation + binMid, textLen) + patternLen; // Initialize the bit array
-
-    var bitArr = Array(finish + 2);
-    bitArr[finish + 1] = (1 << _i) - 1;
-
-    for (var j = finish; j >= start; j -= 1) {
-      var currentLocation = j - 1;
-      var charMatch = patternAlphabet[text.charAt(currentLocation)];
-
-      if (charMatch) {
-        matchMask[currentLocation] = 1;
-      } // First pass: exact match
-
-
-      bitArr[j] = (bitArr[j + 1] << 1 | 1) & charMatch; // Subsequent passes: fuzzy match
-
-      if (_i !== 0) {
-        bitArr[j] |= (lastBitArr[j + 1] | lastBitArr[j]) << 1 | 1 | lastBitArr[j + 1];
-      }
-
-      if (bitArr[j] & mask) {
-        finalScore = bitapScore(pattern, {
-          errors: _i,
-          currentLocation: currentLocation,
-          expectedLocation: expectedLocation,
-          distance: distance
-        }); // This match will almost certainly be better than any existing match.
-        // But check anyway.
-
-        if (finalScore <= currentThreshold) {
-          // Indeed it is
-          currentThreshold = finalScore;
-          bestLocation = currentLocation; // Already passed `loc`, downhill from here on in.
-
-          if (bestLocation <= expectedLocation) {
-            break;
-          } // When passing `bestLocation`, don't exceed our current distance from `expectedLocation`.
-
-
-          start = Math.max(1, 2 * expectedLocation - bestLocation);
-        }
-      }
-    } // No hope for a (better) match at greater error levels.
-
-
-    var _score2 = bitapScore(pattern, {
-      errors: _i + 1,
-      currentLocation: expectedLocation,
-      expectedLocation: expectedLocation,
-      distance: distance
-    }); // console.log('score', score, finalScore)
-
-
-    if (_score2 > currentThreshold) {
-      break;
-    }
-
-    lastBitArr = bitArr;
-  } // console.log('FINAL SCORE', finalScore)
-  // Count exact matches (those with a score of 0) to be "almost" exact
-
-
-  return {
-    isMatch: bestLocation >= 0,
-    score: finalScore === 0 ? 0.001 : finalScore,
-    matchedIndices: matchedIndices(matchMask, minMatchCharLength)
-  };
-};
-
-/***/ }),
-
-/***/ "./src/bitap/index.js":
-/*!****************************!*\
-  !*** ./src/bitap/index.js ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var bitapRegexSearch = __webpack_require__(/*! ./bitap_regex_search */ "./src/bitap/bitap_regex_search.js");
-
-var bitapSearch = __webpack_require__(/*! ./bitap_search */ "./src/bitap/bitap_search.js");
-
-var patternAlphabet = __webpack_require__(/*! ./bitap_pattern_alphabet */ "./src/bitap/bitap_pattern_alphabet.js");
-
-var Bitap =
-/*#__PURE__*/
-function () {
-  function Bitap(pattern, _ref) {
-    var _ref$location = _ref.location,
-        location = _ref$location === void 0 ? 0 : _ref$location,
-        _ref$distance = _ref.distance,
-        distance = _ref$distance === void 0 ? 100 : _ref$distance,
-        _ref$threshold = _ref.threshold,
-        threshold = _ref$threshold === void 0 ? 0.6 : _ref$threshold,
-        _ref$maxPatternLength = _ref.maxPatternLength,
-        maxPatternLength = _ref$maxPatternLength === void 0 ? 32 : _ref$maxPatternLength,
-        _ref$isCaseSensitive = _ref.isCaseSensitive,
-        isCaseSensitive = _ref$isCaseSensitive === void 0 ? false : _ref$isCaseSensitive,
-        _ref$tokenSeparator = _ref.tokenSeparator,
-        tokenSeparator = _ref$tokenSeparator === void 0 ? / +/g : _ref$tokenSeparator,
-        _ref$findAllMatches = _ref.findAllMatches,
-        findAllMatches = _ref$findAllMatches === void 0 ? false : _ref$findAllMatches,
-        _ref$minMatchCharLeng = _ref.minMatchCharLength,
-        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? 1 : _ref$minMatchCharLeng;
-
-    _classCallCheck(this, Bitap);
-
-    this.options = {
-      location: location,
-      distance: distance,
-      threshold: threshold,
-      maxPatternLength: maxPatternLength,
-      isCaseSensitive: isCaseSensitive,
-      tokenSeparator: tokenSeparator,
-      findAllMatches: findAllMatches,
-      minMatchCharLength: minMatchCharLength
-    };
-    this.pattern = this.options.isCaseSensitive ? pattern : pattern.toLowerCase();
-
-    if (this.pattern.length <= maxPatternLength) {
-      this.patternAlphabet = patternAlphabet(this.pattern);
-    }
-  }
-
-  _createClass(Bitap, [{
-    key: "search",
-    value: function search(text) {
-      if (!this.options.isCaseSensitive) {
-        text = text.toLowerCase();
-      } // Exact match
-
-
-      if (this.pattern === text) {
-        return {
-          isMatch: true,
-          score: 0,
-          matchedIndices: [[0, text.length - 1]]
-        };
-      } // When pattern length is greater than the machine word length, just do a a regex comparison
-
-
-      var _this$options = this.options,
-          maxPatternLength = _this$options.maxPatternLength,
-          tokenSeparator = _this$options.tokenSeparator;
-
-      if (this.pattern.length > maxPatternLength) {
-        return bitapRegexSearch(text, this.pattern, tokenSeparator);
-      } // Otherwise, use Bitap algorithm
-
-
-      var _this$options2 = this.options,
-          location = _this$options2.location,
-          distance = _this$options2.distance,
-          threshold = _this$options2.threshold,
-          findAllMatches = _this$options2.findAllMatches,
-          minMatchCharLength = _this$options2.minMatchCharLength;
-      return bitapSearch(text, this.pattern, this.patternAlphabet, {
-        location: location,
-        distance: distance,
-        threshold: threshold,
-        findAllMatches: findAllMatches,
-        minMatchCharLength: minMatchCharLength
-      });
-    }
-  }]);
-
-  return Bitap;
-}(); // let x = new Bitap("od mn war", {})
-// let result = x.search("Old Man's War")
-// console.log(result)
-
-
-module.exports = Bitap;
-
-/***/ }),
-
-/***/ "./src/helpers/deep_value.js":
-/*!***********************************!*\
-  !*** ./src/helpers/deep_value.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var isArray = __webpack_require__(/*! ./is_array */ "./src/helpers/is_array.js");
-
-var deepValue = function deepValue(obj, path, list) {
-  if (!path) {
-    // If there's no path left, we've gotten to the object we care about.
-    list.push(obj);
-  } else {
-    var dotIndex = path.indexOf('.');
-    var firstSegment = path;
-    var remaining = null;
-
-    if (dotIndex !== -1) {
-      firstSegment = path.slice(0, dotIndex);
-      remaining = path.slice(dotIndex + 1);
-    }
-
-    var value = obj[firstSegment];
-
-    if (value !== null && value !== undefined) {
-      if (!remaining && (typeof value === 'string' || typeof value === 'number')) {
-        list.push(value.toString());
-      } else if (isArray(value)) {
-        // Search each item in the array.
-        for (var i = 0, len = value.length; i < len; i += 1) {
-          deepValue(value[i], remaining, list);
-        }
-      } else if (remaining) {
-        // An object. Recurse further.
-        deepValue(value, remaining, list);
-      }
-    }
-  }
-
-  return list;
-};
-
-module.exports = function (obj, path) {
-  return deepValue(obj, path, []);
-};
-
-/***/ }),
-
-/***/ "./src/helpers/is_array.js":
-/*!*********************************!*\
-  !*** ./src/helpers/is_array.js ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = function (obj) {
-  return !Array.isArray ? Object.prototype.toString.call(obj) === '[object Array]' : Array.isArray(obj);
-};
-
-/***/ }),
-
-/***/ "./src/index.js":
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Bitap = __webpack_require__(/*! ./bitap */ "./src/bitap/index.js");
-
-var deepValue = __webpack_require__(/*! ./helpers/deep_value */ "./src/helpers/deep_value.js");
-
-var isArray = __webpack_require__(/*! ./helpers/is_array */ "./src/helpers/is_array.js");
-
-var Fuse =
-/*#__PURE__*/
-function () {
-  function Fuse(list, _ref) {
-    var _ref$location = _ref.location,
-        location = _ref$location === void 0 ? 0 : _ref$location,
-        _ref$distance = _ref.distance,
-        distance = _ref$distance === void 0 ? 100 : _ref$distance,
-        _ref$threshold = _ref.threshold,
-        threshold = _ref$threshold === void 0 ? 0.6 : _ref$threshold,
-        _ref$maxPatternLength = _ref.maxPatternLength,
-        maxPatternLength = _ref$maxPatternLength === void 0 ? 32 : _ref$maxPatternLength,
-        _ref$caseSensitive = _ref.caseSensitive,
-        caseSensitive = _ref$caseSensitive === void 0 ? false : _ref$caseSensitive,
-        _ref$tokenSeparator = _ref.tokenSeparator,
-        tokenSeparator = _ref$tokenSeparator === void 0 ? / +/g : _ref$tokenSeparator,
-        _ref$findAllMatches = _ref.findAllMatches,
-        findAllMatches = _ref$findAllMatches === void 0 ? false : _ref$findAllMatches,
-        _ref$minMatchCharLeng = _ref.minMatchCharLength,
-        minMatchCharLength = _ref$minMatchCharLeng === void 0 ? 1 : _ref$minMatchCharLeng,
-        _ref$id = _ref.id,
-        id = _ref$id === void 0 ? null : _ref$id,
-        _ref$keys = _ref.keys,
-        keys = _ref$keys === void 0 ? [] : _ref$keys,
-        _ref$shouldSort = _ref.shouldSort,
-        shouldSort = _ref$shouldSort === void 0 ? true : _ref$shouldSort,
-        _ref$getFn = _ref.getFn,
-        getFn = _ref$getFn === void 0 ? deepValue : _ref$getFn,
-        _ref$sortFn = _ref.sortFn,
-        sortFn = _ref$sortFn === void 0 ? function (a, b) {
-      return a.score - b.score;
-    } : _ref$sortFn,
-        _ref$tokenize = _ref.tokenize,
-        tokenize = _ref$tokenize === void 0 ? false : _ref$tokenize,
-        _ref$matchAllTokens = _ref.matchAllTokens,
-        matchAllTokens = _ref$matchAllTokens === void 0 ? false : _ref$matchAllTokens,
-        _ref$includeMatches = _ref.includeMatches,
-        includeMatches = _ref$includeMatches === void 0 ? false : _ref$includeMatches,
-        _ref$includeScore = _ref.includeScore,
-        includeScore = _ref$includeScore === void 0 ? false : _ref$includeScore,
-        _ref$verbose = _ref.verbose,
-        verbose = _ref$verbose === void 0 ? false : _ref$verbose;
-
-    _classCallCheck(this, Fuse);
-
-    this.options = {
-      location: location,
-      distance: distance,
-      threshold: threshold,
-      maxPatternLength: maxPatternLength,
-      isCaseSensitive: caseSensitive,
-      tokenSeparator: tokenSeparator,
-      findAllMatches: findAllMatches,
-      minMatchCharLength: minMatchCharLength,
-      id: id,
-      keys: keys,
-      includeMatches: includeMatches,
-      includeScore: includeScore,
-      shouldSort: shouldSort,
-      getFn: getFn,
-      sortFn: sortFn,
-      verbose: verbose,
-      tokenize: tokenize,
-      matchAllTokens: matchAllTokens
-    };
-    this.setCollection(list);
-  }
-
-  _createClass(Fuse, [{
-    key: "setCollection",
-    value: function setCollection(list) {
-      this.list = list;
-      return list;
-    }
-  }, {
-    key: "search",
-    value: function search(pattern) {
-      var opts = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
-        limit: false
-      };
-
-      this._log("---------\nSearch pattern: \"".concat(pattern, "\""));
-
-      var _this$_prepareSearche = this._prepareSearchers(pattern),
-          tokenSearchers = _this$_prepareSearche.tokenSearchers,
-          fullSearcher = _this$_prepareSearche.fullSearcher;
-
-      var _this$_search = this._search(tokenSearchers, fullSearcher),
-          weights = _this$_search.weights,
-          results = _this$_search.results;
-
-      this._computeScore(weights, results);
-
-      if (this.options.shouldSort) {
-        this._sort(results);
-      }
-
-      if (opts.limit && typeof opts.limit === 'number') {
-        results = results.slice(0, opts.limit);
-      }
-
-      return this._format(results);
-    }
-  }, {
-    key: "_prepareSearchers",
-    value: function _prepareSearchers() {
-      var pattern = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-      var tokenSearchers = [];
-
-      if (this.options.tokenize) {
-        // Tokenize on the separator
-        var tokens = pattern.split(this.options.tokenSeparator);
-
-        for (var i = 0, len = tokens.length; i < len; i += 1) {
-          tokenSearchers.push(new Bitap(tokens[i], this.options));
-        }
-      }
-
-      var fullSearcher = new Bitap(pattern, this.options);
-      return {
-        tokenSearchers: tokenSearchers,
-        fullSearcher: fullSearcher
-      };
-    }
-  }, {
-    key: "_search",
-    value: function _search() {
-      var tokenSearchers = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-      var fullSearcher = arguments.length > 1 ? arguments[1] : undefined;
-      var list = this.list;
-      var resultMap = {};
-      var results = []; // Check the first item in the list, if it's a string, then we assume
-      // that every item in the list is also a string, and thus it's a flattened array.
-
-      if (typeof list[0] === 'string') {
-        // Iterate over every item
-        for (var i = 0, len = list.length; i < len; i += 1) {
-          this._analyze({
-            key: '',
-            value: list[i],
-            record: i,
-            index: i
-          }, {
-            resultMap: resultMap,
-            results: results,
-            tokenSearchers: tokenSearchers,
-            fullSearcher: fullSearcher
-          });
-        }
-
-        return {
-          weights: null,
-          results: results
-        };
-      } // Otherwise, the first item is an Object (hopefully), and thus the searching
-      // is done on the values of the keys of each item.
-
-
-      var weights = {};
-
-      for (var _i = 0, _len = list.length; _i < _len; _i += 1) {
-        var item = list[_i]; // Iterate over every key
-
-        for (var j = 0, keysLen = this.options.keys.length; j < keysLen; j += 1) {
-          var key = this.options.keys[j];
-
-          if (typeof key !== 'string') {
-            weights[key.name] = {
-              weight: 1 - key.weight || 1
-            };
-
-            if (key.weight <= 0 || key.weight > 1) {
-              throw new Error('Key weight has to be > 0 and <= 1');
-            }
-
-            key = key.name;
-          } else {
-            weights[key] = {
-              weight: 1
-            };
-          }
-
-          this._analyze({
-            key: key,
-            value: this.options.getFn(item, key),
-            record: item,
-            index: _i
-          }, {
-            resultMap: resultMap,
-            results: results,
-            tokenSearchers: tokenSearchers,
-            fullSearcher: fullSearcher
-          });
-        }
-      }
-
-      return {
-        weights: weights,
-        results: results
-      };
-    }
-  }, {
-    key: "_analyze",
-    value: function _analyze(_ref2, _ref3) {
-      var key = _ref2.key,
-          _ref2$arrayIndex = _ref2.arrayIndex,
-          arrayIndex = _ref2$arrayIndex === void 0 ? -1 : _ref2$arrayIndex,
-          value = _ref2.value,
-          record = _ref2.record,
-          index = _ref2.index;
-      var _ref3$tokenSearchers = _ref3.tokenSearchers,
-          tokenSearchers = _ref3$tokenSearchers === void 0 ? [] : _ref3$tokenSearchers,
-          _ref3$fullSearcher = _ref3.fullSearcher,
-          fullSearcher = _ref3$fullSearcher === void 0 ? [] : _ref3$fullSearcher,
-          _ref3$resultMap = _ref3.resultMap,
-          resultMap = _ref3$resultMap === void 0 ? {} : _ref3$resultMap,
-          _ref3$results = _ref3.results,
-          results = _ref3$results === void 0 ? [] : _ref3$results;
-
-      // Check if the texvaluet can be searched
-      if (value === undefined || value === null) {
-        return;
-      }
-
-      var exists = false;
-      var averageScore = -1;
-      var numTextMatches = 0;
-
-      if (typeof value === 'string') {
-        this._log("\nKey: ".concat(key === '' ? '-' : key));
-
-        var mainSearchResult = fullSearcher.search(value);
-
-        this._log("Full text: \"".concat(value, "\", score: ").concat(mainSearchResult.score));
-
-        if (this.options.tokenize) {
-          var words = value.split(this.options.tokenSeparator);
-          var scores = [];
-
-          for (var i = 0; i < tokenSearchers.length; i += 1) {
-            var tokenSearcher = tokenSearchers[i];
-
-            this._log("\nPattern: \"".concat(tokenSearcher.pattern, "\"")); // let tokenScores = []
-
-
-            var hasMatchInText = false;
-
-            for (var j = 0; j < words.length; j += 1) {
-              var word = words[j];
-              var tokenSearchResult = tokenSearcher.search(word);
-              var obj = {};
-
-              if (tokenSearchResult.isMatch) {
-                obj[word] = tokenSearchResult.score;
-                exists = true;
-                hasMatchInText = true;
-                scores.push(tokenSearchResult.score);
-              } else {
-                obj[word] = 1;
-
-                if (!this.options.matchAllTokens) {
-                  scores.push(1);
-                }
-              }
-
-              this._log("Token: \"".concat(word, "\", score: ").concat(obj[word])); // tokenScores.push(obj)
-
-            }
-
-            if (hasMatchInText) {
-              numTextMatches += 1;
-            }
-          }
-
-          averageScore = scores[0];
-          var scoresLen = scores.length;
-
-          for (var _i2 = 1; _i2 < scoresLen; _i2 += 1) {
-            averageScore += scores[_i2];
-          }
-
-          averageScore = averageScore / scoresLen;
-
-          this._log('Token score average:', averageScore);
-        }
-
-        var finalScore = mainSearchResult.score;
-
-        if (averageScore > -1) {
-          finalScore = (finalScore + averageScore) / 2;
-        }
-
-        this._log('Score average:', finalScore);
-
-        var checkTextMatches = this.options.tokenize && this.options.matchAllTokens ? numTextMatches >= tokenSearchers.length : true;
-
-        this._log("\nCheck Matches: ".concat(checkTextMatches)); // If a match is found, add the item to <rawResults>, including its score
-
-
-        if ((exists || mainSearchResult.isMatch) && checkTextMatches) {
-          // Check if the item already exists in our results
-          var existingResult = resultMap[index];
-
-          if (existingResult) {
-            // Use the lowest score
-            // existingResult.score, bitapResult.score
-            existingResult.output.push({
-              key: key,
-              arrayIndex: arrayIndex,
-              value: value,
-              score: finalScore,
-              matchedIndices: mainSearchResult.matchedIndices
-            });
-          } else {
-            // Add it to the raw result list
-            resultMap[index] = {
-              item: record,
-              output: [{
-                key: key,
-                arrayIndex: arrayIndex,
-                value: value,
-                score: finalScore,
-                matchedIndices: mainSearchResult.matchedIndices
-              }]
-            };
-            results.push(resultMap[index]);
-          }
-        }
-      } else if (isArray(value)) {
-        for (var _i3 = 0, len = value.length; _i3 < len; _i3 += 1) {
-          this._analyze({
-            key: key,
-            arrayIndex: _i3,
-            value: value[_i3],
-            record: record,
-            index: index
-          }, {
-            resultMap: resultMap,
-            results: results,
-            tokenSearchers: tokenSearchers,
-            fullSearcher: fullSearcher
-          });
-        }
-      }
-    }
-  }, {
-    key: "_computeScore",
-    value: function _computeScore(weights, results) {
-      this._log('\n\nComputing score:\n');
-
-      for (var i = 0, len = results.length; i < len; i += 1) {
-        var output = results[i].output;
-        var scoreLen = output.length;
-        var currScore = 1;
-        var bestScore = 1;
-
-        for (var j = 0; j < scoreLen; j += 1) {
-          var weight = weights ? weights[output[j].key].weight : 1;
-          var score = weight === 1 ? output[j].score : output[j].score || 0.001;
-          var nScore = score * weight;
-
-          if (weight !== 1) {
-            bestScore = Math.min(bestScore, nScore);
-          } else {
-            output[j].nScore = nScore;
-            currScore *= nScore;
-          }
-        }
-
-        results[i].score = bestScore === 1 ? currScore : bestScore;
-
-        this._log(results[i]);
-      }
-    }
-  }, {
-    key: "_sort",
-    value: function _sort(results) {
-      this._log('\n\nSorting....');
-
-      results.sort(this.options.sortFn);
-    }
-  }, {
-    key: "_format",
-    value: function _format(results) {
-      var finalOutput = [];
-
-      if (this.options.verbose) {
-        var cache = [];
-
-        this._log('\n\nOutput:\n\n', JSON.stringify(results, function (key, value) {
-          if (_typeof(value) === 'object' && value !== null) {
-            if (cache.indexOf(value) !== -1) {
-              // Circular reference found, discard key
-              return;
-            } // Store value in our collection
-
-
-            cache.push(value);
-          }
-
-          return value;
-        }));
-
-        cache = null;
-      }
-
-      var transformers = [];
-
-      if (this.options.includeMatches) {
-        transformers.push(function (result, data) {
-          var output = result.output;
-          data.matches = [];
-
-          for (var i = 0, len = output.length; i < len; i += 1) {
-            var item = output[i];
-
-            if (item.matchedIndices.length === 0) {
-              continue;
-            }
-
-            var obj = {
-              indices: item.matchedIndices,
-              value: item.value
-            };
-
-            if (item.key) {
-              obj.key = item.key;
-            }
-
-            if (item.hasOwnProperty('arrayIndex') && item.arrayIndex > -1) {
-              obj.arrayIndex = item.arrayIndex;
-            }
-
-            data.matches.push(obj);
-          }
-        });
-      }
-
-      if (this.options.includeScore) {
-        transformers.push(function (result, data) {
-          data.score = result.score;
-        });
-      }
-
-      for (var i = 0, len = results.length; i < len; i += 1) {
-        var result = results[i];
-
-        if (this.options.id) {
-          result.item = this.options.getFn(result.item, this.options.id)[0];
-        }
-
-        if (!transformers.length) {
-          finalOutput.push(result.item);
-          continue;
-        }
-
-        var data = {
-          item: result.item
-        };
-
-        for (var j = 0, _len2 = transformers.length; j < _len2; j += 1) {
-          transformers[j](result, data);
-        }
-
-        finalOutput.push(data);
-      }
-
-      return finalOutput;
-    }
-  }, {
-    key: "_log",
-    value: function _log() {
-      if (this.options.verbose) {
-        var _console;
-
-        (_console = console).log.apply(_console, arguments);
-      }
-    }
-  }]);
-
-  return Fuse;
-}();
-
-module.exports = Fuse;
-
-/***/ })
-
-/******/ });
-});
-
-/***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1423,14 +299,14 @@ function symbolObservablePonyfill(root) {
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(9);
+module.exports = __webpack_require__(8);
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports) {
 
 window.delegateEvent = function delegateEvent() {
@@ -1482,7 +358,7 @@ window.delegateEvent = function delegateEvent() {
 }();
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 var g;
@@ -1508,7 +384,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -1538,25 +414,25 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/fuse.js/dist/fuse.js
-var dist_fuse = __webpack_require__(3);
+var dist_fuse = __webpack_require__(2);
 var fuse_default = /*#__PURE__*/__webpack_require__.n(dist_fuse);
 
 // EXTERNAL MODULE: ./node_modules/deepmerge/dist/cjs.js
-var cjs = __webpack_require__(1);
+var cjs = __webpack_require__(0);
 var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 
 // EXTERNAL MODULE: ./src/scripts/lib/delegate-events.js
-var delegate_events = __webpack_require__(6);
+var delegate_events = __webpack_require__(5);
 
 // EXTERNAL MODULE: ./node_modules/symbol-observable/es/index.js
-var es = __webpack_require__(2);
+var es = __webpack_require__(1);
 
 // CONCATENATED MODULE: ./node_modules/redux/es/redux.js
 
@@ -2445,8 +1321,6 @@ var general = function general(state, action) {
 
 /* harmony default export */ var reducers_general = (general);
 // CONCATENATED MODULE: ./src/scripts/lib/utils.js
-var utils_this = undefined;
-
 var getRandomNumber = function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
@@ -2558,52 +1432,6 @@ var strToEl = function () {
     return firldChild;
   };
 }();
-/**
- * Determines the width of a passed input based on its value and passes
- * it to the supplied callback function.
- */
-
-var calcWidthOfInput = function calcWidthOfInput(input, callback) {
-  var value = input.value || input.placeholder;
-  var width = input.offsetWidth;
-
-  if (value) {
-    var testEl = strToEl("<span>" + sanitise(value) + "</span>");
-    testEl.style.position = 'absolute';
-    testEl.style.padding = '0';
-    testEl.style.top = '-9999px';
-    testEl.style.left = '-9999px';
-    testEl.style.width = 'auto';
-    testEl.style.whiteSpace = 'pre';
-
-    if (document.body.contains(input) && window.getComputedStyle) {
-      var inputStyle = window.getComputedStyle(input);
-
-      if (inputStyle) {
-        testEl.style.fontSize = inputStyle.fontSize;
-        testEl.style.fontFamily = inputStyle.fontFamily;
-        testEl.style.fontWeight = inputStyle.fontWeight;
-        testEl.style.fontStyle = inputStyle.fontStyle;
-        testEl.style.letterSpacing = inputStyle.letterSpacing;
-        testEl.style.textTransform = inputStyle.textTransform;
-        testEl.style.paddingLeft = inputStyle.paddingLeft;
-        testEl.style.paddingRight = inputStyle.paddingRight;
-      }
-    }
-
-    document.body.appendChild(testEl);
-    requestAnimationFrame(function () {
-      if (value && testEl.offsetWidth !== input.offsetWidth) {
-        width = testEl.offsetWidth + 4;
-      }
-
-      document.body.removeChild(testEl);
-      callback.call(utils_this, width + "px");
-    });
-  } else {
-    callback.call(utils_this, width + "px");
-  }
-};
 var sortByAlpha = function sortByAlpha(a, b) {
   var labelA = ("" + (a.label || a.value)).toLowerCase();
   var labelB = ("" + (b.label || b.value)).toLowerCase();
@@ -2755,14 +1583,16 @@ function () {
   }
   /**
    * Get single choice by it's ID
-   * @return {Object} Found choice
+   * @param {id} string
+   * @return {import('../../../types/index').Choices.Choice | false} Found choice
    */
   ;
 
   _proto.getChoiceById = function getChoiceById(id) {
     if (id) {
+      var n = parseInt(id, 10);
       return this.activeChoices.find(function (choice) {
-        return choice.id === parseInt(id, 10);
+        return choice.id === n;
       });
     }
 
@@ -3296,33 +2126,17 @@ function () {
   /**
    * Set the correct input width based on placeholder
    * value or input value
-   * @return
    */
   ;
 
-  _proto.setWidth = function setWidth(enforceWidth) {
-    var _this = this;
-
-    var callback = function callback(width) {
-      _this.element.style.width = width;
-    };
-
-    if (this._placeholderValue) {
-      // If there is a placeholder, we only want to set the width of the input when it is a greater
-      // length than 75% of the placeholder. This stops the input jumping around.
-      var valueHasDesiredLength = this.element.value.length >= this._placeholderValue.length / 1.25;
-
-      if (this.element.value && valueHasDesiredLength || enforceWidth) {
-        this.calcWidth(callback);
-      }
-    } else {
-      // If there is no placeholder, resize input to contents
-      this.calcWidth(callback);
-    }
-  };
-
-  _proto.calcWidth = function calcWidth(callback) {
-    return calcWidthOfInput(this.element, callback);
+  _proto.setWidth = function setWidth() {
+    // Resize input to contents or placeholder
+    var _this$element = this.element,
+        style = _this$element.style,
+        value = _this$element.value,
+        placeholder = _this$element.placeholder;
+    style.minWidth = placeholder.length + 1 + "ch";
+    style.width = value.length + 1 + "ch";
   };
 
   _proto.setActiveDescendant = function setActiveDescendant(activeDescendantID) {
@@ -3398,7 +2212,6 @@ var DEFAULT_CLASSNAMES = {
   openState: 'is-open',
   disabledState: 'is-disabled',
   highlightedState: 'is-highlighted',
-  hiddenState: 'is-hidden',
   flippedState: 'is-flipped',
   loadingState: 'is-loading',
   noResults: 'has-no-results',
@@ -3618,7 +2431,7 @@ function () {
   _proto.conceal = function conceal() {
     // Hide passed input
     this.element.classList.add(this.classNames.input);
-    this.element.classList.add(this.classNames.hiddenState); // Remove element from tab index
+    this.element.hidden = true; // Remove element from tab index
 
     this.element.tabIndex = '-1'; // Backup original styles if any
 
@@ -3628,14 +2441,13 @@ function () {
       this.element.setAttribute('data-choice-orig-style', origStyle);
     }
 
-    this.element.setAttribute('aria-hidden', 'true');
     this.element.setAttribute('data-choice', 'active');
   };
 
   _proto.reveal = function reveal() {
     // Reinstate passed element
     this.element.classList.remove(this.classNames.input);
-    this.element.classList.remove(this.classNames.hiddenState);
+    this.element.hidden = false;
     this.element.removeAttribute('tabindex'); // Recover original styles if any
 
     var origStyle = this.element.getAttribute('data-choice-orig-style');
@@ -3647,7 +2459,6 @@ function () {
       this.element.removeAttribute('style');
     }
 
-    this.element.removeAttribute('aria-hidden');
     this.element.removeAttribute('data-choice'); // Re-assign values - this is weird, I know
 
     this.element.value = this.element.value;
@@ -3816,92 +2627,217 @@ function (_WrappedElement) {
 
 
 
-// EXTERNAL MODULE: ./node_modules/classnames/index.js
-var classnames = __webpack_require__(0);
-var classnames_default = /*#__PURE__*/__webpack_require__.n(classnames);
-
 // CONCATENATED MODULE: ./src/scripts/templates.js
+/**
+ * Helpers to create HTML elements used by Choices
+ * Can be overridden by providing `callbackOnCreateTemplates` option
+ * @typedef {import('../../types/index').Choices.Templates} Templates
+ */
+var TEMPLATES =
+/** @type {Templates} */
+{
+  containerOuter: function containerOuter(_ref, dir, isSelectElement, isSelectOneElement, searchEnabled, passedElementType) {
+    var _containerOuter = _ref.containerOuter;
+    var div = Object.assign(document.createElement('div'), {
+      className: _containerOuter,
+      dir: dir
+    });
+    div.dataset.type = passedElementType;
+    if (isSelectOneElement) div.tabIndex = 0;
 
-
-var TEMPLATES = {
-  containerOuter: function containerOuter(globalClasses, direction, isSelectElement, isSelectOneElement, searchEnabled, passedElementType) {
-    var tabIndex = isSelectOneElement ? 'tabindex="0"' : '';
-    var role = isSelectElement ? 'role="listbox"' : '';
-    var ariaAutoComplete = '';
-
-    if (isSelectElement && searchEnabled) {
-      role = 'role="combobox"';
-      ariaAutoComplete = 'aria-autocomplete="list"';
+    if (isSelectElement) {
+      div.setAttribute('role', searchEnabled ? 'combobox' : 'listbox');
+      if (searchEnabled) div.setAttribute('aria-autocomplete', 'list');
     }
 
-    return strToEl("\n      <div\n        class=\"" + globalClasses.containerOuter + "\"\n        data-type=\"" + passedElementType + "\"\n        " + role + "\n        " + tabIndex + "\n        " + ariaAutoComplete + "\n        aria-haspopup=\"true\"\n        aria-expanded=\"false\"\n        dir=\"" + direction + "\"\n        >\n      </div>\n    ");
+    div.setAttribute('aria-haspopup', 'true');
+    div.setAttribute('aria-expanded', 'false');
+    return div;
   },
-  containerInner: function containerInner(globalClasses) {
-    return strToEl("\n      <div class=\"" + globalClasses.containerInner + "\"></div>\n    ");
+  containerInner: function containerInner(_ref2) {
+    var _containerInner = _ref2.containerInner;
+    return Object.assign(document.createElement('div'), {
+      className: _containerInner
+    });
   },
-  itemList: function itemList(globalClasses, isSelectOneElement) {
-    var _classNames;
-
-    var localClasses = classnames_default()(globalClasses.list, (_classNames = {}, _classNames[globalClasses.listSingle] = isSelectOneElement, _classNames[globalClasses.listItems] = !isSelectOneElement, _classNames));
-    return strToEl("\n      <div class=\"" + localClasses + "\"></div>\n    ");
+  itemList: function itemList(_ref3, isSelectOneElement) {
+    var list = _ref3.list,
+        listSingle = _ref3.listSingle,
+        listItems = _ref3.listItems;
+    return Object.assign(document.createElement('div'), {
+      className: list + " " + (isSelectOneElement ? listSingle : listItems)
+    });
   },
-  placeholder: function placeholder(globalClasses, value) {
-    return strToEl("\n      <div class=\"" + globalClasses.placeholder + "\">\n        " + value + "\n      </div>\n    ");
+  placeholder: function placeholder(_ref4, value) {
+    var _placeholder = _ref4.placeholder;
+    return Object.assign(document.createElement('div'), {
+      className: _placeholder,
+      innerHTML: value
+    });
   },
-  item: function item(globalClasses, data, removeItemButton) {
-    var _classNames2;
-
-    var ariaSelected = data.active ? 'aria-selected="true"' : '';
-    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
-    var localClasses = classnames_default()(globalClasses.item, (_classNames2 = {}, _classNames2[globalClasses.highlightedState] = data.highlighted, _classNames2[globalClasses.itemSelectable] = !data.highlighted, _classNames2[globalClasses.placeholder] = data.placeholder, _classNames2));
+  item: function item(_ref5, _ref6, removeItemButton) {
+    var _item = _ref5.item,
+        button = _ref5.button,
+        highlightedState = _ref5.highlightedState,
+        itemSelectable = _ref5.itemSelectable,
+        placeholder = _ref5.placeholder;
+    var id = _ref6.id,
+        value = _ref6.value,
+        label = _ref6.label,
+        customProperties = _ref6.customProperties,
+        active = _ref6.active,
+        disabled = _ref6.disabled,
+        highlighted = _ref6.highlighted,
+        isPlaceholder = _ref6.placeholder;
+    var div = Object.assign(document.createElement('div'), {
+      className: _item,
+      innerHTML: label
+    });
+    Object.assign(div.dataset, {
+      item: '',
+      id: id,
+      value: value,
+      customProperties: customProperties
+    });
+    if (active) div.setAttribute('aria-selected', 'true');
+    if (disabled) div.setAttribute('aria-disabled', 'true');
+    if (isPlaceholder) div.classList.add(placeholder);
+    div.classList.add(highlighted ? highlightedState : itemSelectable);
 
     if (removeItemButton) {
-      var _classNames3;
+      if (disabled) div.classList.remove(itemSelectable);
+      div.dataset.deletable = '';
+      /** @todo This MUST be localizable, not hardcoded! */
 
-      localClasses = classnames_default()(globalClasses.item, (_classNames3 = {}, _classNames3[globalClasses.highlightedState] = data.highlighted, _classNames3[globalClasses.itemSelectable] = !data.disabled, _classNames3[globalClasses.placeholder] = data.placeholder, _classNames3));
-      return strToEl("\n        <div\n          class=\"" + localClasses + "\"\n          data-item\n          data-id=\"" + data.id + "\"\n          data-value=\"" + data.value + "\"\n          data-custom-properties='" + data.customProperties + "'\n          data-deletable\n          " + ariaSelected + "\n          " + ariaDisabled + "\n          >\n          " + data.label + "<!--\n       --><button\n            type=\"button\"\n            class=\"" + globalClasses.button + "\"\n            data-button\n            aria-label=\"Remove item: '" + data.value + "'\"\n            >\n            Remove item\n          </button>\n        </div>\n      ");
+      var REMOVE_ITEM_TEXT = 'Remove item';
+      var removeButton = Object.assign(document.createElement('button'), {
+        type: 'button',
+        className: button,
+        innerHTML: REMOVE_ITEM_TEXT
+      });
+      removeButton.setAttribute('aria-label', REMOVE_ITEM_TEXT + ": '" + value + "'");
+      removeButton.dataset.button = '';
+      div.appendChild(removeButton);
     }
 
-    return strToEl("\n      <div\n        class=\"" + localClasses + "\"\n        data-item\n        data-id=\"" + data.id + "\"\n        data-value=\"" + data.value + "\"\n        " + ariaSelected + "\n        " + ariaDisabled + "\n        >\n        " + data.label + "\n      </div>\n    ");
+    return div;
   },
-  choiceList: function choiceList(globalClasses, isSelectOneElement) {
-    var ariaMultiSelectable = !isSelectOneElement ? 'aria-multiselectable="true"' : '';
-    return strToEl("\n      <div\n        class=\"" + globalClasses.list + "\"\n        dir=\"ltr\"\n        role=\"listbox\"\n        " + ariaMultiSelectable + "\n        >\n      </div>\n    ");
+  choiceList: function choiceList(_ref7, isSelectOneElement) {
+    var list = _ref7.list;
+    var div = Object.assign(document.createElement('div'), {
+      className: list,
+      dir: 'ltr'
+    });
+    if (!isSelectOneElement) div.setAttribute('aria-multiselectable', 'true');
+    div.setAttribute('role', 'listbox');
+    return div;
   },
-  choiceGroup: function choiceGroup(globalClasses, data) {
-    var _classNames4;
+  choiceGroup: function choiceGroup(_ref8, _ref9) {
+    var group = _ref8.group,
+        groupHeading = _ref8.groupHeading,
+        itemDisabled = _ref8.itemDisabled;
+    var id = _ref9.id,
+        value = _ref9.value,
+        disabled = _ref9.disabled;
+    var div = Object.assign(document.createElement('div'), {
+      className: group + " " + (disabled ? itemDisabled : '')
+    });
+    div.setAttribute('role', 'group');
+    Object.assign(div.dataset, {
+      group: '',
+      id: id,
+      value: value
+    });
+    if (disabled) div.setAttribute('aria-disabled', 'true');
+    div.appendChild(Object.assign(document.createElement('div'), {
+      className: groupHeading,
+      innerHTML: value
+    }));
+    return div;
+  },
+  choice: function choice(_ref10, _ref11, selectText) {
+    var item = _ref10.item,
+        itemChoice = _ref10.itemChoice,
+        itemSelectable = _ref10.itemSelectable,
+        itemDisabled = _ref10.itemDisabled,
+        placeholder = _ref10.placeholder;
+    var id = _ref11.id,
+        value = _ref11.value,
+        label = _ref11.label,
+        groupId = _ref11.groupId,
+        elementId = _ref11.elementId,
+        disabled = _ref11.disabled,
+        isPlaceholder = _ref11.placeholder;
+    var div = Object.assign(document.createElement('div'), {
+      id: elementId,
+      innerHTML: label,
+      className: item + " " + itemChoice + " " + (disabled ? itemDisabled : itemSelectable) + " " + (isPlaceholder ? placeholder : '')
+    });
+    div.setAttribute('role', groupId > 0 ? 'treeitem' : 'option');
+    Object.assign(div.dataset, {
+      choice: '',
+      id: id,
+      value: value,
+      selectText: selectText
+    });
 
-    var ariaDisabled = data.disabled ? 'aria-disabled="true"' : '';
-    var localClasses = classnames_default()(globalClasses.group, (_classNames4 = {}, _classNames4[globalClasses.itemDisabled] = data.disabled, _classNames4));
-    return strToEl("\n      <div\n        class=\"" + localClasses + "\"\n        data-group\n        data-id=\"" + data.id + "\"\n        data-value=\"" + data.value + "\"\n        role=\"group\"\n        " + ariaDisabled + "\n        >\n        <div class=\"" + globalClasses.groupHeading + "\">" + data.value + "</div>\n      </div>\n    ");
-  },
-  choice: function choice(globalClasses, data, itemSelectText) {
-    var _classNames5;
+    if (disabled) {
+      div.dataset.choiceDisabled = '';
+      div.setAttribute('aria-disabled', 'true');
+    } else div.dataset.choiceSelectable = '';
 
-    var role = data.groupId > 0 ? 'role="treeitem"' : 'role="option"';
-    var localClasses = classnames_default()(globalClasses.item, globalClasses.itemChoice, (_classNames5 = {}, _classNames5[globalClasses.itemDisabled] = data.disabled, _classNames5[globalClasses.itemSelectable] = !data.disabled, _classNames5[globalClasses.placeholder] = data.placeholder, _classNames5));
-    return strToEl("\n      <div\n        class=\"" + localClasses + "\"\n        data-select-text=\"" + itemSelectText + "\"\n        data-choice\n        data-id=\"" + data.id + "\"\n        data-value=\"" + data.value + "\"\n        " + (data.disabled ? 'data-choice-disabled aria-disabled="true"' : 'data-choice-selectable') + "\n        id=\"" + data.elementId + "\"\n        " + role + "\n        >\n        " + data.label + "\n      </div>\n    ");
+    return div;
   },
-  input: function input(globalClasses, placeholderValue) {
-    var localClasses = classnames_default()(globalClasses.input, globalClasses.inputCloned);
-    return strToEl("\n      <input\n        type=\"text\"\n        class=\"" + localClasses + "\"\n        autocomplete=\"off\"\n        autocapitalize=\"off\"\n        spellcheck=\"false\"\n        role=\"textbox\"\n        aria-autocomplete=\"list\"\n        aria-label=\"" + placeholderValue + "\"\n        >\n    ");
+  input: function input(_ref12, placeholderValue) {
+    var _input = _ref12.input,
+        inputCloned = _ref12.inputCloned;
+    var inp = Object.assign(document.createElement('input'), {
+      type: 'text',
+      className: _input + " " + inputCloned,
+      autocomplete: 'off',
+      autocapitalize: 'off',
+      spellcheck: false
+    });
+    inp.setAttribute('role', 'textbox');
+    inp.setAttribute('aria-autocomplete', 'list');
+    inp.setAttribute('aria-label', placeholderValue);
+    return inp;
   },
-  dropdown: function dropdown(globalClasses) {
-    var localClasses = classnames_default()(globalClasses.list, globalClasses.listDropdown);
-    return strToEl("\n      <div\n        class=\"" + localClasses + "\"\n        aria-expanded=\"false\"\n        >\n      </div>\n    ");
+  dropdown: function dropdown(_ref13) {
+    var list = _ref13.list,
+        listDropdown = _ref13.listDropdown;
+    var div = document.createElement('div');
+    div.classList.add(list, listDropdown);
+    div.setAttribute('aria-expanded', 'false');
+    return div;
   },
-  notice: function notice(globalClasses, label, type) {
-    var _classNames6;
+  notice: function notice(_ref14, innerHTML, type) {
+    var item = _ref14.item,
+        itemChoice = _ref14.itemChoice,
+        noResults = _ref14.noResults,
+        noChoices = _ref14.noChoices;
 
     if (type === void 0) {
       type = '';
     }
 
-    var localClasses = classnames_default()(globalClasses.item, globalClasses.itemChoice, (_classNames6 = {}, _classNames6[globalClasses.noResults] = type === 'no-results', _classNames6[globalClasses.noChoices] = type === 'no-choices', _classNames6));
-    return strToEl("\n      <div class=\"" + localClasses + "\">\n        " + label + "\n      </div>\n    ");
+    var classes = [item, itemChoice];
+    if (type === 'no-choices') classes.push(noChoices);else if (type === 'no-results') classes.push(noResults);
+    return Object.assign(document.createElement('div'), {
+      innerHTML: innerHTML,
+      className: classes.join(' ')
+    });
   },
-  option: function option(data) {
-    return strToEl("\n      <option value=\"" + data.value + "\" " + (data.active ? 'selected' : '') + " " + (data.disabled ? 'disabled' : '') + " " + (data.customProperties ? "data-custom-properties=" + data.customProperties : '') + ">" + data.label + "</option>\n    ");
+  option: function option(_ref15) {
+    var label = _ref15.label,
+        value = _ref15.value,
+        customProperties = _ref15.customProperties,
+        active = _ref15.active,
+        disabled = _ref15.disabled;
+    var opt = new Option(label, value, false, active);
+    if (customProperties) opt.dataset.customProperties = customProperties;
+    opt.disabled = disabled;
+    return opt;
   }
 };
 /* harmony default export */ var templates = (TEMPLATES);
@@ -4441,16 +3377,20 @@ function () {
     }, []);
 
     return this._isSelectOneElement ? values[0] : values;
-  };
+  }
+  /**
+   * @param {string[] | import('../../types/index').Choices.Item[]} items
+   */
+  ;
 
-  _proto.setValue = function setValue(args) {
+  _proto.setValue = function setValue(items) {
     var _this9 = this;
 
     if (!this.initialised) {
       return this;
     }
 
-    [].concat(args).forEach(function (value) {
+    items.forEach(function (value) {
       return _this9._setChoiceOrItem(value);
     });
     return this;
@@ -4679,7 +3619,9 @@ function () {
   _proto._createGroupsFragment = function _createGroupsFragment(groups, choices, fragment) {
     var _this14 = this;
 
-    var groupFragment = fragment || document.createDocumentFragment();
+    if (fragment === void 0) {
+      fragment = document.createDocumentFragment();
+    }
 
     var getGroupChoices = function getGroupChoices(group) {
       return choices.filter(function (choice) {
@@ -4702,23 +3644,26 @@ function () {
       if (groupChoices.length >= 1) {
         var dropdownGroup = _this14._getTemplate('choiceGroup', group);
 
-        groupFragment.appendChild(dropdownGroup);
+        fragment.appendChild(dropdownGroup);
 
-        _this14._createChoicesFragment(groupChoices, groupFragment, true);
+        _this14._createChoicesFragment(groupChoices, fragment, true);
       }
     });
-    return groupFragment;
+    return fragment;
   };
 
   _proto._createChoicesFragment = function _createChoicesFragment(choices, fragment, withinGroup) {
     var _this15 = this;
+
+    if (fragment === void 0) {
+      fragment = document.createDocumentFragment();
+    }
 
     if (withinGroup === void 0) {
       withinGroup = false;
     }
 
     // Create a fragment to store our list items (so we don't have to update the DOM for each item)
-    var choicesFragment = fragment || document.createDocumentFragment();
     var _this$config = this.config,
         renderSelectedChoices = _this$config.renderSelectedChoices,
         searchResultLimit = _this$config.searchResultLimit,
@@ -4731,7 +3676,7 @@ function () {
       if (shouldRender) {
         var dropdownItem = _this15._getTemplate('choice', choice, _this15.config.itemSelectText);
 
-        choicesFragment.appendChild(dropdownItem);
+        fragment.appendChild(dropdownItem);
       }
     };
 
@@ -4781,22 +3726,21 @@ function () {
       }
     }
 
-    return choicesFragment;
+    return fragment;
   };
 
   _proto._createItemsFragment = function _createItemsFragment(items, fragment) {
     var _this16 = this;
 
     if (fragment === void 0) {
-      fragment = null;
+      fragment = document.createDocumentFragment();
     }
 
     // Create fragment to add elements to
     var _this$config2 = this.config,
         shouldSortItems = _this$config2.shouldSortItems,
         sortFn = _this$config2.sortFn,
-        removeItemButton = _this$config2.removeItemButton;
-    var itemListFragment = fragment || document.createDocumentFragment(); // If sorting is enabled, filter items
+        removeItemButton = _this$config2.removeItemButton; // If sorting is enabled, filter items
 
     if (shouldSortItems && !this._isSelectOneElement) {
       items.sort(sortFn);
@@ -4815,14 +3759,14 @@ function () {
       var listItem = _this16._getTemplate('item', item, removeItemButton); // Append it to list
 
 
-      itemListFragment.appendChild(listItem);
+      fragment.appendChild(listItem);
     }; // Add each list item to list
 
 
     items.forEach(function (item) {
       return addItemToFragment(item);
     });
-    return itemListFragment;
+    return fragment;
   };
 
   _proto._triggerChange = function _triggerChange(value) {
@@ -4903,10 +3847,11 @@ function () {
     } // If we are clicking on an option
 
 
-    var id = element.getAttribute('data-id');
+    var id = element.dataset.id;
 
     var choice = this._store.getChoiceById(id);
 
+    if (!choice) return;
     var passedKeyCode = activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
     var hasActiveDropdown = this.dropdown.isActive; // Update choice keyCode
 
@@ -4915,7 +3860,7 @@ function () {
       choice: choice
     });
 
-    if (choice && !choice.selected && !choice.disabled) {
+    if (!choice.selected && !choice.disabled) {
       var canAddItem = this._canAddItem(activeItems, choice.value);
 
       if (canAddItem.response) {
@@ -4933,7 +3878,7 @@ function () {
       }
     }
 
-    this.clearInput(); // We wont to close the dropdown if we are dealing with a single select box
+    this.clearInput(); // We want to close the dropdown if we are dealing with a single select box
 
     if (hasActiveDropdown && this._isSelectOneElement) {
       this.hideDropdown(true);

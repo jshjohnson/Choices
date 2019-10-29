@@ -28,6 +28,10 @@
   cursor: not-allowed;
 }
 
+.choices [hidden] {
+  display: none !important;
+}
+
 .choices[data-type*='select-one'] {
   cursor: pointer;
 }
@@ -356,14 +360,6 @@
 
 .choices__placeholder {
   opacity: 0.5;
-}
-
-.choices__input[hidden],
-.choices[data-type*='select-one']
-.choices__input[hidden],
-.choices[data-type*='select-multiple']
-.choices__input[hidden] {
-  display: none;
 }
 
 /*=====  End of Choices  ======*/
