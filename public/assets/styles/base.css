@@ -78,7 +78,8 @@ a:focus {
   border-radius: 2.5px;
   font-size: 14px;
   -webkit-appearance: none;
-  appearance: none;
+  -moz-appearance: none;
+       appearance: none;
   margin-bottom: 24px;
 }
 

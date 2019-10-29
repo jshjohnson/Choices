@@ -25,12 +25,12 @@ export default class Input {
     this.element.placeholder = placeholder;
   }
 
-  set value(value) {
-    this.element.value = value;
-  }
-
   get value() {
     return sanitise(this.element.value);
+  }
+
+  set value(value) {
+    this.element.value = value;
   }
 
   addEventListeners() {

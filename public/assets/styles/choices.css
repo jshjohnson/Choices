@@ -325,7 +325,8 @@
 .choices__button {
   text-indent: -9999px;
   -webkit-appearance: none;
-  appearance: none;
+  -moz-appearance: none;
+       appearance: none;
   border: 0;
   background-color: transparent;
   background-repeat: no-repeat;

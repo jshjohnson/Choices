@@ -47,7 +47,7 @@
     <!-- End ignore these -->
 
     <!-- Optional includes -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es5%2Ces6%2CArray.prototype.includes%2Cfetch%2CCustomEvent"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es5%2Ces6%2CArray.prototype.includes%2Cfetch%2CCustomEvent%2CElement.prototype.closest"></script>
     <!-- End optional includes -->
 
     <!-- Choices includes -->
@@ -320,7 +320,7 @@
         </select>
 
         <label for="choices-single-remove-xhr"
-          >Options from remote source (XHR) &amp; remove button</label
+          >Options from remote source (Fetch API) &amp; remove button</label
         >
         <select
           class="form-control"
@@ -636,17 +636,17 @@
           placeholder: true,
           placeholderValue: 'Pick an Strokes record',
           maxItemCount: 5,
-        }).ajax(function(callback) {
-          fetch(
+        }).setChoices(function() {
+          return fetch(
             'https://api.discogs.com/artists/55980/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
           )
             .then(function(response) {
-              response.json().then(function(data) {
-                callback(data.releases, 'title', 'title');
-              });
+              return response.json();
             })
-            .catch(function(error) {
-              console.error(error);
+            .then(function(data) {
+              return data.releases.map(function(release) {
+                return { value: release.title, label: release.title };
+              });
             });
         });
 
@@ -694,46 +694,39 @@
 
         var singleFetch = new Choices('#choices-single-remote-fetch', {
           searchPlaceholderValue: 'Search for an Arctic Monkeys record',
-        }).ajax(function(callback) {
-          fetch(
-            'https://api.discogs.com/artists/391170/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
-          )
-            .then(function(response) {
-              response.json().then(function(data) {
-                callback(data.releases, 'title', 'title');
-                singleFetch.setChoiceByValue('Fake Tales Of San Francisco');
+        })
+          .setChoices(function() {
+            return fetch(
+              'https://api.discogs.com/artists/391170/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
+            )
+              .then(function(response) {
+                return response.json();
+              })
+              .then(function(data) {
+                return data.releases.map(function(release) {
+                  return { label: release.title, value: release.title };
+                });
               });
-            })
-            .catch(function(error) {
-              console.error(error);
-            });
-        });
+          })
+          .then(function(instance) {
+            instance.setChoiceByValue('Fake Tales Of San Francisco');
+          });
 
         var singleXhrRemove = new Choices('#choices-single-remove-xhr', {
           removeItemButton: true,
           searchPlaceholderValue: "Search for a Smiths' record",
-        }).ajax(function(callback) {
-          var request = new XMLHttpRequest();
-          request.open(
-            'get',
+        }).setChoices(function(callback) {
+          return fetch(
             'https://api.discogs.com/artists/83080/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
-            true,
-          );
-          request.onreadystatechange = function() {
-            var status;
-            var data;
-            if (request.readyState === 4) {
-              status = request.status;
-              if (status === 200) {
-                data = JSON.parse(request.responseText);
-                callback(data.releases, 'title', 'title');
-                singleXhrRemove.setChoiceByValue('How Soon Is Now?');
-              } else {
-                console.error(status);
-              }
-            }
-          };
-          request.send();
+          )
+            .then(function(res) {
+              return res.json();
+            })
+            .then(function(data) {
+              return data.releases.map(function(release) {
+                return { label: release.title, value: release.title };
+              });
+            });
         });
 
         var genericExamples = new Choices('[data-trigger]', {

@@ -56,7 +56,8 @@ export default class WrappedElement {
     this.element.removeAttribute('data-choice');
 
     // Re-assign values - this is weird, I know
-    this.element.value = this.element.value;
+    // @todo Figure out why we need to do this
+    this.element.value = this.element.value; // eslint-disable-line no-self-assign
   }
 
   enable() {

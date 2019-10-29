@@ -1,0 +1,23 @@
+name: Polyfills documentation
+
+on:
+  pull_request:
+    paths:
+      - 'README.md'
+      - '.browserslistrc'
+      - '.eslintrc.json'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Check Polyfills documentation and settings sync
+        run: node .github/actions-scripts/polyfills-sync.js

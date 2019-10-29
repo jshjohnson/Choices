@@ -33,6 +33,7 @@ export default function choices(state = defaultState, action) {
         return state.map(obj => {
           const choice = obj;
           choice.active = action.active;
+
           return choice;
         });
       }
@@ -45,6 +46,7 @@ export default function choices(state = defaultState, action) {
           if (choice.id === parseInt(action.choiceId, 10)) {
             choice.selected = true;
           }
+
           return choice;
         });
       }
@@ -61,6 +63,7 @@ export default function choices(state = defaultState, action) {
           if (choice.id === parseInt(action.choiceId, 10)) {
             choice.selected = false;
           }
+
           return choice;
         });
       }
@@ -76,8 +79,10 @@ export default function choices(state = defaultState, action) {
         choice.active = action.results.some(({ item, score }) => {
           if (item.id === choice.id) {
             choice.score = score;
+
             return true;
           }
+
           return false;
         });
 
@@ -89,6 +94,7 @@ export default function choices(state = defaultState, action) {
       return state.map(obj => {
         const choice = obj;
         choice.active = action.active;
+
         return choice;
       });
     }

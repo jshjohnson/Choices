@@ -1,4 +1,4 @@
-/*! choices.js v7.1.5 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v8.0.0 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -257,7 +257,7 @@ if (typeof self !== 'undefined') {
 var result = Object(_ponyfill_js__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(root);
 /* harmony default export */ __webpack_exports__["a"] = (result);
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(6), __webpack_require__(7)(module)))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(5), __webpack_require__(6)(module)))
 
 /***/ }),
 /* 2 */
@@ -302,63 +302,11 @@ function symbolObservablePonyfill(root) {
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(8);
+module.exports = __webpack_require__(7);
 
 
 /***/ }),
 /* 5 */
-/***/ (function(module, exports) {
-
-window.delegateEvent = function delegateEvent() {
-  var events;
-  var addedListenerTypes;
-
-  if (typeof events === 'undefined') {
-    events = new Map();
-  }
-
-  if (typeof addedListenerTypes === 'undefined') {
-    addedListenerTypes = [];
-  }
-
-  function _callback(event) {
-    var type = events.get(event.type);
-    if (!type) return;
-    type.forEach(function (fn) {
-      return fn(event);
-    });
-  }
-
-  return {
-    add: function add(type, fn) {
-      // Cache list of events.
-      if (events.has(type)) {
-        events.get(type).push(fn);
-      } else {
-        events.set(type, [fn]);
-      } // Setup events.
-
-
-      if (addedListenerTypes.indexOf(type) === -1) {
-        document.documentElement.addEventListener(type, _callback, true);
-        addedListenerTypes.push(type);
-      }
-    },
-    remove: function remove(type, fn) {
-      if (!events.get(type)) return;
-      events.set(type, events.get(type).filter(function (item) {
-        return item !== fn;
-      }));
-
-      if (!events.get(type).length) {
-        addedListenerTypes.splice(addedListenerTypes.indexOf(type), 1);
-      }
-    }
-  };
-}();
-
-/***/ }),
-/* 6 */
 /***/ (function(module, exports) {
 
 var g;
@@ -384,7 +332,7 @@ module.exports = g;
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -414,7 +362,7 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -427,9 +375,6 @@ var fuse_default = /*#__PURE__*/__webpack_require__.n(dist_fuse);
 // EXTERNAL MODULE: ./node_modules/deepmerge/dist/cjs.js
 var cjs = __webpack_require__(0);
 var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
-
-// EXTERNAL MODULE: ./src/scripts/lib/delegate-events.js
-var delegate_events = __webpack_require__(5);
 
 // EXTERNAL MODULE: ./node_modules/symbol-observable/es/index.js
 var es = __webpack_require__(1);
@@ -1362,18 +1307,13 @@ var utils_wrap = function wrap(element, wrapper) {
 
   return wrapper.appendChild(element);
 };
+/**
+ * @param {HTMLElement} el
+ * @param {string} attr
+ */
+
 var findAncestorByAttrName = function findAncestorByAttrName(el, attr) {
-  var target = el;
-
-  while (target) {
-    if (target.hasAttribute(attr)) {
-      return target;
-    }
-
-    target = target.parentElement;
-  }
-
-  return null;
+  return el.closest("[" + attr + "]");
 };
 var getAdjacentEl = function getAdjacentEl(startEl, className, direction) {
   if (direction === void 0) {
@@ -1432,19 +1372,24 @@ var strToEl = function () {
     return firldChild;
   };
 }();
-var sortByAlpha = function sortByAlpha(a, b) {
-  var labelA = ("" + (a.label || a.value)).toLowerCase();
-  var labelB = ("" + (b.label || b.value)).toLowerCase();
-
-  if (labelA < labelB) {
-    return -1;
-  }
-
-  if (labelA > labelB) {
-    return 1;
-  }
-
-  return 0;
+var sortByAlpha =
+/**
+ * @param {{ label?: string, value: string }} a
+ * @param {{ label?: string, value: string }} b
+ * @returns {number}
+ */
+function sortByAlpha(_ref, _ref2) {
+  var value = _ref.value,
+      _ref$label = _ref.label,
+      label = _ref$label === void 0 ? value : _ref$label;
+  var value2 = _ref2.value,
+      _ref2$label = _ref2.label,
+      label2 = _ref2$label === void 0 ? value2 : _ref2$label;
+  return label.localeCompare(label2, [], {
+    sensitivity: 'base',
+    ignorePunctuation: true,
+    numeric: true
+  });
 };
 var sortByScore = function sortByScore(a, b) {
   return a.score - b.score;
@@ -1466,15 +1411,6 @@ var getWindowHeight = function getWindowHeight() {
       body = _document.body;
   var html = document.documentElement;
   return Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-};
-var fetchFromObject = function fetchFromObject(object, path) {
-  var index = path.indexOf('.');
-
-  if (index > -1) {
-    return fetchFromObject(object[path.substring(0, index)], path.substr(index + 1));
-  }
-
-  return object[path];
 };
 var isIE11 = function isIE11() {
   return !!(navigator.userAgent.match(/Trident/) && navigator.userAgent.match(/rv[ :]11/));
@@ -2035,21 +1971,23 @@ function input_createClass(Constructor, protoProps, staticProps) { if (protoProp
 var input_Input =
 /*#__PURE__*/
 function () {
+  /**
+   *
+   * @typedef {import('../../../types/index').Choices.passedElement} passedElement
+   * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
+   * @param {{element: HTMLInputElement, type: passedElement['type'], classNames: ClassNames, preventPaste: boolean }} p
+   */
   function Input(_ref) {
     var element = _ref.element,
         type = _ref.type,
         classNames = _ref.classNames,
-        placeholderValue = _ref.placeholderValue;
-    Object.assign(this, {
-      element: element,
-      type: type,
-      classNames: classNames,
-      placeholderValue: placeholderValue
-    });
+        preventPaste = _ref.preventPaste;
     this.element = element;
+    this.type = type;
     this.classNames = classNames;
+    this.preventPaste = preventPaste;
     this.isFocussed = this.element === document.activeElement;
-    this.isDisabled = false;
+    this.isDisabled = element.disabled;
     this._onPaste = this._onPaste.bind(this);
     this._onInput = this._onInput.bind(this);
     this._onFocus = this._onFocus.bind(this);
@@ -2059,25 +1997,29 @@ function () {
   var _proto = Input.prototype;
 
   _proto.addEventListeners = function addEventListeners() {
-    this.element.addEventListener('input', this._onInput);
     this.element.addEventListener('paste', this._onPaste);
-    this.element.addEventListener('focus', this._onFocus);
-    this.element.addEventListener('blur', this._onBlur);
-
-    if (this.element.form) {
-      this.element.form.addEventListener('reset', this._onFormReset);
-    }
+    this.element.addEventListener('input', this._onInput, {
+      passive: true
+    });
+    this.element.addEventListener('focus', this._onFocus, {
+      passive: true
+    });
+    this.element.addEventListener('blur', this._onBlur, {
+      passive: true
+    });
   };
 
   _proto.removeEventListeners = function removeEventListeners() {
-    this.element.removeEventListener('input', this._onInput);
+    this.element.removeEventListener('input', this._onInput, {
+      passive: true
+    });
     this.element.removeEventListener('paste', this._onPaste);
-    this.element.removeEventListener('focus', this._onFocus);
-    this.element.removeEventListener('blur', this._onBlur);
-
-    if (this.element.form) {
-      this.element.form.removeEventListener('reset', this._onFormReset);
-    }
+    this.element.removeEventListener('focus', this._onFocus, {
+      passive: true
+    });
+    this.element.removeEventListener('blur', this._onBlur, {
+      passive: true
+    });
   };
 
   _proto.enable = function enable() {
@@ -2154,9 +2096,7 @@ function () {
   };
 
   _proto._onPaste = function _onPaste(event) {
-    var target = event.target;
-
-    if (target === this.element && this.preventPaste) {
+    if (this.preventPaste) {
       event.preventDefault();
     }
   };
@@ -2176,11 +2116,11 @@ function () {
     }
   }, {
     key: "value",
-    set: function set(value) {
-      this.element.value = value;
-    },
     get: function get() {
       return sanitise(this.element.value);
+    },
+    set: function set(value) {
+      this.element.value = value;
     }
   }]);
 
@@ -2224,7 +2164,7 @@ var DEFAULT_CONFIG = {
   renderChoiceLimit: -1,
   maxItemCount: -1,
   addItems: true,
-  addItemFilterFn: null,
+  addItemFilter: null,
   removeItems: true,
   removeItemButton: false,
   editItems: false,
@@ -2316,7 +2256,6 @@ function () {
     });
     this.scrollPos = this.element.scrollTop;
     this.height = this.element.offsetHeight;
-    this.hasChildren = !!this.element.children;
   }
 
   var _proto = List.prototype;
@@ -2331,6 +2270,10 @@ function () {
 
   _proto.getChild = function getChild(selector) {
     return this.element.querySelector(selector);
+  };
+
+  _proto.hasChildren = function hasChildren() {
+    return this.element.hasChildNodes();
   };
 
   _proto.scrollToTop = function scrollToTop() {
@@ -2351,25 +2294,25 @@ function () {
 
     var containerScrollPos = this.element.scrollTop + dropdownHeight; // Difference between the choice and scroll position
 
-    var endpoint = direction > 0 ? this.element.scrollTop + choicePos - containerScrollPos : choice.offsetTop;
+    var destination = direction > 0 ? this.element.scrollTop + choicePos - containerScrollPos : choice.offsetTop;
     requestAnimationFrame(function (time) {
-      _this._animateScroll(time, endpoint, direction);
+      _this._animateScroll(time, destination, direction);
     });
   };
 
-  _proto._scrollDown = function _scrollDown(scrollPos, strength, endpoint) {
-    var easing = (endpoint - scrollPos) / strength;
+  _proto._scrollDown = function _scrollDown(scrollPos, strength, destination) {
+    var easing = (destination - scrollPos) / strength;
     var distance = easing > 1 ? easing : 1;
     this.element.scrollTop = scrollPos + distance;
   };
 
-  _proto._scrollUp = function _scrollUp(scrollPos, strength, endpoint) {
-    var easing = (scrollPos - endpoint) / strength;
+  _proto._scrollUp = function _scrollUp(scrollPos, strength, destination) {
+    var easing = (scrollPos - destination) / strength;
     var distance = easing > 1 ? easing : 1;
     this.element.scrollTop = scrollPos - distance;
   };
 
-  _proto._animateScroll = function _animateScroll(time, endpoint, direction) {
+  _proto._animateScroll = function _animateScroll(time, destination, direction) {
     var _this2 = this;
 
     var strength = SCROLLING_SPEED;
@@ -2377,22 +2320,22 @@ function () {
     var continueAnimation = false;
 
     if (direction > 0) {
-      this._scrollDown(choiceListScrollTop, strength, endpoint);
+      this._scrollDown(choiceListScrollTop, strength, destination);
 
-      if (choiceListScrollTop < endpoint) {
+      if (choiceListScrollTop < destination) {
         continueAnimation = true;
       }
     } else {
-      this._scrollUp(choiceListScrollTop, strength, endpoint);
+      this._scrollUp(choiceListScrollTop, strength, destination);
 
-      if (choiceListScrollTop > endpoint) {
+      if (choiceListScrollTop > destination) {
         continueAnimation = true;
       }
     }
 
     if (continueAnimation) {
       requestAnimationFrame(function () {
-        _this2._animateScroll(time, endpoint, direction);
+        _this2._animateScroll(time, destination, direction);
       });
     }
   };
@@ -2460,8 +2403,9 @@ function () {
     }
 
     this.element.removeAttribute('data-choice'); // Re-assign values - this is weird, I know
+    // @todo Figure out why we need to do this
 
-    this.element.value = this.element.value;
+    this.element.value = this.element.value; // eslint-disable-line no-self-assign
   };
 
   _proto.enable = function enable() {
@@ -2525,6 +2469,9 @@ function (_WrappedElement) {
 
   wrapped_input_createClass(WrappedInput, [{
     key: "value",
+    get: function get() {
+      return this.element.value;
+    },
     set: function set(items) {
       var itemValues = items.map(function (_ref2) {
         var value = _ref2.value;
@@ -2533,9 +2480,6 @@ function (_WrappedElement) {
       var joinedValues = itemValues.join(this.delimiter);
       this.element.setAttribute('value', joinedValues);
       this.element.value = joinedValues;
-    },
-    get: function get() {
-      return this.element.value;
     }
   }]);
 
@@ -2639,15 +2583,24 @@ var TEMPLATES =
   containerOuter: function containerOuter(_ref, dir, isSelectElement, isSelectOneElement, searchEnabled, passedElementType) {
     var _containerOuter = _ref.containerOuter;
     var div = Object.assign(document.createElement('div'), {
-      className: _containerOuter,
-      dir: dir
+      className: _containerOuter
     });
     div.dataset.type = passedElementType;
-    if (isSelectOneElement) div.tabIndex = 0;
+
+    if (dir) {
+      div.dir = dir;
+    }
+
+    if (isSelectOneElement) {
+      div.tabIndex = 0;
+    }
 
     if (isSelectElement) {
       div.setAttribute('role', searchEnabled ? 'combobox' : 'listbox');
-      if (searchEnabled) div.setAttribute('aria-autocomplete', 'list');
+
+      if (searchEnabled) {
+        div.setAttribute('aria-autocomplete', 'list');
+      }
     }
 
     div.setAttribute('aria-haspopup', 'true');
@@ -2699,13 +2652,26 @@ var TEMPLATES =
       value: value,
       customProperties: customProperties
     });
-    if (active) div.setAttribute('aria-selected', 'true');
-    if (disabled) div.setAttribute('aria-disabled', 'true');
-    if (isPlaceholder) div.classList.add(placeholder);
+
+    if (active) {
+      div.setAttribute('aria-selected', 'true');
+    }
+
+    if (disabled) {
+      div.setAttribute('aria-disabled', 'true');
+    }
+
+    if (isPlaceholder) {
+      div.classList.add(placeholder);
+    }
+
     div.classList.add(highlighted ? highlightedState : itemSelectable);
 
     if (removeItemButton) {
-      if (disabled) div.classList.remove(itemSelectable);
+      if (disabled) {
+        div.classList.remove(itemSelectable);
+      }
+
       div.dataset.deletable = '';
       /** @todo This MUST be localizable, not hardcoded! */
 
@@ -2725,10 +2691,13 @@ var TEMPLATES =
   choiceList: function choiceList(_ref7, isSelectOneElement) {
     var list = _ref7.list;
     var div = Object.assign(document.createElement('div'), {
-      className: list,
-      dir: 'ltr'
+      className: list
     });
-    if (!isSelectOneElement) div.setAttribute('aria-multiselectable', 'true');
+
+    if (!isSelectOneElement) {
+      div.setAttribute('aria-multiselectable', 'true');
+    }
+
     div.setAttribute('role', 'listbox');
     return div;
   },
@@ -2748,7 +2717,11 @@ var TEMPLATES =
       id: id,
       value: value
     });
-    if (disabled) div.setAttribute('aria-disabled', 'true');
+
+    if (disabled) {
+      div.setAttribute('aria-disabled', 'true');
+    }
+
     div.appendChild(Object.assign(document.createElement('div'), {
       className: groupHeading,
       innerHTML: value
@@ -2784,7 +2757,9 @@ var TEMPLATES =
     if (disabled) {
       div.dataset.choiceDisabled = '';
       div.setAttribute('aria-disabled', 'true');
-    } else div.dataset.choiceSelectable = '';
+    } else {
+      div.dataset.choiceSelectable = '';
+    }
 
     return div;
   },
@@ -2822,7 +2797,13 @@ var TEMPLATES =
     }
 
     var classes = [item, itemChoice];
-    if (type === 'no-choices') classes.push(noChoices);else if (type === 'no-results') classes.push(noResults);
+
+    if (type === 'no-choices') {
+      classes.push(noChoices);
+    } else if (type === 'no-results') {
+      classes.push(noResults);
+    }
+
     return Object.assign(document.createElement('div'), {
       innerHTML: innerHTML,
       className: classes.join(' ')
@@ -2835,7 +2816,11 @@ var TEMPLATES =
         active = _ref15.active,
         disabled = _ref15.disabled;
     var opt = new Option(label, value, false, active);
-    if (customProperties) opt.dataset.customProperties = customProperties;
+
+    if (customProperties) {
+      opt.dataset.customProperties = customProperties;
+    }
+
     opt.disabled = disabled;
     return opt;
   }
@@ -2926,8 +2911,6 @@ var items_highlightItem = function highlightItem(id, highlighted) {
 };
 // CONCATENATED MODULE: ./src/scripts/actions/groups.js
 
-/* eslint-disable import/prefer-default-export */
-
 var groups_addGroup = function addGroup(value, id, active, disabled) {
   return {
     type: ACTION_TYPES.ADD_GROUP,
@@ -2950,7 +2933,6 @@ var resetTo = function resetTo(state) {
   };
 };
 // CONCATENATED MODULE: ./src/scripts/actions/general.js
-/* eslint-disable import/prefer-default-export */
 var setIsLoading = function setIsLoading(isLoading) {
   return {
     type: 'SET_IS_LOADING',
@@ -2958,6 +2940,9 @@ var setIsLoading = function setIsLoading(isLoading) {
   };
 };
 // CONCATENATED MODULE: ./src/scripts/choices.js
+function choices_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function choices_createClass(Constructor, protoProps, staticProps) { if (protoProps) choices_defineProperties(Constructor.prototype, protoProps); if (staticProps) choices_defineProperties(Constructor, staticProps); return Constructor; }
 
 
 
@@ -2971,14 +2956,42 @@ var setIsLoading = function setIsLoading(isLoading) {
 
 
 
+var USER_DEFAULTS =
+/** @type {Partial<import('../../types/index').Choices.Options>} */
+{};
 /**
  * Choices
  * @author Josh Johnson<josh@joshuajohnson.co.uk>
  */
 
+/**
+ * @typedef {import('../../types/index').Choices.Choice} Choice
+ */
+
 var choices_Choices =
 /*#__PURE__*/
 function () {
+  choices_createClass(Choices, null, [{
+    key: "defaults",
+    get: function get() {
+      return Object.preventExtensions({
+        get options() {
+          return USER_DEFAULTS;
+        },
+
+        get templates() {
+          return TEMPLATES;
+        }
+
+      });
+    }
+    /**
+     * @param {string | HTMLInputElement | HTMLSelectElement} element
+     * @param {Partial<import('../../types/index').Choices.Options>} userConfig
+     */
+
+  }]);
+
   function Choices(element, userConfig) {
     var _this = this;
 
@@ -2990,22 +3003,19 @@ function () {
       userConfig = {};
     }
 
-    if (isType('String', element)) {
-      var elements = Array.from(document.querySelectorAll(element)); // If there are multiple elements, create a new instance
-      // for each element besides the first one (as that already has an instance)
-
-      if (elements.length > 1) {
-        return this._generateInstances(elements, userConfig);
-      }
-    }
-
-    this.config = cjs_default.a.all([DEFAULT_CONFIG, Choices.userDefaults, userConfig], // When merging array configs, replace with a copy of the userConfig array,
+    this.config = cjs_default.a.all([DEFAULT_CONFIG, Choices.defaults.options, userConfig], // When merging array configs, replace with a copy of the userConfig array,
     // instead of concatenating with the default array
     {
       arrayMerge: function arrayMerge(destinationArray, sourceArray) {
         return [].concat(sourceArray);
       }
-    });
+    }); // Convert addItemFilter to function
+
+    if (userConfig.addItemFilter && typeof userConfig.addItemFilter !== 'function') {
+      var re = userConfig.addItemFilter instanceof RegExp ? userConfig.addItemFilter : new RegExp(userConfig.addItemFilter);
+      this.config.addItemFilter = re.test.bind(re);
+    }
+
     var invalidConfigOptions = diff(this.config, DEFAULT_CONFIG);
 
     if (invalidConfigOptions.length) {
@@ -3014,17 +3024,12 @@ function () {
 
     if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
       this.config.renderSelectedChoices = 'auto';
-    } // Retrieve triggering element (i.e. element with 'data-choice' trigger)
-
+    }
 
     var passedElement = isType('String', element) ? document.querySelector(element) : element;
 
-    if (!passedElement) {
-      if (!this.config.silent) {
-        console.error('Could not find passed element or passed element was of an invalid type');
-      }
-
-      return;
+    if (!(passedElement instanceof HTMLInputElement || passedElement instanceof HTMLSelectElement)) {
+      throw TypeError('Expected one of the following types text|select-one|select-multiple');
     }
 
     this._isTextElement = passedElement.type === 'text';
@@ -3038,22 +3043,18 @@ function () {
         classNames: this.config.classNames,
         delimiter: this.config.delimiter
       });
-    } else if (this._isSelectElement) {
+    } else {
       this.passedElement = new WrappedSelect({
         element: passedElement,
         classNames: this.config.classNames,
         template: function template(data) {
-          return _this.config.templates.option(data);
+          return _this._templates.option(data);
         }
       });
     }
 
-    if (!this.passedElement) {
-      return console.error('Passed element was of an invalid type');
-    }
-
     this.initialised = false;
-    this._store = new store_Store(this.render);
+    this._store = new store_Store();
     this._initialState = {};
     this._currentState = {};
     this._prevState = {};
@@ -3064,7 +3065,26 @@ function () {
     this._wasTap = true;
     this._placeholderValue = this._generatePlaceholderValue();
     this._baseId = generateId(this.passedElement.element, 'choices-');
-    this._direction = this.passedElement.element.getAttribute('dir') || 'ltr';
+    /**
+     * setting direction in cases where it's explicitly set on passedElement
+     * or when calculated direction is different from the document
+     * @type {HTMLElement['dir']}
+     */
+
+    this._direction = this.passedElement.element.dir;
+
+    if (!this._direction) {
+      var _window$getComputedSt = window.getComputedStyle(this.passedElement.element),
+          elementDirection = _window$getComputedSt.direction;
+
+      var _window$getComputedSt2 = window.getComputedStyle(document.documentElement),
+          documentDirection = _window$getComputedSt2.direction;
+
+      if (elementDirection !== documentDirection) {
+        this._direction = elementDirection;
+      }
+    }
+
     this._idNames = {
       itemChoice: 'item-choice'
     }; // Assign preset choices from passed object
@@ -3094,24 +3114,25 @@ function () {
     this._onDirectionKey = this._onDirectionKey.bind(this);
     this._onDeleteKey = this._onDeleteKey.bind(this);
 
-    if (!this.config.silent) {
-      if (this.config.shouldSortItems === true && this._isSelectOneElement) {
+    if (this.config.shouldSortItems === true && this._isSelectOneElement) {
+      if (!this.config.silent) {
         console.warn("shouldSortElements: Type of passed element is 'select-one', falling back to false.");
-      } // If element has already been initialised with Choices, fail silently
+      }
+    } // If element has already been initialised with Choices, fail silently
 
 
-      if (this.passedElement.element.getAttribute('data-choice') === 'active') {
+    if (this.passedElement.element.getAttribute('data-choice') === 'active') {
+      if (!this.config.silent) {
         console.warn('Trying to initialise Choices on element already initialised');
       }
+
+      this.initialised = true;
+      return;
     } // Let's go
 
 
     this.init();
   }
-  /* ========================================
-  =            Public functions            =
-  ======================================== */
-
 
   var _proto = Choices.prototype;
 
@@ -3165,7 +3186,7 @@ function () {
     }
 
     this.clearStore();
-    this.config.templates = null;
+    this._templates = null;
     this.initialised = false;
   };
 
@@ -3410,34 +3431,148 @@ function () {
       return _this10._findAndSelectChoiceByValue(val);
     });
     return this;
-  };
+  }
+  /**
+   * Set choices of select input via an array of objects (or function that returns array of object or promise of it),
+   * a value field name and a label field name.
+   * This behaves the same as passing items via the choices option but can be called after initialising Choices.
+   * This can also be used to add groups of choices (see example 2); Optionally pass a true `replaceChoices` value to remove any existing choices.
+   * Optionally pass a `customProperties` object to add additional data to your choices (useful when searching/filtering etc).
+   *
+   * **Input types affected:** select-one, select-multiple
+   *
+   * @template {object[] | ((instance: Choices) => object[] | Promise<object[]>)} T
+   * @param {T} [choicesArrayOrFetcher]
+   * @param {string} [value = 'value'] - name of `value` field
+   * @param {string} [label = 'label'] - name of 'label' field
+   * @param {boolean} [replaceChoices = false] - whether to replace of add choices
+   * @returns {this | Promise<this>}
+   *
+   * @example
+   * ```js
+   * const example = new Choices(element);
+   *
+   * example.setChoices([
+   *   {value: 'One', label: 'Label One', disabled: true},
+   *   {value: 'Two', label: 'Label Two', selected: true},
+   *   {value: 'Three', label: 'Label Three'},
+   * ], 'value', 'label', false);
+   * ```
+   *
+   * @example
+   * ```js
+   * const example = new Choices(element);
+   *
+   * example.setChoices(async () => {
+   *   try {
+   *      const items = await fetch('/items');
+   *      return items.json()
+   *   } catch(err) {
+   *      console.error(err)
+   *   }
+   * });
+   * ```
+   *
+   * @example
+   * ```js
+   * const example = new Choices(element);
+   *
+   * example.setChoices([{
+   *   label: 'Group one',
+   *   id: 1,
+   *   disabled: false,
+   *   choices: [
+   *     {value: 'Child One', label: 'Child One', selected: true},
+   *     {value: 'Child Two', label: 'Child Two',  disabled: true},
+   *     {value: 'Child Three', label: 'Child Three'},
+   *   ]
+   * },
+   * {
+   *   label: 'Group two',
+   *   id: 2,
+   *   disabled: false,
+   *   choices: [
+   *     {value: 'Child Four', label: 'Child Four', disabled: true},
+   *     {value: 'Child Five', label: 'Child Five'},
+   *     {value: 'Child Six', label: 'Child Six', customProperties: {
+   *       description: 'Custom description about child six',
+   *       random: 'Another random custom property'
+   *     }},
+   *   ]
+   * }], 'value', 'label', false);
+   * ```
+   */
+  ;
 
-  _proto.setChoices = function setChoices(choices, value, label, replaceChoices) {
+  _proto.setChoices = function setChoices(choicesArrayOrFetcher, value, label, replaceChoices) {
     var _this11 = this;
 
-    if (choices === void 0) {
-      choices = [];
+    if (choicesArrayOrFetcher === void 0) {
+      choicesArrayOrFetcher = [];
     }
 
     if (value === void 0) {
-      value = '';
+      value = 'value';
     }
 
     if (label === void 0) {
-      label = '';
+      label = 'label';
     }
 
     if (replaceChoices === void 0) {
       replaceChoices = false;
     }
 
-    if (!this._isSelectElement || !value) {
-      return this;
+    if (!this.initialised) {
+      throw new ReferenceError("setChoices was called on a non-initialized instance of Choices");
+    }
+
+    if (!this._isSelectElement) {
+      throw new TypeError("setChoices can't be used with INPUT based Choices");
+    }
+
+    if (typeof value !== 'string' || !value) {
+      throw new TypeError("value parameter must be a name of 'value' field in passed objects");
     } // Clear choices if needed
 
 
     if (replaceChoices) {
       this.clearChoices();
+    }
+
+    if (!Array.isArray(choicesArrayOrFetcher)) {
+      if (typeof choicesArrayOrFetcher !== 'function') {
+        throw new TypeError(".setChoices must be called either with array of choices with a function resulting into Promise of array of choices");
+      } // it's a choices fetcher
+
+
+      requestAnimationFrame(function () {
+        return _this11._handleLoadingState(true);
+      });
+      var fetcher = choicesArrayOrFetcher(this);
+
+      if (typeof fetcher === 'object' && typeof fetcher.then === 'function') {
+        // that's a promise
+        return fetcher.then(function (data) {
+          return _this11.setChoices(data, value, label, replaceChoices);
+        }).catch(function (err) {
+          if (!_this11.config.silent) {
+            console.error(err);
+          }
+        }).then(function () {
+          return _this11._handleLoadingState(false);
+        }).then(function () {
+          return _this11;
+        });
+      } // function returned something else than promise, let's check if it's an array of choices
+
+
+      if (!Array.isArray(fetcher)) {
+        throw new TypeError(".setChoices first argument function must return either array of choices or Promise, got: " + typeof fetcher);
+      } // recursion with results, it's sync and choices were cleared already
+
+
+      return this.setChoices(fetcher, value, label, false);
     }
 
     this.containerOuter.removeLoadingState();
@@ -3464,7 +3599,7 @@ function () {
 
     this._setLoading(true);
 
-    choices.forEach(addGroupsAndChoices);
+    choicesArrayOrFetcher.forEach(addGroupsAndChoices);
 
     this._setLoading(false);
 
@@ -3473,6 +3608,8 @@ function () {
 
   _proto.clearChoices = function clearChoices() {
     this._store.dispatch(choices_clearChoices());
+
+    return this;
   };
 
   _proto.clearStore = function clearStore() {
@@ -3493,26 +3630,6 @@ function () {
 
     return this;
   };
-
-  _proto.ajax = function ajax(fn) {
-    var _this12 = this;
-
-    if (!this.initialised || !this._isSelectElement || !fn) {
-      return this;
-    }
-
-    requestAnimationFrame(function () {
-      return _this12._handleLoadingState(true);
-    });
-    fn(this._ajaxCallback());
-    return this;
-  }
-  /* =====  End of Public functions  ====== */
-
-  /* =============================================
-  =                Private functions            =
-  ============================================= */
-  ;
 
   _proto._render = function _render() {
     if (this._store.isLoading()) {
@@ -3540,7 +3657,7 @@ function () {
   };
 
   _proto._renderChoices = function _renderChoices() {
-    var _this13 = this;
+    var _this12 = this;
 
     var _this$_store = this._store,
         activeGroups = _this$_store.activeGroups,
@@ -3550,7 +3667,7 @@ function () {
 
     if (this.config.resetScrollPosition) {
       requestAnimationFrame(function () {
-        return _this13.choiceList.scrollToTop();
+        return _this12.choiceList.scrollToTop();
       });
     } // If we have grouped options
 
@@ -3617,7 +3734,7 @@ function () {
   };
 
   _proto._createGroupsFragment = function _createGroupsFragment(groups, choices, fragment) {
-    var _this14 = this;
+    var _this13 = this;
 
     if (fragment === void 0) {
       fragment = document.createDocumentFragment();
@@ -3625,11 +3742,11 @@ function () {
 
     var getGroupChoices = function getGroupChoices(group) {
       return choices.filter(function (choice) {
-        if (_this14._isSelectOneElement) {
+        if (_this13._isSelectOneElement) {
           return choice.groupId === group.id;
         }
 
-        return choice.groupId === group.id && (_this14.config.renderSelectedChoices === 'always' || !choice.selected);
+        return choice.groupId === group.id && (_this13.config.renderSelectedChoices === 'always' || !choice.selected);
       });
     }; // If sorting is enabled, filter groups
 
@@ -3642,18 +3759,18 @@ function () {
       var groupChoices = getGroupChoices(group);
 
       if (groupChoices.length >= 1) {
-        var dropdownGroup = _this14._getTemplate('choiceGroup', group);
+        var dropdownGroup = _this13._getTemplate('choiceGroup', group);
 
         fragment.appendChild(dropdownGroup);
 
-        _this14._createChoicesFragment(groupChoices, fragment, true);
+        _this13._createChoicesFragment(groupChoices, fragment, true);
       }
     });
     return fragment;
   };
 
   _proto._createChoicesFragment = function _createChoicesFragment(choices, fragment, withinGroup) {
-    var _this15 = this;
+    var _this14 = this;
 
     if (fragment === void 0) {
       fragment = document.createDocumentFragment();
@@ -3671,10 +3788,10 @@ function () {
     var filter = this._isSearching ? sortByScore : this.config.sortFn;
 
     var appendChoice = function appendChoice(choice) {
-      var shouldRender = renderSelectedChoices === 'auto' ? _this15._isSelectOneElement || !choice.selected : true;
+      var shouldRender = renderSelectedChoices === 'auto' ? _this14._isSelectOneElement || !choice.selected : true;
 
       if (shouldRender) {
-        var dropdownItem = _this15._getTemplate('choice', choice, _this15.config.itemSelectText);
+        var dropdownItem = _this14._getTemplate('choice', choice, _this14.config.itemSelectText);
 
         fragment.appendChild(dropdownItem);
       }
@@ -3730,7 +3847,7 @@ function () {
   };
 
   _proto._createItemsFragment = function _createItemsFragment(items, fragment) {
-    var _this16 = this;
+    var _this15 = this;
 
     if (fragment === void 0) {
       fragment = document.createDocumentFragment();
@@ -3756,7 +3873,7 @@ function () {
 
     var addItemToFragment = function addItemToFragment(item) {
       // Create new list element
-      var listItem = _this16._getTemplate('item', item, removeItemButton); // Append it to list
+      var listItem = _this15._getTemplate('item', item, removeItemButton); // Append it to list
 
 
       fragment.appendChild(listItem);
@@ -3815,7 +3932,7 @@ function () {
   };
 
   _proto._handleItemAction = function _handleItemAction(activeItems, element, hasShiftKey) {
-    var _this17 = this;
+    var _this16 = this;
 
     if (hasShiftKey === void 0) {
       hasShiftKey = false;
@@ -3831,9 +3948,9 @@ function () {
 
     activeItems.forEach(function (item) {
       if (item.id === parseInt(passedId, 10) && !item.highlighted) {
-        _this17.highlightItem(item);
+        _this16.highlightItem(item);
       } else if (!hasShiftKey && item.highlighted) {
-        _this17.unhighlightItem(item);
+        _this16.unhighlightItem(item);
       }
     }); // Focus input as without focus, a user cannot do anything with a
     // highlighted item
@@ -3851,7 +3968,10 @@ function () {
 
     var choice = this._store.getChoiceById(id);
 
-    if (!choice) return;
+    if (!choice) {
+      return;
+    }
+
     var passedKeyCode = activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
     var hasActiveDropdown = this.dropdown.isActive; // Update choice keyCode
 
@@ -3998,64 +4118,15 @@ function () {
         notice = isType('Function', this.config.uniqueItemText) ? this.config.uniqueItemText(value) : this.config.uniqueItemText;
       }
 
-      if (this._isTextElement && this.config.addItems && canAddItem && isType('Function', this.config.addItemFilterFn) && !this.config.addItemFilterFn(value)) {
+      if (this._isTextElement && this.config.addItems && canAddItem && typeof this.config.addItemFilter === 'function' && !this.config.addItemFilter(value)) {
         canAddItem = false;
-        notice = isType('Function', this.config.customAddItemText) ? this.config.customAddItemText(value) : this.config.customAddItemText;
+        notice = typeof this.config.customAddItemText === 'function' ? this.config.customAddItemText(value) : this.config.customAddItemText;
       }
     }
 
     return {
       response: canAddItem,
       notice: notice
-    };
-  };
-
-  _proto._ajaxCallback = function _ajaxCallback() {
-    var _this18 = this;
-
-    return function (results, value, label) {
-      if (!results || !value) {
-        return;
-      }
-
-      var parsedResults = isType('Object', results) ? [results] : results;
-
-      if (parsedResults && isType('Array', parsedResults) && parsedResults.length) {
-        // Remove loading states/text
-        _this18._handleLoadingState(false);
-
-        _this18._setLoading(true); // Add each result as a choice
-
-
-        parsedResults.forEach(function (result) {
-          if (result.choices) {
-            _this18._addGroup({
-              group: result,
-              id: result.id || null,
-              valueKey: value,
-              labelKey: label
-            });
-          } else {
-            _this18._addChoice({
-              value: fetchFromObject(result, value),
-              label: fetchFromObject(result, label),
-              isSelected: result.selected,
-              isDisabled: result.disabled,
-              customProperties: result.customProperties,
-              placeholder: result.placeholder
-            });
-          }
-        });
-
-        _this18._setLoading(false);
-
-        if (_this18._isSelectOneElement) {
-          _this18._selectPlaceholderChoice();
-        }
-      } else {
-        // No results, remove loading state
-        _this18._handleLoadingState(false);
-      }
     };
   };
 
@@ -4086,48 +4157,90 @@ function () {
   };
 
   _proto._addEventListeners = function _addEventListeners() {
-    window.delegateEvent.add('keyup', this._onKeyUp);
-    window.delegateEvent.add('keydown', this._onKeyDown);
-    window.delegateEvent.add('click', this._onClick);
-    window.delegateEvent.add('touchmove', this._onTouchMove);
-    window.delegateEvent.add('touchend', this._onTouchEnd);
-    window.delegateEvent.add('mousedown', this._onMouseDown);
-    window.delegateEvent.add('mouseover', this._onMouseOver);
+    var _document = document,
+        documentElement = _document.documentElement; // capture events - can cancel event processing or propagation
+
+    documentElement.addEventListener('keydown', this._onKeyDown, true);
+    documentElement.addEventListener('touchend', this._onTouchEnd, true);
+    documentElement.addEventListener('mousedown', this._onMouseDown, true); // passive events - doesn't call `preventDefault` or `stopPropagation`
+
+    documentElement.addEventListener('click', this._onClick, {
+      passive: true
+    });
+    documentElement.addEventListener('touchmove', this._onTouchMove, {
+      passive: true
+    });
+    documentElement.addEventListener('mouseover', this._onMouseOver, {
+      passive: true
+    });
 
     if (this._isSelectOneElement) {
-      this.containerOuter.element.addEventListener('focus', this._onFocus);
-      this.containerOuter.element.addEventListener('blur', this._onBlur);
+      this.containerOuter.element.addEventListener('focus', this._onFocus, {
+        passive: true
+      });
+      this.containerOuter.element.addEventListener('blur', this._onBlur, {
+        passive: true
+      });
     }
 
-    this.input.element.addEventListener('focus', this._onFocus);
-    this.input.element.addEventListener('blur', this._onBlur);
+    this.input.element.addEventListener('keyup', this._onKeyUp, {
+      passive: true
+    });
+    this.input.element.addEventListener('focus', this._onFocus, {
+      passive: true
+    });
+    this.input.element.addEventListener('blur', this._onBlur, {
+      passive: true
+    });
 
     if (this.input.element.form) {
-      this.input.element.form.addEventListener('reset', this._onFormReset);
+      this.input.element.form.addEventListener('reset', this._onFormReset, {
+        passive: true
+      });
     }
 
     this.input.addEventListeners();
   };
 
   _proto._removeEventListeners = function _removeEventListeners() {
-    window.delegateEvent.remove('keyup', this._onKeyUp);
-    window.delegateEvent.remove('keydown', this._onKeyDown);
-    window.delegateEvent.remove('click', this._onClick);
-    window.delegateEvent.remove('touchmove', this._onTouchMove);
-    window.delegateEvent.remove('touchend', this._onTouchEnd);
-    window.delegateEvent.remove('mousedown', this._onMouseDown);
-    window.delegateEvent.remove('mouseover', this._onMouseOver);
+    var _document2 = document,
+        documentElement = _document2.documentElement;
+    documentElement.removeEventListener('keydown', this._onKeyDown, true);
+    documentElement.removeEventListener('touchend', this._onTouchEnd, true);
+    documentElement.removeEventListener('mousedown', this._onMouseDown, true);
+    documentElement.removeEventListener('keyup', this._onKeyUp, {
+      passive: true
+    });
+    documentElement.removeEventListener('click', this._onClick, {
+      passive: true
+    });
+    documentElement.removeEventListener('touchmove', this._onTouchMove, {
+      passive: true
+    });
+    documentElement.removeEventListener('mouseover', this._onMouseOver, {
+      passive: true
+    });
 
     if (this._isSelectOneElement) {
-      this.containerOuter.element.removeEventListener('focus', this._onFocus);
-      this.containerOuter.element.removeEventListener('blur', this._onBlur);
+      this.containerOuter.element.removeEventListener('focus', this._onFocus, {
+        passive: true
+      });
+      this.containerOuter.element.removeEventListener('blur', this._onBlur, {
+        passive: true
+      });
     }
 
-    this.input.element.removeEventListener('focus', this._onFocus);
-    this.input.element.removeEventListener('blur', this._onBlur);
+    this.input.element.removeEventListener('focus', this._onFocus, {
+      passive: true
+    });
+    this.input.element.removeEventListener('blur', this._onBlur, {
+      passive: true
+    });
 
     if (this.input.element.form) {
-      this.input.element.form.removeEventListener('reset', this._onFormReset);
+      this.input.element.form.removeEventListener('reset', this._onFormReset, {
+        passive: true
+      });
     }
 
     this.input.removeEventListeners();
@@ -4148,7 +4261,7 @@ function () {
     var activeItems = this._store.activeItems;
     var hasFocusedInput = this.input.isFocussed;
     var hasActiveDropdown = this.dropdown.isActive;
-    var hasItems = this.itemList.hasChildren;
+    var hasItems = this.itemList.hasChildren();
     var keyString = String.fromCharCode(keyCode);
     var BACK_KEY = KEY_CODES.BACK_KEY,
         DELETE_KEY = KEY_CODES.DELETE_KEY,
@@ -4186,11 +4299,6 @@ function () {
   _proto._onKeyUp = function _onKeyUp(_ref2) {
     var target = _ref2.target,
         keyCode = _ref2.keyCode;
-
-    if (target !== this.input.element) {
-      return;
-    }
-
     var value = this.input.value;
     var activeItems = this._store.activeItems;
 
@@ -4465,7 +4573,7 @@ function () {
   };
 
   _proto._onFocus = function _onFocus(_ref11) {
-    var _this19 = this;
+    var _this17 = this;
 
     var target = _ref11.target;
     var focusWasWithinContainer = this.containerOuter.element.contains(target);
@@ -4476,24 +4584,24 @@ function () {
 
     var focusActions = {
       text: function text() {
-        if (target === _this19.input.element) {
-          _this19.containerOuter.addFocusState();
+        if (target === _this17.input.element) {
+          _this17.containerOuter.addFocusState();
         }
       },
       'select-one': function selectOne() {
-        _this19.containerOuter.addFocusState();
+        _this17.containerOuter.addFocusState();
 
-        if (target === _this19.input.element) {
-          _this19.showDropdown(true);
+        if (target === _this17.input.element) {
+          _this17.showDropdown(true);
         }
       },
       'select-multiple': function selectMultiple() {
-        if (target === _this19.input.element) {
-          _this19.showDropdown(true); // If element is a select box, the focused element is the container and the dropdown
+        if (target === _this17.input.element) {
+          _this17.showDropdown(true); // If element is a select box, the focused element is the container and the dropdown
           // isn't already open, focus and show dropdown
 
 
-          _this19.containerOuter.addFocusState();
+          _this17.containerOuter.addFocusState();
         }
       }
     };
@@ -4501,7 +4609,7 @@ function () {
   };
 
   _proto._onBlur = function _onBlur(_ref12) {
-    var _this20 = this;
+    var _this18 = this;
 
     var target = _ref12.target;
     var blurWasWithinContainer = this.containerOuter.element.contains(target);
@@ -4513,31 +4621,31 @@ function () {
       });
       var blurActions = {
         text: function text() {
-          if (target === _this20.input.element) {
-            _this20.containerOuter.removeFocusState();
+          if (target === _this18.input.element) {
+            _this18.containerOuter.removeFocusState();
 
             if (hasHighlightedItems) {
-              _this20.unhighlightAll();
+              _this18.unhighlightAll();
             }
 
-            _this20.hideDropdown(true);
+            _this18.hideDropdown(true);
           }
         },
         'select-one': function selectOne() {
-          _this20.containerOuter.removeFocusState();
+          _this18.containerOuter.removeFocusState();
 
-          if (target === _this20.input.element || target === _this20.containerOuter.element && !_this20._canSearch) {
-            _this20.hideDropdown(true);
+          if (target === _this18.input.element || target === _this18.containerOuter.element && !_this18._canSearch) {
+            _this18.hideDropdown(true);
           }
         },
         'select-multiple': function selectMultiple() {
-          if (target === _this20.input.element) {
-            _this20.containerOuter.removeFocusState();
+          if (target === _this18.input.element) {
+            _this18.containerOuter.removeFocusState();
 
-            _this20.hideDropdown(true);
+            _this18.hideDropdown(true);
 
             if (hasHighlightedItems) {
-              _this20.unhighlightAll();
+              _this18.unhighlightAll();
             }
           }
         }
@@ -4557,7 +4665,7 @@ function () {
   };
 
   _proto._highlightChoice = function _highlightChoice(el) {
-    var _this21 = this;
+    var _this19 = this;
 
     if (el === void 0) {
       el = null;
@@ -4573,7 +4681,7 @@ function () {
     var highlightedChoices = Array.from(this.dropdown.element.querySelectorAll("." + this.config.classNames.highlightedState)); // Remove any highlighted choices
 
     highlightedChoices.forEach(function (choice) {
-      choice.classList.remove(_this21.config.classNames.highlightedState);
+      choice.classList.remove(_this19.config.classNames.highlightedState);
       choice.setAttribute('aria-selected', 'false');
     });
 
@@ -4751,7 +4859,7 @@ function () {
   };
 
   _proto._addGroup = function _addGroup(_ref15) {
-    var _this22 = this;
+    var _this20 = this;
 
     var group = _ref15.group,
         id = _ref15.id,
@@ -4769,7 +4877,7 @@ function () {
       var addGroupChoices = function addGroupChoices(choice) {
         var isOptDisabled = choice.disabled || choice.parentNode && choice.parentNode.disabled;
 
-        _this22._addChoice({
+        _this20._addChoice({
           value: choice[valueKey],
           label: isType('Object', choice) ? choice[labelKey] : choice.innerHTML,
           isSelected: choice.selected,
@@ -4787,21 +4895,19 @@ function () {
   };
 
   _proto._getTemplate = function _getTemplate(template) {
-    var _templates$template;
+    var _this$_templates$temp;
 
     if (!template) {
       return null;
     }
 
-    var _this$config4 = this.config,
-        templates = _this$config4.templates,
-        classNames = _this$config4.classNames;
+    var classNames = this.config.classNames;
 
     for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
     }
 
-    return (_templates$template = templates[template]).call.apply(_templates$template, [this, classNames].concat(args));
+    return (_this$_templates$temp = this._templates[template]).call.apply(_this$_templates$temp, [this, classNames].concat(args));
   };
 
   _proto._createTemplates = function _createTemplates() {
@@ -4812,7 +4918,7 @@ function () {
       userTemplates = callbackOnCreateTemplates.call(this, strToEl);
     }
 
-    this.config.templates = cjs_default()(TEMPLATES, userTemplates);
+    this._templates = cjs_default()(TEMPLATES, userTemplates);
   };
 
   _proto._createElements = function _createElements() {
@@ -4831,7 +4937,8 @@ function () {
     this.input = new input_Input({
       element: this._getTemplate('input', this._placeholderValue),
       classNames: this.config.classNames,
-      type: this.passedElement.element.type
+      type: this.passedElement.element.type,
+      preventPaste: !this.config.paste
     });
     this.choiceList = new list_List({
       element: this._getTemplate('choiceList', this._isSelectOneElement)
@@ -4883,7 +4990,7 @@ function () {
   };
 
   _proto._addPredefinedChoices = function _addPredefinedChoices() {
-    var _this23 = this;
+    var _this21 = this;
 
     var passedGroups = this.passedElement.optionGroups;
     this._highlightPosition = 0;
@@ -4906,7 +5013,7 @@ function () {
       }
 
       passedGroups.forEach(function (group) {
-        return _this23._addGroup({
+        return _this21._addGroup({
           group: group,
           id: group.id || null
         });
@@ -4927,7 +5034,10 @@ function () {
         });
       }); // If sorting is enabled or the user is searching, filter choices
 
-      if (this.config.shouldSort) allChoices.sort(filter); // Determine whether there is a selected choice
+      if (this.config.shouldSort) {
+        allChoices.sort(filter);
+      } // Determine whether there is a selected choice
+
 
       var hasSelectedChoice = allChoices.some(function (choice) {
         return choice.selected;
@@ -4939,10 +5049,10 @@ function () {
             customProperties = choice.customProperties,
             placeholder = choice.placeholder;
 
-        if (_this23._isSelectElement) {
+        if (_this21._isSelectElement) {
           // If the choice is actually a group
           if (choice.choices) {
-            _this23._addGroup({
+            _this21._addGroup({
               group: choice,
               id: choice.id || null
             });
@@ -4950,11 +5060,11 @@ function () {
             // If there is a selected choice already or the choice is not
             // the first in the array, add each choice normally
             // Otherwise pre-select the first choice in the array if it's a single select
-            var shouldPreselect = _this23._isSelectOneElement && !hasSelectedChoice && index === 0;
+            var shouldPreselect = _this21._isSelectOneElement && !hasSelectedChoice && index === 0;
             var isSelected = shouldPreselect ? true : choice.selected;
             var isDisabled = shouldPreselect ? false : choice.disabled;
 
-            _this23._addChoice({
+            _this21._addChoice({
               value: value,
               label: label,
               isSelected: isSelected,
@@ -4964,7 +5074,7 @@ function () {
             });
           }
         } else {
-          _this23._addChoice({
+          _this21._addChoice({
             value: value,
             label: label,
             isSelected: choice.selected,
@@ -4985,13 +5095,13 @@ function () {
   };
 
   _proto._addPredefinedItems = function _addPredefinedItems() {
-    var _this24 = this;
+    var _this22 = this;
 
     var handlePresetItem = function handlePresetItem(item) {
       var itemType = getType(item);
 
       if (itemType === 'Object' && item.value) {
-        _this24._addItem({
+        _this22._addItem({
           value: item.value,
           label: item.label,
           choiceId: item.id,
@@ -4999,7 +5109,7 @@ function () {
           placeholder: item.placeholder
         });
       } else if (itemType === 'String') {
-        _this24._addItem({
+        _this22._addItem({
           value: item
         });
       }
@@ -5011,7 +5121,7 @@ function () {
   };
 
   _proto._setChoiceOrItem = function _setChoiceOrItem(item) {
-    var _this25 = this;
+    var _this23 = this;
 
     var itemType = getType(item).toLowerCase();
     var handleType = {
@@ -5022,8 +5132,8 @@ function () {
         // that is then selected. For text inputs we can just add items normally.
 
 
-        if (!_this25._isTextElement) {
-          _this25._addChoice({
+        if (!_this23._isTextElement) {
+          _this23._addChoice({
             value: item.value,
             label: item.label,
             isSelected: true,
@@ -5032,7 +5142,7 @@ function () {
             placeholder: item.placeholder
           });
         } else {
-          _this25._addItem({
+          _this23._addItem({
             value: item.value,
             label: item.label,
             choiceId: item.id,
@@ -5042,15 +5152,15 @@ function () {
         }
       },
       string: function string() {
-        if (!_this25._isTextElement) {
-          _this25._addChoice({
+        if (!_this23._isTextElement) {
+          _this23._addChoice({
             value: item,
             label: item,
             isSelected: true,
             isDisabled: false
           });
         } else {
-          _this25._addItem({
+          _this23._addItem({
             value: item
           });
         }
@@ -5060,12 +5170,12 @@ function () {
   };
 
   _proto._findAndSelectChoiceByValue = function _findAndSelectChoiceByValue(val) {
-    var _this26 = this;
+    var _this24 = this;
 
     var choices = this._store.choices; // Check 'value' property exists and the choice isn't already selected
 
     var foundChoice = choices.find(function (choice) {
-      return _this26.config.itemComparer(choice.value, val);
+      return _this24.config.itemComparer(choice.value, val);
     });
 
     if (foundChoice && !foundChoice.selected) {
@@ -5081,13 +5191,6 @@ function () {
     }
   };
 
-  _proto._generateInstances = function _generateInstances(elements, config) {
-    return elements.reduce(function (instances, element) {
-      instances.push(new Choices(element, config));
-      return instances;
-    }, [this]);
-  };
-
   _proto._generatePlaceholderValue = function _generatePlaceholderValue() {
     if (this._isSelectOneElement) {
       return false;
@@ -5101,7 +5204,6 @@ function () {
   return Choices;
 }();
 
-choices_Choices.userDefaults = {};
 /* harmony default export */ var scripts_choices = __webpack_exports__["default"] = (choices_Choices);
 
 /***/ })

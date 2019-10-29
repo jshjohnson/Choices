@@ -1,0 +1,92 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2020
+  },
+  "extends": [
+    "airbnb-base",
+    "plugin:prettier/recommended",
+    "plugin:compat/recommended"
+  ],
+  "plugins": ["prettier", "sort-class-members"],
+  "env": {
+    "es6": true,
+    "browser": true
+  },
+  "rules": {
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
+    "no-console": [
+      "warn",
+      {
+        "allow": ["warn", "error"]
+      }
+    ],
+    "no-plusplus": "off",
+    "no-unused-expressions": "off",
+    "no-underscore-dangle": "off",
+    "consistent-return": "off",
+    "import/no-useless-path-segments": "warn",
+    "prefer-destructuring": [
+      "warn",
+      {
+        "array": false,
+        "object": true
+      }
+    ],
+    "curly": ["error", "all"],
+    "newline-before-return": "error",
+    "sort-class-members/sort-class-members": [
+      2,
+      {
+        "order": [
+          "[static-properties]",
+          "[static-methods]",
+          "[properties]",
+          "[conventional-private-properties]",
+          "constructor",
+          "[methods]",
+          "[conventional-private-methods]"
+        ],
+        "accessorPairPositioning": "getThenSet"
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.test.js"],
+      "env": {
+        "mocha": true
+      },
+      "rules": {
+        "no-restricted-syntax": "off",
+        "compat/compat": "off",
+        "no-new": "off"
+      }
+    },
+    {
+      "files": ["cypress/**/*.spec.js"],
+      "plugins": ["cypress"],
+      "env": {
+        "cypress/globals": true
+      }
+    }
+  ],
+  "settings": {
+    "polyfills": [
+      "Array.from",
+      "Array.prototype.find",
+      "Array.prototype.includes",
+      "Symbol",
+      "Symbol.iterator",
+      "Object.assign",
+      "CustomEvent",
+      "Element.prototype.classList",
+      "Element.prototype.closest"
+    ]
+  }
+}

@@ -31,7 +31,6 @@ import {
   sortByScore,
   generateId,
   findAncestorByAttrName,
-  fetchFromObject,
   isIE11,
   existsInArray,
   cloneObject,
@@ -44,11 +43,11 @@ const USER_DEFAULTS = /** @type {Partial<import('../../types/index').Choices.Opt
  * Choices
  * @author Josh Johnson<josh@joshuajohnson.co.uk>
  */
-class Choices {
-  /* ========================================
-  =            Static properties            =
-  ======================================== */
 
+/**
+ * @typedef {import('../../types/index').Choices.Choice} Choice
+ */
+class Choices {
   static get defaults() {
     return Object.preventExtensions({
       get options() {
@@ -60,6 +59,10 @@ class Choices {
     });
   }
 
+  /**
+   * @param {string | HTMLInputElement | HTMLSelectElement} element
+   * @param {Partial<import('../../types/index').Choices.Options>} userConfig
+   */
   constructor(element = '[data-choice]', userConfig = {}) {
     this.config = merge.all(
       [DEFAULT_CONFIG, Choices.defaults.options, userConfig],
@@ -214,10 +217,6 @@ class Choices {
     this.init();
   }
 
-  /* ========================================
-  =            Public functions            =
-  ======================================== */
-
   init() {
     if (this.initialised) {
       return;
@@ -340,11 +339,13 @@ class Choices {
 
   highlightAll() {
     this._store.items.forEach(item => this.highlightItem(item));
+
     return this;
   }
 
   unhighlightAll() {
     this._store.items.forEach(item => this.unhighlightItem(item));
+
     return this;
   }
 
@@ -420,6 +421,7 @@ class Choices {
     const values = this._store.activeItems.reduce((selectedItems, item) => {
       const itemValue = valueOnly ? item.value : item;
       selectedItems.push(itemValue);
+
       return selectedItems;
     }, []);
 
@@ -435,6 +437,7 @@ class Choices {
     }
 
     items.forEach(value => this._setChoiceOrItem(value));
+
     return this;
   }
 
@@ -452,9 +455,95 @@ class Choices {
     return this;
   }
 
-  setChoices(choices = [], value = '', label = '', replaceChoices = false) {
-    if (!this._isSelectElement || !value) {
-      return this;
+  /**
+   * Set choices of select input via an array of objects (or function that returns array of object or promise of it),
+   * a value field name and a label field name.
+   * This behaves the same as passing items via the choices option but can be called after initialising Choices.
+   * This can also be used to add groups of choices (see example 2); Optionally pass a true `replaceChoices` value to remove any existing choices.
+   * Optionally pass a `customProperties` object to add additional data to your choices (useful when searching/filtering etc).
+   *
+   * **Input types affected:** select-one, select-multiple
+   *
+   * @template {object[] | ((instance: Choices) => object[] | Promise<object[]>)} T
+   * @param {T} [choicesArrayOrFetcher]
+   * @param {string} [value = 'value'] - name of `value` field
+   * @param {string} [label = 'label'] - name of 'label' field
+   * @param {boolean} [replaceChoices = false] - whether to replace of add choices
+   * @returns {this | Promise<this>}
+   *
+   * @example
+   * ```js
+   * const example = new Choices(element);
+   *
+   * example.setChoices([
+   *   {value: 'One', label: 'Label One', disabled: true},
+   *   {value: 'Two', label: 'Label Two', selected: true},
+   *   {value: 'Three', label: 'Label Three'},
+   * ], 'value', 'label', false);
+   * ```
+   *
+   * @example
+   * ```js
+   * const example = new Choices(element);
+   *
+   * example.setChoices(async () => {
+   *   try {
+   *      const items = await fetch('/items');
+   *      return items.json()
+   *   } catch(err) {
+   *      console.error(err)
+   *   }
+   * });
+   * ```
+   *
+   * @example
+   * ```js
+   * const example = new Choices(element);
+   *
+   * example.setChoices([{
+   *   label: 'Group one',
+   *   id: 1,
+   *   disabled: false,
+   *   choices: [
+   *     {value: 'Child One', label: 'Child One', selected: true},
+   *     {value: 'Child Two', label: 'Child Two',  disabled: true},
+   *     {value: 'Child Three', label: 'Child Three'},
+   *   ]
+   * },
+   * {
+   *   label: 'Group two',
+   *   id: 2,
+   *   disabled: false,
+   *   choices: [
+   *     {value: 'Child Four', label: 'Child Four', disabled: true},
+   *     {value: 'Child Five', label: 'Child Five'},
+   *     {value: 'Child Six', label: 'Child Six', customProperties: {
+   *       description: 'Custom description about child six',
+   *       random: 'Another random custom property'
+   *     }},
+   *   ]
+   * }], 'value', 'label', false);
+   * ```
+   */
+  setChoices(
+    choicesArrayOrFetcher = [],
+    value = 'value',
+    label = 'label',
+    replaceChoices = false,
+  ) {
+    if (!this.initialised) {
+      throw new ReferenceError(
+        `setChoices was called on a non-initialized instance of Choices`,
+      );
+    }
+    if (!this._isSelectElement) {
+      throw new TypeError(`setChoices can't be used with INPUT based Choices`);
+    }
+
+    if (typeof value !== 'string' || !value) {
+      throw new TypeError(
+        `value parameter must be a name of 'value' field in passed objects`,
+      );
     }
 
     // Clear choices if needed
@@ -462,7 +551,41 @@ class Choices {
       this.clearChoices();
     }
 
+    if (!Array.isArray(choicesArrayOrFetcher)) {
+      if (typeof choicesArrayOrFetcher !== 'function') {
+        throw new TypeError(
+          `.setChoices must be called either with array of choices with a function resulting into Promise of array of choices`,
+        );
+      }
+
+      // it's a choices fetcher
+      requestAnimationFrame(() => this._handleLoadingState(true));
+      const fetcher = choicesArrayOrFetcher(this);
+      if (typeof fetcher === 'object' && typeof fetcher.then === 'function') {
+        // that's a promise
+        return fetcher
+          .then(data => this.setChoices(data, value, label, replaceChoices))
+          .catch(err => {
+            if (!this.config.silent) {
+              console.error(err);
+            }
+          })
+          .then(() => this._handleLoadingState(false))
+          .then(() => this);
+      }
+      // function returned something else than promise, let's check if it's an array of choices
+      if (!Array.isArray(fetcher)) {
+        throw new TypeError(
+          `.setChoices first argument function must return either array of choices or Promise, got: ${typeof fetcher}`,
+        );
+      }
+
+      // recursion with results, it's sync and choices were cleared already
+      return this.setChoices(fetcher, value, label, false);
+    }
+
     this.containerOuter.removeLoadingState();
+
     const addGroupsAndChoices = groupOrChoice => {
       if (groupOrChoice.choices) {
         this._addGroup({
@@ -484,7 +607,7 @@ class Choices {
     };
 
     this._setLoading(true);
-    choices.forEach(addGroupsAndChoices);
+    choicesArrayOrFetcher.forEach(addGroupsAndChoices);
     this._setLoading(false);
 
     return this;
@@ -492,10 +615,13 @@ class Choices {
 
   clearChoices() {
     this._store.dispatch(clearChoices());
+
+    return this;
   }
 
   clearStore() {
     this._store.dispatch(clearAll());
+
     return this;
   }
 
@@ -510,23 +636,6 @@ class Choices {
 
     return this;
   }
-
-  ajax(fn) {
-    if (!this.initialised || !this._isSelectElement || !fn) {
-      return this;
-    }
-
-    requestAnimationFrame(() => this._handleLoadingState(true));
-    fn(this._ajaxCallback());
-
-    return this;
-  }
-
-  /* =====  End of Public functions  ====== */
-
-  /* =============================================
-  =                Private functions            =
-  ============================================= */
 
   _render() {
     if (this._store.isLoading()) {
@@ -657,6 +766,7 @@ class Choices {
         if (this._isSelectOneElement) {
           return choice.groupId === group.id;
         }
+
         return (
           choice.groupId === group.id &&
           (this.config.renderSelectedChoices === 'always' || !choice.selected)
@@ -721,6 +831,7 @@ class Choices {
         } else {
           acc.normalChoices.push(choice);
         }
+
         return acc;
       },
       { placeholderChoices: [], normalChoices: [] },
@@ -868,7 +979,9 @@ class Choices {
     // If we are clicking on an option
     const { id } = element.dataset;
     const choice = this._store.getChoiceById(id);
-    if (!choice) return;
+    if (!choice) {
+      return;
+    }
     const passedKeyCode =
       activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
     const hasActiveDropdown = this.dropdown.isActive;
@@ -1043,55 +1156,6 @@ class Choices {
     return {
       response: canAddItem,
       notice,
-    };
-  }
-
-  _ajaxCallback() {
-    return (results, value, label) => {
-      if (!results || !value) {
-        return;
-      }
-
-      const parsedResults = isType('Object', results) ? [results] : results;
-
-      if (
-        parsedResults &&
-        isType('Array', parsedResults) &&
-        parsedResults.length
-      ) {
-        // Remove loading states/text
-        this._handleLoadingState(false);
-        this._setLoading(true);
-        // Add each result as a choice
-        parsedResults.forEach(result => {
-          if (result.choices) {
-            this._addGroup({
-              group: result,
-              id: result.id || null,
-              valueKey: value,
-              labelKey: label,
-            });
-          } else {
-            this._addChoice({
-              value: fetchFromObject(result, value),
-              label: fetchFromObject(result, label),
-              isSelected: result.selected,
-              isDisabled: result.disabled,
-              customProperties: result.customProperties,
-              placeholder: result.placeholder,
-            });
-          }
-        });
-
-        this._setLoading(false);
-
-        if (this._isSelectOneElement) {
-          this._selectPlaceholderChoice();
-        }
-      } else {
-        // No results, remove loading state
-        this._handleLoadingState(false);
-      }
     };
   }
 
@@ -1858,6 +1922,7 @@ class Choices {
     }
 
     const { classNames } = this.config;
+
     return this._templates[template].call(this, classNames, ...args);
   }
 
@@ -2005,7 +2070,9 @@ class Choices {
       });
 
       // If sorting is enabled or the user is searching, filter choices
-      if (this.config.shouldSort) allChoices.sort(filter);
+      if (this.config.shouldSort) {
+        allChoices.sort(filter);
+      }
 
       // Determine whether there is a selected choice
       const hasSelectedChoice = allChoices.some(choice => choice.selected);

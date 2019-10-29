@@ -31,3 +31,8 @@ jobs:
           if [[ -z $(sed -e 's/[[:space:]]*$//' <<<${CHANGED_JS}) ]]; then CHANGED_JS="src/scripts"; fi
           echo $CHANGED_JS
           node node_modules/eslint/bin/eslint.js $CHANGED_JS
+
+      - name: Lint JS bundle
+        run: |
+          npm run js:build
+          npx eslint --no-ignore ./public/assets/scripts/*.js

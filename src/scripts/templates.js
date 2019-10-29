@@ -16,13 +16,24 @@ export const TEMPLATES = /** @type {Templates} */ ({
     const div = Object.assign(document.createElement('div'), {
       className: containerOuter,
     });
+
     div.dataset.type = passedElementType;
-    if (dir) div.dir = dir;
-    if (isSelectOneElement) div.tabIndex = 0;
+
+    if (dir) {
+      div.dir = dir;
+    }
+
+    if (isSelectOneElement) {
+      div.tabIndex = 0;
+    }
+
     if (isSelectElement) {
       div.setAttribute('role', searchEnabled ? 'combobox' : 'listbox');
-      if (searchEnabled) div.setAttribute('aria-autocomplete', 'list');
+      if (searchEnabled) {
+        div.setAttribute('aria-autocomplete', 'list');
+      }
     }
+
     div.setAttribute('aria-haspopup', 'true');
     div.setAttribute('aria-expanded', 'false');
 
@@ -63,20 +74,31 @@ export const TEMPLATES = /** @type {Templates} */ ({
       className: item,
       innerHTML: label,
     });
+
     Object.assign(div.dataset, {
       item: '',
       id,
       value,
       customProperties,
     });
-    if (active) div.setAttribute('aria-selected', 'true');
-    if (disabled) div.setAttribute('aria-disabled', 'true');
 
-    if (isPlaceholder) div.classList.add(placeholder);
+    if (active) {
+      div.setAttribute('aria-selected', 'true');
+    }
+
+    if (disabled) {
+      div.setAttribute('aria-disabled', 'true');
+    }
+
+    if (isPlaceholder) {
+      div.classList.add(placeholder);
+    }
     div.classList.add(highlighted ? highlightedState : itemSelectable);
 
     if (removeItemButton) {
-      if (disabled) div.classList.remove(itemSelectable);
+      if (disabled) {
+        div.classList.remove(itemSelectable);
+      }
       div.dataset.deletable = '';
       /** @todo This MUST be localizable, not hardcoded! */
       const REMOVE_ITEM_TEXT = 'Remove item';
@@ -99,8 +121,12 @@ export const TEMPLATES = /** @type {Templates} */ ({
     const div = Object.assign(document.createElement('div'), {
       className: list,
     });
-    if (!isSelectOneElement) div.setAttribute('aria-multiselectable', 'true');
+
+    if (!isSelectOneElement) {
+      div.setAttribute('aria-multiselectable', 'true');
+    }
     div.setAttribute('role', 'listbox');
+
     return div;
   },
 
@@ -108,15 +134,26 @@ export const TEMPLATES = /** @type {Templates} */ ({
     const div = Object.assign(document.createElement('div'), {
       className: `${group} ${disabled ? itemDisabled : ''}`,
     });
+
     div.setAttribute('role', 'group');
-    Object.assign(div.dataset, { group: '', id, value });
-    if (disabled) div.setAttribute('aria-disabled', 'true');
+
+    Object.assign(div.dataset, {
+      group: '',
+      id,
+      value,
+    });
+
+    if (disabled) {
+      div.setAttribute('aria-disabled', 'true');
+    }
+
     div.appendChild(
       Object.assign(document.createElement('div'), {
         className: groupHeading,
         innerHTML: value,
       }),
     );
+
     return div;
   },
 
@@ -140,17 +177,22 @@ export const TEMPLATES = /** @type {Templates} */ ({
         disabled ? itemDisabled : itemSelectable
       } ${isPlaceholder ? placeholder : ''}`,
     });
+
     div.setAttribute('role', groupId > 0 ? 'treeitem' : 'option');
+
     Object.assign(div.dataset, {
       choice: '',
       id,
       value,
       selectText,
     });
+
     if (disabled) {
       div.dataset.choiceDisabled = '';
       div.setAttribute('aria-disabled', 'true');
-    } else div.dataset.choiceSelectable = '';
+    } else {
+      div.dataset.choiceSelectable = '';
+    }
 
     return div;
   },
@@ -162,21 +204,30 @@ export const TEMPLATES = /** @type {Templates} */ ({
       autocapitalize: 'off',
       spellcheck: false,
     });
+
     inp.setAttribute('role', 'textbox');
     inp.setAttribute('aria-autocomplete', 'list');
     inp.setAttribute('aria-label', placeholderValue);
+
     return inp;
   },
   dropdown({ list, listDropdown }) {
     const div = document.createElement('div');
+
     div.classList.add(list, listDropdown);
     div.setAttribute('aria-expanded', 'false');
+
     return div;
   },
   notice({ item, itemChoice, noResults, noChoices }, innerHTML, type = '') {
     const classes = [item, itemChoice];
-    if (type === 'no-choices') classes.push(noChoices);
-    else if (type === 'no-results') classes.push(noResults);
+
+    if (type === 'no-choices') {
+      classes.push(noChoices);
+    } else if (type === 'no-results') {
+      classes.push(noResults);
+    }
+
     return Object.assign(document.createElement('div'), {
       innerHTML,
       className: classes.join(' '),
@@ -184,8 +235,12 @@ export const TEMPLATES = /** @type {Templates} */ ({
   },
   option({ label, value, customProperties, active, disabled }) {
     const opt = new Option(label, value, false, active);
-    if (customProperties) opt.dataset.customProperties = customProperties;
+
+    if (customProperties) {
+      opt.dataset.customProperties = customProperties;
+    }
     opt.disabled = disabled;
+
     return opt;
   },
 });

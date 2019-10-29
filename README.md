@@ -860,7 +860,9 @@ choices.disable();
 
 **Input types affected:** `select-one`, `select-multiple`
 
-**Usage:** Set choices of select input via an array of objects, a value name and a label name. This behaves the same as passing items via the `choices` option but can be called after initialising Choices. This can also be used to add groups of choices (see example 2); Optionally pass a true `replaceChoices` value to remove any existing choices. Optionally pass a `customProperties` object to add additional data to your choices (useful when searching/filtering etc). Passing an empty array as the first parameter, and a true `replaceChoices` is the same as calling `clearChoices` (see below).
+**Usage:** Set choices of select input via an array of objects (or function that returns array of object or promise of it), a value field name and a label field name.
+
+This behaves the similar as passing items via the `choices` option but can be called after initialising Choices. This can also be used to add groups of choices (see example 3); Optionally pass a true `replaceChoices` value to remove any existing choices. Optionally pass a `customProperties` object to add additional data to your choices (useful when searching/filtering etc). Passing an empty array as the first parameter, and a true `replaceChoices` is the same as calling `clearChoices` (see below).
 
 **Example 1:**
 
@@ -880,6 +882,22 @@ example.setChoices(
 ```
 
 **Example 2:**
+
+```js
+const example = new Choices(element);
+
+// Passing a function that returns Promise of choices
+example.setChoices(async () => {
+  try {
+    const items = await fetch('/items');
+    return items.json();
+  } catch (err) {
+    console.error(err);
+  }
+});
+```
+
+**Example 3:**
 
 ```js
 const example = new Choices(element);
@@ -1006,74 +1024,32 @@ example.setChoiceByValue('Two'); // Choice with value of 'Two' has now been sele
 
 **Usage:** Enables input to accept new values/select further choices.
 
-### ajax(fn);
-
-**Input types affected:** `select-one`, `select-multiple`
-
-**Usage:** Populate choices/groups via a callback.
-
-**Example:**
-
-```js
-var example = new Choices(element);
-
-example.ajax(function(callback) {
-  fetch(url)
-    .then(function(response) {
-      response.json().then(function(data) {
-        callback(data, 'value', 'label');
-      });
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-});
-```
-
-**Example 2:**
-If your structure differs from `data.value` and `data.key` structure you can write your own `key` and `value` into the `callback` function. This could be useful when you don't want to transform the given response.
-
-```js
-const example = new Choices(element);
-
-example.ajax(function(callback) {
-  fetch(url)
-    .then(function(response) {
-      response.json().then(function(data) {
-        callback(data, 'data.key', 'data.value');
-      });
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
-});
-```
-
 ## Browser compatibility
 
-Choices is compiled using [Babel](https://babeljs.io/) to enable support for [ES5 browsers](http://caniuse.com/#feat=es5). If you need to support a browser that does not support one of the features listed below, I suggest including a polyfill from the very good [polyfill.io](https://cdn.polyfill.io/v2/docs/):
+Choices is compiled using [Babel](https://babeljs.io/) targeting browsers [with more that 1% of global usage](https://github.com/jshjohnson/Choices/blob/master/.browserslistrc) and expecting that features [listed below](https://github.com/jshjohnson/Choices/blob/master/.eslintrc.json#L62) are available or polyfilled in browser.
+You may see exact list of target browsers by running `npx browserslist` withing this repository folder.
+If you need to support a browser that does not have one of the features listed below,
+I suggest including a polyfill from the very good [polyfill.io](https://polyfill.io/v3/):
 
 **Polyfill example used for the demo:**
 
 ```html
-<script src="https://cdn.polyfill.io/v2/polyfill.js?features=es5,fetch,Element.prototype.classList,requestAnimationFrame,Node.insertBefore,Node.firstChild,CustomEvent"></script>
+<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=es5,es6,fetch,Array.prototype.includes,CustomEvent,Element.prototype.closest"></script>
 ```
 
 **Features used in Choices:**
 
-- Array.prototype.forEach
-- Array.prototype.map
-- Array.prototype.find
-- Array.prototype.some
-- Array.prototype.includes
-- Array.from
-- Array.prototype.reduce
-- Array.prototype.indexOf
-- Object.assign
-- Element.prototype.classList
-- Element.prototype.closest
-- window.requestAnimationFrame
-- CustomEvent
+```polyfills
+Array.from
+Array.prototype.find
+Array.prototype.includes
+Symbol
+Symbol.iterator
+Object.assign
+CustomEvent
+Element.prototype.classList
+Element.prototype.closest
+```
 
 ## Development
 
