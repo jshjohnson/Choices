@@ -21,10 +21,10 @@ jobs:
           HUSKY_SKIP_INSTALL: true
 
       - name: run Cypress
-        run: npx run-p --race start cypress:run
+        run: npx run-p --race start cypress:ci
         env:
           CI: true
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          CYPRESS_RECORD_KEY: XXXXXXXXXXXXXXX
           DEBUG: commit-info,cypress:server:record
           # https://docs.cypress.io/guides/guides/continuous-integration.html#Environment-variables
           COMMIT_INFO_BRANCH: ${{ github.head_ref }}
