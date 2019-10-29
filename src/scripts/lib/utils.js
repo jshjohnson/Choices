@@ -134,6 +134,7 @@ export const dispatchEvent = (element, type, customArgs = null) => {
 
 export const getWindowHeight = () => {
   const windowHeight = Math.ceil(window.devicePixelRatio * window.innerHeight);
+
   return windowHeight + window.pageYOffset;
 };
 
