@@ -9,6 +9,7 @@ on:
       - '.babelrc'
       - 'webpack.config.*'
       - 'public/test/**'
+      - 'cypress/**'
       - '.github/workflows/cypress.yml'
 
 jobs:
