@@ -34,15 +34,13 @@ describe('components/dropdown', () => {
 
   describe('distanceFromTopWindow', () => {
     let top;
-    let offset;
     let dimensions;
     let getBoundingClientRectStub;
 
     beforeEach(() => {
       top = 100;
-      offset = 50;
       dimensions = {
-        bottom: 0,
+        bottom: 121,
         height: 0,
         left: 0,
         right: 0,
@@ -53,30 +51,16 @@ describe('components/dropdown', () => {
       getBoundingClientRectStub = sinon
         .stub(instance.element, 'getBoundingClientRect')
         .returns(dimensions);
-
-      window.pageYOffset = 50;
     });
 
     afterEach(() => {
       getBoundingClientRectStub.restore();
     });
 
-    it('determines how far the top of our element is from the top of the window', () => {
-      const expectedResponse = top + offset;
-      const actualResponse = instance.distanceFromTopWindow();
+    it('determines how far the top of our element is from the top of the viewport', () => {
+      const expectedResponse = dimensions.bottom;
+      const actualResponse = instance.distanceFromTopWindow;
       expect(actualResponse).to.equal(expectedResponse);
-    });
-
-    it('assigns dimensions to instance', () => {
-      instance.distanceFromTopWindow();
-      const expectedResponse = dimensions;
-      expect(instance.dimensions).to.equal(expectedResponse);
-    });
-
-    it('assigns posisiton to instance', () => {
-      instance.distanceFromTopWindow();
-      const expectedResponse = top + offset;
-      expect(instance.position).to.equal(expectedResponse);
     });
   });
 

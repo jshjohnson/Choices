@@ -10,13 +10,8 @@ export default class Dropdown {
    * the top of the window
    * @return {Number} Vertical position
    */
-  distanceFromTopWindow() {
-    this.dimensions = this.element.getBoundingClientRect();
-    this.position = Math.ceil(
-      this.dimensions.top + window.pageYOffset + this.element.offsetHeight,
-    );
-
-    return this.position;
+  get distanceFromTopWindow() {
+    return this.element.getBoundingClientRect().bottom;
   }
 
   /**
