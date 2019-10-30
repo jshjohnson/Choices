@@ -59,5 +59,6 @@
       "fileMatch": [".prettierrc.json"],
       "url": "http://json.schemastore.org/prettierrc"
     }
-  ]
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

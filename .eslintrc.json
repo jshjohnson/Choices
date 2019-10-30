@@ -1,18 +1,31 @@
 {
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2020
+    "ecmaVersion": 2020,
+    "project": "./jsconfig.json",
+    "sourceType": "module"
   },
   "extends": [
     "airbnb-base",
     "plugin:prettier/recommended",
-    "plugin:compat/recommended"
+    "plugin:compat/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "prettier/@typescript-eslint"
   ],
-  "plugins": ["prettier", "sort-class-members"],
+  "plugins": ["prettier", "sort-class-members", "@typescript-eslint"],
   "env": {
     "es6": true,
     "browser": true
   },
   "rules": {
+    // ESLint-Typescript - must be removed when migrating to Typescript
+    "@typescript-eslint/explicit-function-return-type": "off",
+    // superseded by typescript-eslint rule
+    "no-undef": "off",
+    // conflicts with optional chaining
+    "no-restricted-globals": "off",
     "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": [
       "error",
@@ -50,8 +63,18 @@
           "[conventional-private-properties]",
           "constructor",
           "[methods]",
+          "[arrow-function-properties]",
+          "[conventional-private-arrow-function-properties]",
           "[conventional-private-methods]"
         ],
+        "groups": {
+          "conventional-private-arrow-function-properties": [
+            {
+              "propertyType": "ArrowFunctionExpression",
+              "name": "/_.+/"
+            }
+          ]
+        },
         "accessorPairPositioning": "getThenSet"
       }
     ]
