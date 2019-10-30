@@ -29,6 +29,7 @@ jobs:
           - title: '🔧 Maintenance'
             labels:
               - 'chore'
+              - 'housekeeping'
         change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
         template: |
           $CHANGES
