@@ -18,22 +18,17 @@ jobs:
         categories:
           - title: '🚨 Breaking changes'
             labels:
-              - 'breaking'
-              - 'major'
+              - 'breaking change'
           - title: '🚀 Features'
             labels:
               - 'feature'
               - 'enhancement'
-              - 'minor'
           - title: '🐛 Bug Fixes'
             labels:
-              - 'fix'
               - 'bugfix'
-              - 'bug'
           - title: '🔧 Maintenance'
             labels:
               - 'chore'
-              - 'tooling'
         change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
         template: |
           $CHANGES
