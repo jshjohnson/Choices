@@ -44,19 +44,30 @@ export const wrap = (element, wrapper = document.createElement('div')) => {
  */
 export const findAncestorByAttrName = (el, attr) => el.closest(`[${attr}]`);
 
-export const getAdjacentEl = (startEl, className, direction = 1) => {
-  if (!startEl || !className) {
-    return;
-  }
+export const getAdjacentEl =
+  /**
+   * @param {Element} startEl
+   * @param {string} selector
+   * @param {'next' | 'previous'} direction
+   * @returns {Element | undefined}
+   */
+  (startEl, selector, direction) => {
+    if (!(startEl instanceof Element) || typeof selector !== 'string') {
+      return undefined;
+    }
 
-  const parent = startEl.parentNode.parentNode;
-  const children = Array.from(parent.querySelectorAll(className));
+    const prop = `${direction}ElementSibling`;
 
-  const startPos = children.indexOf(startEl);
-  const operatorDirection = direction > 0 ? 1 : -1;
+    let sibling = startEl[prop];
+    while (sibling) {
+      if (sibling.matches(selector)) {
+        return sibling;
+      }
+      sibling = sibling[prop];
+    }
 
-  return children[startPos + operatorDirection];
-};
+    return sibling;
+  };
 
 export const isScrolledIntoView = (el, parent, direction = 1) => {
   if (!el) {

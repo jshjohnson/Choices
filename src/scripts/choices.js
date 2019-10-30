@@ -1455,7 +1455,7 @@ class Choices {
       this._canSearch = false;
 
       const directionInt =
-        keyCode === downKey || keyCode === pageDownKey ? 1 : -1;
+        keyCode === downKey || keyCode === pageDownKey ? 'next' : 'previous';
       const skipKey =
         metaKey || keyCode === pageDownKey || keyCode === pageUpKey;
       const selectableChoiceIdentifier = '[data-choice-selectable]';
