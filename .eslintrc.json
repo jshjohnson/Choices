@@ -69,8 +69,11 @@
       }
     },
     {
-      "files": ["cypress/**/*.spec.js"],
+      "files": ["cypress/**"],
       "plugins": ["cypress"],
+      "rules": {
+        "no-unused-vars": "warn"
+      },
       "env": {
         "cypress/globals": true
       }
