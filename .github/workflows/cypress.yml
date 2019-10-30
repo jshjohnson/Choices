@@ -1,6 +1,15 @@
 name: Cypress
 
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'package-lock.json'
+      - '.browserslistrc'
+      - '.babelrc'
+      - 'webpack.config.*'
+      - 'public/test/**'
+      - '.github/workflows/cypress.yml'
 
 jobs:
   test-e2e:
@@ -20,13 +29,13 @@ jobs:
         env:
           HUSKY_SKIP_INSTALL: true
 
-      - name: run Cypress
-        run: npx run-p --race start cypress:run
+      - name: run Cypress CI
+        run: npx run-p --race start cypress:ci
         env:
           CI: true
+          TERM: xterm-256color
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           DEBUG: commit-info,cypress:server:record
           # https://docs.cypress.io/guides/guides/continuous-integration.html#Environment-variables
           COMMIT_INFO_BRANCH: ${{ github.head_ref }}
-          COMMIT_INFO_AUTHOR: ${{ github.event.sender.login }}
-          COMMIT_INFO_SHA: ${{ github.event.after }}
+          NODE_ENV: production # prevent watching
