@@ -1,17 +1,22 @@
 import { getWindowHeight, wrap } from '../lib/utils';
 
 export default class Container {
+  // Class Properties
+  isOpen = false;
+
+  isFlipped = false;
+
+  isFocussed = false;
+
+  isDisabled = false;
+
+  isLoading = false;
+
   constructor({ element, type, classNames, position }) {
-    Object.assign(this, { element, classNames, type, position });
-
-    this.isOpen = false;
-    this.isFlipped = false;
-    this.isFocussed = false;
-    this.isDisabled = false;
-    this.isLoading = false;
-
-    this._onFocus = this._onFocus.bind(this);
-    this._onBlur = this._onBlur.bind(this);
+    this.element = element;
+    this.type = type;
+    this.classNames = classNames;
+    this.position = position;
   }
 
   /**
@@ -21,10 +26,6 @@ export default class Container {
     this.element.addEventListener('focus', this._onFocus);
     this.element.addEventListener('blur', this._onBlur);
   }
-
-  /**
-   * Remove event listeners
-   */
 
   /** */
   removeEventListeners() {
@@ -57,7 +58,7 @@ export default class Container {
 
   /**
    * Set active descendant attribute
-   * @param {Number} activeDescendant ID of active descendant
+   * @param {Number} activeDescendantID of active descendant
    */
   setActiveDescendant(activeDescendantID) {
     this.element.setAttribute('aria-activedescendant', activeDescendantID);
@@ -70,6 +71,9 @@ export default class Container {
     this.element.removeAttribute('aria-activedescendant');
   }
 
+  /**
+   * Remove event listeners
+   */
   open(dropdownPos) {
     this.element.classList.add(this.classNames.openState);
     this.element.setAttribute('aria-expanded', 'true');
@@ -109,18 +113,6 @@ export default class Container {
   }
 
   /**
-   * Remove disabled state
-   */
-  enable() {
-    this.element.classList.remove(this.classNames.disabledState);
-    this.element.removeAttribute('aria-disabled');
-    if (this.type === 'select-one') {
-      this.element.setAttribute('tabindex', '0');
-    }
-    this.isDisabled = false;
-  }
-
-  /**
    * Set disabled state
    */
   disable() {
@@ -130,6 +122,18 @@ export default class Container {
       this.element.setAttribute('tabindex', '-1');
     }
     this.isDisabled = true;
+  }
+
+  /**
+   * Remove disabled state
+   */
+  enable() {
+    this.element.classList.remove(this.classNames.disabledState);
+    this.element.removeAttribute('aria-disabled');
+    if (this.type === 'select-one') {
+      this.element.setAttribute('tabindex', '0');
+    }
+    this.isDisabled = false;
   }
 
   wrap(element) {
@@ -144,15 +148,6 @@ export default class Container {
   }
 
   /**
-   * Add loading state to element
-   */
-  addLoadingState() {
-    this.element.classList.add(this.classNames.loadingState);
-    this.element.setAttribute('aria-busy', 'true');
-    this.isLoading = true;
-  }
-
-  /**
    * Remove loading state from element
    */
   removeLoadingState() {
@@ -162,16 +157,25 @@ export default class Container {
   }
 
   /**
-   * Set focussed state
+   * Add loading state to element
    */
-  _onFocus() {
-    this.isFocussed = true;
+  addLoadingState() {
+    this.element.classList.add(this.classNames.loadingState);
+    this.element.setAttribute('aria-busy', 'true');
+    this.isLoading = true;
   }
+
+  /**
+   Set focussed state
+   */
+  _onFocus = () => {
+    this.isFocussed = true;
+  };
 
   /**
    * Remove blurred state
    */
-  _onBlur() {
+  _onBlur = () => {
     this.isFocussed = false;
-  }
+  };
 }

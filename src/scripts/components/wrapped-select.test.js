@@ -113,7 +113,6 @@ describe('components/wrappedSelect', () => {
   });
 
   describe('options setter', () => {
-    let appendDocFragmentStub;
     const options = [
       {
         value: '1',
@@ -129,53 +128,12 @@ describe('components/wrappedSelect', () => {
       },
     ];
 
-    beforeEach(() => {
-      appendDocFragmentStub = stub();
-      instance.appendDocFragment = appendDocFragmentStub;
-    });
-
-    afterEach(() => {
-      instance.appendDocFragment.reset();
-    });
-
-    it('creates an option element for each passed object, adds it to a fragment and calls appendDocFragment with created fragment', () => {
-      expect(appendDocFragmentStub.called).to.equal(false);
+    it('creates an option element for each passed object, adds it to select', () => {
+      instance.element.options.length = 0;
       instance.options = options;
-      expect(appendDocFragmentStub.called).to.equal(true);
-
-      const fragment = appendDocFragmentStub.firstCall.args[0];
-      const selectElement = document.createElement('select');
-      selectElement.appendChild(fragment);
-
-      expect(fragment).to.be.instanceOf(DocumentFragment);
-      expect(instance.template.callCount).to.equal(2);
-      expect(selectElement.options.length).to.equal(2);
-      expect(selectElement.options[0].value).to.equal(options[0].value);
-      expect(selectElement.options[1].value).to.equal(options[1].value);
-    });
-  });
-
-  describe('appendDocFragment', () => {
-    it('empties contents of element', () => {
-      expect(instance.element.getElementsByTagName('option').length).to.equal(
-        5,
-      );
-      instance.appendDocFragment(document.createDocumentFragment());
-      expect(instance.element.getElementsByTagName('option').length).to.equal(
-        0,
-      );
-    });
-
-    it('appends passed fragment to element', () => {
-      const fragment = document.createDocumentFragment();
-      const elementToAppend = document.createElement('div');
-      elementToAppend.id = 'fragment-target';
-      fragment.appendChild(elementToAppend);
-      expect(instance.element.querySelector('#fragment-target')).to.equal(null);
-      instance.appendDocFragment(fragment);
-      expect(instance.element.querySelector('#fragment-target')).to.eql(
-        elementToAppend,
-      );
+      expect(instance.element.options.length).to.equal(2);
+      expect(instance.element.options[0].value).to.equal(options[0].value);
+      expect(instance.element.options[1].value).to.equal(options[1].value);
     });
   });
 });

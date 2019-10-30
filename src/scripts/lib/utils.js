@@ -158,8 +158,8 @@ export const existsInArray = (array, value, key = 'value') =>
 export const cloneObject = obj => JSON.parse(JSON.stringify(obj));
 
 export const diff = (a, b) => {
-  const aKeys = Object.keys(a).sort();
-  const bKeys = Object.keys(b).sort();
+  const aKeys = Object.keys(a);
+  const bKeys = new Set(Object.keys(b));
 
-  return aKeys.filter(i => bKeys.indexOf(i) < 0);
+  return aKeys.filter(i => !bKeys.has(i)).sort();
 };

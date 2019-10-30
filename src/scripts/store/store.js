@@ -5,8 +5,7 @@ export default class Store {
   constructor() {
     this._store = createStore(
       rootReducer,
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-        window.__REDUX_DEVTOOLS_EXTENSION__(),
+      window.__REDUX_DEVTOOLS_EXTENSION__?.(),
     );
   }
 
@@ -140,7 +139,7 @@ export default class Store {
 
   /**
    * Get single choice by it's ID
-   * @param {id} string
+   * @param {string} id
    * @return {import('../../../types/index').Choices.Choice | false} Found choice
    */
   getChoiceById(id) {
@@ -155,10 +154,12 @@ export default class Store {
 
   /**
    * Get group by group id
-   * @param  {Number} id Group ID
+   * @param  {string} id Group ID
    * @return {Object}    Group data
    */
   getGroupById(id) {
-    return this.groups.find(group => group.id === parseInt(id, 10));
+    const n = parseInt(id, 10);
+
+    return this.groups.find(group => group.id === n);
   }
 }

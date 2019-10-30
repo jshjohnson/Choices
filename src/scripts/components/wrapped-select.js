@@ -23,22 +23,9 @@ export default class WrappedSelect extends WrappedElement {
   }
 
   set options(options) {
-    const fragment = document.createDocumentFragment();
-    const addOptionToFragment = data => {
-      // Create a standard select option
-      const option = this.template(data);
-      // Append it to fragment
-      fragment.appendChild(option);
-    };
-
-    // Add each list item to list
-    options.forEach(optionData => addOptionToFragment(optionData));
-
-    this.appendDocFragment(fragment);
-  }
-
-  appendDocFragment(fragment) {
+    // https://jsperf.com/select-options-addition-performance/1
     this.element.innerHTML = '';
-    this.element.appendChild(fragment);
+    // Add each list item to select
+    options.forEach(optionData => this.element.add(this.template(optionData)));
   }
 }

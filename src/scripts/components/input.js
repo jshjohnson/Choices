@@ -15,10 +15,6 @@ export default class Input {
 
     this.isFocussed = this.element === document.activeElement;
     this.isDisabled = element.disabled;
-    this._onPaste = this._onPaste.bind(this);
-    this._onInput = this._onInput.bind(this);
-    this._onFocus = this._onFocus.bind(this);
-    this._onBlur = this._onBlur.bind(this);
   }
 
   set placeholder(placeholder) {
@@ -34,7 +30,8 @@ export default class Input {
   }
 
   addEventListeners() {
-    this.element.addEventListener('paste', this._onPaste);
+    this.element.addEventListener('paste', this._onPaste, true);
+
     this.element.addEventListener('input', this._onInput, {
       passive: true,
     });
@@ -47,16 +44,11 @@ export default class Input {
   }
 
   removeEventListeners() {
-    this.element.removeEventListener('input', this._onInput, {
-      passive: true,
-    });
-    this.element.removeEventListener('paste', this._onPaste);
-    this.element.removeEventListener('focus', this._onFocus, {
-      passive: true,
-    });
-    this.element.removeEventListener('blur', this._onBlur, {
-      passive: true,
-    });
+    this.element.removeEventListener('paste', this._onPaste, true);
+
+    this.element.removeEventListener('input', this._onInput, false);
+    this.element.removeEventListener('focus', this._onFocus, false);
+    this.element.removeEventListener('blur', this._onBlur, false);
   }
 
   enable() {
@@ -98,6 +90,10 @@ export default class Input {
     return this;
   }
 
+  setActiveDescendant(activeDescendantID) {
+    this.element.setAttribute('aria-activedescendant', activeDescendantID);
+  }
+
   /**
    * Set the correct input width based on placeholder
    * value or input value
@@ -109,31 +105,24 @@ export default class Input {
     style.width = `${value.length + 1}ch`;
   }
 
-  setActiveDescendant(activeDescendantID) {
-    this.element.setAttribute('aria-activedescendant', activeDescendantID);
-  }
-
   removeActiveDescendant() {
     this.element.removeAttribute('aria-activedescendant');
   }
 
-  _onInput() {
+  // Class properties
+  _onInput = () => {
     if (this.type !== 'select-one') {
       this.setWidth();
     }
-  }
+  };
 
-  _onPaste(event) {
-    if (this.preventPaste) {
-      event.preventDefault();
-    }
-  }
+  _onPaste = event => this.preventPaste && event.preventDefault();
 
-  _onFocus() {
+  _onFocus = () => {
     this.isFocussed = true;
-  }
+  };
 
-  _onBlur() {
+  _onBlur = () => {
     this.isFocussed = false;
-  }
+  };
 }

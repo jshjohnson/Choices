@@ -28,6 +28,7 @@ export const DEFAULT_CLASSNAMES = {
   noChoices: 'has-no-choices',
 };
 
+/** @type {Partial<import('../../types/index').Choices.Options>} */
 export const DEFAULT_CONFIG = {
   items: [],
   choices: [],

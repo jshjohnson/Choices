@@ -1,10 +1,14 @@
 import { dispatchEvent } from '../lib/utils';
 
 export default class WrappedElement {
-  constructor({ element, classNames }) {
-    Object.assign(this, { element, classNames });
+  /** @type {HTMLElement} */
+  element;
 
-    if (!(element instanceof Element)) {
+  constructor({ element, classNames }) {
+    this.element = element;
+    this.classNames = classNames;
+
+    if (!(element instanceof HTMLElement)) {
       throw new TypeError('Invalid element passed');
     }
 
@@ -26,7 +30,7 @@ export default class WrappedElement {
     this.element.hidden = true;
 
     // Remove element from tab index
-    this.element.tabIndex = '-1';
+    this.element.tabIndex = -1;
 
     // Backup original styles if any
     const origStyle = this.element.getAttribute('style');

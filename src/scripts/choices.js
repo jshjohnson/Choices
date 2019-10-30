@@ -646,7 +646,7 @@ class Choices {
     return this;
   }
 
-  _render() {
+  _render = () => {
     if (this._store.isLoading()) {
       return;
     }
@@ -674,7 +674,433 @@ class Choices {
     }
 
     this._prevState = this._currentState;
-  }
+  };
+
+  _onKeyDown = event => {
+    const { target, keyCode, ctrlKey, metaKey } = event;
+
+    if (
+      target !== this.input.element &&
+      !this.containerOuter.element.contains(target)
+    ) {
+      return;
+    }
+
+    const { activeItems } = this._store;
+    const hasFocusedInput = this.input.isFocussed;
+    const hasActiveDropdown = this.dropdown.isActive;
+    const hasItems = this.itemList.hasChildren();
+    const keyString = String.fromCharCode(keyCode);
+
+    const {
+      BACK_KEY,
+      DELETE_KEY,
+      ENTER_KEY,
+      A_KEY,
+      ESC_KEY,
+      UP_KEY,
+      DOWN_KEY,
+      PAGE_UP_KEY,
+      PAGE_DOWN_KEY,
+    } = KEY_CODES;
+    const hasCtrlDownKeyPressed = ctrlKey || metaKey;
+
+    // If a user is typing and the dropdown is not active
+    if (!this._isTextElement && /[\w -]/.test(keyString)) {
+      this.showDropdown();
+    }
+
+    // Map keys to key actions
+    const keyDownActions = {
+      [A_KEY]: this._onAKey,
+      [ENTER_KEY]: this._onEnterKey,
+      [ESC_KEY]: this._onEscapeKey,
+      [UP_KEY]: this._onDirectionKey,
+      [PAGE_UP_KEY]: this._onDirectionKey,
+      [DOWN_KEY]: this._onDirectionKey,
+      [PAGE_DOWN_KEY]: this._onDirectionKey,
+      [DELETE_KEY]: this._onDeleteKey,
+      [BACK_KEY]: this._onDeleteKey,
+    };
+
+    // If keycode has a function, run it
+    if (keyDownActions[keyCode]) {
+      keyDownActions[keyCode]({
+        event,
+        target,
+        keyCode,
+        metaKey,
+        activeItems,
+        hasFocusedInput,
+        hasActiveDropdown,
+        hasItems,
+        hasCtrlDownKeyPressed,
+      });
+    }
+  };
+
+  _onKeyUp = ({ target, keyCode }) => {
+    const { value } = this.input;
+    const { activeItems } = this._store;
+    const canAddItem = this._canAddItem(activeItems, value);
+    const { BACK_KEY: backKey, DELETE_KEY: deleteKey } = KEY_CODES;
+
+    // We are typing into a text input and have a value, we want to show a dropdown
+    // notice. Otherwise hide the dropdown
+    if (this._isTextElement) {
+      const canShowDropdownNotice = canAddItem.notice && value;
+      if (canShowDropdownNotice) {
+        const dropdownItem = this._getTemplate('notice', canAddItem.notice);
+        this.dropdown.element.innerHTML = dropdownItem.outerHTML;
+        this.showDropdown(true);
+      } else {
+        this.hideDropdown(true);
+      }
+    } else {
+      const userHasRemovedValue =
+        (keyCode === backKey || keyCode === deleteKey) && !target.value;
+      const canReactivateChoices = !this._isTextElement && this._isSearching;
+      const canSearch = this._canSearch && canAddItem.response;
+
+      if (userHasRemovedValue && canReactivateChoices) {
+        this._isSearching = false;
+        this._store.dispatch(activateChoices(true));
+      } else if (canSearch) {
+        this._handleSearch(this.input.value);
+      }
+    }
+
+    this._canSearch = this.config.searchEnabled;
+  };
+
+  _onAKey = ({ hasItems, hasCtrlDownKeyPressed }) => {
+    // If CTRL + A or CMD + A have been pressed and there are items to select
+    if (hasCtrlDownKeyPressed && hasItems) {
+      this._canSearch = false;
+
+      const shouldHightlightAll =
+        this.config.removeItems &&
+        !this.input.value &&
+        this.input.element === document.activeElement;
+
+      if (shouldHightlightAll) {
+        this.highlightAll();
+      }
+    }
+  };
+
+  _onEnterKey = ({ event, target, activeItems, hasActiveDropdown }) => {
+    const { ENTER_KEY: enterKey } = KEY_CODES;
+    const targetWasButton = target.hasAttribute('data-button');
+
+    if (this._isTextElement && target.value) {
+      const { value } = this.input;
+      const canAddItem = this._canAddItem(activeItems, value);
+
+      if (canAddItem.response) {
+        this.hideDropdown(true);
+        this._addItem({ value });
+        this._triggerChange(value);
+        this.clearInput();
+      }
+    }
+
+    if (targetWasButton) {
+      this._handleButtonAction(activeItems, target);
+      event.preventDefault();
+    }
+
+    if (hasActiveDropdown) {
+      const highlightedChoice = this.dropdown.getChild(
+        `.${this.config.classNames.highlightedState}`,
+      );
+
+      if (highlightedChoice) {
+        // add enter keyCode value
+        if (activeItems[0]) {
+          activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
+        }
+        this._handleChoiceAction(activeItems, highlightedChoice);
+      }
+
+      event.preventDefault();
+    } else if (this._isSelectOneElement) {
+      this.showDropdown();
+      event.preventDefault();
+    }
+  };
+
+  _onEscapeKey = ({ hasActiveDropdown }) => {
+    if (hasActiveDropdown) {
+      this.hideDropdown(true);
+      this.containerOuter.focus();
+    }
+  };
+
+  _onDirectionKey = ({ event, hasActiveDropdown, keyCode, metaKey }) => {
+    const {
+      DOWN_KEY: downKey,
+      PAGE_UP_KEY: pageUpKey,
+      PAGE_DOWN_KEY: pageDownKey,
+    } = KEY_CODES;
+
+    // If up or down key is pressed, traverse through options
+    if (hasActiveDropdown || this._isSelectOneElement) {
+      this.showDropdown();
+      this._canSearch = false;
+
+      const directionInt =
+        keyCode === downKey || keyCode === pageDownKey ? 1 : -1;
+      const skipKey =
+        metaKey || keyCode === pageDownKey || keyCode === pageUpKey;
+      const selectableChoiceIdentifier = '[data-choice-selectable]';
+
+      let nextEl;
+      if (skipKey) {
+        if (directionInt > 0) {
+          nextEl = this.dropdown.element.querySelector(
+            `${selectableChoiceIdentifier}:last-of-type`,
+          );
+        } else {
+          nextEl = this.dropdown.element.querySelector(
+            selectableChoiceIdentifier,
+          );
+        }
+      } else {
+        const currentEl = this.dropdown.element.querySelector(
+          `.${this.config.classNames.highlightedState}`,
+        );
+        if (currentEl) {
+          nextEl = getAdjacentEl(
+            currentEl,
+            selectableChoiceIdentifier,
+            directionInt,
+          );
+        } else {
+          nextEl = this.dropdown.element.querySelector(
+            selectableChoiceIdentifier,
+          );
+        }
+      }
+
+      if (nextEl) {
+        // We prevent default to stop the cursor moving
+        // when pressing the arrow
+        if (
+          !isScrolledIntoView(nextEl, this.choiceList.element, directionInt)
+        ) {
+          this.choiceList.scrollToChoice(nextEl, directionInt);
+        }
+        this._highlightChoice(nextEl);
+      }
+
+      // Prevent default to maintain cursor position whilst
+      // traversing dropdown options
+      event.preventDefault();
+    }
+  };
+
+  _onDeleteKey = ({ event, target, hasFocusedInput, activeItems }) => {
+    // If backspace or delete key is pressed and the input has no value
+    if (hasFocusedInput && !target.value && !this._isSelectOneElement) {
+      this._handleBackspace(activeItems);
+      event.preventDefault();
+    }
+  };
+
+  _onTouchMove = () => {
+    if (this._wasTap) {
+      this._wasTap = false;
+    }
+  };
+
+  _onTouchEnd = event => {
+    const { target } = event || event.touches[0];
+    const touchWasWithinContainer =
+      this._wasTap && this.containerOuter.element.contains(target);
+
+    if (touchWasWithinContainer) {
+      const containerWasExactTarget =
+        target === this.containerOuter.element ||
+        target === this.containerInner.element;
+
+      if (containerWasExactTarget) {
+        if (this._isTextElement) {
+          this.input.focus();
+        } else if (this._isSelectMultipleElement) {
+          this.showDropdown();
+        }
+      }
+
+      // Prevents focus event firing
+      event.stopPropagation();
+    }
+
+    this._wasTap = true;
+  };
+
+  _onMouseDown = event => {
+    const { target, shiftKey } = event;
+    // If we have our mouse down on the scrollbar and are on IE11...
+    if (
+      this.choiceList.element.contains(target) &&
+      isIE11(navigator.userAgent)
+    ) {
+      this._isScrollingOnIe = true;
+    }
+
+    if (
+      !this.containerOuter.element.contains(target) ||
+      target === this.input.element
+    ) {
+      return;
+    }
+
+    const { activeItems } = this._store;
+    const hasShiftKey = shiftKey;
+    const buttonTarget = findAncestorByAttrName(target, 'data-button');
+    const itemTarget = findAncestorByAttrName(target, 'data-item');
+    const choiceTarget = findAncestorByAttrName(target, 'data-choice');
+
+    if (buttonTarget) {
+      this._handleButtonAction(activeItems, buttonTarget);
+    } else if (itemTarget) {
+      this._handleItemAction(activeItems, itemTarget, hasShiftKey);
+    } else if (choiceTarget) {
+      this._handleChoiceAction(activeItems, choiceTarget);
+    }
+
+    event.preventDefault();
+  };
+
+  _onMouseOver = ({ target }) => {
+    const targetWithinDropdown =
+      target === this.dropdown || this.dropdown.element.contains(target);
+    const shouldHighlightChoice =
+      targetWithinDropdown && target.hasAttribute('data-choice');
+
+    if (shouldHighlightChoice) {
+      this._highlightChoice(target);
+    }
+  };
+
+  _onClick = ({ target }) => {
+    const clickWasWithinContainer = this.containerOuter.element.contains(
+      target,
+    );
+
+    if (clickWasWithinContainer) {
+      if (!this.dropdown.isActive && !this.containerOuter.isDisabled) {
+        if (this._isTextElement) {
+          if (document.activeElement !== this.input.element) {
+            this.input.focus();
+          }
+        } else {
+          this.showDropdown();
+          this.containerOuter.focus();
+        }
+      } else if (
+        this._isSelectOneElement &&
+        target !== this.input.element &&
+        !this.dropdown.element.contains(target)
+      ) {
+        this.hideDropdown();
+      }
+    } else {
+      const hasHighlightedItems = this._store.highlightedActiveItems.length > 0;
+
+      if (hasHighlightedItems) {
+        this.unhighlightAll();
+      }
+
+      this.containerOuter.removeFocusState();
+      this.hideDropdown(true);
+    }
+  };
+
+  _onFocus = ({ target }) => {
+    const focusWasWithinContainer = this.containerOuter.element.contains(
+      target,
+    );
+
+    if (!focusWasWithinContainer) {
+      return;
+    }
+
+    const focusActions = {
+      text: () => {
+        if (target === this.input.element) {
+          this.containerOuter.addFocusState();
+        }
+      },
+      'select-one': () => {
+        this.containerOuter.addFocusState();
+        if (target === this.input.element) {
+          this.showDropdown(true);
+        }
+      },
+      'select-multiple': () => {
+        if (target === this.input.element) {
+          this.showDropdown(true);
+          // If element is a select box, the focused element is the container and the dropdown
+          // isn't already open, focus and show dropdown
+          this.containerOuter.addFocusState();
+        }
+      },
+    };
+
+    focusActions[this.passedElement.element.type]();
+  };
+
+  _onBlur = ({ target }) => {
+    const blurWasWithinContainer = this.containerOuter.element.contains(target);
+
+    if (blurWasWithinContainer && !this._isScrollingOnIe) {
+      const { activeItems } = this._store;
+      const hasHighlightedItems = activeItems.some(item => item.highlighted);
+      const blurActions = {
+        text: () => {
+          if (target === this.input.element) {
+            this.containerOuter.removeFocusState();
+            if (hasHighlightedItems) {
+              this.unhighlightAll();
+            }
+            this.hideDropdown(true);
+          }
+        },
+        'select-one': () => {
+          this.containerOuter.removeFocusState();
+          if (
+            target === this.input.element ||
+            (target === this.containerOuter.element && !this._canSearch)
+          ) {
+            this.hideDropdown(true);
+          }
+        },
+        'select-multiple': () => {
+          if (target === this.input.element) {
+            this.containerOuter.removeFocusState();
+            this.hideDropdown(true);
+            if (hasHighlightedItems) {
+              this.unhighlightAll();
+            }
+          }
+        },
+      };
+
+      blurActions[this.passedElement.element.type]();
+    } else {
+      // On IE11, clicking the scollbar blurs our input and thus
+      // closes the dropdown. To stop this, we refocus our input
+      // if we know we are on IE *and* are scrolling.
+      this._isScrollingOnIe = false;
+      this.input.element.focus();
+    }
+  };
+
+  _onFormReset = () => {
+    this._store.dispatch(resetTo(this._initialState));
+  };
 
   _renderChoices() {
     const { activeGroups, activeChoices } = this._store;
@@ -1269,432 +1695,6 @@ class Choices {
     this.input.removeEventListeners();
   }
 
-  _onKeyDown(event) {
-    const { target, keyCode, ctrlKey, metaKey } = event;
-
-    if (
-      target !== this.input.element &&
-      !this.containerOuter.element.contains(target)
-    ) {
-      return;
-    }
-
-    const { activeItems } = this._store;
-    const hasFocusedInput = this.input.isFocussed;
-    const hasActiveDropdown = this.dropdown.isActive;
-    const hasItems = this.itemList.hasChildren();
-    const keyString = String.fromCharCode(keyCode);
-
-    const {
-      BACK_KEY,
-      DELETE_KEY,
-      ENTER_KEY,
-      A_KEY,
-      ESC_KEY,
-      UP_KEY,
-      DOWN_KEY,
-      PAGE_UP_KEY,
-      PAGE_DOWN_KEY,
-    } = KEY_CODES;
-    const hasCtrlDownKeyPressed = ctrlKey || metaKey;
-
-    // If a user is typing and the dropdown is not active
-    if (!this._isTextElement && /[\w -]/.test(keyString)) {
-      this.showDropdown();
-    }
-
-    // Map keys to key actions
-    const keyDownActions = {
-      [A_KEY]: this._onAKey,
-      [ENTER_KEY]: this._onEnterKey,
-      [ESC_KEY]: this._onEscapeKey,
-      [UP_KEY]: this._onDirectionKey,
-      [PAGE_UP_KEY]: this._onDirectionKey,
-      [DOWN_KEY]: this._onDirectionKey,
-      [PAGE_DOWN_KEY]: this._onDirectionKey,
-      [DELETE_KEY]: this._onDeleteKey,
-      [BACK_KEY]: this._onDeleteKey,
-    };
-
-    // If keycode has a function, run it
-    if (keyDownActions[keyCode]) {
-      keyDownActions[keyCode]({
-        event,
-        target,
-        keyCode,
-        metaKey,
-        activeItems,
-        hasFocusedInput,
-        hasActiveDropdown,
-        hasItems,
-        hasCtrlDownKeyPressed,
-      });
-    }
-  }
-
-  _onKeyUp({ target, keyCode }) {
-    const { value } = this.input;
-    const { activeItems } = this._store;
-    const canAddItem = this._canAddItem(activeItems, value);
-    const { BACK_KEY: backKey, DELETE_KEY: deleteKey } = KEY_CODES;
-
-    // We are typing into a text input and have a value, we want to show a dropdown
-    // notice. Otherwise hide the dropdown
-    if (this._isTextElement) {
-      const canShowDropdownNotice = canAddItem.notice && value;
-      if (canShowDropdownNotice) {
-        const dropdownItem = this._getTemplate('notice', canAddItem.notice);
-        this.dropdown.element.innerHTML = dropdownItem.outerHTML;
-        this.showDropdown(true);
-      } else {
-        this.hideDropdown(true);
-      }
-    } else {
-      const userHasRemovedValue =
-        (keyCode === backKey || keyCode === deleteKey) && !target.value;
-      const canReactivateChoices = !this._isTextElement && this._isSearching;
-      const canSearch = this._canSearch && canAddItem.response;
-
-      if (userHasRemovedValue && canReactivateChoices) {
-        this._isSearching = false;
-        this._store.dispatch(activateChoices(true));
-      } else if (canSearch) {
-        this._handleSearch(this.input.value);
-      }
-    }
-
-    this._canSearch = this.config.searchEnabled;
-  }
-
-  _onAKey({ hasItems, hasCtrlDownKeyPressed }) {
-    // If CTRL + A or CMD + A have been pressed and there are items to select
-    if (hasCtrlDownKeyPressed && hasItems) {
-      this._canSearch = false;
-
-      const shouldHightlightAll =
-        this.config.removeItems &&
-        !this.input.value &&
-        this.input.element === document.activeElement;
-
-      if (shouldHightlightAll) {
-        this.highlightAll();
-      }
-    }
-  }
-
-  _onEnterKey({ event, target, activeItems, hasActiveDropdown }) {
-    const { ENTER_KEY: enterKey } = KEY_CODES;
-    const targetWasButton = target.hasAttribute('data-button');
-
-    if (this._isTextElement && target.value) {
-      const { value } = this.input;
-      const canAddItem = this._canAddItem(activeItems, value);
-
-      if (canAddItem.response) {
-        this.hideDropdown(true);
-        this._addItem({ value });
-        this._triggerChange(value);
-        this.clearInput();
-      }
-    }
-
-    if (targetWasButton) {
-      this._handleButtonAction(activeItems, target);
-      event.preventDefault();
-    }
-
-    if (hasActiveDropdown) {
-      const highlightedChoice = this.dropdown.getChild(
-        `.${this.config.classNames.highlightedState}`,
-      );
-
-      if (highlightedChoice) {
-        // add enter keyCode value
-        if (activeItems[0]) {
-          activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
-        }
-        this._handleChoiceAction(activeItems, highlightedChoice);
-      }
-
-      event.preventDefault();
-    } else if (this._isSelectOneElement) {
-      this.showDropdown();
-      event.preventDefault();
-    }
-  }
-
-  _onEscapeKey({ hasActiveDropdown }) {
-    if (hasActiveDropdown) {
-      this.hideDropdown(true);
-      this.containerOuter.focus();
-    }
-  }
-
-  _onDirectionKey({ event, hasActiveDropdown, keyCode, metaKey }) {
-    const {
-      DOWN_KEY: downKey,
-      PAGE_UP_KEY: pageUpKey,
-      PAGE_DOWN_KEY: pageDownKey,
-    } = KEY_CODES;
-
-    // If up or down key is pressed, traverse through options
-    if (hasActiveDropdown || this._isSelectOneElement) {
-      this.showDropdown();
-      this._canSearch = false;
-
-      const directionInt =
-        keyCode === downKey || keyCode === pageDownKey ? 1 : -1;
-      const skipKey =
-        metaKey || keyCode === pageDownKey || keyCode === pageUpKey;
-      const selectableChoiceIdentifier = '[data-choice-selectable]';
-
-      let nextEl;
-      if (skipKey) {
-        if (directionInt > 0) {
-          nextEl = Array.from(
-            this.dropdown.element.querySelectorAll(selectableChoiceIdentifier),
-          ).pop();
-        } else {
-          nextEl = this.dropdown.element.querySelector(
-            selectableChoiceIdentifier,
-          );
-        }
-      } else {
-        const currentEl = this.dropdown.element.querySelector(
-          `.${this.config.classNames.highlightedState}`,
-        );
-        if (currentEl) {
-          nextEl = getAdjacentEl(
-            currentEl,
-            selectableChoiceIdentifier,
-            directionInt,
-          );
-        } else {
-          nextEl = this.dropdown.element.querySelector(
-            selectableChoiceIdentifier,
-          );
-        }
-      }
-
-      if (nextEl) {
-        // We prevent default to stop the cursor moving
-        // when pressing the arrow
-        if (
-          !isScrolledIntoView(nextEl, this.choiceList.element, directionInt)
-        ) {
-          this.choiceList.scrollToChoice(nextEl, directionInt);
-        }
-        this._highlightChoice(nextEl);
-      }
-
-      // Prevent default to maintain cursor position whilst
-      // traversing dropdown options
-      event.preventDefault();
-    }
-  }
-
-  _onDeleteKey({ event, target, hasFocusedInput, activeItems }) {
-    // If backspace or delete key is pressed and the input has no value
-    if (hasFocusedInput && !target.value && !this._isSelectOneElement) {
-      this._handleBackspace(activeItems);
-      event.preventDefault();
-    }
-  }
-
-  _onTouchMove() {
-    if (this._wasTap) {
-      this._wasTap = false;
-    }
-  }
-
-  _onTouchEnd(event) {
-    const { target } = event || event.touches[0];
-    const touchWasWithinContainer =
-      this._wasTap && this.containerOuter.element.contains(target);
-
-    if (touchWasWithinContainer) {
-      const containerWasExactTarget =
-        target === this.containerOuter.element ||
-        target === this.containerInner.element;
-
-      if (containerWasExactTarget) {
-        if (this._isTextElement) {
-          this.input.focus();
-        } else if (this._isSelectMultipleElement) {
-          this.showDropdown();
-        }
-      }
-
-      // Prevents focus event firing
-      event.stopPropagation();
-    }
-
-    this._wasTap = true;
-  }
-
-  _onMouseDown(event) {
-    const { target, shiftKey } = event;
-    // If we have our mouse down on the scrollbar and are on IE11...
-    if (
-      this.choiceList.element.contains(target) &&
-      isIE11(navigator.userAgent)
-    ) {
-      this._isScrollingOnIe = true;
-    }
-
-    if (
-      !this.containerOuter.element.contains(target) ||
-      target === this.input.element
-    ) {
-      return;
-    }
-
-    const { activeItems } = this._store;
-    const hasShiftKey = shiftKey;
-    const buttonTarget = findAncestorByAttrName(target, 'data-button');
-    const itemTarget = findAncestorByAttrName(target, 'data-item');
-    const choiceTarget = findAncestorByAttrName(target, 'data-choice');
-
-    if (buttonTarget) {
-      this._handleButtonAction(activeItems, buttonTarget);
-    } else if (itemTarget) {
-      this._handleItemAction(activeItems, itemTarget, hasShiftKey);
-    } else if (choiceTarget) {
-      this._handleChoiceAction(activeItems, choiceTarget);
-    }
-
-    event.preventDefault();
-  }
-
-  _onMouseOver({ target }) {
-    const targetWithinDropdown =
-      target === this.dropdown || this.dropdown.element.contains(target);
-    const shouldHighlightChoice =
-      targetWithinDropdown && target.hasAttribute('data-choice');
-
-    if (shouldHighlightChoice) {
-      this._highlightChoice(target);
-    }
-  }
-
-  _onClick({ target }) {
-    const clickWasWithinContainer = this.containerOuter.element.contains(
-      target,
-    );
-
-    if (clickWasWithinContainer) {
-      if (!this.dropdown.isActive && !this.containerOuter.isDisabled) {
-        if (this._isTextElement) {
-          if (document.activeElement !== this.input.element) {
-            this.input.focus();
-          }
-        } else {
-          this.showDropdown();
-          this.containerOuter.focus();
-        }
-      } else if (
-        this._isSelectOneElement &&
-        target !== this.input.element &&
-        !this.dropdown.element.contains(target)
-      ) {
-        this.hideDropdown();
-      }
-    } else {
-      const hasHighlightedItems = this._store.highlightedActiveItems.length > 0;
-
-      if (hasHighlightedItems) {
-        this.unhighlightAll();
-      }
-
-      this.containerOuter.removeFocusState();
-      this.hideDropdown(true);
-    }
-  }
-
-  _onFocus({ target }) {
-    const focusWasWithinContainer = this.containerOuter.element.contains(
-      target,
-    );
-
-    if (!focusWasWithinContainer) {
-      return;
-    }
-
-    const focusActions = {
-      text: () => {
-        if (target === this.input.element) {
-          this.containerOuter.addFocusState();
-        }
-      },
-      'select-one': () => {
-        this.containerOuter.addFocusState();
-        if (target === this.input.element) {
-          this.showDropdown(true);
-        }
-      },
-      'select-multiple': () => {
-        if (target === this.input.element) {
-          this.showDropdown(true);
-          // If element is a select box, the focused element is the container and the dropdown
-          // isn't already open, focus and show dropdown
-          this.containerOuter.addFocusState();
-        }
-      },
-    };
-
-    focusActions[this.passedElement.element.type]();
-  }
-
-  _onBlur({ target }) {
-    const blurWasWithinContainer = this.containerOuter.element.contains(target);
-
-    if (blurWasWithinContainer && !this._isScrollingOnIe) {
-      const { activeItems } = this._store;
-      const hasHighlightedItems = activeItems.some(item => item.highlighted);
-      const blurActions = {
-        text: () => {
-          if (target === this.input.element) {
-            this.containerOuter.removeFocusState();
-            if (hasHighlightedItems) {
-              this.unhighlightAll();
-            }
-            this.hideDropdown(true);
-          }
-        },
-        'select-one': () => {
-          this.containerOuter.removeFocusState();
-          if (
-            target === this.input.element ||
-            (target === this.containerOuter.element && !this._canSearch)
-          ) {
-            this.hideDropdown(true);
-          }
-        },
-        'select-multiple': () => {
-          if (target === this.input.element) {
-            this.containerOuter.removeFocusState();
-            this.hideDropdown(true);
-            if (hasHighlightedItems) {
-              this.unhighlightAll();
-            }
-          }
-        },
-      };
-
-      blurActions[this.passedElement.element.type]();
-    } else {
-      // On IE11, clicking the scollbar blurs our input and thus
-      // closes the dropdown. To stop this, we refocus our input
-      // if we know we are on IE *and* are scrolling.
-      this._isScrollingOnIe = false;
-      this.input.element.focus();
-    }
-  }
-
-  _onFormReset() {
-    this._store.dispatch(resetTo(this._initialState));
-  }
-
   _highlightChoice(el = null) {
     const choices = Array.from(
       this.dropdown.element.querySelectorAll('[data-choice-selectable]'),
@@ -1726,11 +1726,11 @@ class Choices {
         passedEl = choices[this._highlightPosition];
       } else {
         // Otherwise highlight the option before
-        passedEl = choices[choices.length - 1];
+        passedEl = choices.pop();
       }
 
       if (!passedEl) {
-        passedEl = choices[0];
+        passedEl = choices.shift();
       }
     }
 
@@ -1798,7 +1798,7 @@ class Choices {
       value: passedValue,
       label: passedLabel,
       customProperties: passedCustomProperties,
-      groupValue: group && group.value ? group.value : undefined,
+      groupValue: group?.value,
       keyCode: passedKeyCode,
     });
 
@@ -1815,7 +1815,7 @@ class Choices {
 
     this._store.dispatch(removeItem(id, choiceId));
 
-    if (group && group.value) {
+    if (group?.value) {
       this.passedElement.triggerEvent(EVENTS.removeItem, {
         id,
         value,
@@ -1850,7 +1850,7 @@ class Choices {
     // Generate unique id
     const { choices } = this._store;
     const choiceLabel = label || value;
-    const choiceId = choices ? choices.length + 1 : 1;
+    const choiceId = choices?.length || 0 + 1;
     const choiceElementId = `${this._baseId}-${this._idNames.itemChoice}-${choiceId}`;
 
     this._store.dispatch(
@@ -1884,14 +1884,13 @@ class Choices {
       ? group.choices
       : Array.from(group.getElementsByTagName('OPTION'));
     const groupId = id || Math.floor(new Date().valueOf() * Math.random());
-    const isDisabled = group.disabled ? group.disabled : false;
+    const isDisabled = !!group.disabled;
 
     if (groupChoices) {
       this._store.dispatch(addGroup(group.label, groupId, true, isDisabled));
 
       const addGroupChoices = choice => {
-        const isOptDisabled =
-          choice.disabled || (choice.parentNode && choice.parentNode.disabled);
+        const isOptDisabled = choice.disabled || choice.parentNode?.disabled;
 
         this._addChoice({
           value: choice[valueKey],
@@ -1926,10 +1925,7 @@ class Choices {
     const { callbackOnCreateTemplates } = this.config;
     let userTemplates = {};
 
-    if (
-      callbackOnCreateTemplates &&
-      typeof callbackOnCreateTemplates === 'function'
-    ) {
+    if (typeof callbackOnCreateTemplates === 'function') {
       userTemplates = callbackOnCreateTemplates.call(this, strToEl);
     }
 
@@ -2026,13 +2022,10 @@ class Choices {
     this._isSearching = false;
     this._setLoading(true);
 
-    if (passedGroups && passedGroups.length) {
+    if (passedGroups?.length) {
       // If we have a placeholder option
       const placeholderChoice = this.passedElement.placeholderOption;
-      if (
-        placeholderChoice &&
-        placeholderChoice.parentNode.tagName === 'SELECT'
-      ) {
+      if (placeholderChoice?.parentNode?.tagName === 'SELECT') {
         this._addChoice({
           value: placeholderChoice.value,
           label: placeholderChoice.innerHTML,
@@ -2059,9 +2052,9 @@ class Choices {
           value: o.value,
           label: o.innerHTML,
           selected: o.selected,
-          disabled: o.disabled || o.parentNode.disabled,
+          disabled: o.disabled || o.parentNode?.disabled,
           placeholder: o.hasAttribute('placeholder'),
-          customProperties: o.getAttribute('data-custom-properties'),
+          customProperties: o.dataset.customProperties,
         });
       });
 
@@ -2121,8 +2114,7 @@ class Choices {
 
   _addPredefinedItems() {
     const handlePresetItem = item => {
-      const itemType = getType(item);
-      if (itemType === 'Object' && item.value) {
+      if (item?.value) {
         this._addItem({
           value: item.value,
           label: item.label,
@@ -2130,7 +2122,7 @@ class Choices {
           customProperties: item.customProperties,
           placeholder: item.placeholder,
         });
-      } else if (itemType === 'String') {
+      } else if (typeof item === 'string') {
         this._addItem({
           value: item,
         });
@@ -2141,10 +2133,24 @@ class Choices {
   }
 
   _setChoiceOrItem(item) {
-    const itemType = getType(item).toLowerCase();
-    const handleType = {
-      object: () => {
-        if (!item.value) {
+    switch (typeof item) {
+      case 'string':
+        if (!this._isTextElement) {
+          this._addChoice({
+            value: item,
+            label: item,
+            isSelected: true,
+            isDisabled: false,
+          });
+        } else {
+          this._addItem({
+            value: item,
+          });
+        }
+        break;
+
+      default:
+        if (!item?.value) {
           return;
         }
 
@@ -2168,24 +2174,8 @@ class Choices {
             placeholder: item.placeholder,
           });
         }
-      },
-      string: () => {
-        if (!this._isTextElement) {
-          this._addChoice({
-            value: item,
-            label: item,
-            isSelected: true,
-            isDisabled: false,
-          });
-        } else {
-          this._addItem({
-            value: item,
-          });
-        }
-      },
-    };
-
-    handleType[itemType]();
+        break;
+    }
   }
 
   _findAndSelectChoiceByValue(val) {

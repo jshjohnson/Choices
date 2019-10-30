@@ -2,8 +2,7 @@ import { SCROLLING_SPEED } from '../constants';
 
 export default class List {
   constructor({ element }) {
-    Object.assign(this, { element });
-
+    this.element = element;
     this.scrollPos = this.element.scrollTop;
     this.height = this.element.offsetHeight;
   }

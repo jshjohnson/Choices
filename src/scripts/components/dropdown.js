@@ -1,8 +1,10 @@
 export default class Dropdown {
-  constructor({ element, type, classNames }) {
-    Object.assign(this, { element, type, classNames });
+  isActive = false;
 
-    this.isActive = false;
+  constructor({ element, type, classNames }) {
+    this.type = type;
+    this.element = element;
+    this.classNames = classNames;
   }
 
   /**
