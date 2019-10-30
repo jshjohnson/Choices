@@ -1,0 +1,39 @@
+name: Release Management
+
+on:
+  push:
+    # branches to consider in the event; optional, defaults to all
+    branches:
+      - master
+
+jobs:
+  update-draft-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: toolmantim/release-drafter@v5.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        name-template: 'v$NEXT_PATCH_VERSION 🌈'
+        tag-template: 'v$NEXT_PATCH_VERSION'
+        categories:
+          - title: '🚨 Breaking changes'
+            labels:
+              - 'breaking'
+              - 'major'
+          - title: '🚀 Features'
+            labels:
+              - 'feature'
+              - 'enhancement'
+              - 'minor'
+          - title: '🐛 Bug Fixes'
+            labels:
+              - 'fix'
+              - 'bugfix'
+              - 'bug'
+          - title: '🔧 Maintenance'
+            labels:
+              - 'chore'
+              - 'tooling'
+        change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+        template: |
+          $CHANGES
