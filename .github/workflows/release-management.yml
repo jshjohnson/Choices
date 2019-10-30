@@ -30,6 +30,7 @@ jobs:
             labels:
               - 'chore'
               - 'housekeeping'
+              - 'refactor'
         change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
         template: |
           $CHANGES
