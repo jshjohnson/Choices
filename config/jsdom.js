@@ -42,6 +42,7 @@ global.HTMLSelectElement = window.HTMLSelectElement;
 global.HTMLInputElement = window.HTMLInputElement;
 global.DocumentFragment = window.DocumentFragment;
 global.requestAnimationFrame = window.requestAnimationFrame;
+window.matchMedia = () => true;
 
 copyProps(window, global);
 

@@ -1,4 +1,4 @@
-import { getWindowHeight, wrap } from '../lib/utils';
+import { wrap } from '../lib/utils';
 
 export default class Container {
   constructor({ element, type, classNames, position }) {
@@ -38,7 +38,7 @@ export default class Container {
    * @param {Number} dropdownPos
    * @returns
    */
-  shouldFlip(dropdownPos, windowHeight = getWindowHeight()) {
+  shouldFlip(dropdownPos) {
     if (dropdownPos === undefined) {
       return false;
     }
@@ -47,7 +47,8 @@ export default class Container {
     // greater than the window height flip the dropdown.
     let shouldFlip = false;
     if (this.position === 'auto') {
-      shouldFlip = dropdownPos >= windowHeight;
+      shouldFlip = !window.matchMedia(`(min-height: ${dropdownPos + 1}px)`)
+        .matches;
     } else if (this.position === 'top') {
       shouldFlip = true;
     }

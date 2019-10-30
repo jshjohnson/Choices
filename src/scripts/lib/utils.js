@@ -130,19 +130,6 @@ export const dispatchEvent = (element, type, customArgs = null) => {
   return element.dispatchEvent(event);
 };
 
-export const getWindowHeight = () => {
-  const { body } = document;
-  const html = document.documentElement;
-
-  return Math.max(
-    body.scrollHeight,
-    body.offsetHeight,
-    html.clientHeight,
-    html.scrollHeight,
-    html.offsetHeight,
-  );
-};
-
 export const isIE11 = userAgent =>
   !!(userAgent.match(/Trident/) && userAgent.match(/rv[ :]11/));
 

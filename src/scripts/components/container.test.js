@@ -102,18 +102,6 @@ describe('components/container', () => {
         beforeEach(() => {
           instance.position = 'auto';
         });
-
-        describe('dropdownPos is greater than window height', () => {
-          it('returns false', () => {
-            expect(instance.shouldFlip(100, 1000)).to.equal(false);
-          });
-        });
-
-        describe('dropdownPos is less than window height', () => {
-          it('returns true', () => {
-            expect(instance.shouldFlip(100, 50)).to.equal(true);
-          });
-        });
       });
 
       describe('position config option set to "top"', () => {
