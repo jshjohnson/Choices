@@ -59,6 +59,31 @@ class Choices {
     });
   }
 
+  /** @type {import('../../types/index').Choices.Options} */
+  config;
+
+  initialised = false;
+
+  _store = new Store();
+
+  _initialState = {};
+
+  _currentState = {};
+
+  _prevState = {};
+
+  _currentValue = '';
+
+  _isScrollingOnIe = false;
+
+  _highlightPosition = 0;
+
+  _wasTap = true;
+
+  _idNames = {
+    itemChoice: 'item-choice',
+  };
+
   /**
    * @param {string | HTMLInputElement | HTMLSelectElement} element
    * @param {Partial<import('../../types/index').Choices.Options>} userConfig
@@ -130,17 +155,7 @@ class Choices {
       });
     }
 
-    this.initialised = false;
-
-    this._store = new Store();
-    this._initialState = {};
-    this._currentState = {};
-    this._prevState = {};
-    this._currentValue = '';
     this._canSearch = this.config.searchEnabled;
-    this._isScrollingOnIe = false;
-    this._highlightPosition = 0;
-    this._wasTap = true;
     this._placeholderValue = this._generatePlaceholderValue();
     this._baseId = generateId(this.passedElement.element, 'choices-');
     /**
@@ -160,9 +175,7 @@ class Choices {
         this._direction = elementDirection;
       }
     }
-    this._idNames = {
-      itemChoice: 'item-choice',
-    };
+
     // Assign preset choices from passed object
     this._presetChoices = this.config.choices;
     // Assign preset items from passed object first
@@ -242,11 +255,8 @@ class Choices {
 
     this.initialised = true;
 
-    const { callbackOnInit } = this.config;
-    // Run callback if it is a function
-    if (callbackOnInit && typeof callbackOnInit === 'function') {
-      callbackOnInit.call(this);
-    }
+    // Run callback if defined
+    this.config.callbackOnInit?.call(this);
   }
 
   destroy() {
@@ -702,10 +712,7 @@ class Choices {
     }
 
     // If we have choices to show
-    if (
-      choiceListFragment.childNodes &&
-      choiceListFragment.childNodes.length > 0
-    ) {
+    if (choiceListFragment.childNodes?.length > 0) {
       const { activeItems } = this._store;
       const canAddItem = this._canAddItem(activeItems, this.input.value);
 
@@ -954,13 +961,13 @@ class Choices {
       return;
     }
 
-    const passedId = element.getAttribute('data-id');
+    const { id } = element.dataset;
 
     // We only want to select one item with a click
     // so we deselect any items that aren't the target
     // unless shift is being pressed
     activeItems.forEach(item => {
-      if (item.id === parseInt(passedId, 10) && !item.highlighted) {
+      if (item.id === parseInt(id, 10) && !item.highlighted) {
         this.highlightItem(item);
       } else if (!hasShiftKey && item.highlighted) {
         this.unhighlightItem(item);
@@ -983,8 +990,7 @@ class Choices {
     if (!choice) {
       return;
     }
-    const passedKeyCode =
-      activeItems[0] && activeItems[0].keyCode ? activeItems[0].keyCode : null;
+    const passedKeyCode = activeItems[0]?.keyCode ?? null;
     const hasActiveDropdown = this.dropdown.isActive;
 
     // Update choice keyCode
@@ -1093,7 +1099,7 @@ class Choices {
     const hasUnactiveChoices = choices.some(option => !option.active);
 
     // Check that we have a value to search and the input was an alphanumeric character
-    if (value && value.length >= searchFloor) {
+    if (value?.length >= searchFloor) {
       const resultCount = searchChoices ? this._searchChoices(value) : 0;
       // Trigger search event
       this.passedElement.triggerEvent(EVENTS.search, {
@@ -1243,39 +1249,21 @@ class Choices {
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
     documentElement.removeEventListener('mousedown', this._onMouseDown, true);
 
-    documentElement.removeEventListener('keyup', this._onKeyUp, {
-      passive: true,
-    });
-    documentElement.removeEventListener('click', this._onClick, {
-      passive: true,
-    });
-    documentElement.removeEventListener('touchmove', this._onTouchMove, {
-      passive: true,
-    });
-    documentElement.removeEventListener('mouseover', this._onMouseOver, {
-      passive: true,
-    });
+    documentElement.removeEventListener('keyup', this._onKeyUp);
+    documentElement.removeEventListener('click', this._onClick);
+    documentElement.removeEventListener('touchmove', this._onTouchMove);
+    documentElement.removeEventListener('mouseover', this._onMouseOver);
 
     if (this._isSelectOneElement) {
-      this.containerOuter.element.removeEventListener('focus', this._onFocus, {
-        passive: true,
-      });
-      this.containerOuter.element.removeEventListener('blur', this._onBlur, {
-        passive: true,
-      });
+      this.containerOuter.element.removeEventListener('focus', this._onFocus);
+      this.containerOuter.element.removeEventListener('blur', this._onBlur);
     }
 
-    this.input.element.removeEventListener('focus', this._onFocus, {
-      passive: true,
-    });
-    this.input.element.removeEventListener('blur', this._onBlur, {
-      passive: true,
-    });
+    this.input.element.removeEventListener('focus', this._onFocus);
+    this.input.element.removeEventListener('blur', this._onBlur);
 
     if (this.input.element.form) {
-      this.input.element.form.removeEventListener('reset', this._onFormReset, {
-        passive: true,
-      });
+      this.input.element.form.removeEventListener('reset', this._onFormReset);
     }
 
     this.input.removeEventListeners();
@@ -1311,7 +1299,7 @@ class Choices {
     const hasCtrlDownKeyPressed = ctrlKey || metaKey;
 
     // If a user is typing and the dropdown is not active
-    if (!this._isTextElement && /[a-zA-Z0-9-_ ]/.test(keyString)) {
+    if (!this._isTextElement && /[\w -]/.test(keyString)) {
       this.showDropdown();
     }
 
