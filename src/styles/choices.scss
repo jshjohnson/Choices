@@ -217,7 +217,7 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
 }
 
 .#{$choices-selector}__list--dropdown {
-  display: none;
+  visibility: hidden;
   z-index: 1;
   position: absolute;
   width: 100%;
@@ -229,8 +229,9 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
   border-bottom-right-radius: $choices-border-radius;
   overflow: hidden;
   word-break: break-all;
+  will-change: visibility;
   &.is-active {
-    display: block;
+    visibility: visible;
   }
   .is-open & {
     border-color: darken($choices-keyline-color, 15%);
