@@ -1,16 +1,8 @@
 export const getRandomNumber = (min, max) =>
   Math.floor(Math.random() * (max - min) + min);
 
-export const generateChars = length => {
-  let chars = '';
-
-  for (let i = 0; i < length; i++) {
-    const randomChar = getRandomNumber(0, 36);
-    chars += randomChar.toString(36);
-  }
-
-  return chars;
-};
+export const generateChars = length =>
+  Array.from({ length }, () => getRandomNumber(0, 36).toString(36)).join('');
 
 export const generateId = (element, prefix) => {
   let id =
@@ -48,15 +40,15 @@ export const getAdjacentEl =
   /**
    * @param {Element} startEl
    * @param {string} selector
-   * @param {'next' | 'previous'} direction
+   * @param {1 | -1} direction
    * @returns {Element | undefined}
    */
-  (startEl, selector, direction) => {
+  (startEl, selector, direction = 1) => {
     if (!(startEl instanceof Element) || typeof selector !== 'string') {
       return undefined;
     }
 
-    const prop = `${direction}ElementSibling`;
+    const prop = `${direction > 0 ? 'next' : 'previous'}ElementSibling`;
 
     let sibling = startEl[prop];
     while (sibling) {
