@@ -1,4 +1,4 @@
-name: Lint
+name: Code linting
 
 on:
   pull_request:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   lint:
+    name: lint changed files and bundle
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1

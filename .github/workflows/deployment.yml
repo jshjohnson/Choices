@@ -1,12 +1,12 @@
-name: Publish Package
+name: Publish and deploy
 
 on:
-  push:
-    branches:
-      - master
+  release:
+    types: [published]
 
 jobs:
-  build:
+  build-and-test:
+    name: build and run all tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -46,6 +46,7 @@ jobs:
           CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
 
   publish-npm:
+    name: publish to npm
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -65,6 +66,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
   deploy-gh-pages:
+    name: publish to github pages
     needs: publish-npm
     runs-on: ubuntu-latest
     steps:

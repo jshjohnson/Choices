@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Unit tests
 
 on:
   pull_request:
@@ -9,6 +9,7 @@ on:
 
 jobs:
   test-unit:
+    name: unit tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
