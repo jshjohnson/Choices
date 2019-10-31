@@ -1,5 +1,6 @@
-name-template: 'v$NEXT_PATCH_VERSION 🌈'
+name-template: 'Version  🌈'
 tag-template: 'v$NEXT_PATCH_VERSION'
+sort-direction: descending
 categories:
   - title: '🚨 Breaking changes'
     labels:
@@ -19,3 +20,4 @@ categories:
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 template: |
   $CHANGES
+  $CONTRIBUTORS
