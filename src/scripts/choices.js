@@ -550,19 +550,15 @@ class Choices {
       this.clearChoices();
     }
 
-    if (!Array.isArray(choicesArrayOrFetcher)) {
-      if (typeof choicesArrayOrFetcher !== 'function') {
-        throw new TypeError(
-          `.setChoices must be called either with array of choices with a function resulting into Promise of array of choices`,
-        );
-      }
-
-      // it's a choices fetcher
-      requestAnimationFrame(() => this._handleLoadingState(true));
+    if (typeof choicesArrayOrFetcher === 'function') {
+      // it's a choices fetcher function
       const fetcher = choicesArrayOrFetcher(this);
-      if (typeof fetcher === 'object' && typeof fetcher.then === 'function') {
+      if (typeof Promise === 'function' && fetcher instanceof Promise) {
         // that's a promise
-        return fetcher
+        // eslint-disable-next-line compat/compat
+        return new Promise(resolve => requestAnimationFrame(resolve))
+          .then(() => this._handleLoadingState(true))
+          .then(() => fetcher)
           .then(data => this.setChoices(data, value, label, replaceChoices))
           .catch(err => {
             if (!this.config.silent) {
@@ -572,6 +568,7 @@ class Choices {
           .then(() => this._handleLoadingState(false))
           .then(() => this);
       }
+
       // function returned something else than promise, let's check if it's an array of choices
       if (!Array.isArray(fetcher)) {
         throw new TypeError(
@@ -581,6 +578,12 @@ class Choices {
 
       // recursion with results, it's sync and choices were cleared already
       return this.setChoices(fetcher, value, label, false);
+    }
+
+    if (!Array.isArray(choicesArrayOrFetcher)) {
+      throw new TypeError(
+        `.setChoices must be called either with array of choices with a function resulting into Promise of array of choices`,
+      );
     }
 
     this.containerOuter.removeLoadingState();
