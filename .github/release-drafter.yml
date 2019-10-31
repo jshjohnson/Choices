@@ -1,4 +1,4 @@
-name-template: 'Version  🌈'
+name-template: 'Draft (next release)'
 tag-template: 'v$NEXT_PATCH_VERSION'
 sort-direction: descending
 categories:
