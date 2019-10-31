@@ -34,8 +34,10 @@ jobs:
         env:
           CI: true
           TERM: xterm-256color
+          NODE_ENV: production # prevent watching
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           DEBUG: commit-info,cypress:server:record
           # https://docs.cypress.io/guides/guides/continuous-integration.html#Environment-variables
           COMMIT_INFO_BRANCH: ${{ github.head_ref }}
-          NODE_ENV: production # prevent watching
+          COMMIT_INFO_AUTHOR: ${{ github.event.sender.login }}
+          COMMIT_INFO_SHA: ${{ github.event.after }}
