@@ -1,10 +1,12 @@
-const puppeteer = require('puppeteer');
-const path = require('path');
 const { readFileSync, writeFileSync, mkdirSync } = require('fs');
+const path = require('path');
+const { once } = require('events');
+
+const puppeteer = require('puppeteer');
 const pixelmatch = require('pixelmatch');
 const { PNG } = require('pngjs');
 
-const launchServer = require('./lib/run-server');
+const server = require('../../server');
 
 async function test() {
   const browser = await puppeteer.launch();
@@ -12,7 +14,8 @@ async function test() {
   let error;
   let pixelDifference;
 
-  const server = await launchServer();
+  if (!server.listening) await once(server, 'listening');
+
   try {
     page.on('console', msg => {
       if (msg.type() === 'error') throw new Error(msg.text());
@@ -29,7 +32,7 @@ async function test() {
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('ArrowDown');
 
-    const snapshotName = `puppeteer-${process.platform}.png`
+    const snapshotName = `puppeteer-${process.platform}.png`;
     const artifactsPath = 'screenshot';
     mkdirSync(artifactsPath, { recursive: true });
     const imageBuffer = await page.screenshot({
@@ -40,12 +43,7 @@ async function test() {
     // compare with snapshot
     const screenshot = PNG.sync.read(imageBuffer);
     const snapshot = PNG.sync.read(
-      readFileSync(
-        path.resolve(
-          __dirname,
-          `./__snapshots__/${snapshotName}`,
-        ),
-      ),
+      readFileSync(path.resolve(__dirname, `./__snapshots__/${snapshotName}`)),
     );
     const { width, height } = screenshot;
     const diff = new PNG({ width, height });
@@ -64,8 +62,10 @@ async function test() {
     console.error(err);
     error = err;
   } finally {
-    await browser.close();
-    await new Promise(resolve => server.close(resolve));
+    await Promise.all([
+      browser.close(),
+      new Promise(resolve => server.close(resolve)),
+    ]);
   }
 
   if (pixelDifference > 200) {
@@ -76,7 +76,6 @@ async function test() {
   }
   if (error) process.exit(1);
 }
-
 
 process.on('unhandledRejection', err => {
   console.error(err);

@@ -2,8 +2,8 @@
 const express = require('express');
 const path = require('path');
 
-const PORT = 3001;
-const DIST_DIR = path.join(__dirname, 'public');
+const PORT = process.env.PORT || 3001;
+const DIST_DIR = path.resolve(__dirname, 'public');
 
 const app = express();
 
@@ -51,7 +51,7 @@ const server = app.listen(PORT, err => {
     console.log(err);
   }
 
-  console.log(`Listening at http://localhost:${PORT} 👂`);
+  console.log(`Listening at http://localhost:${server.address().port} 👂`);
 });
 
 process.on('SIGTERM', () => {
@@ -70,3 +70,5 @@ process.on('SIGTERM', () => {
     process.exit(0);
   }
 });
+
+module.exports = server;

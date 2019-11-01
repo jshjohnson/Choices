@@ -1,8 +1,9 @@
 const path = require('path');
 const { readFileSync, writeFileSync, mkdirSync } = require('fs');
+const { once } = require('events');
+
 const pixelmatch = require('pixelmatch');
 const { PNG } = require('pngjs');
-
 const {
   Builder,
   By,
@@ -12,7 +13,7 @@ const {
   logging,
 } = require('selenium-webdriver');
 
-const launchServer = require('./lib/run-server')
+const server = require('../../server');
 
 async function test() {
   let pixelDifference;
@@ -24,8 +25,10 @@ async function test() {
       capabilities = Capabilities.ie();
       capabilities.set('ignoreProtectedModeSettings', true);
       capabilities.set('ignoreZoomSetting', true);
-      capabilities.set('ie.enableFullPageScreenshot', true);
-      capabilities.set('ie.ensureCleanSession', true);
+      capabilities.set('ie.options', {
+        enableFullPageScreenshot: true,
+        ensureCleanSession: true,
+      });
       break;
 
     case 'edge':
@@ -51,7 +54,9 @@ async function test() {
   }
 
   let driver = await new Builder().withCapabilities(capabilities).build();
-  const server = await launchServer();
+
+  if (!server.listening) await once(server, 'listening');
+
   try {
     await driver.get(`http://127.0.0.1:${server.address().port}`);
 
@@ -59,8 +64,8 @@ async function test() {
     await driver.wait(
       until.elementLocated(By.css('#reset-multiple ~ .choices__list')),
       10000,
-      'waiting for all Choices instances to init'
-    )
+      'waiting for all Choices instances to init',
+    );
 
     // Resize window
     await driver
@@ -92,12 +97,7 @@ async function test() {
     // compare with snapshot
     const screenshot = PNG.sync.read(imageBuffer);
     const snapshot = PNG.sync.read(
-      readFileSync(
-        path.resolve(
-          __dirname,
-          `./__snapshots__/${snapshotName}`,
-        ),
-      ),
+      readFileSync(path.resolve(__dirname, `./__snapshots__/${snapshotName}`)),
     );
     const { width, height } = screenshot;
     const diff = new PNG({ width, height });
@@ -130,8 +130,10 @@ async function test() {
     console.error(err);
     error = err;
   } finally {
-    await driver.quit();
-    await new Promise(resolve => server.close(resolve));
+    await Promise.all([
+      driver.quit(),
+      new Promise(resolve => server.close(resolve)),
+    ]);
   }
   if (pixelDifference > 200) {
     console.error(

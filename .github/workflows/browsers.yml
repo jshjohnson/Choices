@@ -79,6 +79,9 @@ jobs:
       - run: node .github/actions-scripts/selenium.js
         env:
           BROWSER: ${{ matrix.browser }}
+          PORT: 0
+          NODE_ENV: production # prevent watching
+
       - uses: actions/upload-artifact@master
         if: failure()
         with:
@@ -102,6 +105,10 @@ jobs:
           HUSKY_SKIP_INSTALL: true
       - run: npm i --no-optional --no-audit puppeteer pixelmatch pngjs
       - run: node .github/actions-scripts/puppeteer.js
+        env:
+          PORT: 0
+          NODE_ENV: production # prevent watching
+
       - uses: actions/upload-artifact@master
         if: failure()
         with:
