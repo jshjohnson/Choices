@@ -458,6 +458,7 @@ describe('Choices - select one', () => {
           cy.get('[data-test-hook=remote-data]')
             .find('.choices__list--single')
             .children()
+            .should('have.length', 1)
             .first()
             .should('have.class', 'choices__placeholder')
             .and($placeholder => {
