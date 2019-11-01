@@ -39,16 +39,19 @@ export const TEMPLATES = /** @type {Templates} */ ({
 
     return div;
   },
+
   containerInner({ containerInner }) {
     return Object.assign(document.createElement('div'), {
       className: containerInner,
     });
   },
+
   itemList({ list, listSingle, listItems }, isSelectOneElement) {
     return Object.assign(document.createElement('div'), {
       className: `${list} ${isSelectOneElement ? listSingle : listItems}`,
     });
   },
+
   placeholder({ placeholder }, value) {
     return Object.assign(document.createElement('div'), {
       className: placeholder,
@@ -93,6 +96,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
     if (isPlaceholder) {
       div.classList.add(placeholder);
     }
+
     div.classList.add(highlighted ? highlightedState : itemSelectable);
 
     if (removeItemButton) {
@@ -117,6 +121,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
 
     return div;
   },
+
   choiceList({ list }, isSelectOneElement) {
     const div = Object.assign(document.createElement('div'), {
       className: list,
@@ -196,6 +201,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
 
     return div;
   },
+
   input({ input, inputCloned }, placeholderValue) {
     const inp = Object.assign(document.createElement('input'), {
       type: 'text',
@@ -211,6 +217,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
 
     return inp;
   },
+
   dropdown({ list, listDropdown }) {
     const div = document.createElement('div');
 
@@ -219,6 +226,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
 
     return div;
   },
+
   notice({ item, itemChoice, noResults, noChoices }, innerHTML, type = '') {
     const classes = [item, itemChoice];
 
@@ -233,6 +241,7 @@ export const TEMPLATES = /** @type {Templates} */ ({
       className: classes.join(' '),
     });
   },
+
   option({ label, value, customProperties, active, disabled }) {
     const opt = new Option(label, value, false, active);
 
