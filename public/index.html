@@ -564,7 +564,7 @@
             editItems: true,
             maxItemCount: 5,
             removeItemButton: true,
-          },
+          }
         );
 
         var textUniqueVals = new Choices('#choices-text-unique-values', {
@@ -612,7 +612,7 @@
           {
             prependValue: 'item-',
             appendValue: '-' + Date.now(),
-          },
+          }
         ).removeActiveItems();
 
         var textPresetVal = new Choices('#choices-text-preset-values', {
@@ -629,7 +629,7 @@
         });
 
         var multipleDefault = new Choices(
-          document.getElementById('choices-multiple-groups'),
+          document.getElementById('choices-multiple-groups')
         );
 
         var multipleFetch = new Choices('#choices-multiple-remote-fetch', {
@@ -638,7 +638,7 @@
           maxItemCount: 5,
         }).setChoices(function() {
           return fetch(
-            'https://api.discogs.com/artists/55980/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
+            'https://api.discogs.com/artists/55980/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW'
           )
             .then(function(response) {
               return response.json();
@@ -654,7 +654,7 @@
           '#choices-multiple-remove-button',
           {
             removeItemButton: true,
-          },
+          }
         );
 
         /* Use label on event */
@@ -673,7 +673,7 @@
           ],
           'value',
           'label',
-          false,
+          false
         );
 
         choicesSelect.passedElement.element.addEventListener(
@@ -681,7 +681,7 @@
           function(event) {
             document.getElementById('message').innerHTML =
               'You just added "' + event.detail.label + '"';
-          },
+          }
         );
 
         choicesSelect.passedElement.element.addEventListener(
@@ -689,7 +689,7 @@
           function(event) {
             document.getElementById('message').innerHTML =
               'You just removed "' + event.detail.label + '"';
-          },
+          }
         );
 
         var singleFetch = new Choices('#choices-single-remote-fetch', {
@@ -697,7 +697,7 @@
         })
           .setChoices(function() {
             return fetch(
-              'https://api.discogs.com/artists/391170/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
+              'https://api.discogs.com/artists/391170/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW'
             )
               .then(function(response) {
                 return response.json();
@@ -717,7 +717,7 @@
           searchPlaceholderValue: "Search for a Smiths' record",
         }).setChoices(function(callback) {
           return fetch(
-            'https://api.discogs.com/artists/83080/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW',
+            'https://api.discogs.com/artists/83080/releases?token=QBRmstCkwXEvCjTclCpumbtNwvVkEzGAdELXyRyW'
           )
             .then(function(res) {
               return res.json();
@@ -750,7 +750,7 @@
           ],
           'value',
           'label',
-          false,
+          false
         );
 
         var singlePresetOpts = new Choices('#choices-single-preset-options', {
@@ -779,7 +779,7 @@
             },
           ],
           'value',
-          'label',
+          'label'
         );
 
         var singleSelectedOpt = new Choices('#choices-single-selected-option', {
@@ -801,7 +801,7 @@
           '#choices-with-custom-props-via-html',
           {
             searchFields: ['label', 'value', 'customProperties'],
-          },
+          }
         );
 
         var singleNoSorting = new Choices('#choices-single-no-sorting', {
@@ -810,7 +810,7 @@
 
         var cities = new Choices(document.getElementById('cities'));
         var tubeStations = new Choices(
-          document.getElementById('tube-stations'),
+          document.getElementById('tube-stations')
         ).disable();
 
         cities.passedElement.element.addEventListener('change', function(e) {
@@ -838,7 +838,7 @@
                       String(
                         data.highlighted
                           ? classNames.highlightedState
-                          : classNames.itemSelectable,
+                          : classNames.itemSelectable
                       ) +
                       '"\
                   data-item\
@@ -859,7 +859,7 @@
                       String(data.label) +
                       '\
                 </div>\
-              ',
+              '
                   );
                 },
                 choice: function(classNames, data) {
@@ -874,7 +874,7 @@
                       String(
                         data.disabled
                           ? classNames.itemDisabled
-                          : classNames.itemSelectable,
+                          : classNames.itemSelectable
                       ) +
                       '"\
                   data-select-text="' +
@@ -885,7 +885,7 @@
                       String(
                         data.disabled
                           ? 'data-choice-disabled aria-disabled="true"'
-                          : 'data-choice-selectable',
+                          : 'data-choice-selectable'
                       ) +
                       '\
                   data-id="' +
@@ -896,7 +896,7 @@
                       '"\
                   ' +
                       String(
-                        data.groupId > 0 ? 'role="treeitem"' : 'role="option"',
+                        data.groupId > 0 ? 'role="treeitem"' : 'role="option"'
                       ) +
                       '\
                   >\
@@ -904,12 +904,12 @@
                       String(data.label) +
                       '\
                 </div>\
-              ',
+              '
                   );
                 },
               };
             },
-          },
+          }
         );
 
         var resetSimple = new Choices(document.getElementById('reset-simple'));
