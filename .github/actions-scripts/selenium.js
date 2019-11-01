@@ -24,6 +24,8 @@ async function test() {
       capabilities = Capabilities.ie();
       capabilities.set('ignoreProtectedModeSettings', true);
       capabilities.set('ignoreZoomSetting', true);
+      capabilities.set('ie.enableFullPageScreenshot', true);
+      capabilities.set('ie.ensureCleanSession', true);
       break;
 
     case 'edge':
