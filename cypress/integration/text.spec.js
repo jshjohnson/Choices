@@ -1,6 +1,6 @@
 describe('Choices - text element', () => {
   beforeEach(() => {
-    cy.visit('/text.html');
+    cy.visit('/text');
   });
 
   describe('scenarios', () => {

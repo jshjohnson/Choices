@@ -1,6 +1,6 @@
 describe('Choices - select multiple', () => {
   beforeEach(() => {
-    cy.visit('/select-multiple.html');
+    cy.visit('/select-multiple');
   });
 
   describe('scenarios', () => {
