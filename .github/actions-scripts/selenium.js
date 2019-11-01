@@ -58,7 +58,9 @@ async function test() {
     // wait for last choice to init
     await driver.wait(
       until.elementLocated(By.css('#reset-multiple ~ .choices__list')),
-    );
+      10000,
+      'waiting for all Choices instances to init'
+    )
 
     // Resize window
     await driver
@@ -128,8 +130,8 @@ async function test() {
     console.error(err);
     error = err;
   } finally {
-    driver.quit();
-    server.close();
+    await driver.quit();
+    await new Promise(resolve => server.close(resolve));
   }
   if (pixelDifference > 200) {
     console.error(
