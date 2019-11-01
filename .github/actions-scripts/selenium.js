@@ -126,8 +126,8 @@ async function test() {
     console.error(err);
     error = err;
   } finally {
-    await driver.quit();
-    await new Promise(resolve => server.close(resolve));
+    driver.quit();
+    server.close();
   }
   if (pixelDifference > 200) {
     console.error(
