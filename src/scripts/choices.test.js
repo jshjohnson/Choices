@@ -1133,7 +1133,7 @@ describe('choices', () => {
           const fetcher = async inst => {
             expect(inst).to.eq(choice);
             fetcherCalled = true;
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 800));
 
             return [
               { label: 'l1', value: 'v1', customProperties: 'prop1' },
