@@ -829,12 +829,18 @@ class Choices {
       rendererableChoices = choices.filter(choice => !choice.selected);
     }
 
-    /*
-      Remove placeholder choices as we don't want to display
-      them in the choice list
-    */
-    const normalChoices = rendererableChoices.filter(
-      choice => !choice.placeholder,
+    // Split array into placeholders and "normal" choices
+    const { placeholderChoices, normalChoices } = rendererableChoices.reduce(
+      (acc, choice) => {
+        if (choice.placeholder) {
+          acc.placeholderChoices.push(choice);
+        } else {
+          acc.normalChoices.push(choice);
+        }
+
+        return acc;
+      },
+      { placeholderChoices: [], normalChoices: [] },
     );
 
     // If sorting is enabled or the user is searching, filter choices
@@ -844,8 +850,10 @@ class Choices {
 
     let choiceLimit = rendererableChoices.length;
 
-    // Prepend placeholder
-    const sortedChoices = [...normalChoices];
+    // Prepend placeholeder
+    const sortedChoices = this._isSelectOneElement
+      ? [...placeholderChoices, ...normalChoices]
+      : normalChoices;
 
     if (this._isSearching) {
       choiceLimit = searchResultLimit;
