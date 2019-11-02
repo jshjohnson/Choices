@@ -1730,15 +1730,15 @@ describe('choices', () => {
 
           beforeEach(() => {
             sortFnStub = stub();
-            instance.config.sortFn = sortFnStub;
+            instance.config.sorter = sortFnStub;
             instance.config.shouldSort = true;
           });
 
           afterEach(() => {
-            instance.config.sortFn.reset();
+            instance.config.sorter.reset();
           });
 
-          it('sorts groups by config.sortFn', () => {
+          it('sorts groups by config.sorter', () => {
             expect(sortFnStub.called).to.equal(false);
             instance._createGroupsFragment(groups, choices);
             expect(sortFnStub.called).to.equal(true);
@@ -1750,12 +1750,12 @@ describe('choices', () => {
 
           beforeEach(() => {
             sortFnStub = stub();
-            instance.config.sortFn = sortFnStub;
+            instance.config.sorter = sortFnStub;
             instance.config.shouldSort = false;
           });
 
           afterEach(() => {
-            instance.config.sortFn.reset();
+            instance.config.sorter.reset();
           });
 
           it('does not sort groups', () => {

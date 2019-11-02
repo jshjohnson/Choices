@@ -784,7 +784,7 @@ class Choices {
 
     // If sorting is enabled, filter groups
     if (this.config.shouldSort) {
-      groups.sort(this.config.sortFn);
+      groups.sort(this.config.sorter);
     }
 
     groups.forEach(group => {
@@ -810,7 +810,7 @@ class Choices {
       searchResultLimit,
       renderChoiceLimit,
     } = this.config;
-    const filter = this._isSearching ? sortByScore : this.config.sortFn;
+    const filter = this._isSearching ? sortByScore : this.config.sorter;
     const appendChoice = choice => {
       const shouldRender =
         renderSelectedChoices === 'auto'
@@ -876,11 +876,11 @@ class Choices {
 
   _createItemsFragment(items, fragment = document.createDocumentFragment()) {
     // Create fragment to add elements to
-    const { shouldSortItems, sortFn, removeItemButton } = this.config;
+    const { shouldSortItems, sorter, removeItemButton } = this.config;
 
     // If sorting is enabled, filter items
     if (shouldSortItems && !this._isSelectOneElement) {
-      items.sort(sortFn);
+      items.sort(sorter);
     }
 
     if (this._isTextElement) {
@@ -2072,7 +2072,7 @@ class Choices {
       );
     } else {
       const passedOptions = this.passedElement.options;
-      const filter = this.config.sortFn;
+      const filter = this.config.sorter;
       const allChoices = this._presetChoices;
 
       // Create array of options from option elements

@@ -105,7 +105,7 @@ Or include Choices directly:
     resetScrollPosition: true,
     shouldSort: true,
     shouldSortItems: false,
-    sortFn: () => {...},
+    sorter: () => {...},
     placeholder: true,
     placeholderValue: null,
     searchPlaceholderValue: null,
@@ -408,7 +408,7 @@ new Choices(element, {
 
 **Usage:** Whether items should be sorted. If false, items will appear in the order they were selected.
 
-### sortFn
+### sorter
 
 **Type:** `Function` **Default:** sortByAlpha
 
@@ -421,7 +421,7 @@ new Choices(element, {
 ```js
 // Sorting via length of label from largest to smallest
 const example = new Choices(element, {
-  sortFn: function(a, b) {
+  sorter: function(a, b) {
     return b.label.length - a.label.length;
   },
 };

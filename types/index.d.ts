@@ -565,7 +565,7 @@ declare namespace Choices {
      * ```
      * // Sorting via length of label from largest to smallest
      * const example = new Choices(element, {
-     *   sortFilter: function(a, b) {
+     *   sorter: function(a, b) {
      *     return b.label.length - a.label.length;
      *   },
      * };
@@ -573,7 +573,7 @@ declare namespace Choices {
      *
      * @default sortByAlpha
      */
-    sortFilter: (current: Choice, next: Choice) => number;
+    sorter: (current: Choice, next: Choice) => number;
 
     /**
      * Whether the input should show a placeholder. Used in conjunction with `placeholderValue`. If `placeholder` is set to true and no value is passed to `placeholderValue`, the passed input's placeholder attribute will be used as the placeholder value.
