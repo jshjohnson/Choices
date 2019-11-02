@@ -23,17 +23,29 @@ declare namespace Choices {
   }
 
   interface Choice {
+    id?: string;
     customProperties?: Record<string, any>;
     disabled?: boolean;
     active?: boolean;
     elementId?: string;
     groupId?: string;
-    id?: string;
     keyCode?: number;
     label: string;
     placeholder?: boolean;
     selected?: boolean;
     value: string;
+  }
+
+  interface Group {
+    id?: string;
+    active?: boolean;
+    disabled?: boolean;
+    value: any;
+  }
+
+  interface Item extends Choice {
+    choiceId?: string;
+    keyCode?: number;
   }
 
   /**
@@ -149,18 +161,6 @@ declare namespace Choices {
      * Arguments: el is the choice.passedElement that was affected.
      */
     highlightChoice: CustomEvent<{ el: Choices.passedElement }>;
-  }
-
-  interface Group {
-    active?: boolean;
-    disabled?: boolean;
-    id?: string;
-    value: any;
-  }
-
-  interface Item extends Choice {
-    choiceId?: string;
-    keyCode?: number;
   }
 
   interface Templates {

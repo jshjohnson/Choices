@@ -218,13 +218,6 @@ describe('reducers/store', () => {
           expect(actualResponse).to.eql(expectedResponse);
         });
       });
-
-      describe('passing no id', () => {
-        it('returns false', () => {
-          const actualResponse = instance.getChoiceById();
-          expect(actualResponse).to.equal(false);
-        });
-      });
     });
 
     describe('placeholderChoice getter', () => {

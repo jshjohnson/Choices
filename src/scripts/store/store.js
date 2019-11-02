@@ -1,6 +1,12 @@
 import { createStore } from 'redux';
 import rootReducer from '../reducers/index';
 
+/**
+ * @typedef {import('../../../types/index').Choices.Choice} Choice
+ * @typedef {import('../../../types/index').Choices.Group} Group
+ * @typedef {import('../../../types/index').Choices.Item} Item
+ */
+
 export default class Store {
   constructor() {
     this._store = createStore(
@@ -30,7 +36,7 @@ export default class Store {
 
   /**
    * Get store object (wrapping Redux method)
-   * @return {Object} State
+   * @return {object} State
    */
   get state() {
     return this._store.getState();
@@ -38,7 +44,7 @@ export default class Store {
 
   /**
    * Get items from store
-   * @return {Array} Item objects
+   * @return {Item[]} Item objects
    */
   get items() {
     return this.state.items;
@@ -46,7 +52,7 @@ export default class Store {
 
   /**
    * Get active items from store
-   * @return {Array} Item objects
+   * @return {Item[]} Item objects
    */
   get activeItems() {
     return this.items.filter(item => item.active === true);
@@ -54,7 +60,7 @@ export default class Store {
 
   /**
    * Get highlighted items from store
-   * @return {Array} Item objects
+   * @return {Item[]} Item objects
    */
   get highlightedActiveItems() {
     return this.items.filter(item => item.active && item.highlighted);
@@ -62,7 +68,7 @@ export default class Store {
 
   /**
    * Get choices from store
-   * @return {Array} Option objects
+   * @return {Choice[]} Option objects
    */
   get choices() {
     return this.state.choices;
@@ -70,18 +76,15 @@ export default class Store {
 
   /**
    * Get active choices from store
-   * @return {Array} Option objects
+   * @return {Choice[]} Option objects
    */
   get activeChoices() {
-    const { choices } = this;
-    const values = choices.filter(choice => choice.active === true);
-
-    return values;
+    return this.choices.filter(choice => choice.active === true);
   }
 
   /**
    * Get selectable choices from store
-   * @return {Array} Option objects
+   * @return {Choice[]} Option objects
    */
   get selectableChoices() {
     return this.choices.filter(choice => choice.disabled !== true);
@@ -89,7 +92,7 @@ export default class Store {
 
   /**
    * Get choices that can be searched (excluding placeholders)
-   * @return {Array} Option objects
+   * @return {Choice[]} Option objects
    */
   get searchableChoices() {
     return this.selectableChoices.filter(choice => choice.placeholder !== true);
@@ -97,7 +100,7 @@ export default class Store {
 
   /**
    * Get placeholder choice from store
-   * @return {Object} Found placeholder
+   * @return {Choice | undefined} Found placeholder
    */
   get placeholderChoice() {
     return [...this.choices]
@@ -107,7 +110,7 @@ export default class Store {
 
   /**
    * Get groups from store
-   * @return {Array} Group objects
+   * @return {Group[]} Group objects
    */
   get groups() {
     return this.state.groups;
@@ -115,7 +118,7 @@ export default class Store {
 
   /**
    * Get active groups from store
-   * @return {Array} Group objects
+   * @return {Group[]} Group objects
    */
   get activeGroups() {
     const { groups, choices } = this;
@@ -132,7 +135,7 @@ export default class Store {
 
   /**
    * Get loading state from store
-   * @return {Boolean} Loading State
+   * @return {boolean} Loading State
    */
   isLoading() {
     return this.state.general.loading;
@@ -140,23 +143,17 @@ export default class Store {
 
   /**
    * Get single choice by it's ID
-   * @param {id} string
-   * @return {import('../../../types/index').Choices.Choice | false} Found choice
+   * @param {string} id
+   * @return {Choice | undefined} Found choice
    */
   getChoiceById(id) {
-    if (id) {
-      const n = parseInt(id, 10);
-
-      return this.activeChoices.find(choice => choice.id === n);
-    }
-
-    return false;
+    return this.activeChoices.find(choice => choice.id === parseInt(id, 10));
   }
 
   /**
    * Get group by group id
-   * @param  {Number} id Group ID
-   * @return {Object}    Group data
+   * @param  {string} id Group ID
+   * @return {Group | undefined} Group data
    */
   getGroupById(id) {
     return this.groups.find(group => group.id === parseInt(id, 10));
