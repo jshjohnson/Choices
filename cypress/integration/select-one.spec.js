@@ -479,6 +479,21 @@ describe('Choices - select one', () => {
             .should('not.have.value', 'I am a placeholder');
         });
       });
+
+      describe('when choice list is open', () => {
+        it('displays the placeholder choice first', () => {
+          cy.get('[data-test-hook=placeholder-via-option-value]')
+            .find('.choices__input--cloned')
+            .focus();
+
+          cy.get('[data-test-hook=placeholder-via-option-value]')
+            .find('.choices__list--dropdown .choices__list')
+            .children()
+            .first()
+            .should('have.class', 'choices__placeholder')
+            .should('have.text', 'I am a placeholder');
+        });
+      });
     });
 
     describe('placeholder via option attribute', () => {
@@ -497,19 +512,34 @@ describe('Choices - select one', () => {
 
       describe('when a choice has been selected', () => {
         it('does not display a placeholder', () => {
-          cy.get('[data-test-hook=placeholder-via-option-value]')
+          cy.get('[data-test-hook=placeholder-via-option-attr]')
             .find('.choices__input--cloned')
             .focus();
 
-          cy.get('[data-test-hook=placeholder-via-option-value]')
+          cy.get('[data-test-hook=placeholder-via-option-attr]')
             .find('.choices__list--dropdown .choices__list')
             .children()
             .first()
             .click();
 
-          cy.get('[data-test-hook=placeholder-via-option-value]')
+          cy.get('[data-test-hook=placeholder-via-option-attr]')
             .find('.choices__input--cloned')
             .should('not.have.value', 'I am a placeholder');
+        });
+      });
+
+      describe('when choice list is open', () => {
+        it('displays the placeholder choice first', () => {
+          cy.get('[data-test-hook=placeholder-via-option-attr]')
+            .find('.choices__input--cloned')
+            .focus();
+
+          cy.get('[data-test-hook=placeholder-via-option-attr]')
+            .find('.choices__list--dropdown .choices__list')
+            .children()
+            .first()
+            .should('have.class', 'choices__placeholder')
+            .should('have.text', 'I am a placeholder');
         });
       });
     });
