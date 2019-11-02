@@ -1,5 +1,11 @@
 import { sanitise, sortByAlpha } from './lib/utils';
 
+/**
+ * @typedef {import('../../types/index').Choices.ClassNames} ClassNames
+ * @typedef {import('../../types/index').Choices.Options} Options
+ */
+
+/** @type {ClassNames} */
 export const DEFAULT_CLASSNAMES = {
   containerOuter: 'choices',
   containerInner: 'choices__inner',
@@ -28,6 +34,7 @@ export const DEFAULT_CLASSNAMES = {
   noChoices: 'has-no-choices',
 };
 
+/** @type {Options} */
 export const DEFAULT_CONFIG = {
   items: [],
   choices: [],
@@ -51,7 +58,7 @@ export const DEFAULT_CONFIG = {
   resetScrollPosition: true,
   shouldSort: true,
   shouldSortItems: false,
-  sortFn: sortByAlpha,
+  sorter: sortByAlpha,
   placeholder: true,
   placeholderValue: null,
   searchPlaceholderValue: null,
