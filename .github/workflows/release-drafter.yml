@@ -1,4 +1,4 @@
-name: Release management
+name: Release drafter
 
 on:
   push:
@@ -9,6 +9,6 @@ jobs:
   update-draft-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: toolmantim/release-drafter@v5.2.0
+      - uses: toolmantim/release-drafter@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

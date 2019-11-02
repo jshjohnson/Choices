@@ -1,6 +1,9 @@
 name-template: 'Draft (next release)'
 tag-template: 'v$NEXT_PATCH_VERSION'
 sort-direction: descending
+exclude-labels:
+  - 'skip-changelog'
+  - 'release'
 categories:
   - title: '🚨 Breaking changes'
     labels:
