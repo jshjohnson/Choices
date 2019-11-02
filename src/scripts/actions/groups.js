@@ -6,6 +6,7 @@ import { ACTION_TYPES } from '../constants';
 
 /**
  * @param {Group} group
+ * @returns {{type: string} & Group}
  */
 export const addGroup = ({ value, id, active, disabled }) => ({
   type: ACTION_TYPES.ADD_GROUP,

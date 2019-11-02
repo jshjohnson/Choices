@@ -6,6 +6,7 @@ import { ACTION_TYPES } from '../constants';
 
 /**
  * @param {Item} item
+ * @returns {{type: string} & Item}
  */
 export const addItem = ({
   value,
@@ -31,6 +32,7 @@ export const addItem = ({
 /**
  * @param {string} id
  * @param {string} choiceId
+ * @returns {{type: string, id: string, choiceId: string}}
  */
 export const removeItem = (id, choiceId) => ({
   type: ACTION_TYPES.REMOVE_ITEM,
@@ -41,6 +43,7 @@ export const removeItem = (id, choiceId) => ({
 /**
  * @param {string} id
  * @param {boolean} highlighted
+ * @returns {{type: string, id: string, highlighted: boolean}}
  */
 export const highlightItem = (id, highlighted) => ({
   type: ACTION_TYPES.HIGHLIGHT_ITEM,

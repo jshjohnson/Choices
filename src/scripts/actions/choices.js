@@ -6,6 +6,7 @@ import { ACTION_TYPES } from '../constants';
 
 /**
  * @argument {Choice} choice
+ * @returns {{type: string} & Choice}
  */
 export const addChoice = ({
   value,
@@ -32,6 +33,7 @@ export const addChoice = ({
 
 /**
  * @argument {Choice[]} results
+ * @returns {{type: string, results: Choice[]}}
  */
 export const filterChoices = results => ({
   type: ACTION_TYPES.FILTER_CHOICES,
@@ -40,12 +42,16 @@ export const filterChoices = results => ({
 
 /**
  * @argument {boolean} active
+ * @returns {{type: string, active: boolean}}
  */
 export const activateChoices = (active = true) => ({
   type: ACTION_TYPES.ACTIVATE_CHOICES,
   active,
 });
 
+/**
+ * @returns {{type: string}}
+ */
 export const clearChoices = () => ({
   type: ACTION_TYPES.CLEAR_CHOICES,
 });

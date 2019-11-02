@@ -108,19 +108,25 @@ export const strToEl = (() => {
   };
 })();
 
-export const sortByAlpha =
-  /**
-   * @param {{ label?: string, value: string }} a
-   * @param {{ label?: string, value: string }} b
-   * @returns {number}
-   */
-  ({ value, label = value }, { value: value2, label: label2 = value2 }) =>
-    label.localeCompare(label2, [], {
-      sensitivity: 'base',
-      ignorePunctuation: true,
-      numeric: true,
-    });
+/**
+ * @param {{ label?: string, value: string }} a
+ * @param {{ label?: string, value: string }} b
+ * @returns {number}
+ */
+export const sortByAlpha = (
+  { value, label = value },
+  { value: value2, label: label2 = value2 },
+) =>
+  label.localeCompare(label2, [], {
+    sensitivity: 'base',
+    ignorePunctuation: true,
+    numeric: true,
+  });
 
+/**
+ * @param {object} a
+ * @param {object} b
+ */
 export const sortByScore = (a, b) => a.score - b.score;
 
 export const dispatchEvent = (element, type, customArgs = null) => {

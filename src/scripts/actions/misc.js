@@ -3,7 +3,8 @@ export const clearAll = () => ({
 });
 
 /**
- * @param {object} state
+ * @param {any} state
+ * @returns {{type: string, state: any}}
  */
 export const resetTo = state => ({
   type: 'RESET_TO',
