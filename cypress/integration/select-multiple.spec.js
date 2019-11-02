@@ -495,7 +495,7 @@ describe('Choices - select multiple', () => {
       */
       describe('when no value has been inputted', () => {
         it('displays a placeholder', () => {
-          cy.get('[data-test-hook=placeholder]')
+          cy.get('[data-test-hook=placeholder-via-config]')
             .find('.choices__input--cloned')
             .should('have.attr', 'placeholder', 'I am a placeholder');
         });

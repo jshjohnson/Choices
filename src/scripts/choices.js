@@ -829,18 +829,12 @@ class Choices {
       rendererableChoices = choices.filter(choice => !choice.selected);
     }
 
-    // Split array into placeholders and "normal" choices
-    const { normalChoices } = rendererableChoices.reduce(
-      (acc, choice) => {
-        if (choice.placeholder) {
-          acc.placeholderChoices.push(choice);
-        } else {
-          acc.normalChoices.push(choice);
-        }
-
-        return acc;
-      },
-      { placeholderChoices: [], normalChoices: [] },
+    /*
+      Remove placeholder choices as we don't want to display
+      them in the choice list
+    */
+    const normalChoices = rendererableChoices.filter(
+      choice => !choice.placeholder,
     );
 
     // If sorting is enabled or the user is searching, filter choices
@@ -850,7 +844,7 @@ class Choices {
 
     let choiceLimit = rendererableChoices.length;
 
-    // Prepend placeholeder
+    // Prepend placeholder
     const sortedChoices = [...normalChoices];
 
     if (this._isSearching) {
@@ -2226,14 +2220,15 @@ class Choices {
   }
 
   _generatePlaceholderValue() {
-    if (this._isSelectElement) {
-      const { placeholderOption } = this.passedElement;
+    const { placeholder, placeholderValue } = this.config;
+    const { placeholderOption } = this.passedElement;
 
+    if (placeholderOption) {
       return placeholderOption ? placeholderOption.text : false;
     }
 
-    return this.config.placeholder
-      ? this.config.placeholderValue ||
+    return placeholder
+      ? placeholderValue ||
           this.passedElement.element.getAttribute('placeholder')
       : false;
   }

@@ -197,12 +197,14 @@
           </select>
         </div>
 
-        <div data-test-hook="placeholder">
-          <label for="choices-placeholder">Placeholder</label>
+        <div data-test-hook="placeholder-via-config">
+          <label for="choices-placeholder-via-config"
+            >Placeholder via config</label
+          >
           <select
             class="form-control"
-            name="choices-placeholder"
-            id="choices-placeholder"
+            name="choices-placeholder-via-config"
+            id="choices-placeholder-via-config"
             multiple
           >
             <option value="Choice 1">Choice 1</option>
@@ -378,7 +380,7 @@
           searchFloor: 5,
         });
 
-        new Choices('#choices-placeholder', {
+        new Choices('#choices-placeholder-via-config', {
           placeholder: true,
           placeholderValue: 'I am a placeholder',
         });
