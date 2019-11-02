@@ -580,10 +580,14 @@ describe('Choices - select one', () => {
             cy.get('[data-test-hook=remote-data]')
               .find('.choices__list--dropdown .choices__list')
               .children()
-              .should('have.length', 50)
+              .should('have.length', 51) // 50 choices + 1 placeholder choice
               .each(($choice, index) => {
-                expect($choice.text().trim()).to.equal(`Label ${index + 1}`);
-                expect($choice.data('value')).to.equal(`Value ${index + 1}`);
+                if (index === 0) {
+                  expect($choice.text().trim()).to.equal('I am a placeholder');
+                } else {
+                  expect($choice.text().trim()).to.equal(`Label ${index}`);
+                  expect($choice.data('value')).to.equal(`Value ${index}`);
+                }
               });
           });
         });
