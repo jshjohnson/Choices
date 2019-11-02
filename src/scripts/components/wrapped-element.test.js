@@ -39,6 +39,22 @@ describe('components/wrappedElement', () => {
     });
   });
 
+  describe('isActive getter', () => {
+    it('returns whether the "data-choice" attribute is set to "active"', () => {
+      instance.element.dataset.choice = 'active';
+      expect(instance.isActive).to.equal(true);
+
+      instance.element.dataset.choice = 'inactive';
+      expect(instance.isActive).to.equal(false);
+    });
+  });
+
+  describe('dir getter', () => {
+    it('returns the direction of the element', () => {
+      expect(instance.dir).to.equal(instance.element.dir);
+    });
+  });
+
   describe('conceal', () => {
     let originalStyling;
 

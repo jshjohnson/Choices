@@ -11,6 +11,14 @@ export default class WrappedElement {
     this.isDisabled = false;
   }
 
+  get isActive() {
+    return this.element.dataset.choice === 'active';
+  }
+
+  get dir() {
+    return this.element.dir;
+  }
+
   get value() {
     return this.element.value;
   }

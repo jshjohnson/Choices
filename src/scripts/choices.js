@@ -37,15 +37,17 @@ import {
   diff,
 } from './lib/utils';
 
-const USER_DEFAULTS = /** @type {Partial<import('../../types/index').Choices.Options>} */ ({});
+/**
+ * @typedef {import('../../types/index').Choices.Choice} Choice
+ * @typedef {import('../../types/index').Choices.Options} Options
+ */
+
+/** @type {Partial<Options>} */
+const USER_DEFAULTS = {};
 
 /**
  * Choices
  * @author Josh Johnson<josh@joshuajohnson.co.uk>
- */
-
-/**
- * @typedef {import('../../types/index').Choices.Choice} Choice
  */
 class Choices {
   static get defaults() {
@@ -61,9 +63,10 @@ class Choices {
 
   /**
    * @param {string | HTMLInputElement | HTMLSelectElement} element
-   * @param {Partial<import('../../types/index').Choices.Options>} userConfig
+   * @param {Partial<Options>} userConfig
    */
   constructor(element = '[data-choice]', userConfig = {}) {
+    /** @type {Partial<Options>} */
     this.config = merge.all(
       [DEFAULT_CONFIG, Choices.defaults.options, userConfig],
       // When merging array configs, replace with a copy of the userConfig array,
@@ -148,7 +151,7 @@ class Choices {
      * or when calculated direction is different from the document
      * @type {HTMLElement['dir']}
      */
-    this._direction = this.passedElement.element.dir;
+    this._direction = this.passedElement.dir;
 
     if (!this._direction) {
       const { direction: elementDirection } = window.getComputedStyle(
@@ -202,7 +205,7 @@ class Choices {
     }
 
     // If element has already been initialised with Choices, fail silently
-    if (this.passedElement.element.getAttribute('data-choice') === 'active') {
+    if (this.passedElement.isActive) {
       if (!this.config.silent) {
         console.warn(
           'Trying to initialise Choices on element already initialised',
