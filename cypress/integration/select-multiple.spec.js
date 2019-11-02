@@ -486,16 +486,20 @@ describe('Choices - select multiple', () => {
       });
     });
 
-    describe('placeholder', () => {
-      /*
-        {
-          placeholder: true,
-          placeholderValue: 'I am a placeholder',
-        }
-      */
+    describe('placeholder via empty option value', () => {
       describe('when no value has been inputted', () => {
         it('displays a placeholder', () => {
-          cy.get('[data-test-hook=placeholder-via-config]')
+          cy.get('[data-test-hook=placeholder]')
+            .find('.choices__input--cloned')
+            .should('have.attr', 'placeholder', 'I am a placeholder');
+        });
+      });
+    });
+
+    describe('placeholder via option attribute', () => {
+      describe('when no value has been inputted', () => {
+        it('displays a placeholder', () => {
+          cy.get('[data-test-hook=placeholder-legacy]')
             .find('.choices__input--cloned')
             .should('have.attr', 'placeholder', 'I am a placeholder');
         });

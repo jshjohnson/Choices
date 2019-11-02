@@ -197,16 +197,34 @@
           </select>
         </div>
 
-        <div data-test-hook="placeholder-via-config">
-          <label for="choices-placeholder-via-config"
-            >Placeholder via config</label
+        <div data-test-hook="placeholder">
+          <label for="choices-placeholder"
+            >Placeholder via empty option value</label
           >
           <select
             class="form-control"
-            name="choices-placeholder-via-config"
-            id="choices-placeholder-via-config"
+            name="choices-placeholder"
+            id="choices-placeholder"
             multiple
           >
+            <option value="">I am a placeholder</option>
+            <option value="Choice 1">Choice 1</option>
+            <option value="Choice 2">Choice 2</option>
+            <option value="Choice 3">Choice 3</option>
+          </select>
+        </div>
+
+        <div data-test-hook="placeholder-legacy">
+          <label for="choices-placeholder-legacy"
+            >Placeholder via option attribute</label
+          >
+          <select
+            class="form-control"
+            name="choices-placeholder-legacy"
+            id="choices-placeholder-legacy"
+            multiple
+          >
+            <option placeholder>I am a placeholder</option>
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
@@ -380,10 +398,9 @@
           searchFloor: 5,
         });
 
-        new Choices('#choices-placeholder-via-config', {
-          placeholder: true,
-          placeholderValue: 'I am a placeholder',
-        });
+        new Choices('#choices-placeholder');
+
+        new Choices('#choices-placeholder-legacy');
 
         new Choices('#choices-remote-data', {
           shouldSort: false,

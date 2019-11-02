@@ -448,6 +448,36 @@ describe('Choices - select one', () => {
       });
     });
 
+    describe('placeholder via empty option value', () => {
+      describe('when no value has been inputted', () => {
+        it('displays a placeholder', () => {
+          cy.get('[data-test-hook=placeholder]')
+            .find('.choices__list--single')
+            .children()
+            .first()
+            .should('have.class', 'choices__placeholder')
+            .and($placeholder => {
+              expect($placeholder).to.contain('I am a placeholder');
+            });
+        });
+      });
+    });
+
+    describe('placeholder via option attribute', () => {
+      describe('when no value has been inputted', () => {
+        it('displays a placeholder', () => {
+          cy.get('[data-test-hook=placeholder-legacy]')
+            .find('.choices__list--single')
+            .children()
+            .first()
+            .should('have.class', 'choices__placeholder')
+            .and($placeholder => {
+              expect($placeholder).to.contain('I am a placeholder');
+            });
+        });
+      });
+    });
+
     describe('remote data', () => {
       beforeEach(() => {
         cy.reload(true);

@@ -2221,9 +2221,10 @@ class Choices {
 
   _generatePlaceholderValue() {
     const { placeholder, placeholderValue } = this.config;
-    const { placeholderOption } = this.passedElement;
 
-    if (placeholderOption) {
+    if (this._isSelectElement) {
+      const { placeholderOption } = this.passedElement;
+
       return placeholderOption ? placeholderOption.text : false;
     }
 
