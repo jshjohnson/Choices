@@ -2254,8 +2254,6 @@ class Choices {
 
     return false;
   }
-
-  /* =====  End of Private functions  ====== */
 }
 
 export default Choices;
