@@ -449,9 +449,9 @@ describe('Choices - select one', () => {
     });
 
     describe('placeholder via empty option value', () => {
-      describe('when no value has been inputted', () => {
+      describe('when no choice has been selected', () => {
         it('displays a placeholder', () => {
-          cy.get('[data-test-hook=placeholder]')
+          cy.get('[data-test-hook=placeholder-via-option-value]')
             .find('.choices__list--single')
             .children()
             .first()
@@ -461,12 +461,30 @@ describe('Choices - select one', () => {
             });
         });
       });
+
+      describe('when a choice has been selected', () => {
+        it('does not display a placeholder', () => {
+          cy.get('[data-test-hook=placeholder-via-option-value]')
+            .find('.choices__input--cloned')
+            .focus();
+
+          cy.get('[data-test-hook=placeholder-via-option-value]')
+            .find('.choices__list--dropdown .choices__list')
+            .children()
+            .first()
+            .click();
+
+          cy.get('[data-test-hook=placeholder-via-option-value]')
+            .find('.choices__input--cloned')
+            .should('not.have.value', 'I am a placeholder');
+        });
+      });
     });
 
     describe('placeholder via option attribute', () => {
-      describe('when no value has been inputted', () => {
+      describe('when no choice has been selected', () => {
         it('displays a placeholder', () => {
-          cy.get('[data-test-hook=placeholder-legacy]')
+          cy.get('[data-test-hook=placeholder-via-option-attr]')
             .find('.choices__list--single')
             .children()
             .first()
@@ -474,6 +492,24 @@ describe('Choices - select one', () => {
             .and($placeholder => {
               expect($placeholder).to.contain('I am a placeholder');
             });
+        });
+      });
+
+      describe('when a choice has been selected', () => {
+        it('does not display a placeholder', () => {
+          cy.get('[data-test-hook=placeholder-via-option-value]')
+            .find('.choices__input--cloned')
+            .focus();
+
+          cy.get('[data-test-hook=placeholder-via-option-value]')
+            .find('.choices__list--dropdown .choices__list')
+            .children()
+            .first()
+            .click();
+
+          cy.get('[data-test-hook=placeholder-via-option-value]')
+            .find('.choices__input--cloned')
+            .should('not.have.value', 'I am a placeholder');
         });
       });
     });

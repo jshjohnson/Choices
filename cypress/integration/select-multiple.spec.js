@@ -489,9 +489,18 @@ describe('Choices - select multiple', () => {
     describe('placeholder via empty option value', () => {
       describe('when no value has been inputted', () => {
         it('displays a placeholder', () => {
-          cy.get('[data-test-hook=placeholder]')
+          cy.get('[data-test-hook=placeholder-via-option-value]')
             .find('.choices__input--cloned')
             .should('have.attr', 'placeholder', 'I am a placeholder');
+        });
+      });
+
+      describe('when a value has been inputted', () => {
+        it('does not display a placeholder', () => {
+          cy.get('[data-test-hook=placeholder-via-option-value]')
+            .find('.choices__input--cloned')
+            .type('test')
+            .should('not.have.value', 'I am a placeholder');
         });
       });
     });
@@ -499,9 +508,18 @@ describe('Choices - select multiple', () => {
     describe('placeholder via option attribute', () => {
       describe('when no value has been inputted', () => {
         it('displays a placeholder', () => {
-          cy.get('[data-test-hook=placeholder-legacy]')
+          cy.get('[data-test-hook=placeholder-via-option-attr]')
             .find('.choices__input--cloned')
             .should('have.attr', 'placeholder', 'I am a placeholder');
+        });
+      });
+
+      describe('when a value has been inputted', () => {
+        it('does not display a placeholder', () => {
+          cy.get('[data-test-hook=placeholder-via-option-attr]')
+            .find('.choices__input--cloned')
+            .type('test')
+            .should('not.have.value', 'I am a placeholder');
         });
       });
     });
