@@ -25,6 +25,7 @@ declare namespace Choices {
   interface Choice {
     customProperties?: Record<string, any>;
     disabled?: boolean;
+    active?: boolean;
     elementId?: string;
     groupId?: string;
     id?: string;
