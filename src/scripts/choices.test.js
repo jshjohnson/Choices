@@ -1873,5 +1873,96 @@ describe('choices', () => {
         });
       });
     });
+
+    describe('_generatePlaceholderValue', () => {
+      describe('select element', () => {
+        describe('when a placeholder option is defined', () => {
+          it('returns the text value of the placeholder option', () => {
+            const placeholderValue = 'I am a placeholder';
+
+            instance._isSelectElement = true;
+            instance.passedElement.placeholderOption = {
+              text: placeholderValue,
+            };
+
+            const value = instance._generatePlaceholderValue();
+            expect(value).to.equal(placeholderValue);
+          });
+        });
+
+        describe('when a placeholder option is not defined', () => {
+          it('returns false', () => {
+            instance._isSelectElement = true;
+            instance.passedElement.placeholderOption = undefined;
+
+            const value = instance._generatePlaceholderValue();
+            expect(value).to.equal(false);
+          });
+        });
+      });
+
+      describe('text input', () => {
+        describe('when the placeholder config option is set to true', () => {
+          describe('when the placeholderValue config option is defined', () => {
+            it('returns placeholderValue', () => {
+              const placeholderValue = 'I am a placeholder';
+
+              instance._isSelectElement = false;
+              instance.config.placeholder = true;
+              instance.config.placeholderValue = placeholderValue;
+
+              const value = instance._generatePlaceholderValue();
+              expect(value).to.equal(placeholderValue);
+            });
+          });
+
+          describe('when the placeholderValue config option is not defined', () => {
+            describe('when the placeholder attribute is defined on the passed element', () => {
+              it('returns the value of the placeholder attribute', () => {
+                const placeholderValue = 'I am a placeholder';
+
+                instance._isSelectElement = false;
+                instance.config.placeholder = true;
+                instance.config.placeholderValue = undefined;
+                instance.passedElement.element = {
+                  dataset: {
+                    placeholder: placeholderValue,
+                  },
+                };
+
+                const value = instance._generatePlaceholderValue();
+                expect(value).to.equal(placeholderValue);
+              });
+            });
+
+            describe('when the placeholder attribute is not defined on the passed element', () => {
+              it('returns false', () => {
+                instance._isSelectElement = false;
+                instance.config.placeholder = true;
+                instance.config.placeholderValue = undefined;
+                instance.passedElement.element = {
+                  dataset: {
+                    placeholder: undefined,
+                  },
+                };
+
+                const value = instance._generatePlaceholderValue();
+                expect(value).to.equal(false);
+              });
+            });
+          });
+        });
+
+        describe('when the placeholder config option is set to false', () => {
+          it('returns false', () => {
+            instance._isSelectElement = false;
+            instance.config.placeholder = false;
+
+            const value = instance._generatePlaceholderValue();
+            expect(value).to.equal(false);
+          });
+        });
+      });
+    });
   });
 });

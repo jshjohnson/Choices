@@ -2220,18 +2220,28 @@ class Choices {
   }
 
   _generatePlaceholderValue() {
-    const { placeholder, placeholderValue } = this.config;
-
     if (this._isSelectElement) {
       const { placeholderOption } = this.passedElement;
 
       return placeholderOption ? placeholderOption.text : false;
     }
 
-    return placeholder
-      ? placeholderValue ||
-          this.passedElement.element.getAttribute('placeholder')
-      : false;
+    const { placeholder, placeholderValue } = this.config;
+    const {
+      element: { dataset },
+    } = this.passedElement;
+
+    if (placeholder) {
+      if (placeholderValue) {
+        return placeholderValue;
+      }
+
+      if (dataset.placeholder) {
+        return dataset.placeholder;
+      }
+    }
+
+    return false;
   }
 
   /* =====  End of Private functions  ====== */
