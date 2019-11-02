@@ -1908,7 +1908,14 @@ class Choices {
     const isDisabled = group.disabled ? group.disabled : false;
 
     if (groupChoices) {
-      this._store.dispatch(addGroup(group.label, groupId, true, isDisabled));
+      this._store.dispatch(
+        addGroup({
+          value: group.label,
+          id: groupId,
+          active: true,
+          disabled: isDisabled,
+        }),
+      );
 
       const addGroupChoices = choice => {
         const isOptDisabled =
@@ -1928,7 +1935,12 @@ class Choices {
       groupChoices.forEach(addGroupChoices);
     } else {
       this._store.dispatch(
-        addGroup(group.label, group.id, false, group.disabled),
+        addGroup({
+          value: group.label,
+          id: group.id,
+          active: false,
+          disabled: group.disabled,
+        }),
       );
     }
   }

@@ -1,5 +1,12 @@
+/**
+ * @typedef {import('../../../types/index').Choices.Choice} Choice
+ */
+
 import { ACTION_TYPES } from '../constants';
 
+/**
+ * @argument {Choice} choice
+ */
 export const addChoice = ({
   value,
   label,
@@ -23,11 +30,17 @@ export const addChoice = ({
   keyCode,
 });
 
+/**
+ * @argument {Choice[]} results
+ */
 export const filterChoices = results => ({
   type: ACTION_TYPES.FILTER_CHOICES,
   results,
 });
 
+/**
+ * @argument {boolean} active
+ */
 export const activateChoices = (active = true) => ({
   type: ACTION_TYPES.ACTIVATE_CHOICES,
   active,
