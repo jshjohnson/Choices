@@ -118,4 +118,8 @@ export const KEY_CODES = {
   PAGE_DOWN_KEY: 34,
 };
 
+export const TEXT_TYPE = 'text';
+export const SELECT_ONE_TYPE = 'select-one';
+export const SELECT_MULTIPLE_TYPE = 'select-multiple';
+
 export const SCROLLING_SPEED = 4;

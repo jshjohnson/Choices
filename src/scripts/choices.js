@@ -10,7 +10,14 @@ import {
   WrappedInput,
   WrappedSelect,
 } from './components';
-import { DEFAULT_CONFIG, EVENTS, KEY_CODES } from './constants';
+import {
+  DEFAULT_CONFIG,
+  EVENTS,
+  KEY_CODES,
+  TEXT_TYPE,
+  SELECT_ONE_TYPE,
+  SELECT_MULTIPLE_TYPE,
+} from './constants';
 import { TEMPLATES } from './templates';
 import {
   addChoice,
@@ -71,7 +78,7 @@ class Choices {
       [DEFAULT_CONFIG, Choices.defaults.options, userConfig],
       // When merging array configs, replace with a copy of the userConfig array,
       // instead of concatenating with the default array
-      { arrayMerge: (destinationArray, sourceArray) => [...sourceArray] },
+      { arrayMerge: (_, sourceArray) => [...sourceArray] },
     );
 
     // Convert addItemFilter to function
@@ -113,9 +120,9 @@ class Choices {
       );
     }
 
-    this._isTextElement = passedElement.type === 'text';
-    this._isSelectOneElement = passedElement.type === 'select-one';
-    this._isSelectMultipleElement = passedElement.type === 'select-multiple';
+    this._isTextElement = passedElement.type === TEXT_TYPE;
+    this._isSelectOneElement = passedElement.type === SELECT_ONE_TYPE;
+    this._isSelectMultipleElement = passedElement.type === SELECT_MULTIPLE_TYPE;
     this._isSelectElement =
       this._isSelectOneElement || this._isSelectMultipleElement;
 
@@ -195,14 +202,6 @@ class Choices {
     this._onEscapeKey = this._onEscapeKey.bind(this);
     this._onDirectionKey = this._onDirectionKey.bind(this);
     this._onDeleteKey = this._onDeleteKey.bind(this);
-
-    if (this.config.shouldSortItems === true && this._isSelectOneElement) {
-      if (!this.config.silent) {
-        console.warn(
-          "shouldSortElements: Type of passed element is 'select-one', falling back to false.",
-        );
-      }
-    }
 
     // If element has already been initialised with Choices, fail silently
     if (this.passedElement.isActive) {
@@ -860,7 +859,7 @@ class Choices {
 
     if (this._isSearching) {
       choiceLimit = searchResultLimit;
-    } else if (renderChoiceLimit > 0 && !withinGroup) {
+    } else if (renderChoiceLimit && renderChoiceLimit > 0 && !withinGroup) {
       choiceLimit = renderChoiceLimit;
     }
 
@@ -1643,18 +1642,18 @@ class Choices {
     }
 
     const focusActions = {
-      text: () => {
+      [TEXT_TYPE]: () => {
         if (target === this.input.element) {
           this.containerOuter.addFocusState();
         }
       },
-      'select-one': () => {
+      [SELECT_ONE_TYPE]: () => {
         this.containerOuter.addFocusState();
         if (target === this.input.element) {
           this.showDropdown(true);
         }
       },
-      'select-multiple': () => {
+      [SELECT_MULTIPLE_TYPE]: () => {
         if (target === this.input.element) {
           this.showDropdown(true);
           // If element is a select box, the focused element is the container and the dropdown
@@ -1674,7 +1673,7 @@ class Choices {
       const { activeItems } = this._store;
       const hasHighlightedItems = activeItems.some(item => item.highlighted);
       const blurActions = {
-        text: () => {
+        [TEXT_TYPE]: () => {
           if (target === this.input.element) {
             this.containerOuter.removeFocusState();
             if (hasHighlightedItems) {
@@ -1683,7 +1682,7 @@ class Choices {
             this.hideDropdown(true);
           }
         },
-        'select-one': () => {
+        [SELECT_ONE_TYPE]: () => {
           this.containerOuter.removeFocusState();
           if (
             target === this.input.element ||
@@ -1692,7 +1691,7 @@ class Choices {
             this.hideDropdown(true);
           }
         },
-        'select-multiple': () => {
+        [SELECT_MULTIPLE_TYPE]: () => {
           if (target === this.input.element) {
             this.containerOuter.removeFocusState();
             this.hideDropdown(true);
