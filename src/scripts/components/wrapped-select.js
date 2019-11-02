@@ -1,6 +1,18 @@
 import WrappedElement from './wrapped-element';
 
+/**
+ * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
+ */
+
 export default class WrappedSelect extends WrappedElement {
+  /**
+   * @param {{
+   *  element: HTMLSelectElement,
+   *  classNames: ClassNames,
+   *  delimiter: string
+   *  template: function
+   * }} args
+   */
   constructor({ element, classNames, template }) {
     super({ element, classNames });
     this.template = template;
@@ -14,14 +26,23 @@ export default class WrappedSelect extends WrappedElement {
     );
   }
 
+  /**
+   * @returns {Element[]}
+   */
   get optionGroups() {
     return Array.from(this.element.getElementsByTagName('OPTGROUP'));
   }
 
+  /**
+   * @returns {object[]}
+   */
   get options() {
     return Array.from(this.element.options);
   }
 
+  /**
+   * @param {object[]} options
+   */
   set options(options) {
     const fragment = document.createDocumentFragment();
     const addOptionToFragment = data => {
@@ -37,6 +58,9 @@ export default class WrappedSelect extends WrappedElement {
     this.appendDocFragment(fragment);
   }
 
+  /**
+   * @param {DocumentFragment} fragment
+   */
   appendDocFragment(fragment) {
     this.element.innerHTML = '';
     this.element.appendChild(fragment);

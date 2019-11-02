@@ -1,11 +1,18 @@
 import { sanitise } from '../lib/utils';
 
+/**
+ * @typedef {import('../../../types/index').Choices.passedElement} passedElement
+ * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
+ */
+
 export default class Input {
   /**
-   *
-   * @typedef {import('../../../types/index').Choices.passedElement} passedElement
-   * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
-   * @param {{element: HTMLInputElement, type: passedElement['type'], classNames: ClassNames, preventPaste: boolean }} p
+   * @param {{
+   *  element: HTMLInputElement,
+   *  type: passedElement['type'],
+   *  classNames: ClassNames,
+   *  preventPaste: boolean
+   * }} args
    */
   constructor({ element, type, classNames, preventPaste }) {
     this.element = element;
@@ -21,14 +28,23 @@ export default class Input {
     this._onBlur = this._onBlur.bind(this);
   }
 
+  /**
+   * @param {string} placeholder
+   */
   set placeholder(placeholder) {
     this.element.placeholder = placeholder;
   }
 
+  /**
+   * @returns {string}
+   */
   get value() {
     return sanitise(this.element.value);
   }
 
+  /**
+   * @param {string} value
+   */
   set value(value) {
     this.element.value = value;
   }
@@ -83,8 +99,8 @@ export default class Input {
 
   /**
    * Set value of input to blank
-   * @return {Object} Class instance
-   * @public
+   * @param {boolean} setWidth
+   * @returns {this}
    */
   clear(setWidth = true) {
     if (this.element.value) {
@@ -109,6 +125,9 @@ export default class Input {
     style.width = `${value.length + 1}ch`;
   }
 
+  /**
+   * @param {string} activeDescendantID
+   */
   setActiveDescendant(activeDescendantID) {
     this.element.setAttribute('aria-activedescendant', activeDescendantID);
   }
@@ -123,6 +142,9 @@ export default class Input {
     }
   }
 
+  /**
+   * @param {Event} event
+   */
   _onPaste(event) {
     if (this.preventPaste) {
       event.preventDefault();

@@ -1,8 +1,20 @@
 import { dispatchEvent } from '../lib/utils';
 
+/**
+ * @typedef {import('../../../types/index').Choices.passedElement} passedElement
+ * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
+ */
+
 export default class WrappedElement {
+  /**
+   * @param {{
+   *  element: HTMLElement,
+   *  classNames: ClassNames,
+   * }} args
+   */
   constructor({ element, classNames }) {
-    Object.assign(this, { element, classNames });
+    this.element = element;
+    this.classNames = classNames;
 
     if (!(element instanceof Element)) {
       throw new TypeError('Invalid element passed');

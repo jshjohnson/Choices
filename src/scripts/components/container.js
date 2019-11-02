@@ -1,42 +1,47 @@
 import { wrap } from '../lib/utils';
 
+/**
+ * @typedef {import('../../../types/index').Choices.passedElement} passedElement
+ * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
+ */
 export default class Container {
+  /**
+   * @param {{
+   *  element: HTMLElement,
+   *  type: passedElement['type'],
+   *  classNames: ClassNames,
+   *  position
+   * }} args
+   */
   constructor({ element, type, classNames, position }) {
-    Object.assign(this, { element, classNames, type, position });
-
+    this.element = element;
+    this.classNames = classNames;
+    this.type = type;
+    this.position = position;
     this.isOpen = false;
     this.isFlipped = false;
     this.isFocussed = false;
     this.isDisabled = false;
     this.isLoading = false;
-
     this._onFocus = this._onFocus.bind(this);
     this._onBlur = this._onBlur.bind(this);
   }
 
-  /**
-   * Add event listeners
-   */
   addEventListeners() {
     this.element.addEventListener('focus', this._onFocus);
     this.element.addEventListener('blur', this._onBlur);
   }
 
-  /**
-   * Remove event listeners
-   */
-
-  /** */
   removeEventListeners() {
     this.element.removeEventListener('focus', this._onFocus);
     this.element.removeEventListener('blur', this._onBlur);
   }
 
   /**
-   * Determine whether container should be flipped
-   * based on passed dropdown position
-   * @param {Number} dropdownPos
-   * @returns
+   * Determine whether container should be flipped based on passed
+   * dropdown position
+   * @param {number} dropdownPos
+   * @returns {boolean}
    */
   shouldFlip(dropdownPos) {
     if (typeof dropdownPos !== 'number') {
@@ -57,20 +62,19 @@ export default class Container {
   }
 
   /**
-   * Set active descendant attribute
-   * @param {Number} activeDescendant ID of active descendant
+   * @param {number} activeDescendantID
    */
   setActiveDescendant(activeDescendantID) {
     this.element.setAttribute('aria-activedescendant', activeDescendantID);
   }
 
-  /**
-   * Remove active descendant attribute
-   */
   removeActiveDescendant() {
     this.element.removeAttribute('aria-activedescendant');
   }
 
+  /**
+   * @param {number} dropdownPos
+   */
   open(dropdownPos) {
     this.element.classList.add(this.classNames.openState);
     this.element.setAttribute('aria-expanded', 'true');
@@ -109,9 +113,6 @@ export default class Container {
     this.element.classList.remove(this.classNames.focusState);
   }
 
-  /**
-   * Remove disabled state
-   */
   enable() {
     this.element.classList.remove(this.classNames.disabledState);
     this.element.removeAttribute('aria-disabled');
@@ -121,9 +122,6 @@ export default class Container {
     this.isDisabled = false;
   }
 
-  /**
-   * Set disabled state
-   */
   disable() {
     this.element.classList.add(this.classNames.disabledState);
     this.element.setAttribute('aria-disabled', 'true');
@@ -133,10 +131,16 @@ export default class Container {
     this.isDisabled = true;
   }
 
+  /**
+   * @param {Element} element
+   */
   wrap(element) {
     wrap(element, this.element);
   }
 
+  /**
+   * @param {Element} element
+   */
   unwrap(element) {
     // Move passed element outside this element
     this.element.parentNode.insertBefore(element, this.element);
@@ -144,34 +148,22 @@ export default class Container {
     this.element.parentNode.removeChild(this.element);
   }
 
-  /**
-   * Add loading state to element
-   */
   addLoadingState() {
     this.element.classList.add(this.classNames.loadingState);
     this.element.setAttribute('aria-busy', 'true');
     this.isLoading = true;
   }
 
-  /**
-   * Remove loading state from element
-   */
   removeLoadingState() {
     this.element.classList.remove(this.classNames.loadingState);
     this.element.removeAttribute('aria-busy');
     this.isLoading = false;
   }
 
-  /**
-   * Set focussed state
-   */
   _onFocus() {
     this.isFocussed = true;
   }
 
-  /**
-   * Remove blurred state
-   */
   _onBlur() {
     this.isFocussed = false;
   }

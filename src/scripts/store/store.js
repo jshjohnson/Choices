@@ -36,7 +36,7 @@ export default class Store {
 
   /**
    * Get store object (wrapping Redux method)
-   * @return {object} State
+   * @returns {object} State
    */
   get state() {
     return this._store.getState();
@@ -44,7 +44,7 @@ export default class Store {
 
   /**
    * Get items from store
-   * @return {Item[]} Item objects
+   * @returns {Item[]} Item objects
    */
   get items() {
     return this.state.items;
@@ -52,7 +52,7 @@ export default class Store {
 
   /**
    * Get active items from store
-   * @return {Item[]} Item objects
+   * @returns {Item[]} Item objects
    */
   get activeItems() {
     return this.items.filter(item => item.active === true);
@@ -60,7 +60,7 @@ export default class Store {
 
   /**
    * Get highlighted items from store
-   * @return {Item[]} Item objects
+   * @returns {Item[]} Item objects
    */
   get highlightedActiveItems() {
     return this.items.filter(item => item.active && item.highlighted);
@@ -68,7 +68,7 @@ export default class Store {
 
   /**
    * Get choices from store
-   * @return {Choice[]} Option objects
+   * @returns {Choice[]} Option objects
    */
   get choices() {
     return this.state.choices;
@@ -76,7 +76,7 @@ export default class Store {
 
   /**
    * Get active choices from store
-   * @return {Choice[]} Option objects
+   * @returns {Choice[]} Option objects
    */
   get activeChoices() {
     return this.choices.filter(choice => choice.active === true);
@@ -84,7 +84,7 @@ export default class Store {
 
   /**
    * Get selectable choices from store
-   * @return {Choice[]} Option objects
+   * @returns {Choice[]} Option objects
    */
   get selectableChoices() {
     return this.choices.filter(choice => choice.disabled !== true);
@@ -92,7 +92,7 @@ export default class Store {
 
   /**
    * Get choices that can be searched (excluding placeholders)
-   * @return {Choice[]} Option objects
+   * @returns {Choice[]} Option objects
    */
   get searchableChoices() {
     return this.selectableChoices.filter(choice => choice.placeholder !== true);
@@ -100,7 +100,7 @@ export default class Store {
 
   /**
    * Get placeholder choice from store
-   * @return {Choice | undefined} Found placeholder
+   * @returns {Choice | undefined} Found placeholder
    */
   get placeholderChoice() {
     return [...this.choices]
@@ -110,7 +110,7 @@ export default class Store {
 
   /**
    * Get groups from store
-   * @return {Group[]} Group objects
+   * @returns {Group[]} Group objects
    */
   get groups() {
     return this.state.groups;
@@ -118,7 +118,7 @@ export default class Store {
 
   /**
    * Get active groups from store
-   * @return {Group[]} Group objects
+   * @returns {Group[]} Group objects
    */
   get activeGroups() {
     const { groups, choices } = this;
@@ -135,7 +135,7 @@ export default class Store {
 
   /**
    * Get loading state from store
-   * @return {boolean} Loading State
+   * @returns {boolean} Loading State
    */
   isLoading() {
     return this.state.general.loading;
@@ -144,7 +144,7 @@ export default class Store {
   /**
    * Get single choice by it's ID
    * @param {string} id
-   * @return {Choice | undefined} Found choice
+   * @returns {Choice | undefined} Found choice
    */
   getChoiceById(id) {
     return this.activeChoices.find(choice => choice.id === parseInt(id, 10));
@@ -153,7 +153,7 @@ export default class Store {
   /**
    * Get group by group id
    * @param  {string} id Group ID
-   * @return {Group | undefined} Group data
+   * @returns {Group | undefined} Group data
    */
   getGroupById(id) {
     return this.groups.find(group => group.id === parseInt(id, 10));

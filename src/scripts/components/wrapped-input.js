@@ -1,6 +1,17 @@
 import WrappedElement from './wrapped-element';
 
+/**
+ * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
+ */
+
 export default class WrappedInput extends WrappedElement {
+  /**
+   * @param {{
+   *  element: HTMLInputElement,
+   *  classNames: ClassNames,
+   *  delimiter: string
+   * }} args
+   */
   constructor({ element, classNames, delimiter }) {
     super({ element, classNames });
     this.delimiter = delimiter;
