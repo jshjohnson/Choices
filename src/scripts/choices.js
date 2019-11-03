@@ -45,6 +45,8 @@ import {
 
 /**
  * @typedef {import('../../types/index').Choices.Choice} Choice
+ * @typedef {import('../../types/index').Choices.Item} Item
+ * @typedef {import('../../types/index').Choices.Group} Group
  * @typedef {import('../../types/index').Choices.Options} Options
  */
 
@@ -174,15 +176,30 @@ class Choices {
     this._idNames = {
       itemChoice: 'item-choice',
     };
+    // Assign preset groups from passed element
+    this._presetGroups = this.passedElement.optionGroups;
     // Assign preset choices from passed object
     this._presetChoices = this.config.choices;
     // Assign preset items from passed object first
     this._presetItems = this.config.items;
-    // Then add any values passed from attribute
+    // Add any values passed from attribute
     if (this.passedElement.value) {
       this._presetItems = this._presetItems.concat(
         this.passedElement.value.split(this.config.delimiter),
       );
+    }
+    // Create array of choices from option elements
+    if (this.passedElement.options) {
+      this.passedElement.options.forEach(o => {
+        this._presetChoices.push({
+          value: o.value,
+          label: o.innerHTML,
+          selected: o.selected,
+          disabled: o.disabled || o.parentNode.disabled,
+          placeholder: o.value === '' || o.hasAttribute('placeholder'),
+          customProperties: o.getAttribute('data-custom-properties'),
+        });
+      });
     }
 
     this._render = this._render.bind(this);
@@ -2024,7 +2041,7 @@ class Choices {
       this.input.placeholder = this.config.searchPlaceholderValue || '';
     } else if (this._placeholderValue) {
       this.input.placeholder = this._placeholderValue;
-      this.input.setWidth(true);
+      this.input.setWidth();
     }
 
     this.containerOuter.element.appendChild(this.containerInner.element);
@@ -2045,116 +2062,105 @@ class Choices {
     }
 
     if (this._isSelectElement) {
-      this._addPredefinedChoices();
-    } else if (this._isTextElement) {
-      this._addPredefinedItems();
+      this._highlightPosition = 0;
+      this._isSearching = false;
+      this._setLoading(true);
+
+      if (this._presetGroups.length) {
+        this._addPredefinedGroups(this._presetGroups);
+      } else {
+        this._addPredefinedChoices(this._presetChoices);
+      }
+
+      this._setLoading(false);
+    }
+
+    if (this._isTextElement) {
+      this._addPredefinedItems(this._presetItems);
     }
   }
 
-  _addPredefinedChoices() {
-    const passedGroups = this.passedElement.optionGroups;
-
-    this._highlightPosition = 0;
-    this._isSearching = false;
-    this._setLoading(true);
-
-    if (passedGroups && passedGroups.length) {
-      // If we have a placeholder option
-      const placeholderChoice = this.passedElement.placeholderOption;
-      if (
-        placeholderChoice &&
-        placeholderChoice.parentNode.tagName === 'SELECT'
-      ) {
-        this._addChoice({
-          value: placeholderChoice.value,
-          label: placeholderChoice.innerHTML,
-          isSelected: placeholderChoice.selected,
-          isDisabled: placeholderChoice.disabled,
-          placeholder: true,
-        });
-      }
-
-      passedGroups.forEach(group =>
-        this._addGroup({
-          group,
-          id: group.id || null,
-        }),
-      );
-    } else {
-      const passedOptions = this.passedElement.options;
-      const filter = this.config.sorter;
-      const allChoices = this._presetChoices;
-
-      // Create array of options from option elements
-      passedOptions.forEach(o => {
-        allChoices.push({
-          value: o.value,
-          label: o.innerHTML,
-          selected: o.selected,
-          disabled: o.disabled || o.parentNode.disabled,
-          placeholder: o.value === '' || o.hasAttribute('placeholder'),
-          customProperties: o.getAttribute('data-custom-properties'),
-        });
+  _addPredefinedGroups(groups) {
+    // If we have a placeholder option
+    const placeholderChoice = this.passedElement.placeholderOption;
+    if (
+      placeholderChoice &&
+      placeholderChoice.parentNode.tagName === 'SELECT'
+    ) {
+      this._addChoice({
+        value: placeholderChoice.value,
+        label: placeholderChoice.innerHTML,
+        isSelected: placeholderChoice.selected,
+        isDisabled: placeholderChoice.disabled,
+        placeholder: true,
       });
+    }
 
-      // If sorting is enabled or the user is searching, filter choices
-      if (this.config.shouldSort) {
-        allChoices.sort(filter);
-      }
+    groups.forEach(group =>
+      this._addGroup({
+        group,
+        id: group.id || null,
+      }),
+    );
+  }
 
-      // Determine whether there is a selected choice
-      const hasSelectedChoice = allChoices.some(choice => choice.selected);
-      const handleChoice = (choice, index) => {
-        const { value, label, customProperties, placeholder } = choice;
+  _addPredefinedChoices(choices) {
+    // If sorting is enabled or the user is searching, filter choices
+    if (this.config.shouldSort) {
+      choices.sort(this.config.sorter);
+    }
 
-        if (this._isSelectElement) {
-          // If the choice is actually a group
-          if (choice.choices) {
-            this._addGroup({
-              group: choice,
-              id: choice.id || null,
-            });
-          } else {
-            // If there is a selected choice already or the choice is not
-            // the first in the array, add each choice normally
-            // Otherwise pre-select the first choice in the array if it's a single select
-            const shouldPreselect =
-              this._isSelectOneElement && !hasSelectedChoice && index === 0;
-            const isSelected = shouldPreselect ? true : choice.selected;
-            const isDisabled = shouldPreselect ? false : choice.disabled;
+    // Determine whether there is a selected choice
+    const hasSelectedChoice = choices.some(choice => choice.selected);
 
-            this._addChoice({
-              value,
-              label,
-              isSelected,
-              isDisabled,
-              customProperties,
-              placeholder,
-            });
-          }
+    // Add each choice
+    choices.forEach((choice, index) => {
+      const { value, label, customProperties, placeholder } = choice;
+
+      if (this._isSelectElement) {
+        // If the choice is actually a group
+        if (choice.choices) {
+          this._addGroup({
+            group: choice,
+            id: choice.id || null,
+          });
         } else {
+          // If there is a selected choice already or the choice is not
+          // the first in the array, add each choice normally
+          // Otherwise pre-select the first choice in the array if it's a single select
+          const shouldPreselect =
+            this._isSelectOneElement && !hasSelectedChoice && index === 0;
+          const isSelected = shouldPreselect ? true : choice.selected;
+          const isDisabled = shouldPreselect ? false : choice.disabled;
+
           this._addChoice({
             value,
             label,
-            isSelected: choice.selected,
-            isDisabled: choice.disabled,
+            isSelected,
+            isDisabled,
             customProperties,
             placeholder,
           });
         }
-      };
-
-      // Add each choice
-      allChoices.forEach((choice, index) => handleChoice(choice, index));
-    }
-
-    this._setLoading(false);
+      } else {
+        this._addChoice({
+          value,
+          label,
+          isSelected: choice.selected,
+          isDisabled: choice.disabled,
+          customProperties,
+          placeholder,
+        });
+      }
+    });
   }
 
-  _addPredefinedItems() {
-    const handlePresetItem = item => {
-      const itemType = getType(item);
-      if (itemType === 'Object' && item.value) {
+  /**
+   * @param {Item[]} items
+   */
+  _addPredefinedItems(items) {
+    items.forEach(item => {
+      if (typeof item === 'object' && item.value) {
         this._addItem({
           value: item.value,
           label: item.label,
@@ -2162,14 +2168,14 @@ class Choices {
           customProperties: item.customProperties,
           placeholder: item.placeholder,
         });
-      } else if (itemType === 'String') {
+      }
+
+      if (typeof item === 'string') {
         this._addItem({
           value: item,
         });
       }
-    };
-
-    this._presetItems.forEach(item => handlePresetItem(item));
+    });
   }
 
   _setChoiceOrItem(item) {
