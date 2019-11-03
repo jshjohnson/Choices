@@ -27,8 +27,7 @@ import {
 } from './actions/choices';
 import { addItem, removeItem, highlightItem } from './actions/items';
 import { addGroup } from './actions/groups';
-import { clearAll, resetTo } from './actions/misc';
-import { setIsLoading } from './actions/general';
+import { clearAll, resetTo, setIsLoading } from './actions/misc';
 import {
   isScrolledIntoView,
   getAdjacentEl,
@@ -898,7 +897,7 @@ class Choices {
     };
 
     // Add each list item to list
-    items.forEach(item => addItemToFragment(item));
+    items.forEach(addItemToFragment);
 
     return fragment;
   }

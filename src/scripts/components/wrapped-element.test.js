@@ -31,6 +31,19 @@ describe('components/wrappedElement', () => {
     it('sets isDisabled flag to false', () => {
       expect(instance.isDisabled).to.eql(false);
     });
+
+    describe('passing an element that is not an instance of HTMLInputElement or HTMLSelectElement', () => {
+      it('throws a TypeError', () => {
+        element = document.createElement('div');
+        expect(
+          () =>
+            new WrappedElement({
+              element,
+              classNames: DEFAULT_CLASSNAMES,
+            }),
+        ).to.throw(TypeError, 'Invalid element passed');
+      });
+    });
   });
 
   describe('value getter', () => {

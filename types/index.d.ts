@@ -721,7 +721,7 @@ declare namespace Choices {
      *
      * **Input types affected:** text, select-one, select-multiple
      */
-    classNames: Partial<Choices.ClassNames>;
+    classNames: Choices.ClassNames;
 
     /**
      * Choices uses the great Fuse library for searching. You can find more options here: https://github.com/krisk/Fuse#options

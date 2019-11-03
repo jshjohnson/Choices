@@ -29,7 +29,7 @@ export default class Dropdown {
   /**
    * Find element that matches passed selector
    * @param {string} selector
-   * @returns {HTMLElement}
+   * @returns {HTMLElement | null}
    */
   getChild(selector) {
     return this.element.querySelector(selector);

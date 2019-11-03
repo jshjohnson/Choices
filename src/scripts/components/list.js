@@ -26,7 +26,7 @@ export default class List {
 
   /**
    * @param {string} selector
-   * @returns {Element}
+   * @returns {Element | null}
    */
   getChild(selector) {
     return this.element.querySelector(selector);

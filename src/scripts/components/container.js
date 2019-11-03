@@ -62,7 +62,7 @@ export default class Container {
   }
 
   /**
-   * @param {number} activeDescendantID
+   * @param {string} activeDescendantID
    */
   setActiveDescendant(activeDescendantID) {
     this.element.setAttribute('aria-activedescendant', activeDescendantID);
@@ -132,7 +132,7 @@ export default class Container {
   }
 
   /**
-   * @param {Element} element
+   * @param {HTMLElement} element
    */
   wrap(element) {
     wrap(element, this.element);

@@ -2,6 +2,7 @@ import WrappedElement from './wrapped-element';
 
 /**
  * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
+ * @typedef {import('../../../types/index').Choices.Item} Item
  */
 
 export default class WrappedInput extends WrappedElement {
@@ -17,10 +18,16 @@ export default class WrappedInput extends WrappedElement {
     this.delimiter = delimiter;
   }
 
+  /**
+   * @returns {string}
+   */
   get value() {
     return this.element.value;
   }
 
+  /**
+   * @param {Item[]} items
+   */
   set value(items) {
     const itemValues = items.map(({ value }) => value);
     const joinedValues = itemValues.join(this.delimiter);

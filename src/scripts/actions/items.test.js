@@ -9,8 +9,8 @@ describe('actions/items', () => {
       const id = '1234';
       const choiceId = '1234';
       const groupId = 'test';
-      const customProperties = 'test';
-      const placeholder = 'test';
+      const customProperties = { test: true };
+      const placeholder = true;
       const keyCode = 10;
 
       const expectedAction = {

@@ -8,7 +8,7 @@ import { dispatchEvent } from '../lib/utils';
 export default class WrappedElement {
   /**
    * @param {{
-   *  element: HTMLElement,
+   *  element: HTMLInputElement | HTMLSelectElement,
    *  classNames: ClassNames,
    * }} args
    */
@@ -16,7 +16,10 @@ export default class WrappedElement {
     this.element = element;
     this.classNames = classNames;
 
-    if (!(element instanceof Element)) {
+    if (
+      !(element instanceof HTMLInputElement) &&
+      !(element instanceof HTMLSelectElement)
+    ) {
       throw new TypeError('Invalid element passed');
     }
 
@@ -46,7 +49,7 @@ export default class WrappedElement {
     this.element.hidden = true;
 
     // Remove element from tab index
-    this.element.tabIndex = '-1';
+    this.element.tabIndex = -1;
 
     // Backup original styles if any
     const origStyle = this.element.getAttribute('style');
