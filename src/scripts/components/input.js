@@ -1,4 +1,5 @@
 import { sanitise } from '../lib/utils';
+import { SELECT_ONE_TYPE } from '../constants';
 
 /**
  * @typedef {import('../../../types/index').Choices.passedElement} passedElement
@@ -137,7 +138,7 @@ export default class Input {
   }
 
   _onInput() {
-    if (this.type !== 'select-one') {
+    if (this.type !== SELECT_ONE_TYPE) {
       this.setWidth();
     }
   }

@@ -1,4 +1,5 @@
 import { wrap } from '../lib/utils';
+import { SELECT_ONE_TYPE } from '../constants';
 
 /**
  * @typedef {import('../../../types/index').Choices.passedElement} passedElement
@@ -116,7 +117,7 @@ export default class Container {
   enable() {
     this.element.classList.remove(this.classNames.disabledState);
     this.element.removeAttribute('aria-disabled');
-    if (this.type === 'select-one') {
+    if (this.type === SELECT_ONE_TYPE) {
       this.element.setAttribute('tabindex', '0');
     }
     this.isDisabled = false;
@@ -125,7 +126,7 @@ export default class Container {
   disable() {
     this.element.classList.add(this.classNames.disabledState);
     this.element.setAttribute('aria-disabled', 'true');
-    if (this.type === 'select-one') {
+    if (this.type === SELECT_ONE_TYPE) {
       this.element.setAttribute('tabindex', '-1');
     }
     this.isDisabled = true;
