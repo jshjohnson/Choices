@@ -483,7 +483,7 @@ class Choices {
    *
    * **Input types affected:** select-one, select-multiple
    *
-   * @template {object[] | ((instance: Choices) => object[] | Promise<object[]>)} T
+   * @template {Choice[] | ((instance: Choices) => object[] | Promise<object[]>)} T
    * @param {T} [choicesArrayOrFetcher]
    * @param {string} [value = 'value'] - name of `value` field
    * @param {string} [label = 'label'] - name of 'label' field
@@ -573,6 +573,7 @@ class Choices {
     if (typeof choicesArrayOrFetcher === 'function') {
       // it's a choices fetcher function
       const fetcher = choicesArrayOrFetcher(this);
+
       if (typeof Promise === 'function' && fetcher instanceof Promise) {
         // that's a promise
         // eslint-disable-next-line compat/compat
@@ -608,7 +609,9 @@ class Choices {
 
     this.containerOuter.removeLoadingState();
 
-    const addGroupsAndChoices = groupOrChoice => {
+    this._setLoading(true);
+
+    choicesArrayOrFetcher.forEach(groupOrChoice => {
       if (groupOrChoice.choices) {
         this._addGroup({
           group: groupOrChoice,
@@ -626,10 +629,8 @@ class Choices {
           placeholder: groupOrChoice.placeholder,
         });
       }
-    };
+    });
 
-    this._setLoading(true);
-    choicesArrayOrFetcher.forEach(addGroupsAndChoices);
     this._setLoading(false);
 
     return this;

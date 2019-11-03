@@ -1,4 +1,4 @@
-// Type definitions for Choices.js 7.1.x
+// Type definitions for Choices.js
 // Project: https://github.com/jshjohnson/Choices
 // Definitions by:
 //         Arthur vasconcelos <https://github.com/arthurvasconcelos>,
@@ -46,6 +46,7 @@ declare namespace Choices {
   interface Item extends Choice {
     choiceId?: string;
     keyCode?: number;
+    highlighted?: boolean;
   }
 
   /**
