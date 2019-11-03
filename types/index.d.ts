@@ -65,7 +65,7 @@ declare namespace Choices {
       value: string;
       label: string;
       groupValue: string;
-      keyCode: string;
+      keyCode: number;
     }>;
 
     /**

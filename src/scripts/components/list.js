@@ -18,7 +18,7 @@ export default class List {
   }
 
   /**
-   * @param {Element} node
+   * @param {Element | DocumentFragment} node
    */
   append(node) {
     this.element.appendChild(node);

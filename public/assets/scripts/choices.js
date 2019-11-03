@@ -1266,9 +1266,19 @@ var general = function general(state, action) {
 
 /* harmony default export */ var reducers_general = (general);
 // CONCATENATED MODULE: ./src/scripts/lib/utils.js
+/**
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
 var getRandomNumber = function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min) + min);
 };
+/**
+ * @param {number} length
+ * @returns {string}
+ */
+
 var generateChars = function generateChars(length) {
   return Array.from({
     length: length
@@ -1276,18 +1286,41 @@ var generateChars = function generateChars(length) {
     return getRandomNumber(0, 36).toString(36);
   }).join('');
 };
+/**
+ * @param {HTMLInputElement | HTMLSelectElement} element
+ * @param {string} prefix
+ * @returns {string}
+ */
+
 var generateId = function generateId(element, prefix) {
   var id = element.id || element.name && element.name + "-" + generateChars(2) || generateChars(4);
   id = id.replace(/(:|\.|\[|\]|,)/g, '');
   id = prefix + "-" + id;
   return id;
 };
+/**
+ * @param {any} obj
+ * @returns {string}
+ */
+
 var getType = function getType(obj) {
   return Object.prototype.toString.call(obj).slice(8, -1);
 };
+/**
+ * @param {string} type
+ * @param {any} obj
+ * @returns {boolean}
+ */
+
 var isType = function isType(type, obj) {
   return obj !== undefined && obj !== null && getType(obj) === type;
 };
+/**
+ * @param {HTMLElement} element
+ * @param {HTMLElement} [wrapper={HTMLDivElement}]
+ * @returns {HTMLElement}
+ */
+
 var utils_wrap = function wrap(element, wrapper) {
   if (wrapper === void 0) {
     wrapper = document.createElement('div');
@@ -1309,14 +1342,14 @@ var utils_wrap = function wrap(element, wrapper) {
 var findAncestorByAttrName = function findAncestorByAttrName(el, attr) {
   return el.closest("[" + attr + "]");
 };
-var getAdjacentEl =
 /**
  * @param {Element} startEl
  * @param {string} selector
  * @param {1 | -1} direction
  * @returns {Element | undefined}
  */
-function getAdjacentEl(startEl, selector, direction) {
+
+var getAdjacentEl = function getAdjacentEl(startEl, selector, direction) {
   if (direction === void 0) {
     direction = 1;
   }
@@ -1338,27 +1371,39 @@ function getAdjacentEl(startEl, selector, direction) {
 
   return sibling;
 };
-var isScrolledIntoView = function isScrolledIntoView(el, parent, direction) {
+/**
+ * @param {HTMLElement} element
+ * @param {HTMLElement} parent
+ * @param {-1 | 1} direction
+ * @returns {boolean}
+ */
+
+var isScrolledIntoView = function isScrolledIntoView(element, parent, direction) {
   if (direction === void 0) {
     direction = 1;
   }
 
-  if (!el) {
-    return;
+  if (!element) {
+    return false;
   }
 
   var isVisible;
 
   if (direction > 0) {
     // In view from bottom
-    isVisible = parent.scrollTop + parent.offsetHeight >= el.offsetTop + el.offsetHeight;
+    isVisible = parent.scrollTop + parent.offsetHeight >= element.offsetTop + element.offsetHeight;
   } else {
     // In view from top
-    isVisible = el.offsetTop >= parent.scrollTop;
+    isVisible = element.offsetTop >= parent.scrollTop;
   }
 
   return isVisible;
 };
+/**
+ * @param {any} value
+ * @returns {any}
+ */
+
 var sanitise = function sanitise(value) {
   if (typeof value !== 'string') {
     return value;
@@ -1366,6 +1411,10 @@ var sanitise = function sanitise(value) {
 
   return value.replace(/&/g, '&amp;').replace(/>/g, '&rt;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 };
+/**
+ * @returns {function}
+ */
+
 var strToEl = function () {
   var tmpEl = document.createElement('div');
   return function (str) {
@@ -1400,13 +1449,19 @@ var sortByAlpha = function sortByAlpha(_ref, _ref2) {
   });
 };
 /**
- * @param {object} a
- * @param {object} b
+ * @param {{ score: number }} a
+ * @param {{ score: number }} b
  */
 
 var sortByScore = function sortByScore(a, b) {
   return a.score - b.score;
 };
+/**
+ * @param {HTMLElement} element
+ * @param {string} type
+ * @param {object} customArgs
+ */
+
 var dispatchEvent = function dispatchEvent(element, type, customArgs) {
   if (customArgs === void 0) {
     customArgs = null;
@@ -1419,9 +1474,21 @@ var dispatchEvent = function dispatchEvent(element, type, customArgs) {
   });
   return element.dispatchEvent(event);
 };
+/**
+ * @param {string} userAgent
+ * @returns {boolean}
+ */
+
 var isIE11 = function isIE11(userAgent) {
   return !!(userAgent.match(/Trident/) && userAgent.match(/rv[ :]11/));
 };
+/**
+ * @param {array} array
+ * @param {any} value
+ * @param {string} [key="value"]
+ * @returns {boolean}
+ */
+
 var existsInArray = function existsInArray(array, value, key) {
   if (key === void 0) {
     key = 'value';
@@ -1435,9 +1502,20 @@ var existsInArray = function existsInArray(array, value, key) {
     return item[key] === value;
   });
 };
+/**
+ * @param {any} obj
+ * @returns {any}
+ */
+
 var cloneObject = function cloneObject(obj) {
   return JSON.parse(JSON.stringify(obj));
 };
+/**
+ * @param {object} a
+ * @param {object} b
+ * @returns {array}
+ */
+
 var diff = function diff(a, b) {
   var aKeys = Object.keys(a).sort();
   var bKeys = Object.keys(b).sort();
