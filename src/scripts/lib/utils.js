@@ -1,9 +1,23 @@
+/**
+ * @param {number} min
+ * @param {number} max
+ * @returns {number}
+ */
 export const getRandomNumber = (min, max) =>
   Math.floor(Math.random() * (max - min) + min);
 
+/**
+ * @param {number} length
+ * @returns {string}
+ */
 export const generateChars = length =>
   Array.from({ length }, () => getRandomNumber(0, 36).toString(36)).join('');
 
+/**
+ * @param {HTMLInputElement | HTMLSelectElement} element
+ * @param {string} prefix
+ * @returns {string}
+ */
 export const generateId = (element, prefix) => {
   let id =
     element.id ||
@@ -15,11 +29,25 @@ export const generateId = (element, prefix) => {
   return id;
 };
 
+/**
+ * @param {any} obj
+ * @returns {string}
+ */
 export const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
 
+/**
+ * @param {string} type
+ * @param {any} obj
+ * @returns {boolean}
+ */
 export const isType = (type, obj) =>
   obj !== undefined && obj !== null && getType(obj) === type;
 
+/**
+ * @param {HTMLElement} element
+ * @param {HTMLElement} [wrapper={HTMLDivElement}]
+ * @returns {HTMLElement}
+ */
 export const wrap = (element, wrapper = document.createElement('div')) => {
   if (element.nextSibling) {
     element.parentNode.insertBefore(wrapper, element.nextSibling);
@@ -36,34 +64,39 @@ export const wrap = (element, wrapper = document.createElement('div')) => {
  */
 export const findAncestorByAttrName = (el, attr) => el.closest(`[${attr}]`);
 
-export const getAdjacentEl =
-  /**
-   * @param {Element} startEl
-   * @param {string} selector
-   * @param {1 | -1} direction
-   * @returns {Element | undefined}
-   */
-  (startEl, selector, direction = 1) => {
-    if (!(startEl instanceof Element) || typeof selector !== 'string') {
-      return undefined;
+/**
+ * @param {Element} startEl
+ * @param {string} selector
+ * @param {1 | -1} direction
+ * @returns {Element | undefined}
+ */
+export const getAdjacentEl = (startEl, selector, direction = 1) => {
+  if (!(startEl instanceof Element) || typeof selector !== 'string') {
+    return undefined;
+  }
+
+  const prop = `${direction > 0 ? 'next' : 'previous'}ElementSibling`;
+
+  let sibling = startEl[prop];
+  while (sibling) {
+    if (sibling.matches(selector)) {
+      return sibling;
     }
+    sibling = sibling[prop];
+  }
 
-    const prop = `${direction > 0 ? 'next' : 'previous'}ElementSibling`;
+  return sibling;
+};
 
-    let sibling = startEl[prop];
-    while (sibling) {
-      if (sibling.matches(selector)) {
-        return sibling;
-      }
-      sibling = sibling[prop];
-    }
-
-    return sibling;
-  };
-
-export const isScrolledIntoView = (el, parent, direction = 1) => {
-  if (!el) {
-    return;
+/**
+ * @param {HTMLElement} element
+ * @param {HTMLElement} parent
+ * @param {-1 | 1} direction
+ * @returns {boolean}
+ */
+export const isScrolledIntoView = (element, parent, direction = 1) => {
+  if (!element) {
+    return false;
   }
 
   let isVisible;
@@ -71,15 +104,20 @@ export const isScrolledIntoView = (el, parent, direction = 1) => {
   if (direction > 0) {
     // In view from bottom
     isVisible =
-      parent.scrollTop + parent.offsetHeight >= el.offsetTop + el.offsetHeight;
+      parent.scrollTop + parent.offsetHeight >=
+      element.offsetTop + element.offsetHeight;
   } else {
     // In view from top
-    isVisible = el.offsetTop >= parent.scrollTop;
+    isVisible = element.offsetTop >= parent.scrollTop;
   }
 
   return isVisible;
 };
 
+/**
+ * @param {any} value
+ * @returns {any}
+ */
 export const sanitise = value => {
   if (typeof value !== 'string') {
     return value;
@@ -92,6 +130,9 @@ export const sanitise = value => {
     .replace(/"/g, '&quot;');
 };
 
+/**
+ * @returns {function}
+ */
 export const strToEl = (() => {
   const tmpEl = document.createElement('div');
 
@@ -129,6 +170,11 @@ export const sortByAlpha = (
  */
 export const sortByScore = (a, b) => a.score - b.score;
 
+/**
+ * @param {HTMLElement} element
+ * @param {string} type
+ * @param {object} customArgs
+ */
 export const dispatchEvent = (element, type, customArgs = null) => {
   const event = new CustomEvent(type, {
     detail: customArgs,
@@ -139,9 +185,19 @@ export const dispatchEvent = (element, type, customArgs = null) => {
   return element.dispatchEvent(event);
 };
 
+/**
+ * @param {string} userAgent
+ * @returns {boolean}
+ */
 export const isIE11 = userAgent =>
   !!(userAgent.match(/Trident/) && userAgent.match(/rv[ :]11/));
 
+/**
+ * @param {array} array
+ * @param {any} value
+ * @param {string} key
+ * @returns {boolean}
+ */
 export const existsInArray = (array, value, key = 'value') =>
   array.some(item => {
     if (typeof value === 'string') {
@@ -151,8 +207,17 @@ export const existsInArray = (array, value, key = 'value') =>
     return item[key] === value;
   });
 
+/**
+ * @param {any} obj
+ * @returns {any}
+ */
 export const cloneObject = obj => JSON.parse(JSON.stringify(obj));
 
+/**
+ * @param {object} a
+ * @param {object} b
+ * @returns {array}
+ */
 export const diff = (a, b) => {
   const aKeys = Object.keys(a).sort();
   const bKeys = Object.keys(b).sort();
