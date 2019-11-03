@@ -1,12 +1,13 @@
 import { ACTION_TYPES } from '../constants';
 
 /**
+ * @typedef {import('redux').Action} Action
  * @typedef {import('../../../types/index').Choices.Item} Item
  */
 
 /**
  * @param {Item} item
- * @returns {{ type: string } & Item}
+ * @returns {Action & Item}
  */
 export const addItem = ({
   value,
@@ -32,7 +33,7 @@ export const addItem = ({
 /**
  * @param {string} id
  * @param {string} choiceId
- * @returns {{ type: string, id: string, choiceId: string }}
+ * @returns {Action & { id: string, choiceId: string }}
  */
 export const removeItem = (id, choiceId) => ({
   type: ACTION_TYPES.REMOVE_ITEM,
@@ -43,7 +44,7 @@ export const removeItem = (id, choiceId) => ({
 /**
  * @param {string} id
  * @param {boolean} highlighted
- * @returns {{ type: string, id: string, highlighted: boolean }}
+ * @returns {Action & { id: string, highlighted: boolean }}
  */
 export const highlightItem = (id, highlighted) => ({
   type: ACTION_TYPES.HIGHLIGHT_ITEM,

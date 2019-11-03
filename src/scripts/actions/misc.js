@@ -1,5 +1,9 @@
 /**
- * @returns {{ type: string }}
+ * @typedef {import('redux').Action} Action
+ */
+
+/**
+ * @returns {Action}
  */
 export const clearAll = () => ({
   type: 'CLEAR_ALL',
@@ -7,7 +11,7 @@ export const clearAll = () => ({
 
 /**
  * @param {any} state
- * @returns {{ type: string, state: object }}
+ * @returns {Action & { state: object }}
  */
 export const resetTo = state => ({
   type: 'RESET_TO',
@@ -16,7 +20,7 @@ export const resetTo = state => ({
 
 /**
  * @param {boolean} isLoading
- * @returns {{ type: string, isLoading: boolean }}
+ * @returns {Action & { isLoading: boolean }}
  */
 export const setIsLoading = isLoading => ({
   type: 'SET_IS_LOADING',
