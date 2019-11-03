@@ -214,6 +214,7 @@
           placeholder="This is a placeholder"
           multiple
         >
+          <option value="">Pick a country</option>
           <optgroup label="UK">
             <option value="London">London</option>
             <option value="Manchester">Manchester</option>
@@ -336,8 +337,8 @@
           data-trigger
           name="choices-single-groups"
           id="choices-single-groups"
-          placeholder="This is a placeholder"
         >
+          <option value="">Pick a country</option>
           <optgroup label="UK">
             <option value="London">London</option>
             <option value="Manchester">Manchester</option>
@@ -376,7 +377,6 @@
           data-trigger
           name="choices-single-rtl"
           id="choices-single-rtl"
-          placeholder="This is a placeholder"
           dir="rtl"
         >
           <option value="Choice 1">Choice 1</option>
@@ -402,7 +402,6 @@
           class="form-control"
           name="choices-single-preset-options"
           id="choices-single-preset-options"
-          placeholder="This is a placeholder"
         ></select>
 
         <label for="choices-single-selected-option"
@@ -415,7 +414,6 @@
           class="form-control"
           name="choices-single-selected-option"
           id="choices-single-selected-option"
-          placeholder="This is a placeholder"
         ></select>
 
         <label for="choices-with-custom-props-via-html"
@@ -440,7 +438,6 @@
           class="form-control"
           name="choices-single-no-sorting"
           id="choices-single-no-sorting"
-          placeholder="This is a placeholder"
         >
           <option value="Madrid">Madrid</option>
           <option value="Toronto">Toronto</option>
@@ -467,7 +464,6 @@
           class="form-control"
           name="choices-single-custom-templates"
           id="choices-single-custom-templates"
-          placeholder="This is a placeholder"
         >
           <option value="React">React</option>
           <option value="Angular">Angular</option>
@@ -481,12 +477,8 @@
           'Cities' is 'London'
         </p>
         <label for="cities">Cities</label>
-        <select
-          class="form-control"
-          name="cities"
-          id="cities"
-          placeholder="Choose a city"
-        >
+        <select class="form-control" name="cities" id="cities">
+          <option value="">Choose a city</option>
           <option value="Leeds">Leeds</option>
           <option value="Manchester">Manchester</option>
           <option value="London">London</option>
@@ -495,12 +487,8 @@
         </select>
 
         <label for="tube-stations">Tube stations</label>
-        <select
-          class="form-control"
-          name="tube-stations"
-          id="tube-stations"
-          placeholder="Choose a tube station"
-        >
+        <select class="form-control" name="tube-stations" id="tube-stations">
+          <option value="">Choose a tube station</option>
           <option value="Moorgate">Moorgate</option>
           <option value="St Pauls">St Pauls</option>
           <option value="Old Street">Old Street</option>
@@ -515,12 +503,7 @@
         <p>Change the values and press reset to restore to initial state.</p>
         <form>
           <label for="reset-simple">Change me!</label>
-          <select
-            class="form-control"
-            name="reset-simple"
-            id="reset-simple"
-            placeholder="Choose an option"
-          >
+          <select class="form-control" name="reset-simple" id="reset-simple">
             <option value="Option 1">Option 1</option>
             <option value="Option 2" selected>Option 2</option>
             <option value="Option 3">Option 3</option>
@@ -533,7 +516,6 @@
             class="form-control"
             name="reset-multiple"
             id="reset-multiple"
-            placeholder="This is a placeholder"
             multiple
           >
             <option value="Choice 1" selected>Choice 1</option>
