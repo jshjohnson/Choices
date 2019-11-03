@@ -73,7 +73,7 @@ export const DEFAULT_CONFIG = {
   customAddItemText: 'Only values matching specific conditions can be added',
   addItemText: value => `Press Enter to add <b>"${sanitise(value)}"</b>`,
   maxItemText: maxItemCount => `Only ${maxItemCount} values can be added`,
-  itemComparer: (choice, item) => choice === item,
+  valueComparer: (value1, value2) => value1 === value2,
   fuseOptions: {
     includeScore: true,
   },

@@ -2224,7 +2224,7 @@ class Choices {
     const { choices } = this._store;
     // Check 'value' property exists and the choice isn't already selected
     const foundChoice = choices.find(choice =>
-      this.config.itemComparer(choice.value, val),
+      this.config.valueComparer(choice.value, val),
     );
 
     if (foundChoice && !foundChoice.selected) {
