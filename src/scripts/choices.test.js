@@ -63,6 +63,22 @@ describe('choices', () => {
             ...config,
           });
         });
+
+        describe('passing the searchEnabled config option as false', () => {
+          describe('passing a select-multiple element', () => {
+            it('sets searchEnabled to true', () => {
+              document.body.innerHTML = `
+              <select data-choice multiple></select>
+              `;
+
+              instance = new Choices('[data-choice]', {
+                searchEnabled: false,
+              });
+
+              expect(instance.config.searchEnabled).to.equal(true);
+            });
+          });
+        });
       });
     });
 

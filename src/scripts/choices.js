@@ -82,29 +82,12 @@ class Choices {
       { arrayMerge: (_, sourceArray) => [...sourceArray] },
     );
 
-    // Convert addItemFilter to function
-    if (
-      userConfig.addItemFilter &&
-      typeof userConfig.addItemFilter !== 'function'
-    ) {
-      const re =
-        userConfig.addItemFilter instanceof RegExp
-          ? userConfig.addItemFilter
-          : new RegExp(userConfig.addItemFilter);
-
-      this.config.addItemFilter = re.test.bind(re);
-    }
-
     const invalidConfigOptions = diff(this.config, DEFAULT_CONFIG);
     if (invalidConfigOptions.length) {
       console.warn(
         'Unknown config option(s) passed',
         invalidConfigOptions.join(', '),
       );
-    }
-
-    if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
-      this.config.renderSelectedChoices = 'auto';
     }
 
     const passedElement =
@@ -126,6 +109,25 @@ class Choices {
     this._isSelectMultipleElement = passedElement.type === SELECT_MULTIPLE_TYPE;
     this._isSelectElement =
       this._isSelectOneElement || this._isSelectMultipleElement;
+
+    this.config.searchEnabled =
+      this._isSelectMultipleElement || this.config.searchEnabled;
+
+    if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
+      this.config.renderSelectedChoices = 'auto';
+    }
+
+    if (
+      userConfig.addItemFilter &&
+      typeof userConfig.addItemFilter !== 'function'
+    ) {
+      const re =
+        userConfig.addItemFilter instanceof RegExp
+          ? userConfig.addItemFilter
+          : new RegExp(userConfig.addItemFilter);
+
+      this.config.addItemFilter = re.test.bind(re);
+    }
 
     if (this._isTextElement) {
       this.passedElement = new WrappedInput({
