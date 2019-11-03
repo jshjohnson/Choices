@@ -13,6 +13,7 @@ import {
   existsInArray,
   cloneObject,
   dispatchEvent,
+  diff,
 } from './utils';
 
 describe('utils', () => {
@@ -97,12 +98,24 @@ describe('utils', () => {
   });
 
   describe('sanitise', () => {
-    it('strips HTML from value', () => {
-      const value = '<script>somethingMalicious();</script>';
-      const output = sanitise(value);
-      expect(output).to.equal(
-        '&lt;script&rt;somethingMalicious();&lt;/script&rt;',
-      );
+    describe('when passing a parameter that is not a string', () => {
+      it('returns the passed argument', () => {
+        const value = {
+          test: true,
+        };
+        const output = sanitise(value);
+        expect(output).to.equal(value);
+      });
+    });
+
+    describe('when passing a string', () => {
+      it('strips HTML from value', () => {
+        const value = '<script>somethingMalicious();</script>';
+        const output = sanitise(value);
+        expect(output).to.equal(
+          '&lt;script&rt;somethingMalicious();&lt;/script&rt;',
+        );
+      });
     });
   });
 
@@ -236,6 +249,22 @@ describe('utils', () => {
 
       expect(output).to.not.equal(object);
       expect(output).to.eql(object);
+    });
+  });
+
+  describe('diff', () => {
+    it('returns an array of keys present on the first but missing on the second object', () => {
+      const obj1 = {
+        foo: 'bar',
+        baz: 'foo',
+      };
+      const obj2 = {
+        foo: 'bar',
+      };
+
+      const output = diff(obj1, obj2);
+
+      expect(output).to.deep.equal(['baz']);
     });
   });
 });

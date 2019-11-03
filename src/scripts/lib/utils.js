@@ -214,9 +214,10 @@ export const existsInArray = (array, value, key = 'value') =>
 export const cloneObject = obj => JSON.parse(JSON.stringify(obj));
 
 /**
+ * Returns an array of keys present on the first but missing on the second object
  * @param {object} a
  * @param {object} b
- * @returns {array}
+ * @returns {string[]}
  */
 export const diff = (a, b) => {
   const aKeys = Object.keys(a).sort();
