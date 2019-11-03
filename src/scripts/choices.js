@@ -1502,7 +1502,7 @@ class Choices {
         if (
           !isScrolledIntoView(nextEl, this.choiceList.element, directionInt)
         ) {
-          this.choiceList.scrollToChoice(nextEl, directionInt);
+          this.choiceList.scrollToChildElement(nextEl, directionInt);
         }
         this._highlightChoice(nextEl);
       }

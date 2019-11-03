@@ -47,21 +47,23 @@ export default class List {
    * @param {HTMLElement} element
    * @param {1 | -1} direction
    */
-  scrollToChoice(element, direction) {
+  scrollToChildElement(element, direction) {
     if (!element) {
       return;
     }
 
-    const dropdownHeight = this.element.offsetHeight;
+    const listHeight = this.element.offsetHeight;
+    // Scroll position of dropdown
+    const listScrollPosition = this.element.scrollTop + listHeight;
+
     const elementHeight = element.offsetHeight;
     // Distance from bottom of element to top of parent
     const elementPos = element.offsetTop + elementHeight;
-    // Scroll position of dropdown
-    const containerScrollPos = this.element.scrollTop + dropdownHeight;
+
     // Difference between the element and scroll position
     const destination =
       direction > 0
-        ? this.element.scrollTop + elementPos - containerScrollPos
+        ? this.element.scrollTop + elementPos - listScrollPosition
         : element.offsetTop;
 
     requestAnimationFrame(() => {
