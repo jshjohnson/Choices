@@ -165,8 +165,8 @@ export const sortByAlpha = (
   });
 
 /**
- * @param {object} a
- * @param {object} b
+ * @param {{ score: number }} a
+ * @param {{ score: number }} b
  */
 export const sortByScore = (a, b) => a.score - b.score;
 
@@ -195,7 +195,7 @@ export const isIE11 = userAgent =>
 /**
  * @param {array} array
  * @param {any} value
- * @param {string} key
+ * @param {string} [key="value"]
  * @returns {boolean}
  */
 export const existsInArray = (array, value, key = 'value') =>
