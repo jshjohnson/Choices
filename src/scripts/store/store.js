@@ -27,7 +27,7 @@ export default class Store {
 
   /**
    * Dispatch event to store (wrapped Redux method)
-   * @param  {Function} action Action function to trigger
+   * @param  {{ type: string, [x: string]: any }} action Action to trigger
    * @return
    */
   dispatch(action) {
