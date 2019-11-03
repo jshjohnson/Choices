@@ -38,7 +38,7 @@ describe('utils', () => {
   describe('generateId', () => {
     describe('when given element has id value', () => {
       it('generates a unique prefixed id based on given elements id', () => {
-        const element = document.createElement('div');
+        const element = document.createElement('select');
         element.id = 'test-id';
         const prefix = 'test-prefix';
 
@@ -50,7 +50,7 @@ describe('utils', () => {
 
     describe('when given element has no id value but name value', () => {
       it('generates a unique prefixed id based on given elements name plus 2 random characters', () => {
-        const element = document.createElement('div');
+        const element = document.createElement('select');
         element.name = 'test-name';
         const prefix = 'test-prefix';
 
@@ -64,7 +64,7 @@ describe('utils', () => {
 
     describe('when given element has no id value and no name value', () => {
       it('generates a unique prefixed id based on 4 random characters', () => {
-        const element = document.createElement('div');
+        const element = document.createElement('select');
         const prefix = 'test-prefix';
 
         const output = generateId(element, prefix);
@@ -84,7 +84,7 @@ describe('utils', () => {
       expect(getType([])).to.equal('Array');
       expect(getType(() => {})).to.equal('Function');
       expect(getType(new Error())).to.equal('Error');
-      expect(getType(new RegExp())).to.equal('RegExp');
+      expect(getType(new RegExp(/''/g))).to.equal('RegExp');
       expect(getType(new String())).to.equal('String'); // eslint-disable-line
       expect(getType('')).to.equal('String');
     });

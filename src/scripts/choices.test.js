@@ -1,9 +1,12 @@
-import { expect } from 'chai';
+import chai, { expect } from 'chai';
 import { spy, stub } from 'sinon';
+import sinonChai from 'sinon-chai';
 
 import Choices from './choices';
 import { EVENTS, ACTION_TYPES, DEFAULT_CONFIG } from './constants';
 import { WrappedSelect, WrappedInput } from './components/index';
+
+chai.use(sinonChai);
 
 describe('choices', () => {
   let instance;
@@ -1961,6 +1964,34 @@ describe('choices', () => {
             const value = instance._generatePlaceholderValue();
             expect(value).to.equal(false);
           });
+        });
+      });
+    });
+
+    describe('_getTemplate', () => {
+      describe('when not passing a template key', () => {
+        it('returns null', () => {
+          output = instance._getTemplate();
+          expect(output).to.equal(null);
+        });
+      });
+
+      describe('when passing a template key', () => {
+        it('returns the generated template for the given template key', () => {
+          const templateKey = 'test';
+          const element = document.createElement('div');
+          const customArg = { test: true };
+
+          instance._templates = {
+            [templateKey]: stub().returns(element),
+          };
+
+          output = instance._getTemplate(templateKey, customArg);
+          expect(output).to.deep.equal(element);
+          expect(instance._templates[templateKey]).to.have.been.calledOnceWith(
+            instance.config.classNames,
+            customArg,
+          );
         });
       });
     });
