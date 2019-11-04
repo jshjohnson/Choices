@@ -10,14 +10,15 @@ on:
       - 'webpack.config.*'
       - 'public/index.html'
       - '.github/actions-scripts/__snapshots__/**'
+      - '.github/workflows/browsers.yml'
 
 jobs:
   selenium:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macOS-10.14]
-        browser: [ie, firefox]
+        os: [windows-latest, macOS-latest]
+        browser: [ie, firefox, safari]
         exclude:
           # On Windows, run tests with only IE and Edge
           - os: windows-latest
@@ -51,20 +52,19 @@ jobs:
       # install drivers
       - name: Enable Safari Driver
         run: |
-          # brew tap homebrew/cask-versions
-          # brew cask install safari-technology-preview
-          sudo safaridriver --enable
-          defaults write -app Safari IncludeDevelopMenu 1
-          defaults write -app Safari AllowJavaScriptFromAppleEvents 1
-          defaults write -app Safari IncludeInternalDebugMenu 1
-          defaults write -app Safari AllowRemoteAutomation 1
-          safaridriver -p 0 &
+          # Workaround for `sudo safardriver --enable` not working:
+          # https://github.com/web-platform-tests/wpt/issues/19845
+          # https://github.com/web-platform-tests/wpt/blob/master/tools/ci/azure/install_safari.yml
+          mkdir -p ~/Library/WebDriver/
+          curl https://raw.githubusercontent.com/web-platform-tests/wpt/master/tools/ci/azure/com.apple.Safari.plist -o ~/Library/WebDriver/com.apple.Safari.plist
+          defaults write com.apple.Safari WebKitJavaScriptCanOpenWindowsAutomatically 1
+          # sudo safaridriver --enable
         if: matrix.browser == 'safari'
 
       - run: |
           brew cask install firefox
           brew install geckodriver
-        if: matrix.browser == 'firefox' && matrix.os == 'macOS-10.14'
+        if: matrix.browser == 'firefox' && matrix.os == 'macOS-latest'
 
       - run: echo "::add-path::$env:GeckoWebDriver"
         if: matrix.browser == 'firefox' && matrix.os == 'windows-latest'
