@@ -1511,9 +1511,10 @@ var cloneObject = function cloneObject(obj) {
   return JSON.parse(JSON.stringify(obj));
 };
 /**
+ * Returns an array of keys present on the first but missing on the second object
  * @param {object} a
  * @param {object} b
- * @returns {array}
+ * @returns {string[]}
  */
 
 var diff = function diff(a, b) {
@@ -2381,7 +2382,7 @@ function () {
     this.element.innerHTML = '';
   }
   /**
-   * @param {Element} node
+   * @param {Element | DocumentFragment} node
    */
   ;
 
@@ -3045,12 +3046,13 @@ var TEMPLATES =
 /* harmony default export */ var templates = (TEMPLATES);
 // CONCATENATED MODULE: ./src/scripts/actions/choices.js
 /**
+ * @typedef {import('redux').Action} Action
  * @typedef {import('../../../types/index').Choices.Choice} Choice
  */
 
 /**
  * @argument {Choice} choice
- * @returns {{ type: string } & Choice}
+ * @returns {Action & Choice}
  */
 
 var choices_addChoice = function addChoice(_ref) {
@@ -3078,7 +3080,7 @@ var choices_addChoice = function addChoice(_ref) {
 };
 /**
  * @argument {Choice[]} results
- * @returns {{ type: string, results: Choice[] }}
+ * @returns {Action & { results: Choice[] }}
  */
 
 var choices_filterChoices = function filterChoices(results) {
@@ -3089,7 +3091,7 @@ var choices_filterChoices = function filterChoices(results) {
 };
 /**
  * @argument {boolean} active
- * @returns {{ type: string, active: boolean }}
+ * @returns {Action & { active: boolean }}
  */
 
 var choices_activateChoices = function activateChoices(active) {
@@ -3103,7 +3105,7 @@ var choices_activateChoices = function activateChoices(active) {
   };
 };
 /**
- * @returns {{ type: string }}
+ * @returns {Action}
  */
 
 var choices_clearChoices = function clearChoices() {
@@ -3114,12 +3116,13 @@ var choices_clearChoices = function clearChoices() {
 // CONCATENATED MODULE: ./src/scripts/actions/items.js
 
 /**
+ * @typedef {import('redux').Action} Action
  * @typedef {import('../../../types/index').Choices.Item} Item
  */
 
 /**
  * @param {Item} item
- * @returns {{ type: string } & Item}
+ * @returns {Action & Item}
  */
 
 var items_addItem = function addItem(_ref) {
@@ -3146,7 +3149,7 @@ var items_addItem = function addItem(_ref) {
 /**
  * @param {string} id
  * @param {string} choiceId
- * @returns {{ type: string, id: string, choiceId: string }}
+ * @returns {Action & { id: string, choiceId: string }}
  */
 
 var items_removeItem = function removeItem(id, choiceId) {
@@ -3159,7 +3162,7 @@ var items_removeItem = function removeItem(id, choiceId) {
 /**
  * @param {string} id
  * @param {boolean} highlighted
- * @returns {{ type: string, id: string, highlighted: boolean }}
+ * @returns {Action & { id: string, highlighted: boolean }}
  */
 
 var items_highlightItem = function highlightItem(id, highlighted) {
@@ -3172,12 +3175,13 @@ var items_highlightItem = function highlightItem(id, highlighted) {
 // CONCATENATED MODULE: ./src/scripts/actions/groups.js
 
 /**
+ * @typedef {import('redux').Action} Action
  * @typedef {import('../../../types/index').Choices.Group} Group
  */
 
 /**
  * @param {Group} group
- * @returns {{ type: string } & Group}
+ * @returns {Action & Group}
  */
 
 var groups_addGroup = function addGroup(_ref) {
@@ -3195,7 +3199,11 @@ var groups_addGroup = function addGroup(_ref) {
 };
 // CONCATENATED MODULE: ./src/scripts/actions/misc.js
 /**
- * @returns {{ type: string }}
+ * @typedef {import('redux').Action} Action
+ */
+
+/**
+ * @returns {Action}
  */
 var clearAll = function clearAll() {
   return {
@@ -3204,7 +3212,7 @@ var clearAll = function clearAll() {
 };
 /**
  * @param {any} state
- * @returns {{ type: string, state: object }}
+ * @returns {Action & { state: object }}
  */
 
 var resetTo = function resetTo(state) {
@@ -3215,7 +3223,7 @@ var resetTo = function resetTo(state) {
 };
 /**
  * @param {boolean} isLoading
- * @returns {{ type: string, isLoading: boolean }}
+ * @returns {Action & { isLoading: boolean }}
  */
 
 var setIsLoading = function setIsLoading(isLoading) {
@@ -3297,21 +3305,11 @@ function () {
       arrayMerge: function arrayMerge(_, sourceArray) {
         return [].concat(sourceArray);
       }
-    }); // Convert addItemFilter to function
-
-    if (userConfig.addItemFilter && typeof userConfig.addItemFilter !== 'function') {
-      var re = userConfig.addItemFilter instanceof RegExp ? userConfig.addItemFilter : new RegExp(userConfig.addItemFilter);
-      this.config.addItemFilter = re.test.bind(re);
-    }
-
+    });
     var invalidConfigOptions = diff(this.config, DEFAULT_CONFIG);
 
     if (invalidConfigOptions.length) {
       console.warn('Unknown config option(s) passed', invalidConfigOptions.join(', '));
-    }
-
-    if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
-      this.config.renderSelectedChoices = 'auto';
     }
 
     var passedElement = typeof element === 'string' ? document.querySelector(element) : element;
@@ -3324,6 +3322,16 @@ function () {
     this._isSelectOneElement = passedElement.type === SELECT_ONE_TYPE;
     this._isSelectMultipleElement = passedElement.type === SELECT_MULTIPLE_TYPE;
     this._isSelectElement = this._isSelectOneElement || this._isSelectMultipleElement;
+    this.config.searchEnabled = this._isSelectMultipleElement || this.config.searchEnabled;
+
+    if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
+      this.config.renderSelectedChoices = 'auto';
+    }
+
+    if (userConfig.addItemFilter && typeof userConfig.addItemFilter !== 'function') {
+      var re = userConfig.addItemFilter instanceof RegExp ? userConfig.addItemFilter : new RegExp(userConfig.addItemFilter);
+      this.config.addItemFilter = re.test.bind(re);
+    }
 
     if (this._isTextElement) {
       this.passedElement = new WrappedInput({
@@ -5339,6 +5347,9 @@ function () {
 
     var hasSelectedChoice = choices.some(function (choice) {
       return choice.selected;
+    });
+    var firstEnabledChoiceIndex = choices.findIndex(function (_choice) {
+      return _choice.disabled === undefined || !_choice.disabled;
     }); // Add each choice
 
     choices.forEach(function (choice, index) {
@@ -5355,12 +5366,15 @@ function () {
             id: choice.id || null
           });
         } else {
-          // If there is a selected choice already or the choice is not
-          // the first in the array, add each choice normally
-          // Otherwise pre-select the first choice in the array if it's a single select
-          var shouldPreselect = _this22._isSelectOneElement && !hasSelectedChoice && index === 0;
+          /**
+           * If there is a selected choice already or the choice is not the first in
+           * the array, add each choice normally.
+           *
+           * Otherwise we pre-select the first enabled choice in the array ("select-one" only)
+           */
+          var shouldPreselect = _this22._isSelectOneElement && !hasSelectedChoice && index === firstEnabledChoiceIndex;
           var isSelected = shouldPreselect ? true : choice.selected;
-          var isDisabled = shouldPreselect ? false : choice.disabled;
+          var isDisabled = choice.disabled;
 
           _this22._addChoice({
             value: value,
