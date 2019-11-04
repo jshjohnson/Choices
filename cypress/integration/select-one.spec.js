@@ -963,36 +963,38 @@ describe('Choices - select one', () => {
       });
     });
 
-    describe('disabled-first-by-options', () => {
+    describe('disabling first choice via options', () => {
       beforeEach(() => {
-        cy.get('[data-test-hook=disabled-first-choice-by-options]')
+        cy.get('[data-test-hook=disabled-first-choice-via-options]')
           .find('.choices')
           .click();
       });
 
-      it('first choice is disabled', () => {
-        cy.get('[data-test-hook=disabled-first-choice-by-options]')
+      let disabledValue;
+
+      it('disables the first choice', () => {
+        cy.get('[data-test-hook=disabled-first-choice-via-options]')
           .find('.choices__list--dropdown .choices__list')
           .children()
           .first()
-          .should('have.class', 'choices__item--disabled');
+          .should('have.class', 'choices__item--disabled')
+          .then($choice => {
+            disabledValue = $choice.val();
+          });
       });
 
-      let selectValue;
-
-      it('first non-disabled choice is selected', () => {
-        cy.get('[data-test-hook=disabled-first-choice-by-options]')
-          .find('.choices__input.is-hidden')
-          .then($select => {
-            selectValue = $select.val();
+      it('selects the first enabled choice', () => {
+        cy.get('[data-test-hook=disabled-first-choice-via-options]')
+          .find('.choices__input[hidden]')
+          .then($option => {
+            expect($option.text().trim()).to.not.equal(disabledValue);
           });
 
-        cy.get('[data-test-hook=disabled-first-choice-by-options]')
-          .find('.choices__list--dropdown .choices__list')
-          .children()
-          .eq(1)
+        cy.get('[data-test-hook=disabled-first-choice-via-options]')
+          .find('.choices__item.choices__item--selectable')
+          .first()
           .should($choice => {
-            expect($choice.text().trim()).to.equal(selectValue);
+            expect($choice.text().trim()).to.not.equal(disabledValue);
           });
       });
     });
