@@ -24,9 +24,9 @@ jobs:
           - os: windows-latest
             browser: safari
           # On macOS, run tests with only on safari
-          - os: macOS-10.14
+          - os: macOS-latest
             browser: ie
-          - os: macOS-10.14
+          - os: macOS-latest
             browser: chrome
 
     runs-on: ${{ matrix.os }}
