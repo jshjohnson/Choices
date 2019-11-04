@@ -2115,6 +2115,9 @@ class Choices {
 
     // Determine whether there is a selected choice
     const hasSelectedChoice = choices.some(choice => choice.selected);
+    const firstEnabledChoiceIndex = choices.findIndex(
+      _choice => _choice.disabled === undefined || !_choice.disabled,
+    );
 
     // Add each choice
     choices.forEach((choice, index) => {
@@ -2128,13 +2131,19 @@ class Choices {
             id: choice.id || null,
           });
         } else {
-          // If there is a selected choice already or the choice is not
-          // the first in the array, add each choice normally
-          // Otherwise pre-select the first choice in the array if it's a single select
+          /**
+           * If there is a selected choice already or the choice is not the first in
+           * the array, add each choice normally.
+           *
+           * Otherwise we pre-select the first enabled choice in the array ("select-one" only)
+           */
           const shouldPreselect =
-            this._isSelectOneElement && !hasSelectedChoice && index === 0;
+            this._isSelectOneElement &&
+            !hasSelectedChoice &&
+            index === firstEnabledChoiceIndex;
+
           const isSelected = shouldPreselect ? true : choice.selected;
-          const isDisabled = shouldPreselect ? false : choice.disabled;
+          const isDisabled = choice.disabled;
 
           this._addChoice({
             value,
