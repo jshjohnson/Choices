@@ -36,11 +36,15 @@ import {
   strToEl,
   sortByScore,
   generateId,
-  isIE11,
   existsInArray,
   cloneObject,
   diff,
 } from './lib/utils';
+
+/** @see {@link http://browserhacks.com/#hack-acea075d0ac6954f275a70023906050c} */
+const IS_IE11 =
+  '-ms-scroll-limit' in document.documentElement.style &&
+  '-ms-ime-align' in document.documentElement.style;
 
 /**
  * @typedef {import('../../types/index').Choices.Choice} Choice
@@ -1572,10 +1576,7 @@ class Choices {
     }
 
     // If we have our mouse down on the scrollbar and are on IE11...
-    if (
-      isIE11(navigator.userAgent) &&
-      this.choiceList.element.contains(target)
-    ) {
+    if (IS_IE11 && this.choiceList.element.contains(target)) {
       // check if click was on a scrollbar area
       const firstChoice = /** @type {HTMLElement} */ (this.choiceList.element
         .firstElementChild);

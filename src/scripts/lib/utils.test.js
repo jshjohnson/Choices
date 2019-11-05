@@ -9,7 +9,6 @@ import {
   sanitise,
   sortByAlpha,
   sortByScore,
-  isIE11,
   existsInArray,
   cloneObject,
   dispatchEvent,
@@ -199,18 +198,6 @@ describe('utils', () => {
       expect(event.bubbles).to.equal(true);
       expect(event.cancelable).to.equal(true);
       expect(event.detail).to.equal(customArgs);
-    });
-  });
-
-  describe('isIE11', () => {
-    it('returns whether the given user agent string matches an IE11 user agent string', () => {
-      const IE11UserAgent =
-        'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko';
-      const firefoxUserAgent =
-        'Mozilla/5.0 (Android 4.4; Mobile; rv:41.0) Gecko/41.0 Firefox/41.0';
-
-      expect(isIE11(IE11UserAgent)).to.equal(true);
-      expect(isIE11(firefoxUserAgent)).to.equal(false);
     });
   });
 

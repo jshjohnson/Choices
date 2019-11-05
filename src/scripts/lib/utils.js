@@ -180,13 +180,6 @@ export const dispatchEvent = (element, type, customArgs = null) => {
 };
 
 /**
- * @param {string} userAgent
- * @returns {boolean}
- */
-export const isIE11 = userAgent =>
-  !!(userAgent.match(/Trident/) && userAgent.match(/rv[ :]11/));
-
-/**
  * @param {array} array
  * @param {any} value
  * @param {string} [key="value"]
