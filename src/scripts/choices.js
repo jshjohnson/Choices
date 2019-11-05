@@ -36,7 +36,6 @@ import {
   strToEl,
   sortByScore,
   generateId,
-  findAncestorByAttrName,
   isIE11,
   existsInArray,
   cloneObject,
@@ -1224,7 +1223,11 @@ class Choices {
     // capture events - can cancel event processing or propagation
     documentElement.addEventListener('keydown', this._onKeyDown, true);
     documentElement.addEventListener('touchend', this._onTouchEnd, true);
-    documentElement.addEventListener('mousedown', this._onMouseDown, true);
+    this.containerOuter.element.addEventListener(
+      'mousedown',
+      this._onMouseDown,
+      true,
+    );
 
     // passive events - doesn't call `preventDefault` or `stopPropagation`
     documentElement.addEventListener('click', this._onClick, { passive: true });
@@ -1269,41 +1272,27 @@ class Choices {
 
     documentElement.removeEventListener('keydown', this._onKeyDown, true);
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
-    documentElement.removeEventListener('mousedown', this._onMouseDown, true);
+    this.containerOuter.element.removeEventListener(
+      'mousedown',
+      this._onMouseDown,
+      true,
+    );
 
-    documentElement.removeEventListener('keyup', this._onKeyUp, {
-      passive: true,
-    });
-    documentElement.removeEventListener('click', this._onClick, {
-      passive: true,
-    });
-    documentElement.removeEventListener('touchmove', this._onTouchMove, {
-      passive: true,
-    });
-    documentElement.removeEventListener('mouseover', this._onMouseOver, {
-      passive: true,
-    });
+    documentElement.removeEventListener('keyup', this._onKeyUp);
+    documentElement.removeEventListener('click', this._onClick);
+    documentElement.removeEventListener('touchmove', this._onTouchMove);
+    documentElement.removeEventListener('mouseover', this._onMouseOver);
 
     if (this._isSelectOneElement) {
-      this.containerOuter.element.removeEventListener('focus', this._onFocus, {
-        passive: true,
-      });
-      this.containerOuter.element.removeEventListener('blur', this._onBlur, {
-        passive: true,
-      });
+      this.containerOuter.element.removeEventListener('focus', this._onFocus);
+      this.containerOuter.element.removeEventListener('blur', this._onBlur);
     }
 
-    this.input.element.removeEventListener('focus', this._onFocus, {
-      passive: true,
-    });
-    this.input.element.removeEventListener('blur', this._onBlur, {
-      passive: true,
-    });
+    this.input.element.removeEventListener('focus', this._onFocus);
+    this.input.element.removeEventListener('blur', this._onBlur);
 
     if (this.input.element.form) {
-      this.input.element.form.removeEventListener('reset', this._onFormReset, {
-        passive: true,
-      });
+      this.input.element.form.removeEventListener('reset', this._onFormReset);
     }
 
     this.input.removeEventListeners();
@@ -1573,7 +1562,7 @@ class Choices {
   }
 
   _onMouseDown(event) {
-    const { target, shiftKey } = event;
+    const { target } = event;
     // If we have our mouse down on the scrollbar and are on IE11...
     if (
       this.choiceList.element.contains(target) &&
@@ -1582,27 +1571,24 @@ class Choices {
       this._isScrollingOnIe = true;
     }
 
-    if (
-      !this.containerOuter.element.contains(target) ||
-      target === this.input.element
-    ) {
+    if (target === this.input.element) {
       return;
     }
 
-    const { activeItems } = this._store;
-    const hasShiftKey = shiftKey;
-    const buttonTarget = findAncestorByAttrName(target, 'data-button');
-    const itemTarget = findAncestorByAttrName(target, 'data-item');
-    const choiceTarget = findAncestorByAttrName(target, 'data-choice');
+    const item = target.closest('[data-button],[data-item],[data-choice]');
+    if (item) {
+      const hasShiftKey = event.shiftKey;
+      const { activeItems } = this._store;
+      const { dataset } = item;
 
-    if (buttonTarget) {
-      this._handleButtonAction(activeItems, buttonTarget);
-    } else if (itemTarget) {
-      this._handleItemAction(activeItems, itemTarget, hasShiftKey);
-    } else if (choiceTarget) {
-      this._handleChoiceAction(activeItems, choiceTarget);
+      if ('button' in dataset) {
+        this._handleButtonAction(activeItems, item);
+      } else if ('item' in dataset) {
+        this._handleItemAction(activeItems, item, hasShiftKey);
+      } else if ('choice' in dataset) {
+        this._handleChoiceAction(activeItems, item);
+      }
     }
-
     event.preventDefault();
   }
 

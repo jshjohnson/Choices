@@ -59,12 +59,6 @@ export const wrap = (element, wrapper = document.createElement('div')) => {
 };
 
 /**
- * @param {HTMLElement} el
- * @param {string} attr
- */
-export const findAncestorByAttrName = (el, attr) => el.closest(`[${attr}]`);
-
-/**
  * @param {Element} startEl
  * @param {string} selector
  * @param {1 | -1} direction
