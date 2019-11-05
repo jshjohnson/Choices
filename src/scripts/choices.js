@@ -1561,14 +1561,29 @@ class Choices {
     this._wasTap = true;
   }
 
+  /**
+   * Handles mousedown event in capture mode for containetOuter.element
+   * @param {MouseEvent} event
+   */
   _onMouseDown(event) {
     const { target } = event;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+
     // If we have our mouse down on the scrollbar and are on IE11...
     if (
-      this.choiceList.element.contains(target) &&
-      isIE11(navigator.userAgent)
+      isIE11(navigator.userAgent) &&
+      this.choiceList.element.contains(target)
     ) {
-      this._isScrollingOnIe = true;
+      // check if click was on a scrollbar area
+      const firstChoice = /** @type {HTMLElement} */ (this.choiceList.element
+        .firstElementChild);
+      const isOnScrollbar =
+        this._direction === 'ltr'
+          ? event.offsetX >= firstChoice.offsetWidth
+          : event.offsetX < firstChoice.offsetLeft;
+      this._isScrollingOnIe = isOnScrollbar;
     }
 
     if (target === this.input.element) {
@@ -1576,7 +1591,7 @@ class Choices {
     }
 
     const item = target.closest('[data-button],[data-item],[data-choice]');
-    if (item) {
+    if (item instanceof HTMLElement) {
       const hasShiftKey = event.shiftKey;
       const { activeItems } = this._store;
       const { dataset } = item;
