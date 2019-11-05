@@ -1290,7 +1290,6 @@ class Choices {
       true,
     );
 
-    documentElement.removeEventListener('keyup', this._onKeyUp);
     documentElement.removeEventListener('click', this._onClick);
     documentElement.removeEventListener('touchmove', this._onTouchMove);
     this.dropdown.element.removeEventListener('mouseover', this._onMouseOver);
@@ -1300,6 +1299,7 @@ class Choices {
       this.containerOuter.element.removeEventListener('blur', this._onBlur);
     }
 
+    this.input.element.removeEventListener('keyup', this._onKeyUp);
     this.input.element.removeEventListener('focus', this._onFocus);
     this.input.element.removeEventListener('blur', this._onBlur);
 
