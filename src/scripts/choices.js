@@ -1225,8 +1225,12 @@ class Choices {
     const { documentElement } = document;
 
     // capture events - can cancel event processing or propagation
-    documentElement.addEventListener('keydown', this._onKeyDown, true);
     documentElement.addEventListener('touchend', this._onTouchEnd, true);
+    this.containerOuter.element.addEventListener(
+      'keydown',
+      this._onKeyDown,
+      true,
+    );
     this.containerOuter.element.addEventListener(
       'mousedown',
       this._onMouseDown,
@@ -1274,8 +1278,12 @@ class Choices {
   _removeEventListeners() {
     const { documentElement } = document;
 
-    documentElement.removeEventListener('keydown', this._onKeyDown, true);
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
+    this.containerOuter.element.removeEventListener(
+      'keydown',
+      this._onKeyDown,
+      true,
+    );
     this.containerOuter.element.removeEventListener(
       'mousedown',
       this._onMouseDown,
@@ -1302,13 +1310,13 @@ class Choices {
     this.input.removeEventListeners();
   }
 
+  /**
+   * @param {KeyboardEvent} event
+   */
   _onKeyDown(event) {
     const { target, keyCode, ctrlKey, metaKey } = event;
 
-    if (
-      target !== this.input.element &&
-      !this.containerOuter.element.contains(target)
-    ) {
+    if (target !== this.input.element) {
       return;
     }
 
