@@ -1242,7 +1242,7 @@ class Choices {
     documentElement.addEventListener('touchmove', this._onTouchMove, {
       passive: true,
     });
-    documentElement.addEventListener('mouseover', this._onMouseOver, {
+    this.dropdown.element.addEventListener('mouseover', this._onMouseOver, {
       passive: true,
     });
 
@@ -1293,7 +1293,7 @@ class Choices {
     documentElement.removeEventListener('keyup', this._onKeyUp);
     documentElement.removeEventListener('click', this._onClick);
     documentElement.removeEventListener('touchmove', this._onTouchMove);
-    documentElement.removeEventListener('mouseover', this._onMouseOver);
+    this.dropdown.element.removeEventListener('mouseover', this._onMouseOver);
 
     if (this._isSelectOneElement) {
       this.containerOuter.element.removeEventListener('focus', this._onFocus);
@@ -1616,13 +1616,12 @@ class Choices {
     event.preventDefault();
   }
 
+  /**
+   * Handles mouseover event over this.dropdown
+   * @param {MouseEvent} event
+   */
   _onMouseOver({ target }) {
-    const targetWithinDropdown =
-      target === this.dropdown || this.dropdown.element.contains(target);
-    const shouldHighlightChoice =
-      targetWithinDropdown && target.hasAttribute('data-choice');
-
-    if (shouldHighlightChoice) {
+    if (target instanceof HTMLElement && 'choice' in target.dataset) {
       this._highlightChoice(target);
     }
   }
