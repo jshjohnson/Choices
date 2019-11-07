@@ -44,7 +44,7 @@ export default class List {
   }
 
   /**
-   * @param {HTMLElement} element
+   * @param {Element} element
    * @param {1 | -1} direction
    */
   scrollToChildElement(element, direction) {
