@@ -1372,8 +1372,8 @@ var getAdjacentEl = function getAdjacentEl(startEl, selector, direction) {
   return sibling;
 };
 /**
- * @param {HTMLElement} element
- * @param {HTMLElement} parent
+ * @param {Element} element
+ * @param {Element} parent
  * @param {-1 | 1} direction
  * @returns {boolean}
  */
@@ -1412,7 +1412,7 @@ var sanitise = function sanitise(value) {
   return value.replace(/&/g, '&amp;').replace(/>/g, '&rt;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 };
 /**
- * @returns {function}
+ * @returns {() => (str: string) => Element}
  */
 
 var strToEl = function () {
@@ -1622,14 +1622,14 @@ function () {
   }
   /**
    * Get group by group id
-   * @param  {string} id Group ID
+   * @param  {number} id Group ID
    * @returns {Group | undefined} Group data
    */
   ;
 
   _proto.getGroupById = function getGroupById(id) {
     return this.groups.find(function (group) {
-      return group.id === parseInt(id, 10);
+      return group.id === id;
     });
   };
 
@@ -2411,7 +2411,7 @@ function () {
     this.element.scrollTop = 0;
   }
   /**
-   * @param {HTMLElement} element
+   * @param {Element} element
    * @param {1 | -1} direction
    */
   ;
@@ -3886,13 +3886,13 @@ function () {
 
     this.containerOuter.removeLoadingState();
 
-    this._setLoading(true);
+    this._startLoading();
 
     choicesArrayOrFetcher.forEach(function (groupOrChoice) {
       if (groupOrChoice.choices) {
         _this11._addGroup({
+          id: parseInt(groupOrChoice.id, 10) || null,
           group: groupOrChoice,
-          id: groupOrChoice.id || null,
           valueKey: value,
           labelKey: label
         });
@@ -3908,7 +3908,7 @@ function () {
       }
     });
 
-    this._setLoading(false);
+    this._stopLoading();
 
     return this;
   };
@@ -4339,8 +4339,12 @@ function () {
     }
   };
 
-  _proto._setLoading = function _setLoading(isLoading) {
-    this._store.dispatch(setIsLoading(isLoading));
+  _proto._startLoading = function _startLoading() {
+    this._store.dispatch(setIsLoading(true));
+  };
+
+  _proto._stopLoading = function _stopLoading() {
+    this._store.dispatch(setIsLoading(false));
   };
 
   _proto._handleLoadingState = function _handleLoadingState(setLoading) {
@@ -4513,39 +4517,21 @@ function () {
     documentElement.removeEventListener('keydown', this._onKeyDown, true);
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
     documentElement.removeEventListener('mousedown', this._onMouseDown, true);
-    documentElement.removeEventListener('keyup', this._onKeyUp, {
-      passive: true
-    });
-    documentElement.removeEventListener('click', this._onClick, {
-      passive: true
-    });
-    documentElement.removeEventListener('touchmove', this._onTouchMove, {
-      passive: true
-    });
-    documentElement.removeEventListener('mouseover', this._onMouseOver, {
-      passive: true
-    });
+    documentElement.removeEventListener('keyup', this._onKeyUp);
+    documentElement.removeEventListener('click', this._onClick);
+    documentElement.removeEventListener('touchmove', this._onTouchMove);
+    documentElement.removeEventListener('mouseover', this._onMouseOver);
 
     if (this._isSelectOneElement) {
-      this.containerOuter.element.removeEventListener('focus', this._onFocus, {
-        passive: true
-      });
-      this.containerOuter.element.removeEventListener('blur', this._onBlur, {
-        passive: true
-      });
+      this.containerOuter.element.removeEventListener('focus', this._onFocus);
+      this.containerOuter.element.removeEventListener('blur', this._onBlur);
     }
 
-    this.input.element.removeEventListener('focus', this._onFocus, {
-      passive: true
-    });
-    this.input.element.removeEventListener('blur', this._onBlur, {
-      passive: true
-    });
+    this.input.element.removeEventListener('focus', this._onFocus);
+    this.input.element.removeEventListener('blur', this._onBlur);
 
     if (this.input.element.form) {
-      this.input.element.form.removeEventListener('reset', this._onFormReset, {
-        passive: true
-      });
+      this.input.element.form.removeEventListener('reset', this._onFormReset);
     }
 
     this.input.removeEventListeners();
@@ -5035,7 +5021,7 @@ function () {
     var passedCustomProperties = customProperties;
     var items = this._store.items;
     var passedLabel = label || passedValue;
-    var passedOptionId = parseInt(choiceId, 10) || -1;
+    var passedOptionId = choiceId || -1;
     var group = groupId >= 0 ? this._store.getGroupById(groupId) : null;
     var id = items ? items.length + 1 : 1; // If a prepended value has been passed, prepend it
 
@@ -5135,12 +5121,12 @@ function () {
     var choiceElementId = this._baseId + "-" + this._idNames.itemChoice + "-" + choiceId;
 
     this._store.dispatch(choices_addChoice({
-      value: value,
-      label: choiceLabel,
       id: choiceId,
       groupId: groupId,
-      disabled: isDisabled,
       elementId: choiceElementId,
+      value: value,
+      label: choiceLabel,
+      disabled: isDisabled,
       customProperties: customProperties,
       placeholder: placeholder,
       keyCode: keyCode
@@ -5296,7 +5282,7 @@ function () {
       this._highlightPosition = 0;
       this._isSearching = false;
 
-      this._setLoading(true);
+      this._startLoading();
 
       if (this._presetGroups.length) {
         this._addPredefinedGroups(this._presetGroups);
@@ -5304,7 +5290,7 @@ function () {
         this._addPredefinedChoices(this._presetChoices);
       }
 
-      this._setLoading(false);
+      this._stopLoading();
     }
 
     if (this._isTextElement) {
@@ -5342,16 +5328,14 @@ function () {
     // If sorting is enabled or the user is searching, filter choices
     if (this.config.shouldSort) {
       choices.sort(this.config.sorter);
-    } // Determine whether there is a selected choice
-
+    }
 
     var hasSelectedChoice = choices.some(function (choice) {
       return choice.selected;
     });
-    var firstEnabledChoiceIndex = choices.findIndex(function (_choice) {
-      return _choice.disabled === undefined || !_choice.disabled;
-    }); // Add each choice
-
+    var firstEnabledChoiceIndex = choices.findIndex(function (choice) {
+      return choice.disabled === undefined || !choice.disabled;
+    });
     choices.forEach(function (choice, index) {
       var value = choice.value,
           label = choice.label,
