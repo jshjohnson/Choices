@@ -611,7 +611,7 @@ class Choices {
 
     this.containerOuter.removeLoadingState();
 
-    this._setLoading(true);
+    this._startLoading();
 
     choicesArrayOrFetcher.forEach(groupOrChoice => {
       if (groupOrChoice.choices) {
@@ -633,7 +633,7 @@ class Choices {
       }
     });
 
-    this._setLoading(false);
+    this._stopLoading();
 
     return this;
   }
@@ -1073,8 +1073,12 @@ class Choices {
     }
   }
 
-  _setLoading(isLoading) {
-    this._store.dispatch(setIsLoading(isLoading));
+  _startLoading() {
+    this._store.dispatch(setIsLoading(true));
+  }
+
+  _stopLoading() {
+    this._store.dispatch(setIsLoading(false));
   }
 
   _handleLoadingState(setLoading = true) {
@@ -2049,7 +2053,7 @@ class Choices {
     if (this._isSelectElement) {
       this._highlightPosition = 0;
       this._isSearching = false;
-      this._setLoading(true);
+      this._startLoading();
 
       if (this._presetGroups.length) {
         this._addPredefinedGroups(this._presetGroups);
@@ -2057,7 +2061,7 @@ class Choices {
         this._addPredefinedChoices(this._presetChoices);
       }
 
-      this._setLoading(false);
+      this._stopLoading();
     }
 
     if (this._isTextElement) {
