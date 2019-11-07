@@ -72,6 +72,10 @@
   box-shadow: 0px 0px 0px 2px #00bcd4;
 }
 
+.choices[data-type*='select-one'] .choices__item[data-value=''] .choices__button {
+  display: none;
+}
+
 .choices[data-type*='select-one']:after {
   content: '';
   height: 0;

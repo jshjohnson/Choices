@@ -83,6 +83,9 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
       box-shadow: 0px 0px 0px 2px $choices-highlight-color;
     }
   }
+  .#{$choices-selector}__item[data-value=''] .#{$choices-selector}__button {
+    display: none;
+  }
   &:after {
     content: '';
     height: 0;
