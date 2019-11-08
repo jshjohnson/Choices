@@ -48,8 +48,8 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v1
         with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.OS }}-build
           restore-keys: |
             ${{ runner.OS }}-build-${{ env.cache-name }}-
             ${{ runner.OS }}-build-
@@ -110,8 +110,8 @@ jobs:
       - name: Cache node modules
         uses: actions/cache@v1
         with:
-          path: node_modules
-          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.OS }}-build-puppeteer
           restore-keys: |
             ${{ runner.OS }}-build-${{ env.cache-name }}-
             ${{ runner.OS }}-build-
