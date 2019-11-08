@@ -28,6 +28,8 @@ jobs:
             browser: ie
           - os: macOS-latest
             browser: chrome
+          # Safari workaround is not working in Catalina
+          - browser: safari
 
     runs-on: ${{ matrix.os }}
     steps:
