@@ -58,7 +58,7 @@ jobs:
         env:
           HUSKY_SKIP_INSTALL: true
 
-      - name: run Cypress (with recording)
+      - name: run Cypress (with or without recording)
         # if we have ran out of free Cypress recordings, run Cypress with recording switched off
         run: npx run-p --race start cypress:ci || npx run-p --race start cypress:run
         env:
