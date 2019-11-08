@@ -83,8 +83,8 @@ export const getAdjacentEl = (startEl, selector, direction = 1) => {
 };
 
 /**
- * @param {HTMLElement} element
- * @param {HTMLElement} parent
+ * @param {Element} element
+ * @param {Element} parent
  * @param {-1 | 1} direction
  * @returns {boolean}
  */
@@ -125,7 +125,7 @@ export const sanitise = value => {
 };
 
 /**
- * @returns {function}
+ * @returns {() => (str: string) => Element}
  */
 export const strToEl = (() => {
   const tmpEl = document.createElement('div');

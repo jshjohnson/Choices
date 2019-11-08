@@ -152,10 +152,10 @@ export default class Store {
 
   /**
    * Get group by group id
-   * @param  {string} id Group ID
+   * @param  {number} id Group ID
    * @returns {Group | undefined} Group data
    */
   getGroupById(id) {
-    return this.groups.find(group => group.id === parseInt(id, 10));
+    return this.groups.find(group => group.id === id);
   }
 }

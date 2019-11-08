@@ -1539,12 +1539,12 @@ describe('choices', () => {
       const label = 'label';
       const choices = [
         {
-          id: '1',
+          id: 1,
           value: '1',
           label: 'Test 1',
         },
         {
-          id: '2',
+          id: 2,
           value: '2',
           label: 'Test 2',
         },

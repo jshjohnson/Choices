@@ -962,5 +962,41 @@ describe('Choices - select one', () => {
           });
       });
     });
+
+    describe('disabling first choice via options', () => {
+      beforeEach(() => {
+        cy.get('[data-test-hook=disabled-first-choice-via-options]')
+          .find('.choices')
+          .click();
+      });
+
+      let disabledValue;
+
+      it('disables the first choice', () => {
+        cy.get('[data-test-hook=disabled-first-choice-via-options]')
+          .find('.choices__list--dropdown .choices__list')
+          .children()
+          .first()
+          .should('have.class', 'choices__item--disabled')
+          .then($choice => {
+            disabledValue = $choice.val();
+          });
+      });
+
+      it('selects the first enabled choice', () => {
+        cy.get('[data-test-hook=disabled-first-choice-via-options]')
+          .find('.choices__input[hidden]')
+          .then($option => {
+            expect($option.text().trim()).to.not.equal(disabledValue);
+          });
+
+        cy.get('[data-test-hook=disabled-first-choice-via-options]')
+          .find('.choices__item.choices__item--selectable')
+          .first()
+          .should($choice => {
+            expect($choice.text().trim()).to.not.equal(disabledValue);
+          });
+      });
+    });
   });
 });

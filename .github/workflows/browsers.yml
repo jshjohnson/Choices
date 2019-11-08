@@ -28,6 +28,8 @@ jobs:
             browser: ie
           - os: macOS-latest
             browser: chrome
+          # Safari workaround is not working in Catalina
+          - browser: safari
 
     runs-on: ${{ matrix.os }}
     steps:
@@ -42,6 +44,17 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-build-${{ matrix.browser }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+
       - run: |
           npm ci
           npm run build
@@ -94,9 +107,13 @@ jobs:
       - uses: actions/checkout@v1
         with:
           fetch-depth: 1
-      - uses: actions/setup-node@v1
+      - name: Cache node modules
+        uses: actions/cache@v1
         with:
-          node-version: '12.x'
+          path: ~/.npm
+          key: ${{ runner.OS }}-build-puppeteer
+          restore-keys: |
+            ${{ runner.OS }}-build-puppeteer
       - run: |
           npm ci
           npm run build

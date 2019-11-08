@@ -23,12 +23,12 @@ declare namespace Choices {
   }
 
   interface Choice {
-    id?: string;
+    id?: number;
     customProperties?: Record<string, any>;
     disabled?: boolean;
     active?: boolean;
     elementId?: string;
-    groupId?: string;
+    groupId?: number;
     keyCode?: number;
     label: string;
     placeholder?: boolean;
@@ -37,14 +37,14 @@ declare namespace Choices {
   }
 
   interface Group {
-    id?: string;
+    id?: number;
     active?: boolean;
     disabled?: boolean;
     value: any;
   }
 
   interface Item extends Choice {
-    choiceId?: string;
+    choiceId?: number;
     keyCode?: number;
     highlighted?: boolean;
   }
@@ -61,7 +61,7 @@ declare namespace Choices {
      * Arguments: id, value, label, groupValue, keyCode
      */
     addItem: CustomEvent<{
-      id: string;
+      id: number;
       value: string;
       label: string;
       groupValue: string;
@@ -76,7 +76,7 @@ declare namespace Choices {
      * Arguments: id, value, label, groupValue
      */
     removeItem: CustomEvent<{
-      id: string;
+      id: number;
       value: string;
       label: string;
       groupValue: string;
@@ -90,7 +90,7 @@ declare namespace Choices {
      * Arguments: id, value, label, groupValue
      */
     highlightItem: CustomEvent<{
-      id: string;
+      id: number;
       value: string;
       label: string;
       groupValue: string;
@@ -104,7 +104,7 @@ declare namespace Choices {
      * Arguments: id, value, label, groupValue
      */
     unhighlightItem: CustomEvent<{
-      id: string;
+      id: number;
       value: string;
       label: string;
       groupValue: string;

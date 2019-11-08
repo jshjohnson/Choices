@@ -10,11 +10,15 @@ on:
       - 'webpack.config.*'
       - 'public/test/**'
       - 'cypress/**'
-      - '.github/workflows/cypress.yml'
+      - '.github/workflows/e2e-tests.yml'
 
 jobs:
   test-e2e:
     runs-on: ubuntu-latest
+    env:
+      CI: true
+      TERM: xterm-256color
+
     steps:
       - uses: actions/checkout@v1
         with:
@@ -22,33 +26,42 @@ jobs:
 
       - uses: actions/setup-node@v1
         with:
-          node-version: 10
+          node-version: 12.x
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.OS }}-build-${{ env.cache-name }}-
+            ${{ runner.OS }}-build-
+            ${{ runner.OS }}-
+
+      - name: Get Cypress info
+        id: cypress-info
+        run: |
+          echo ::set-output name=version::$(jq -r .devDependencies.cypress ./package.json)
+          echo ::set-output name=cache::$(npx cypress cache path)
+        env:
+          CYPRESS_INSTALL_BINARY: 0
+      - name: Cache Cypress cache
+        uses: actions/cache@v1
+        with:
+          path: ${{ steps.cypress-info.outputs.cache }}
+          key: ${{ runner.OS }}-cypress-${{ steps.cypress-info.outputs.version }}
+          restore-keys: |
+            ${{ runner.OS }}-cypress-${{ steps.cypress-info.outputs.version }}
 
       - name: Install dependencies
         run: npm ci
         env:
           HUSKY_SKIP_INSTALL: true
 
-      - name: run Cypress (with recording)
-        run: npx run-p --race start cypress:ci
+      - name: run Cypress (with or without recording)
+        # if we have ran out of free Cypress recordings, run Cypress with recording switched off
+        run: npx run-p --race start cypress:ci || npx run-p --race start cypress:run
         env:
-          CI: true
-          TERM: xterm-256color
-          NODE_ENV: production # prevent watching
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          DEBUG: commit-info,cypress:server:record
-          # https://docs.cypress.io/guides/guides/continuous-integration.html#Environment-variables
-          COMMIT_INFO_BRANCH: ${{ github.head_ref }}
-          COMMIT_INFO_AUTHOR: ${{ github.event.sender.login }}
-          COMMIT_INFO_SHA: ${{ github.event.after }}
-
-      # if we have ran out of free Cypress recordings, run Cypress with recording switched off
-      - name: run Cypress (without recording)
-        if: failure()
-        run: npx run-p --race start cypress:run
-        env:
-          CI: true
-          TERM: xterm-256color
           NODE_ENV: production # prevent watching
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           DEBUG: commit-info,cypress:server:record

@@ -1372,8 +1372,8 @@ var getAdjacentEl = function getAdjacentEl(startEl, selector, direction) {
   return sibling;
 };
 /**
- * @param {HTMLElement} element
- * @param {HTMLElement} parent
+ * @param {Element} element
+ * @param {Element} parent
  * @param {-1 | 1} direction
  * @returns {boolean}
  */
@@ -1412,7 +1412,7 @@ var sanitise = function sanitise(value) {
   return value.replace(/&/g, '&amp;').replace(/>/g, '&rt;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
 };
 /**
- * @returns {function}
+ * @returns {() => (str: string) => Element}
  */
 
 var strToEl = function () {
@@ -1511,9 +1511,10 @@ var cloneObject = function cloneObject(obj) {
   return JSON.parse(JSON.stringify(obj));
 };
 /**
+ * Returns an array of keys present on the first but missing on the second object
  * @param {object} a
  * @param {object} b
- * @returns {array}
+ * @returns {string[]}
  */
 
 var diff = function diff(a, b) {
@@ -1621,14 +1622,14 @@ function () {
   }
   /**
    * Get group by group id
-   * @param  {string} id Group ID
+   * @param  {number} id Group ID
    * @returns {Group | undefined} Group data
    */
   ;
 
   _proto.getGroupById = function getGroupById(id) {
     return this.groups.find(function (group) {
-      return group.id === parseInt(id, 10);
+      return group.id === id;
     });
   };
 
@@ -2381,7 +2382,7 @@ function () {
     this.element.innerHTML = '';
   }
   /**
-   * @param {Element} node
+   * @param {Element | DocumentFragment} node
    */
   ;
 
@@ -2410,7 +2411,7 @@ function () {
     this.element.scrollTop = 0;
   }
   /**
-   * @param {HTMLElement} element
+   * @param {Element} element
    * @param {1 | -1} direction
    */
   ;
@@ -3045,12 +3046,13 @@ var TEMPLATES =
 /* harmony default export */ var templates = (TEMPLATES);
 // CONCATENATED MODULE: ./src/scripts/actions/choices.js
 /**
+ * @typedef {import('redux').Action} Action
  * @typedef {import('../../../types/index').Choices.Choice} Choice
  */
 
 /**
  * @argument {Choice} choice
- * @returns {{ type: string } & Choice}
+ * @returns {Action & Choice}
  */
 
 var choices_addChoice = function addChoice(_ref) {
@@ -3078,7 +3080,7 @@ var choices_addChoice = function addChoice(_ref) {
 };
 /**
  * @argument {Choice[]} results
- * @returns {{ type: string, results: Choice[] }}
+ * @returns {Action & { results: Choice[] }}
  */
 
 var choices_filterChoices = function filterChoices(results) {
@@ -3089,7 +3091,7 @@ var choices_filterChoices = function filterChoices(results) {
 };
 /**
  * @argument {boolean} active
- * @returns {{ type: string, active: boolean }}
+ * @returns {Action & { active: boolean }}
  */
 
 var choices_activateChoices = function activateChoices(active) {
@@ -3103,7 +3105,7 @@ var choices_activateChoices = function activateChoices(active) {
   };
 };
 /**
- * @returns {{ type: string }}
+ * @returns {Action}
  */
 
 var choices_clearChoices = function clearChoices() {
@@ -3114,12 +3116,13 @@ var choices_clearChoices = function clearChoices() {
 // CONCATENATED MODULE: ./src/scripts/actions/items.js
 
 /**
+ * @typedef {import('redux').Action} Action
  * @typedef {import('../../../types/index').Choices.Item} Item
  */
 
 /**
  * @param {Item} item
- * @returns {{ type: string } & Item}
+ * @returns {Action & Item}
  */
 
 var items_addItem = function addItem(_ref) {
@@ -3146,7 +3149,7 @@ var items_addItem = function addItem(_ref) {
 /**
  * @param {string} id
  * @param {string} choiceId
- * @returns {{ type: string, id: string, choiceId: string }}
+ * @returns {Action & { id: string, choiceId: string }}
  */
 
 var items_removeItem = function removeItem(id, choiceId) {
@@ -3159,7 +3162,7 @@ var items_removeItem = function removeItem(id, choiceId) {
 /**
  * @param {string} id
  * @param {boolean} highlighted
- * @returns {{ type: string, id: string, highlighted: boolean }}
+ * @returns {Action & { id: string, highlighted: boolean }}
  */
 
 var items_highlightItem = function highlightItem(id, highlighted) {
@@ -3172,12 +3175,13 @@ var items_highlightItem = function highlightItem(id, highlighted) {
 // CONCATENATED MODULE: ./src/scripts/actions/groups.js
 
 /**
+ * @typedef {import('redux').Action} Action
  * @typedef {import('../../../types/index').Choices.Group} Group
  */
 
 /**
  * @param {Group} group
- * @returns {{ type: string } & Group}
+ * @returns {Action & Group}
  */
 
 var groups_addGroup = function addGroup(_ref) {
@@ -3195,7 +3199,11 @@ var groups_addGroup = function addGroup(_ref) {
 };
 // CONCATENATED MODULE: ./src/scripts/actions/misc.js
 /**
- * @returns {{ type: string }}
+ * @typedef {import('redux').Action} Action
+ */
+
+/**
+ * @returns {Action}
  */
 var clearAll = function clearAll() {
   return {
@@ -3204,7 +3212,7 @@ var clearAll = function clearAll() {
 };
 /**
  * @param {any} state
- * @returns {{ type: string, state: object }}
+ * @returns {Action & { state: object }}
  */
 
 var resetTo = function resetTo(state) {
@@ -3215,7 +3223,7 @@ var resetTo = function resetTo(state) {
 };
 /**
  * @param {boolean} isLoading
- * @returns {{ type: string, isLoading: boolean }}
+ * @returns {Action & { isLoading: boolean }}
  */
 
 var setIsLoading = function setIsLoading(isLoading) {
@@ -3297,21 +3305,11 @@ function () {
       arrayMerge: function arrayMerge(_, sourceArray) {
         return [].concat(sourceArray);
       }
-    }); // Convert addItemFilter to function
-
-    if (userConfig.addItemFilter && typeof userConfig.addItemFilter !== 'function') {
-      var re = userConfig.addItemFilter instanceof RegExp ? userConfig.addItemFilter : new RegExp(userConfig.addItemFilter);
-      this.config.addItemFilter = re.test.bind(re);
-    }
-
+    });
     var invalidConfigOptions = diff(this.config, DEFAULT_CONFIG);
 
     if (invalidConfigOptions.length) {
       console.warn('Unknown config option(s) passed', invalidConfigOptions.join(', '));
-    }
-
-    if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
-      this.config.renderSelectedChoices = 'auto';
     }
 
     var passedElement = typeof element === 'string' ? document.querySelector(element) : element;
@@ -3324,6 +3322,16 @@ function () {
     this._isSelectOneElement = passedElement.type === SELECT_ONE_TYPE;
     this._isSelectMultipleElement = passedElement.type === SELECT_MULTIPLE_TYPE;
     this._isSelectElement = this._isSelectOneElement || this._isSelectMultipleElement;
+    this.config.searchEnabled = this._isSelectMultipleElement || this.config.searchEnabled;
+
+    if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
+      this.config.renderSelectedChoices = 'auto';
+    }
+
+    if (userConfig.addItemFilter && typeof userConfig.addItemFilter !== 'function') {
+      var re = userConfig.addItemFilter instanceof RegExp ? userConfig.addItemFilter : new RegExp(userConfig.addItemFilter);
+      this.config.addItemFilter = re.test.bind(re);
+    }
 
     if (this._isTextElement) {
       this.passedElement = new WrappedInput({
@@ -3878,13 +3886,13 @@ function () {
 
     this.containerOuter.removeLoadingState();
 
-    this._setLoading(true);
+    this._startLoading();
 
     choicesArrayOrFetcher.forEach(function (groupOrChoice) {
       if (groupOrChoice.choices) {
         _this11._addGroup({
+          id: parseInt(groupOrChoice.id, 10) || null,
           group: groupOrChoice,
-          id: groupOrChoice.id || null,
           valueKey: value,
           labelKey: label
         });
@@ -3900,7 +3908,7 @@ function () {
       }
     });
 
-    this._setLoading(false);
+    this._stopLoading();
 
     return this;
   };
@@ -4331,8 +4339,12 @@ function () {
     }
   };
 
-  _proto._setLoading = function _setLoading(isLoading) {
-    this._store.dispatch(setIsLoading(isLoading));
+  _proto._startLoading = function _startLoading() {
+    this._store.dispatch(setIsLoading(true));
+  };
+
+  _proto._stopLoading = function _stopLoading() {
+    this._store.dispatch(setIsLoading(false));
   };
 
   _proto._handleLoadingState = function _handleLoadingState(setLoading) {
@@ -4505,39 +4517,21 @@ function () {
     documentElement.removeEventListener('keydown', this._onKeyDown, true);
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
     documentElement.removeEventListener('mousedown', this._onMouseDown, true);
-    documentElement.removeEventListener('keyup', this._onKeyUp, {
-      passive: true
-    });
-    documentElement.removeEventListener('click', this._onClick, {
-      passive: true
-    });
-    documentElement.removeEventListener('touchmove', this._onTouchMove, {
-      passive: true
-    });
-    documentElement.removeEventListener('mouseover', this._onMouseOver, {
-      passive: true
-    });
+    documentElement.removeEventListener('keyup', this._onKeyUp);
+    documentElement.removeEventListener('click', this._onClick);
+    documentElement.removeEventListener('touchmove', this._onTouchMove);
+    documentElement.removeEventListener('mouseover', this._onMouseOver);
 
     if (this._isSelectOneElement) {
-      this.containerOuter.element.removeEventListener('focus', this._onFocus, {
-        passive: true
-      });
-      this.containerOuter.element.removeEventListener('blur', this._onBlur, {
-        passive: true
-      });
+      this.containerOuter.element.removeEventListener('focus', this._onFocus);
+      this.containerOuter.element.removeEventListener('blur', this._onBlur);
     }
 
-    this.input.element.removeEventListener('focus', this._onFocus, {
-      passive: true
-    });
-    this.input.element.removeEventListener('blur', this._onBlur, {
-      passive: true
-    });
+    this.input.element.removeEventListener('focus', this._onFocus);
+    this.input.element.removeEventListener('blur', this._onBlur);
 
     if (this.input.element.form) {
-      this.input.element.form.removeEventListener('reset', this._onFormReset, {
-        passive: true
-      });
+      this.input.element.form.removeEventListener('reset', this._onFormReset);
     }
 
     this.input.removeEventListeners();
@@ -5027,7 +5021,7 @@ function () {
     var passedCustomProperties = customProperties;
     var items = this._store.items;
     var passedLabel = label || passedValue;
-    var passedOptionId = parseInt(choiceId, 10) || -1;
+    var passedOptionId = choiceId || -1;
     var group = groupId >= 0 ? this._store.getGroupById(groupId) : null;
     var id = items ? items.length + 1 : 1; // If a prepended value has been passed, prepend it
 
@@ -5127,12 +5121,12 @@ function () {
     var choiceElementId = this._baseId + "-" + this._idNames.itemChoice + "-" + choiceId;
 
     this._store.dispatch(choices_addChoice({
-      value: value,
-      label: choiceLabel,
       id: choiceId,
       groupId: groupId,
-      disabled: isDisabled,
       elementId: choiceElementId,
+      value: value,
+      label: choiceLabel,
+      disabled: isDisabled,
       customProperties: customProperties,
       placeholder: placeholder,
       keyCode: keyCode
@@ -5288,7 +5282,7 @@ function () {
       this._highlightPosition = 0;
       this._isSearching = false;
 
-      this._setLoading(true);
+      this._startLoading();
 
       if (this._presetGroups.length) {
         this._addPredefinedGroups(this._presetGroups);
@@ -5296,7 +5290,7 @@ function () {
         this._addPredefinedChoices(this._presetChoices);
       }
 
-      this._setLoading(false);
+      this._stopLoading();
     }
 
     if (this._isTextElement) {
@@ -5334,13 +5328,14 @@ function () {
     // If sorting is enabled or the user is searching, filter choices
     if (this.config.shouldSort) {
       choices.sort(this.config.sorter);
-    } // Determine whether there is a selected choice
-
+    }
 
     var hasSelectedChoice = choices.some(function (choice) {
       return choice.selected;
-    }); // Add each choice
-
+    });
+    var firstEnabledChoiceIndex = choices.findIndex(function (choice) {
+      return choice.disabled === undefined || !choice.disabled;
+    });
     choices.forEach(function (choice, index) {
       var value = choice.value,
           label = choice.label,
@@ -5355,12 +5350,15 @@ function () {
             id: choice.id || null
           });
         } else {
-          // If there is a selected choice already or the choice is not
-          // the first in the array, add each choice normally
-          // Otherwise pre-select the first choice in the array if it's a single select
-          var shouldPreselect = _this22._isSelectOneElement && !hasSelectedChoice && index === 0;
+          /**
+           * If there is a selected choice already or the choice is not the first in
+           * the array, add each choice normally.
+           *
+           * Otherwise we pre-select the first enabled choice in the array ("select-one" only)
+           */
+          var shouldPreselect = _this22._isSelectOneElement && !hasSelectedChoice && index === firstEnabledChoiceIndex;
           var isSelected = shouldPreselect ? true : choice.selected;
-          var isDisabled = shouldPreselect ? false : choice.disabled;
+          var isDisabled = choice.disabled;
 
           _this22._addChoice({
             value: value,

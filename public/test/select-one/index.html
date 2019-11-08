@@ -102,6 +102,18 @@
           </select>
         </div>
 
+        <div data-test-hook="disabled-first-choice-via-options">
+          <label for="choices-disabled-choice-via-options"
+            >Disabled first choice by options</label
+          >
+          <select
+            class="form-control"
+            name="choices-disabled-choice-via-options"
+            id="choices-disabled-choice-via-options"
+          >
+          </select>
+        </div>
+
         <div data-test-hook="add-items-disabled">
           <label for="choices-add-items-disabled">Add items disabled</label>
           <select
@@ -371,6 +383,29 @@
 
         new Choices('#choices-disabled-choice', {
           removeItemButton: true,
+        });
+
+        new Choices('#choices-disabled-choice-via-options', {
+          removeItemButton: true,
+          choices: [
+            {
+              value: 'Choice 1',
+              label: 'Choice 1',
+              disabled: true,
+            },
+            {
+              value: 'Choice 2',
+              label: 'Choice 2',
+            },
+            {
+              value: 'Choice 3',
+              label: 'Choice 3',
+            },
+            {
+              value: 'Choice 4',
+              label: 'Choice 4',
+            },
+          ],
         });
 
         new Choices('#choices-add-items-disabled', {
