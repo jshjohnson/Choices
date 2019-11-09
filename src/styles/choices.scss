@@ -198,6 +198,7 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
     border: 1px solid darken($choices-primary-color, 5%);
     color: #ffffff;
     word-break: break-all;
+    box-sizing: border-box;
     &[data-deletable] {
       padding-right: 5px;
     }
