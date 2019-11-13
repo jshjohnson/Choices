@@ -231,8 +231,6 @@ export const TEMPLATES = /** @type {Templates} */ ({
       className: `${item} ${itemChoice}`,
     });
 
-    console.log(selectedState, placeholder, itemDisabled, itemSelectable);
-
     if (isSelected) {
       div.classList.add(selectedState);
     }
