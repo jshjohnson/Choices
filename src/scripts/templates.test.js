@@ -13,6 +13,7 @@ function expectEqualElements(element1, element2) {
   expect(Object.keys(element1.dataset)).to.have.members(
     Object.keys(element2.dataset),
   );
+  expect(element1.classList).to.include(element2.classList);
   // compare attributes values
   for (const attribute of Object.values(element1.attributes)) {
     expect(element1.getAttribute(attribute)).to.equal(
@@ -336,6 +337,7 @@ describe('templates', () => {
         elementId: 'test',
         label: 'test',
         value: 'test',
+        selected: false,
       };
     });
 
@@ -356,8 +358,6 @@ describe('templates', () => {
           </div>
         `);
         const actualOutput = templates.choice(classes, data, itemSelectText);
-
-        console.log(actualOutput);
 
         expectEqualElements(actualOutput, expectedOutput);
       });
@@ -393,6 +393,35 @@ describe('templates', () => {
       });
     });
 
+    describe('selected state', () => {
+      beforeEach(() => {
+        data = {
+          ...data,
+          selected: true,
+        };
+      });
+
+      it('returns expected html', () => {
+        const expectedOutput = strToEl(`
+          <div
+            class="${classes.item} ${classes.itemChoice} ${classes.selectedState} ${classes.itemSelectable}"
+            data-select-text="${itemSelectText}"
+            data-choice
+            data-id="${data.id}"
+            data-value="${data.value}"
+            data-choice-selectable
+            id="${data.elementId}"
+            role="option"
+            >
+            ${data.label}
+          </div>
+        `);
+        const actualOutput = templates.choice(classes, data, itemSelectText);
+
+        expectEqualElements(actualOutput, expectedOutput);
+      });
+    });
+
     describe('placeholder', () => {
       beforeEach(() => {
         data = {
@@ -404,7 +433,7 @@ describe('templates', () => {
       it('returns expected html', () => {
         const expectedOutput = strToEl(`
           <div
-            class="${classes.item} ${classes.itemChoice} ${classes.itemSelectable} ${classes.placeholder}"
+            class="${classes.item} ${classes.itemChoice} ${classes.placeholder} ${classes.itemSelectable}"
             data-select-text="${itemSelectText}"
             data-choice
             data-id="${data.id}"
