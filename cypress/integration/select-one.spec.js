@@ -12,6 +12,30 @@ describe('Choices - select one', () => {
           .click();
       });
 
+      describe('focusing on container', () => {
+        describe('pressing enter key', () => {
+          it('toggles the dropdown', () => {
+            cy.get('[data-test-hook=basic]')
+              .find('.choices')
+              .focus()
+              .type('{enter}');
+
+            cy.get('[data-test-hook=basic]')
+              .find('.choices__list--dropdown')
+              .should('not.be.visible');
+
+            cy.get('[data-test-hook=basic]')
+              .find('.choices')
+              .focus()
+              .type('{enter}');
+
+            cy.get('[data-test-hook=basic]')
+              .find('.choices__list--dropdown')
+              .should('be.visible');
+          });
+        });
+      });
+
       describe('focusing on text input', () => {
         it('displays a dropdown of choices', () => {
           cy.get('[data-test-hook=basic]')

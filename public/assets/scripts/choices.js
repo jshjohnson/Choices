@@ -1335,14 +1335,6 @@ var utils_wrap = function wrap(element, wrapper) {
   return wrapper.appendChild(element);
 };
 /**
- * @param {HTMLElement} el
- * @param {string} attr
- */
-
-var findAncestorByAttrName = function findAncestorByAttrName(el, attr) {
-  return el.closest("[" + attr + "]");
-};
-/**
  * @param {Element} startEl
  * @param {string} selector
  * @param {1 | -1} direction
@@ -1473,14 +1465,6 @@ var dispatchEvent = function dispatchEvent(element, type, customArgs) {
     cancelable: true
   });
   return element.dispatchEvent(event);
-};
-/**
- * @param {string} userAgent
- * @returns {boolean}
- */
-
-var isIE11 = function isIE11(userAgent) {
-  return !!(userAgent.match(/Trident/) && userAgent.match(/rv[ :]11/));
 };
 /**
  * @param {array} array
@@ -1875,6 +1859,7 @@ var DEFAULT_CLASSNAMES = {
   openState: 'is-open',
   disabledState: 'is-disabled',
   highlightedState: 'is-highlighted',
+  selectedState: 'is-selected',
   flippedState: 'is-flipped',
   loadingState: 'is-loading',
   noResults: 'has-no-results',
@@ -2794,10 +2779,23 @@ function (_WrappedElement) {
  * Helpers to create HTML elements used by Choices
  * Can be overridden by providing `callbackOnCreateTemplates` option
  * @typedef {import('../../types/index').Choices.Templates} Templates
+ * @typedef {import('../../types/index').Choices.ClassNames} ClassNames
+ * @typedef {import('../../types/index').Choices.Options} Options
+ * @typedef {import('../../types/index').Choices.Item} Item
+ * @typedef {import('../../types/index').Choices.Choice} Choice
+ * @typedef {import('../../types/index').Choices.Group} Group
  */
 var TEMPLATES =
 /** @type {Templates} */
 {
+  /**
+   * @param {Partial<ClassNames>} classNames
+   * @param {"ltr" | "rtl" | "auto"} dir
+   * @param {boolean} isSelectElement
+   * @param {boolean} isSelectOneElement
+   * @param {boolean} searchEnabled
+   * @param {"select-one" | "select-multiple" | "text"} passedElementType
+   */
   containerOuter: function containerOuter(_ref, dir, isSelectElement, isSelectOneElement, searchEnabled, passedElementType) {
     var _containerOuter = _ref.containerOuter;
     var div = Object.assign(document.createElement('div'), {
@@ -2825,12 +2823,21 @@ var TEMPLATES =
     div.setAttribute('aria-expanded', 'false');
     return div;
   },
+
+  /**
+   * @param {Partial<ClassNames>} classNames
+   */
   containerInner: function containerInner(_ref2) {
     var _containerInner = _ref2.containerInner;
     return Object.assign(document.createElement('div'), {
       className: _containerInner
     });
   },
+
+  /**
+   * @param {Partial<ClassNames>} classNames
+   * @param {boolean} isSelectOneElement
+   */
   itemList: function itemList(_ref3, isSelectOneElement) {
     var list = _ref3.list,
         listSingle = _ref3.listSingle,
@@ -2839,6 +2846,11 @@ var TEMPLATES =
       className: list + " " + (isSelectOneElement ? listSingle : listItems)
     });
   },
+
+  /**
+   * @param {Partial<ClassNames>} classNames
+   * @param {string} value
+   */
   placeholder: function placeholder(_ref4, value) {
     var _placeholder = _ref4.placeholder;
     return Object.assign(document.createElement('div'), {
@@ -2846,6 +2858,12 @@ var TEMPLATES =
       innerHTML: value
     });
   },
+
+  /**
+   * @param {Partial<ClassNames>} classNames
+   * @param {Item} item
+   * @param {boolean} removeItemButton
+   */
   item: function item(_ref5, _ref6, removeItemButton) {
     var _item = _ref5.item,
         button = _ref5.button,
@@ -2906,6 +2924,11 @@ var TEMPLATES =
 
     return div;
   },
+
+  /**
+   * @param {Partial<ClassNames>} classNames
+   * @param {boolean} isSelectOneElement
+   */
   choiceList: function choiceList(_ref7, isSelectOneElement) {
     var list = _ref7.list;
     var div = Object.assign(document.createElement('div'), {
@@ -2919,6 +2942,11 @@ var TEMPLATES =
     div.setAttribute('role', 'listbox');
     return div;
   },
+
+  /**
+   * @param {Partial<ClassNames>} classNames
+   * @param {Group} group
+   */
   choiceGroup: function choiceGroup(_ref8, _ref9) {
     var group = _ref8.group,
         groupHeading = _ref8.groupHeading,
@@ -2946,10 +2974,17 @@ var TEMPLATES =
     }));
     return div;
   },
+
+  /**
+   * @param {Partial<ClassNames>} classNames
+   * @param {Choice} choice
+   * @param {Options['itemSelectText']} selectText
+   */
   choice: function choice(_ref10, _ref11, selectText) {
     var item = _ref10.item,
         itemChoice = _ref10.itemChoice,
         itemSelectable = _ref10.itemSelectable,
+        selectedState = _ref10.selectedState,
         itemDisabled = _ref10.itemDisabled,
         placeholder = _ref10.placeholder;
     var id = _ref11.id,
@@ -2957,13 +2992,23 @@ var TEMPLATES =
         label = _ref11.label,
         groupId = _ref11.groupId,
         elementId = _ref11.elementId,
-        disabled = _ref11.disabled,
+        isDisabled = _ref11.disabled,
+        isSelected = _ref11.selected,
         isPlaceholder = _ref11.placeholder;
     var div = Object.assign(document.createElement('div'), {
       id: elementId,
       innerHTML: label,
-      className: item + " " + itemChoice + " " + (disabled ? itemDisabled : itemSelectable) + " " + (isPlaceholder ? placeholder : '')
+      className: item + " " + itemChoice
     });
+
+    if (isSelected) {
+      div.classList.add(selectedState);
+    }
+
+    if (isPlaceholder) {
+      div.classList.add(placeholder);
+    }
+
     div.setAttribute('role', groupId > 0 ? 'treeitem' : 'option');
     Object.assign(div.dataset, {
       choice: '',
@@ -2972,15 +3017,22 @@ var TEMPLATES =
       selectText: selectText
     });
 
-    if (disabled) {
+    if (isDisabled) {
+      div.classList.add(itemDisabled);
       div.dataset.choiceDisabled = '';
       div.setAttribute('aria-disabled', 'true');
     } else {
+      div.classList.add(itemSelectable);
       div.dataset.choiceSelectable = '';
     }
 
     return div;
   },
+
+  /**
+   * @param {Partial<ClassNames>} classNames
+   * @param {string} placeholderValue
+   */
   input: function input(_ref12, placeholderValue) {
     var _input = _ref12.input,
         inputCloned = _ref12.inputCloned;
@@ -2996,6 +3048,10 @@ var TEMPLATES =
     inp.setAttribute('aria-label', placeholderValue);
     return inp;
   },
+
+  /**
+   * @param {Partial<ClassNames>} classNames
+   */
   dropdown: function dropdown(_ref13) {
     var list = _ref13.list,
         listDropdown = _ref13.listDropdown;
@@ -3004,6 +3060,13 @@ var TEMPLATES =
     div.setAttribute('aria-expanded', 'false');
     return div;
   },
+
+  /**
+   *
+   * @param {Partial<ClassNames>} classNames
+   * @param {string} innerHTML
+   * @param {"no-choices" | "no-results" | ""} type
+   */
   notice: function notice(_ref14, innerHTML, type) {
     var item = _ref14.item,
         itemChoice = _ref14.itemChoice,
@@ -3027,6 +3090,10 @@ var TEMPLATES =
       className: classes.join(' ')
     });
   },
+
+  /**
+   * @param {Item} option
+   */
   option: function option(_ref15) {
     var label = _ref15.label,
         value = _ref15.value,
@@ -3248,6 +3315,9 @@ function choices_createClass(Constructor, protoProps, staticProps) { if (protoPr
 
 
 
+/** @see {@link http://browserhacks.com/#hack-acea075d0ac6954f275a70023906050c} */
+
+var IS_IE11 = '-ms-scroll-limit' in document.documentElement.style && '-ms-ime-align' in document.documentElement.style;
 /**
  * @typedef {import('../../types/index').Choices.Choice} Choice
  * @typedef {import('../../types/index').Choices.Item} Item
@@ -4469,9 +4539,9 @@ function () {
     var _document = document,
         documentElement = _document.documentElement; // capture events - can cancel event processing or propagation
 
-    documentElement.addEventListener('keydown', this._onKeyDown, true);
     documentElement.addEventListener('touchend', this._onTouchEnd, true);
-    documentElement.addEventListener('mousedown', this._onMouseDown, true); // passive events - doesn't call `preventDefault` or `stopPropagation`
+    this.containerOuter.element.addEventListener('keydown', this._onKeyDown, true);
+    this.containerOuter.element.addEventListener('mousedown', this._onMouseDown, true); // passive events - doesn't call `preventDefault` or `stopPropagation`
 
     documentElement.addEventListener('click', this._onClick, {
       passive: true
@@ -4479,7 +4549,7 @@ function () {
     documentElement.addEventListener('touchmove', this._onTouchMove, {
       passive: true
     });
-    documentElement.addEventListener('mouseover', this._onMouseOver, {
+    this.dropdown.element.addEventListener('mouseover', this._onMouseOver, {
       passive: true
     });
 
@@ -4514,19 +4584,19 @@ function () {
   _proto._removeEventListeners = function _removeEventListeners() {
     var _document2 = document,
         documentElement = _document2.documentElement;
-    documentElement.removeEventListener('keydown', this._onKeyDown, true);
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
-    documentElement.removeEventListener('mousedown', this._onMouseDown, true);
-    documentElement.removeEventListener('keyup', this._onKeyUp);
+    this.containerOuter.element.removeEventListener('keydown', this._onKeyDown, true);
+    this.containerOuter.element.removeEventListener('mousedown', this._onMouseDown, true);
     documentElement.removeEventListener('click', this._onClick);
     documentElement.removeEventListener('touchmove', this._onTouchMove);
-    documentElement.removeEventListener('mouseover', this._onMouseOver);
+    this.dropdown.element.removeEventListener('mouseover', this._onMouseOver);
 
     if (this._isSelectOneElement) {
       this.containerOuter.element.removeEventListener('focus', this._onFocus);
       this.containerOuter.element.removeEventListener('blur', this._onBlur);
     }
 
+    this.input.element.removeEventListener('keyup', this._onKeyUp);
     this.input.element.removeEventListener('focus', this._onFocus);
     this.input.element.removeEventListener('blur', this._onBlur);
 
@@ -4535,7 +4605,11 @@ function () {
     }
 
     this.input.removeEventListeners();
-  };
+  }
+  /**
+   * @param {KeyboardEvent} event
+   */
+  ;
 
   _proto._onKeyDown = function _onKeyDown(event) {
     var _keyDownActions;
@@ -4544,11 +4618,6 @@ function () {
         keyCode = event.keyCode,
         ctrlKey = event.ctrlKey,
         metaKey = event.metaKey;
-
-    if (target !== this.input.element && !this.containerOuter.element.contains(target)) {
-      return;
-    }
-
     var activeItems = this._store.activeItems;
     var hasFocusedInput = this.input.isFocussed;
     var hasActiveDropdown = this.dropdown.isActive;
@@ -4793,43 +4862,62 @@ function () {
     }
 
     this._wasTap = true;
-  };
+  }
+  /**
+   * Handles mousedown event in capture mode for containetOuter.element
+   * @param {MouseEvent} event
+   */
+  ;
 
   _proto._onMouseDown = function _onMouseDown(event) {
-    var target = event.target,
-        shiftKey = event.shiftKey; // If we have our mouse down on the scrollbar and are on IE11...
+    var target = event.target;
 
-    if (this.choiceList.element.contains(target) && isIE11(navigator.userAgent)) {
-      this._isScrollingOnIe = true;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    } // If we have our mouse down on the scrollbar and are on IE11...
+
+
+    if (IS_IE11 && this.choiceList.element.contains(target)) {
+      // check if click was on a scrollbar area
+      var firstChoice =
+      /** @type {HTMLElement} */
+      this.choiceList.element.firstElementChild;
+      var isOnScrollbar = this._direction === 'ltr' ? event.offsetX >= firstChoice.offsetWidth : event.offsetX < firstChoice.offsetLeft;
+      this._isScrollingOnIe = isOnScrollbar;
     }
 
-    if (!this.containerOuter.element.contains(target) || target === this.input.element) {
+    if (target === this.input.element) {
       return;
     }
 
-    var activeItems = this._store.activeItems;
-    var hasShiftKey = shiftKey;
-    var buttonTarget = findAncestorByAttrName(target, 'data-button');
-    var itemTarget = findAncestorByAttrName(target, 'data-item');
-    var choiceTarget = findAncestorByAttrName(target, 'data-choice');
+    var item = target.closest('[data-button],[data-item],[data-choice]');
 
-    if (buttonTarget) {
-      this._handleButtonAction(activeItems, buttonTarget);
-    } else if (itemTarget) {
-      this._handleItemAction(activeItems, itemTarget, hasShiftKey);
-    } else if (choiceTarget) {
-      this._handleChoiceAction(activeItems, choiceTarget);
+    if (item instanceof HTMLElement) {
+      var hasShiftKey = event.shiftKey;
+      var activeItems = this._store.activeItems;
+      var dataset = item.dataset;
+
+      if ('button' in dataset) {
+        this._handleButtonAction(activeItems, item);
+      } else if ('item' in dataset) {
+        this._handleItemAction(activeItems, item, hasShiftKey);
+      } else if ('choice' in dataset) {
+        this._handleChoiceAction(activeItems, item);
+      }
     }
 
     event.preventDefault();
-  };
+  }
+  /**
+   * Handles mouseover event over this.dropdown
+   * @param {MouseEvent} event
+   */
+  ;
 
   _proto._onMouseOver = function _onMouseOver(_ref9) {
     var target = _ref9.target;
-    var targetWithinDropdown = target === this.dropdown || this.dropdown.element.contains(target);
-    var shouldHighlightChoice = targetWithinDropdown && target.hasAttribute('data-choice');
 
-    if (shouldHighlightChoice) {
+    if (target instanceof HTMLElement && 'choice' in target.dataset) {
       this._highlightChoice(target);
     }
   };

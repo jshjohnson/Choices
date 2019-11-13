@@ -200,6 +200,7 @@
   border: 1px solid #00a5bb;
   color: #ffffff;
   word-break: break-all;
+  box-sizing: border-box;
 }
 
 .choices__list--multiple .choices__item[data-deletable] {
