@@ -1319,11 +1319,6 @@ class Choices {
    */
   _onKeyDown(event) {
     const { target, keyCode, ctrlKey, metaKey } = event;
-
-    if (target !== this.input.element) {
-      return;
-    }
-
     const { activeItems } = this._store;
     const hasFocusedInput = this.input.isFocussed;
     const hasActiveDropdown = this.dropdown.isActive;
