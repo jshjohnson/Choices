@@ -35,6 +35,7 @@ describe('constants', () => {
           'openState',
           'disabledState',
           'highlightedState',
+          'selectedState',
           'flippedState',
           'loadingState',
           'noResults',

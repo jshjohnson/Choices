@@ -266,6 +266,8 @@ declare namespace Choices {
     disabledState: string;
     /** @default 'is-highlighted' */
     highlightedState: string;
+    /** @default 'is-selected' */
+    selectedState: string;
     /** @default 'is-flipped' */
     flippedState: string;
     /** @default 'is-loading' */
