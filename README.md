@@ -147,6 +147,7 @@ Or include Choices directly:
       openState: 'is-open',
       disabledState: 'is-disabled',
       highlightedState: 'is-highlighted',
+      selectedState: 'is-selected',
       flippedState: 'is-flipped',
       loadingState: 'is-loading',
       noResults: 'has-no-results',
@@ -578,6 +579,7 @@ classNames: {
   openState: 'is-open',
   disabledState: 'is-disabled',
   highlightedState: 'is-highlighted',
+  selectedState: 'is-selected',
   flippedState: 'is-flipped',
   selectedState: 'is-highlighted',
 }
