@@ -3,7 +3,7 @@ name: Build and test
 on:
   push:
     branches:
-      - master
+      - build-on-merge
 
 jobs:
   build-and-test:
