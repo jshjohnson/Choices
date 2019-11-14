@@ -15,8 +15,8 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 10
-      # run all tests
-      - run: |
+      - name: Build and run all tests
+        run: |
           npm ci
           npm run build
           npx bundlesize
