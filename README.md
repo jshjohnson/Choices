@@ -1063,7 +1063,7 @@ Element.prototype.closest
 
 ## Development
 
-To setup a local environment: clone this repo, navigate into it's directory in a terminal window and run the following command:
+To setup a local environment: clone this repo, navigate into its directory in a terminal window and run the following command:
 
 `npm install`
 
