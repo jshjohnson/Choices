@@ -32,6 +32,15 @@ jobs:
           BUNDLESIZE_GITHUB_TOKEN: ${{secrets.BUNDLESIZE_GITHUB_TOKEN}}
           FORCE_COLOR: 2
           HUSKY_SKIP_INSTALL: true
+      - name: Commit built files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git commit -m "Update build files 🏗" -a
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload coverage to Codecov
         run: bash <(curl -s https://codecov.io/bash)
