@@ -25,7 +25,6 @@
     "css:prefix": "postcss public/assets/styles/*.css --use autoprefixer --no-map --env prod --dir public/assets/styles",
     "css:min": "csso public/assets/styles/base.css --output public/assets/styles/base.min.css && csso public/assets/styles/choices.css --output public/assets/styles/choices.min.css",
     "deploy": "git subtree push --prefix public origin gh-pages",
-    "postversion": "git push --no-verify --atomic --follow-tags",
     "prepublishOnly": "npm run build"
   },
   "repository": {
