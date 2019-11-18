@@ -1044,7 +1044,7 @@ I suggest including a polyfill from the very good [polyfill.io](https://polyfill
 **Polyfill example used for the demo:**
 
 ```html
-<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=es5,es6,fetch,Array.prototype.includes,CustomEvent,Element.prototype.closest"></script>
+<script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=Array.from%2Ces5%2Ces6%2CSymbol%2CSymbol.iterator%2CDOMTokenList%2CObject.assign%2CCustomEvent%2CElement.prototype.classList%2CElement.prototype.closest%2CElement.prototype.dataset%2CArray.prototype.find%2CArray.prototype.includes"></script>
 ```
 
 **Features used in Choices:**
@@ -1055,10 +1055,12 @@ Array.prototype.find
 Array.prototype.includes
 Symbol
 Symbol.iterator
+DOMTokenList
 Object.assign
 CustomEvent
 Element.prototype.classList
 Element.prototype.closest
+Element.prototype.dataset
 ```
 
 ## Development
