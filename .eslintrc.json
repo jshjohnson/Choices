@@ -86,10 +86,12 @@
       "Array.prototype.includes",
       "Symbol",
       "Symbol.iterator",
+      "DOMTokenList",
       "Object.assign",
       "CustomEvent",
       "Element.prototype.classList",
-      "Element.prototype.closest"
+      "Element.prototype.closest",
+      "Element.prototype.dataset"
     ]
   }
 }
