@@ -5,13 +5,6 @@ describe('Choices - select one', () => {
 
   describe('scenarios', () => {
     describe('basic', () => {
-      beforeEach(() => {
-        // open dropdown
-        cy.get('[data-test-hook=basic]')
-          .find('.choices')
-          .click();
-      });
-
       describe('focusing on container', () => {
         describe('pressing enter key', () => {
           it('toggles the dropdown', () => {
@@ -22,7 +15,7 @@ describe('Choices - select one', () => {
 
             cy.get('[data-test-hook=basic]')
               .find('.choices__list--dropdown')
-              .should('not.be.visible');
+              .should('be.visible');
 
             cy.get('[data-test-hook=basic]')
               .find('.choices')
@@ -31,7 +24,26 @@ describe('Choices - select one', () => {
 
             cy.get('[data-test-hook=basic]')
               .find('.choices__list--dropdown')
+              .should('not.be.visible');
+          });
+        });
+
+        describe('pressing an alpha-numeric key', () => {
+          it('opens the dropdown and the input value', () => {
+            const inputValue = 'test';
+
+            cy.get('[data-test-hook=basic]')
+              .find('.choices')
+              .focus()
+              .type(inputValue);
+
+            cy.get('[data-test-hook=basic]')
+              .find('.choices__list--dropdown')
               .should('be.visible');
+
+            cy.get('[data-test-hook=basic]')
+              .find('.choices__input--cloned')
+              .should('have.value', inputValue);
           });
         });
       });
@@ -67,6 +79,13 @@ describe('Choices - select one', () => {
       });
 
       describe('selecting choices', () => {
+        beforeEach(() => {
+          // open dropdown
+          cy.get('[data-test-hook=basic]')
+            .find('.choices')
+            .click();
+        });
+
         const selectedChoiceText = 'Choice 1';
 
         it('allows selecting choices from dropdown', () => {
@@ -102,6 +121,13 @@ describe('Choices - select one', () => {
       });
 
       describe('searching choices', () => {
+        beforeEach(() => {
+          // open dropdown
+          cy.get('[data-test-hook=basic]')
+            .find('.choices')
+            .click();
+        });
+
         describe('on input', () => {
           describe('searching by label', () => {
             it('displays choices filtered by inputted value', () => {
