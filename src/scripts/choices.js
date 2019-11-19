@@ -1327,7 +1327,7 @@ class Choices {
     const hasActiveDropdown = this.dropdown.isActive;
     const hasItems = this.itemList.hasChildren();
     const keyString = String.fromCharCode(keyCode);
-    const wasAlphaNumericInput = /[a-zA-Z0-9-_ ]/.test(keyString);
+    const wasAlphaNumericChar = /[a-zA-Z0-9-_ ]/.test(keyString);
 
     const {
       BACK_KEY,
@@ -1341,7 +1341,7 @@ class Choices {
       PAGE_DOWN_KEY,
     } = KEY_CODES;
 
-    if (!this._isTextElement && !hasActiveDropdown && wasAlphaNumericInput) {
+    if (!this._isTextElement && !hasActiveDropdown && wasAlphaNumericChar) {
       this.showDropdown();
 
       if (!this.input.isFocussed) {
