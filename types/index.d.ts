@@ -780,6 +780,14 @@ declare namespace Choices {
       | ((template: Choices.Types.strToEl) => Partial<Choices.Templates>)
       | null;
   }
+
+  interface KeyDownAction {
+    event: KeyboardEvent;
+    activeItems: Item[];
+    hasFocusedInput: boolean;
+    hasActiveDropdown: boolean;
+    hasItems: boolean;
+  }
 }
 
 // Exporting default class
@@ -1024,4 +1032,10 @@ export default class Choices {
    * **Input types affected:** text, select-one, select-multiple
    */
   disable(): this;
+
+  _onEnterKey(keyDownAction: keyDownAction): void;
+  _onAKey(keyDownAction: keyDownAction): void;
+  _onEscapeKey(keyDownAction: keyDownAction): void;
+  _onDirectionKey(keyDownAction: keyDownAction): void;
+  _onDeleteKey(keyDownAction: keyDownAction): void;
 }

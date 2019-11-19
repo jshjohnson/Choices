@@ -1321,7 +1321,7 @@ class Choices {
    * @param {KeyboardEvent} event
    */
   _onKeyDown(event) {
-    const { target, keyCode, ctrlKey, metaKey } = event;
+    const { keyCode } = event;
     const { activeItems } = this._store;
     const hasFocusedInput = this.input.isFocussed;
     const hasActiveDropdown = this.dropdown.isActive;
@@ -1339,7 +1339,6 @@ class Choices {
       PAGE_UP_KEY,
       PAGE_DOWN_KEY,
     } = KEY_CODES;
-    const hasCtrlDownKeyPressed = ctrlKey || metaKey;
 
     // If a user is typing and the dropdown is not active
     if (!this._isTextElement && /[a-zA-Z0-9-_ ]/.test(keyString)) {
@@ -1363,14 +1362,10 @@ class Choices {
     if (keyDownActions[keyCode]) {
       keyDownActions[keyCode]({
         event,
-        target,
-        keyCode,
-        metaKey,
         activeItems,
         hasFocusedInput,
         hasActiveDropdown,
         hasItems,
-        hasCtrlDownKeyPressed,
       });
     }
   }
@@ -1409,7 +1404,9 @@ class Choices {
     this._canSearch = this.config.searchEnabled;
   }
 
-  _onAKey({ hasItems, hasCtrlDownKeyPressed }) {
+  _onAKey({ event, hasItems }) {
+    const { ctrlKey, metaKey } = event;
+    const hasCtrlDownKeyPressed = ctrlKey || metaKey;
     // If CTRL + A or CMD + A have been pressed and there are items to select
     if (hasCtrlDownKeyPressed && hasItems) {
       this._canSearch = false;
@@ -1425,7 +1422,8 @@ class Choices {
     }
   }
 
-  _onEnterKey({ event, target, activeItems, hasActiveDropdown }) {
+  _onEnterKey({ event, activeItems, hasActiveDropdown }) {
+    const { target } = event;
     const { ENTER_KEY: enterKey } = KEY_CODES;
     const targetWasButton = target.hasAttribute('data-button');
 
@@ -1473,7 +1471,8 @@ class Choices {
     }
   }
 
-  _onDirectionKey({ event, hasActiveDropdown, keyCode, metaKey }) {
+  _onDirectionKey({ event, hasActiveDropdown }) {
+    const { keyCode, metaKey } = event;
     const {
       DOWN_KEY: downKey,
       PAGE_UP_KEY: pageUpKey,
@@ -1536,7 +1535,8 @@ class Choices {
     }
   }
 
-  _onDeleteKey({ event, target, hasFocusedInput, activeItems }) {
+  _onDeleteKey({ event, hasFocusedInput, activeItems }) {
+    const { target } = event;
     // If backspace or delete key is pressed and the input has no value
     if (hasFocusedInput && !target.value && !this._isSelectOneElement) {
       this._handleBackspace(activeItems);
