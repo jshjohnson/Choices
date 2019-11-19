@@ -2094,7 +2094,7 @@ describe('choices', () => {
 
         describe('select input', () => {
           describe('when the dropdown is not active', () => {
-            describe('when the input was alpha-numeric', () => {
+            describe('when the key was alpha-numeric', () => {
               beforeEach(() => {
                 instance._isTextElement = false;
                 instance.dropdown.isActive = false;
@@ -2108,9 +2108,9 @@ describe('choices', () => {
                 expect(instance.showDropdown).to.have.been.calledWith();
               });
 
-              describe('select-one input', () => {
+              describe('when the input is not focussed', () => {
                 beforeEach(() => {
-                  instance._isSelectOneElement = true;
+                  instance.input.isFocussed = false;
                 });
 
                 it('updates the input value with the character corresponding to the key code', () => {
@@ -2122,9 +2122,9 @@ describe('choices', () => {
                 });
               });
 
-              describe('select-multiple input', () => {
+              describe('when the input is focussed', () => {
                 beforeEach(() => {
-                  instance._isSelectOneElement = false;
+                  instance.input.isFocussed = true;
                 });
 
                 it('does not update the input value', () => {

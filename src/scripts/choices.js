@@ -1344,12 +1344,12 @@ class Choices {
     if (!this._isTextElement && !hasActiveDropdown && wasAlphaNumericInput) {
       this.showDropdown();
 
-      /*
-        We update the input value with the pressed key as
-        the input was not focussed at the time of key press
-        therefore does not have the value of the key.
-      */
-      if (this._isSelectOneElement) {
+      if (!this.input.isFocussed) {
+        /*
+          We update the input value with the pressed key as
+          the input was not focussed at the time of key press
+          therefore does not have the value of the key.
+        */
         this.input.value += keyString.toLowerCase();
       }
     }
