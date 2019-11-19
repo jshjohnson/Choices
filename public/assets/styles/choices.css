@@ -61,7 +61,7 @@
   height: 20px;
   width: 20px;
   border-radius: 10em;
-  opacity: 0.5;
+  opacity: 0.25;
 }
 
 .choices[data-type*='select-one'] .choices__button:hover, .choices[data-type*='select-one'] .choices__button:focus {
