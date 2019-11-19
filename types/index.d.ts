@@ -1033,9 +1033,9 @@ export default class Choices {
    */
   disable(): this;
 
-  _onEnterKey(keyDownAction: keyDownAction): void;
-  _onAKey(keyDownAction: keyDownAction): void;
-  _onEscapeKey(keyDownAction: keyDownAction): void;
-  _onDirectionKey(keyDownAction: keyDownAction): void;
-  _onDeleteKey(keyDownAction: keyDownAction): void;
+  _onEnterKey(keyDownAction: Partial<Choices.KeyDownAction>): void;
+  _onAKey(keyDownAction: Partial<Choices.KeyDownAction>): void;
+  _onEscapeKey(keyDownAction: Partial<Choices.KeyDownAction>): void;
+  _onDirectionKey(keyDownAction: Partial<Choices.KeyDownAction>): void;
+  _onDeleteKey(keyDownAction: Partial<Choices.KeyDownAction>): void;
 }
