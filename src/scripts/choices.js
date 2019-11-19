@@ -1350,7 +1350,7 @@ class Choices {
         therefore does not have the value of the key.
       */
       if (this._isSelectOneElement) {
-        this.input.value += keyString;
+        this.input.value += keyString.toLowerCase();
       }
     }
 

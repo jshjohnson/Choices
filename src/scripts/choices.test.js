@@ -2118,7 +2118,7 @@ describe('choices', () => {
                     keyCode: KEY_CODES.A_KEY,
                   });
 
-                  expect(instance.input.value).to.contain('A');
+                  expect(instance.input.value).to.contain('a');
                 });
               });
 
@@ -2132,7 +2132,7 @@ describe('choices', () => {
                     keyCode: KEY_CODES.A_KEY,
                   });
 
-                  expect(instance.input.value).to.not.contain('A');
+                  expect(instance.input.value).to.not.contain('a');
                 });
               });
             });
