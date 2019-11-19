@@ -3,7 +3,7 @@ import { spy, stub } from 'sinon';
 import sinonChai from 'sinon-chai';
 
 import Choices from './choices';
-import { EVENTS, ACTION_TYPES, DEFAULT_CONFIG } from './constants';
+import { EVENTS, ACTION_TYPES, DEFAULT_CONFIG, KEY_CODES } from './constants';
 import { WrappedSelect, WrappedInput } from './components/index';
 
 chai.use(sinonChai);
@@ -2022,6 +2022,136 @@ describe('choices', () => {
             instance.config.classNames,
             customArg,
           );
+        });
+      });
+    });
+
+    describe.only('_onKeyDown', () => {
+      beforeEach(() => {
+        instance.showDropdown = stub();
+        instance._onAKey = stub();
+        instance._onEnterKey = stub();
+        instance._onEscapeKey = stub();
+        instance._onDirectionKey = stub();
+        instance._onDeleteKey = stub();
+      });
+
+      const scenarios = [
+        {
+          keyCode: KEY_CODES.BACK_KEY,
+          expectedFunctionCall: '_onDeleteKey',
+        },
+        {
+          keyCode: KEY_CODES.DELETE_KEY,
+          expectedFunctionCall: '_onDeleteKey',
+        },
+        {
+          keyCode: KEY_CODES.A_KEY,
+          expectedFunctionCall: '_onAKey',
+        },
+        {
+          keyCode: KEY_CODES.ENTER_KEY,
+          expectedFunctionCall: '_onEnterKey',
+        },
+        {
+          keyCode: KEY_CODES.UP_KEY,
+          expectedFunctionCall: '_onDirectionKey',
+        },
+        {
+          keyCode: KEY_CODES.DOWN_KEY,
+          expectedFunctionCall: '_onDirectionKey',
+        },
+        {
+          keyCode: KEY_CODES.DOWN_KEY,
+          expectedFunctionCall: '_onDirectionKey',
+        },
+        {
+          keyCode: KEY_CODES.ESC_KEY,
+          expectedFunctionCall: '_onEscapeKey',
+        },
+      ];
+
+      describe('when called with a keydown event', () => {
+        scenarios.forEach(({ keyCode, expectedFunctionCall }) => {
+          describe(`when the keyCode is ${keyCode}`, () => {
+            it(`calls ${expectedFunctionCall} with the expected arguments`, () => {
+              const mockEvent = {
+                keyCode,
+              };
+
+              instance._onKeyDown(mockEvent);
+
+              expect(instance[expectedFunctionCall]).to.have.been.calledWith({
+                event: mockEvent,
+                activeItems: instance._store.activeItems,
+                hasActiveDropdown: instance.dropdown.isActive,
+                hasFocusedInput: instance.input.isFocussed,
+                hasItems: instance.itemList.hasChildren(),
+              });
+            });
+          });
+        });
+
+        describe('select input', () => {
+          describe('when the dropdown is not active', () => {
+            describe('when the input was alpha-numeric', () => {
+              beforeEach(() => {
+                instance._isTextElement = false;
+                instance.dropdown.isActive = false;
+              });
+
+              it('shows the dropdown', () => {
+                instance._onKeyDown({
+                  keyCode: KEY_CODES.A_KEY,
+                });
+
+                expect(instance.showDropdown).to.have.been.calledWith();
+              });
+
+              describe('select-one input', () => {
+                beforeEach(() => {
+                  instance._isSelectOneElement = true;
+                });
+
+                it('updates the input value with the character corresponding to the key code', () => {
+                  instance._onKeyDown({
+                    keyCode: KEY_CODES.A_KEY,
+                  });
+
+                  expect(instance.input.value).to.contain('A');
+                });
+              });
+
+              describe('select-multiple input', () => {
+                beforeEach(() => {
+                  instance._isSelectOneElement = false;
+                });
+
+                it('does not update the input value', () => {
+                  instance._onKeyDown({
+                    keyCode: KEY_CODES.A_KEY,
+                  });
+
+                  expect(instance.input.value).to.not.contain('A');
+                });
+              });
+            });
+
+            describe('when the input was not alpha-numeric', () => {
+              beforeEach(() => {
+                instance._isTextElement = false;
+                instance.dropdown.isActive = false;
+              });
+
+              it('does not show the dropdown', () => {
+                instance._onKeyDown({
+                  keyCode: KEY_CODES.DELETE_KEY,
+                });
+
+                expect(instance.showDropdown).to.not.have.been.called;
+              });
+            });
+          });
         });
       });
     });

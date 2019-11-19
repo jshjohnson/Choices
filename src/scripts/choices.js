@@ -1327,6 +1327,7 @@ class Choices {
     const hasActiveDropdown = this.dropdown.isActive;
     const hasItems = this.itemList.hasChildren();
     const keyString = String.fromCharCode(keyCode);
+    const wasAlphaNumericInput = /[a-zA-Z0-9-_ ]/.test(keyString);
 
     const {
       BACK_KEY,
@@ -1340,9 +1341,17 @@ class Choices {
       PAGE_DOWN_KEY,
     } = KEY_CODES;
 
-    // If a user is typing and the dropdown is not active
-    if (!this._isTextElement && /[a-zA-Z0-9-_ ]/.test(keyString)) {
+    if (!this._isTextElement && !hasActiveDropdown && wasAlphaNumericInput) {
       this.showDropdown();
+
+      /*
+        We update the input value with the pressed key as
+        the input was not focussed at the time of key press
+        therefore does not have the value of the key.
+      */
+      if (this._isSelectOneElement) {
+        this.input.value += keyString;
+      }
     }
 
     // Map keys to key actions
@@ -1358,7 +1367,6 @@ class Choices {
       [BACK_KEY]: this._onDeleteKey,
     };
 
-    // If keycode has a function, run it
     if (keyDownActions[keyCode]) {
       keyDownActions[keyCode]({
         event,
@@ -1380,6 +1388,7 @@ class Choices {
     // notice. Otherwise hide the dropdown
     if (this._isTextElement) {
       const canShowDropdownNotice = canAddItem.notice && value;
+
       if (canShowDropdownNotice) {
         const dropdownItem = this._getTemplate('notice', canAddItem.notice);
         this.dropdown.element.innerHTML = dropdownItem.outerHTML;
@@ -1388,8 +1397,8 @@ class Choices {
         this.hideDropdown(true);
       }
     } else {
-      const userHasRemovedValue =
-        (keyCode === backKey || keyCode === deleteKey) && !target.value;
+      const wasRemovalKeyCode = keyCode === backKey || keyCode === deleteKey;
+      const userHasRemovedValue = wasRemovalKeyCode && !target.value;
       const canReactivateChoices = !this._isTextElement && this._isSearching;
       const canSearch = this._canSearch && canAddItem.response;
 
@@ -1407,6 +1416,7 @@ class Choices {
   _onAKey({ event, hasItems }) {
     const { ctrlKey, metaKey } = event;
     const hasCtrlDownKeyPressed = ctrlKey || metaKey;
+
     // If CTRL + A or CMD + A have been pressed and there are items to select
     if (hasCtrlDownKeyPressed && hasItems) {
       this._canSearch = false;
