@@ -2026,7 +2026,7 @@ describe('choices', () => {
       });
     });
 
-    describe.only('_onKeyDown', () => {
+    describe('_onKeyDown', () => {
       beforeEach(() => {
         instance.showDropdown = stub();
         instance._onAKey = stub();
