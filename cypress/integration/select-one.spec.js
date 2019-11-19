@@ -48,36 +48,6 @@ describe('Choices - select one', () => {
         });
       });
 
-      describe('focusing on text input', () => {
-        it('displays a dropdown of choices', () => {
-          cy.get('[data-test-hook=basic]')
-            .find('.choices__list--dropdown')
-            .should('be.visible');
-
-          cy.get('[data-test-hook=basic]')
-            .find('.choices__list--dropdown .choices__list')
-            .children()
-            .should('have.length', 4)
-            .each(($choice, index) => {
-              expect($choice.text().trim()).to.equal(`Choice ${index + 1}`);
-            });
-        });
-
-        describe('pressing escape', () => {
-          beforeEach(() => {
-            cy.get('[data-test-hook=basic]')
-              .find('.choices__input--cloned')
-              .type('{esc}');
-          });
-
-          it('closes the dropdown', () => {
-            cy.get('[data-test-hook=basic]')
-              .find('.choices__list--dropdown')
-              .should('not.be.visible');
-          });
-        });
-      });
-
       describe('selecting choices', () => {
         beforeEach(() => {
           // open dropdown
