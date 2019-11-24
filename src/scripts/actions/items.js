@@ -31,9 +31,9 @@ export const addItem = ({
 });
 
 /**
- * @param {string} id
- * @param {string} choiceId
- * @returns {Action & { id: string, choiceId: string }}
+ * @param {number} id
+ * @param {number} choiceId
+ * @returns {Action & { id: number, choiceId: number }}
  */
 export const removeItem = (id, choiceId) => ({
   type: ACTION_TYPES.REMOVE_ITEM,
@@ -42,9 +42,9 @@ export const removeItem = (id, choiceId) => ({
 });
 
 /**
- * @param {string} id
+ * @param {number} id
  * @param {boolean} highlighted
- * @returns {Action & { id: string, highlighted: boolean }}
+ * @returns {Action & { id: number, highlighted: boolean }}
  */
 export const highlightItem = (id, highlighted) => ({
   type: ACTION_TYPES.HIGHLIGHT_ITEM,

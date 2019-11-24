@@ -707,7 +707,7 @@ example.passedElement.element.addEventListener(
 
 ### addItem
 
-**Arguments:** `id, value, label, groupValue, keyCode`
+**Payload:** `id, value, label, customProperties, groupValue, keyCode`
 
 **Input types affected:** `text`, `select-one`, `select-multiple`
 
@@ -715,7 +715,7 @@ example.passedElement.element.addEventListener(
 
 ### removeItem
 
-**Arguments:** `id, value, label, groupValue`
+**Payload:** `id, value, label, customProperties, groupValue`
 
 **Input types affected:** `text`, `select-one`, `select-multiple`
 
@@ -723,7 +723,7 @@ example.passedElement.element.addEventListener(
 
 ### highlightItem
 
-**Arguments:** `id, value, label, groupValue`
+**Payload:** `id, value, label, groupValue`
 
 **Input types affected:** `text`, `select-multiple`
 
@@ -731,7 +731,7 @@ example.passedElement.element.addEventListener(
 
 ### unhighlightItem
 
-**Arguments:** `id, value, label, groupValue`
+**Payload:** `id, value, label, groupValue`
 
 **Input types affected:** `text`, `select-multiple`
 
@@ -739,7 +739,7 @@ example.passedElement.element.addEventListener(
 
 ### choice
 
-**Arguments:** `choice`
+**Payload:** `choice`
 
 **Input types affected:** `select-one`, `select-multiple`
 
@@ -748,7 +748,7 @@ example.passedElement.element.addEventListener(
 
 ### change
 
-**Arguments:** `value`
+**Payload:** `value`
 
 **Input types affected:** `text`, `select-one`, `select-multiple`
 
@@ -756,7 +756,7 @@ example.passedElement.element.addEventListener(
 
 ### search
 
-**Arguments:** `value`, `resultCount`
+**Payload:** `value`, `resultCount`
 
 **Input types affected:** `select-one`, `select-multiple`
 
@@ -764,7 +764,7 @@ example.passedElement.element.addEventListener(
 
 ### showDropdown
 
-**Arguments:** -
+**Payload:** -
 
 **Input types affected:** `select-one`, `select-multiple`
 
@@ -772,7 +772,7 @@ example.passedElement.element.addEventListener(
 
 ### hideDropdown
 
-**Arguments:** -
+**Payload:** -
 
 **Input types affected:** `select-one`, `select-multiple`
 
@@ -780,7 +780,7 @@ example.passedElement.element.addEventListener(
 
 ### highlightChoice
 
-**Arguments:** `el`
+**Payload:** `el`
 
 **Input types affected:** `select-one`, `select-multiple`
 
