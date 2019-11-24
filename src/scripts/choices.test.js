@@ -5,6 +5,7 @@ import sinonChai from 'sinon-chai';
 import Choices from './choices';
 import { EVENTS, ACTION_TYPES, DEFAULT_CONFIG, KEY_CODES } from './constants';
 import { WrappedSelect, WrappedInput } from './components/index';
+import { removeItem } from './actions/items';
 
 chai.use(sinonChai);
 
@@ -2151,6 +2152,94 @@ describe('choices', () => {
                 expect(instance.showDropdown).to.not.have.been.called;
               });
             });
+          });
+        });
+      });
+    });
+
+    describe('_removeItem', () => {
+      beforeEach(() => {
+        instance._store.dispatch = stub();
+      });
+
+      afterEach(() => {
+        instance._store.dispatch.reset();
+      });
+
+      describe('when given an item to remove', () => {
+        const item = {
+          id: 1111,
+          value: 'test value',
+          label: 'test label',
+          choiceId: 2222,
+          groupId: 3333,
+          customProperties: {},
+        };
+
+        it('dispatches a REMOVE_ITEM action to the store', () => {
+          instance._removeItem(item);
+
+          expect(instance._store.dispatch).to.have.been.calledWith(
+            removeItem(item.id, item.choiceId),
+          );
+        });
+
+        it('triggers a REMOVE_ITEM event on the passed element', done => {
+          passedElement.addEventListener(
+            'removeItem',
+            event => {
+              expect(event.detail).to.eql({
+                id: item.id,
+                value: item.value,
+                label: item.label,
+                customProperties: item.customProperties,
+                groupValue: null,
+              });
+              done();
+            },
+            false,
+          );
+
+          instance._removeItem(item);
+        });
+
+        describe('when the item belongs to a group', () => {
+          const group = {
+            id: 1,
+            value: 'testing',
+          };
+          const itemWithGroup = {
+            ...item,
+            groupId: group.id,
+          };
+
+          beforeEach(() => {
+            instance._store.getGroupById = stub();
+            instance._store.getGroupById.returns(group);
+          });
+
+          afterEach(() => {
+            instance._store.getGroupById.reset();
+          });
+
+          it("includes the group's value in the triggered event", done => {
+            passedElement.addEventListener(
+              'removeItem',
+              event => {
+                expect(event.detail).to.eql({
+                  id: itemWithGroup.id,
+                  value: itemWithGroup.value,
+                  label: itemWithGroup.label,
+                  customProperties: itemWithGroup.customProperties,
+                  groupValue: group.value,
+                });
+
+                done();
+              },
+              false,
+            );
+
+            instance._removeItem(itemWithGroup);
           });
         });
       });
