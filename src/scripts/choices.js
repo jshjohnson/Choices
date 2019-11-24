@@ -1871,25 +1871,15 @@ class Choices {
       return this;
     }
 
-    const { id, value, label, choiceId, groupId } = item;
+    const { id, choiceId, groupId } = item;
     const group = groupId >= 0 ? this._store.getGroupById(groupId) : null;
 
     this._store.dispatch(removeItem(id, choiceId));
 
-    if (group && group.value) {
-      this.passedElement.triggerEvent(EVENTS.removeItem, {
-        id,
-        value,
-        label,
-        groupValue: group.value,
-      });
-    } else {
-      this.passedElement.triggerEvent(EVENTS.removeItem, {
-        id,
-        value,
-        label,
-      });
-    }
+    this.passedElement.triggerEvent(EVENTS.removeItem, {
+      ...item,
+      groupValue: group && group.value ? group.value : undefined,
+    });
 
     return this;
   }
