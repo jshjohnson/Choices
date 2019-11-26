@@ -231,7 +231,7 @@ class Choices {
       if (!this.config.silent) {
         console.warn(
           'Trying to initialise Choices on element already initialised',
-          this.passedElement,
+          { element },
         );
       }
 
