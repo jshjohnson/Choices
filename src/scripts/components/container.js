@@ -77,6 +77,7 @@ export default class Container {
    * @param {number} dropdownPos
    */
   open(dropdownPos) {
+    console.log({ dropdownPos });
     this.element.classList.add(this.classNames.openState);
     this.element.setAttribute('aria-expanded', 'true');
     this.isOpen = true;

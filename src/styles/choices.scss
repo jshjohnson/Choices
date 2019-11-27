@@ -24,6 +24,7 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
 
 .#{$choices-selector} {
   position: relative;
+  overflow: hidden;
   margin-bottom: $choices-guttering;
   font-size: $choices-font-size-lg;
   &:focus {
@@ -31,6 +32,9 @@ $choices-icon-cross-inverse: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiI
   }
   &:last-child {
     margin-bottom: 0;
+  }
+  &.is-open {
+    overflow: initial;
   }
   &.is-disabled {
     .#{$choices-selector}__inner,
