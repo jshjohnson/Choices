@@ -2267,7 +2267,7 @@ class Choices {
   }
 
   _generatePlaceholderValue() {
-    if (this._isSelectElement) {
+    if (this._isSelectElement && this.passedElement.placeholderOption) {
       const { placeholderOption } = this.passedElement;
 
       return placeholderOption ? placeholderOption.text : false;
