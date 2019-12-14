@@ -1,14 +1,7 @@
-/**
- * @typedef {import('redux').Action} Action
- * @typedef {import('../../../types/index').Choices.Choice} Choice
- */
-
+import { Action } from 'redux';
 import { ACTION_TYPES } from '../constants';
+import { Choice } from '../interfaces';
 
-/**
- * @argument {Choice} choice
- * @returns {Action & Choice}
- */
 export const addChoice = ({
   value,
   label,
@@ -19,7 +12,7 @@ export const addChoice = ({
   customProperties,
   placeholder,
   keyCode,
-}) => ({
+}): Action & Choice => ({
   type: ACTION_TYPES.ADD_CHOICE,
   value,
   label,
@@ -32,27 +25,20 @@ export const addChoice = ({
   keyCode,
 });
 
-/**
- * @argument {Choice[]} results
- * @returns {Action & { results: Choice[] }}
- */
-export const filterChoices = results => ({
+export const filterChoices = (
+  results: Choice[],
+): Action & { results: Choice[] } => ({
   type: ACTION_TYPES.FILTER_CHOICES,
   results,
 });
 
-/**
- * @argument {boolean} active
- * @returns {Action & { active: boolean }}
- */
-export const activateChoices = (active = true) => ({
+export const activateChoices = (
+  active = true,
+): Action & { active: boolean } => ({
   type: ACTION_TYPES.ACTIVATE_CHOICES,
   active,
 });
 
-/**
- * @returns {Action}
- */
-export const clearChoices = () => ({
+export const clearChoices = (): Action => ({
   type: ACTION_TYPES.CLEAR_CHOICES,
 });

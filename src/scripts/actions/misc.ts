@@ -1,28 +1,18 @@
-/**
- * @typedef {import('redux').Action} Action
- */
+import { Action } from 'redux';
+import { State } from '../interfaces';
 
-/**
- * @returns {Action}
- */
-export const clearAll = () => ({
+export const clearAll = (): Action => ({
   type: 'CLEAR_ALL',
 });
 
-/**
- * @param {any} state
- * @returns {Action & { state: object }}
- */
-export const resetTo = state => ({
+export const resetTo = (state: State): Action & { state: State } => ({
   type: 'RESET_TO',
   state,
 });
 
-/**
- * @param {boolean} isLoading
- * @returns {Action & { isLoading: boolean }}
- */
-export const setIsLoading = isLoading => ({
+export const setIsLoading = (
+  isLoading: boolean,
+): Action & { isLoading: boolean } => ({
   type: 'SET_IS_LOADING',
   isLoading,
 });

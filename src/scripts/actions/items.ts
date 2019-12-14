@@ -1,14 +1,7 @@
+import { Action } from 'redux';
 import { ACTION_TYPES } from '../constants';
+import { Item } from '../interfaces';
 
-/**
- * @typedef {import('redux').Action} Action
- * @typedef {import('../../../types/index').Choices.Item} Item
- */
-
-/**
- * @param {Item} item
- * @returns {Action & Item}
- */
 export const addItem = ({
   value,
   label,
@@ -18,7 +11,7 @@ export const addItem = ({
   customProperties,
   placeholder,
   keyCode,
-}) => ({
+}: Item): Action & Item => ({
   type: ACTION_TYPES.ADD_ITEM,
   value,
   label,
@@ -30,23 +23,19 @@ export const addItem = ({
   keyCode,
 });
 
-/**
- * @param {number} id
- * @param {number} choiceId
- * @returns {Action & { id: number, choiceId: number }}
- */
-export const removeItem = (id, choiceId) => ({
+export const removeItem = (
+  id: number,
+  choiceId: number,
+): Action & { id: number; choiceId: number } => ({
   type: ACTION_TYPES.REMOVE_ITEM,
   id,
   choiceId,
 });
 
-/**
- * @param {number} id
- * @param {boolean} highlighted
- * @returns {Action & { id: number, highlighted: boolean }}
- */
-export const highlightItem = (id, highlighted) => ({
+export const highlightItem = (
+  id: number,
+  highlighted: boolean,
+): Action & { id: number; highlighted: boolean } => ({
   type: ACTION_TYPES.HIGHLIGHT_ITEM,
   id,
   highlighted,
