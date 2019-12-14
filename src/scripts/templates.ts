@@ -1,4 +1,11 @@
-import { Templates } from './interfaces';
+import {
+  Templates,
+  ClassNames,
+  Item,
+  Choice,
+  Group,
+  PassedElement,
+} from './interfaces';
 
 /**
  * Helpers to create HTML elements used by Choices
@@ -6,21 +13,13 @@ import { Templates } from './interfaces';
  */
 
 export const TEMPLATES: Templates = {
-  /**
-   * @param {Partial<ClassNames>} classNames
-   * @param {"ltr" | "rtl" | "auto"} dir
-   * @param {boolean} isSelectElement
-   * @param {boolean} isSelectOneElement
-   * @param {boolean} searchEnabled
-   * @param {"select-one" | "select-multiple" | "text"} passedElementType
-   */
   containerOuter(
-    { containerOuter },
-    dir,
-    isSelectElement,
-    isSelectOneElement,
-    searchEnabled,
-    passedElementType,
+    { containerOuter }: ClassNames,
+    dir: HTMLElement['dir'],
+    isSelectElement: boolean,
+    isSelectOneElement: boolean,
+    searchEnabled: boolean,
+    passedElementType: PassedElement['type'],
   ) {
     const div = Object.assign(document.createElement('div'), {
       className: containerOuter,
@@ -49,43 +48,30 @@ export const TEMPLATES: Templates = {
     return div;
   },
 
-  /**
-   * @param {Partial<ClassNames>} classNames
-   */
-  containerInner({ containerInner }) {
+  containerInner({ containerInner }: ClassNames) {
     return Object.assign(document.createElement('div'), {
       className: containerInner,
     });
   },
 
-  /**
-   * @param {Partial<ClassNames>} classNames
-   * @param {boolean} isSelectOneElement
-   */
-  itemList({ list, listSingle, listItems }, isSelectOneElement) {
+  itemList(
+    { list, listSingle, listItems }: ClassNames,
+    isSelectOneElement: boolean,
+  ) {
     return Object.assign(document.createElement('div'), {
       className: `${list} ${isSelectOneElement ? listSingle : listItems}`,
     });
   },
 
-  /**
-   * @param {Partial<ClassNames>} classNames
-   * @param {string} value
-   */
-  placeholder({ placeholder }, value) {
+  placeholder({ placeholder }: ClassNames, value: string) {
     return Object.assign(document.createElement('div'), {
       className: placeholder,
       innerHTML: value,
     });
   },
 
-  /**
-   * @param {Partial<ClassNames>} classNames
-   * @param {Item} item
-   * @param {boolean} removeItemButton
-   */
   item(
-    { item, button, highlightedState, itemSelectable, placeholder },
+    { item, button, highlightedState, itemSelectable, placeholder }: ClassNames,
     {
       id,
       value,
@@ -95,8 +81,8 @@ export const TEMPLATES: Templates = {
       disabled,
       highlighted,
       placeholder: isPlaceholder,
-    },
-    removeItemButton,
+    }: Item,
+    removeItemButton: boolean,
   ) {
     const div = Object.assign(document.createElement('div'), {
       className: item,
@@ -147,11 +133,7 @@ export const TEMPLATES: Templates = {
     return div;
   },
 
-  /**
-   * @param {Partial<ClassNames>} classNames
-   * @param {boolean} isSelectOneElement
-   */
-  choiceList({ list }, isSelectOneElement) {
+  choiceList({ list }: ClassNames, isSelectOneElement: boolean) {
     const div = Object.assign(document.createElement('div'), {
       className: list,
     });
@@ -164,11 +146,10 @@ export const TEMPLATES: Templates = {
     return div;
   },
 
-  /**
-   * @param {Partial<ClassNames>} classNames
-   * @param {Group} group
-   */
-  choiceGroup({ group, groupHeading, itemDisabled }, { id, value, disabled }) {
+  choiceGroup(
+    { group, groupHeading, itemDisabled }: ClassNames,
+    { id, value, disabled }: Group,
+  ) {
     const div = Object.assign(document.createElement('div'), {
       className: `${group} ${disabled ? itemDisabled : ''}`,
     });
@@ -195,11 +176,6 @@ export const TEMPLATES: Templates = {
     return div;
   },
 
-  /**
-   * @param {Partial<ClassNames>} classNames
-   * @param {Choice} choice
-   * @param {Options['itemSelectText']} selectText
-   */
   choice(
     {
       item,
@@ -208,7 +184,7 @@ export const TEMPLATES: Templates = {
       selectedState,
       itemDisabled,
       placeholder,
-    },
+    }: ClassNames,
     {
       id,
       value,
@@ -218,9 +194,9 @@ export const TEMPLATES: Templates = {
       disabled: isDisabled,
       selected: isSelected,
       placeholder: isPlaceholder,
-    },
-    selectText,
-  ) {
+    }: Choice,
+    selectText: string,
+  ): HTMLDivElement {
     const div = Object.assign(document.createElement('div'), {
       id: elementId,
       innerHTML: label,
@@ -235,7 +211,7 @@ export const TEMPLATES: Templates = {
       div.classList.add(placeholder);
     }
 
-    div.setAttribute('role', groupId > 0 ? 'treeitem' : 'option');
+    div.setAttribute('role', groupId && groupId > 0 ? 'treeitem' : 'option');
 
     Object.assign(div.dataset, {
       choice: '',
@@ -256,11 +232,10 @@ export const TEMPLATES: Templates = {
     return div;
   },
 
-  /**
-   * @param {Partial<ClassNames>} classNames
-   * @param {string} placeholderValue
-   */
-  input({ input, inputCloned }, placeholderValue) {
+  input(
+    { input, inputCloned }: ClassNames,
+    placeholderValue: string,
+  ): HTMLInputElement {
     const inp = Object.assign(document.createElement('input'), {
       type: 'text',
       className: `${input} ${inputCloned}`,
@@ -276,10 +251,7 @@ export const TEMPLATES: Templates = {
     return inp;
   },
 
-  /**
-   * @param {Partial<ClassNames>} classNames
-   */
-  dropdown({ list, listDropdown }) {
+  dropdown({ list, listDropdown }: ClassNames): HTMLDivElement {
     const div = document.createElement('div');
 
     div.classList.add(list, listDropdown);
@@ -288,13 +260,11 @@ export const TEMPLATES: Templates = {
     return div;
   },
 
-  /**
-   *
-   * @param {Partial<ClassNames>} classNames
-   * @param {string} innerHTML
-   * @param {"no-choices" | "no-results" | ""} type
-   */
-  notice({ item, itemChoice, noResults, noChoices }, innerHTML, type = '') {
+  notice(
+    { item, itemChoice, noResults, noChoices }: ClassNames,
+    innerHTML: string,
+    type: 'no-choices' | 'no-results' | '' = '',
+  ): HTMLDivElement {
     const classes = [item, itemChoice];
 
     if (type === 'no-choices') {
@@ -309,16 +279,20 @@ export const TEMPLATES: Templates = {
     });
   },
 
-  /**
-   * @param {Item} option
-   */
-  option({ label, value, customProperties, active, disabled }) {
+  option({
+    label,
+    value,
+    customProperties,
+    active,
+    disabled,
+  }: Item): HTMLOptionElement {
     const opt = new Option(label, value, false, active);
 
     if (customProperties) {
-      opt.dataset.customProperties = customProperties;
+      opt.dataset.customProperties = `${customProperties}`;
     }
-    opt.disabled = disabled;
+
+    opt.disabled = !!disabled;
 
     return opt;
   },
