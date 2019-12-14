@@ -26,7 +26,7 @@ export default class Input {
     this.classNames = classNames;
     this.preventPaste = preventPaste;
 
-    this.isFocussed = this.element === document.activeElement;
+    this.isFocussed = this.element.isEqualNode(document.activeElement);
     this.isDisabled = element.disabled;
     this._onPaste = this._onPaste.bind(this);
     this._onInput = this._onInput.bind(this);

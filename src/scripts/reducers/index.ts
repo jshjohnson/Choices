@@ -5,6 +5,15 @@ import choices from './choices';
 import general from './general';
 import { cloneObject } from '../lib/utils';
 
+export const defaultState = {
+  groups: [],
+  items: [],
+  choices: [],
+  general: {
+    loading: false,
+  },
+};
+
 const appReducer = combineReducers({
   items,
   groups,
@@ -19,7 +28,7 @@ const rootReducer = (passedState, action) => {
   // mutating our actual state
   // See: http://stackoverflow.com/a/35641992
   if (action.type === 'CLEAR_ALL') {
-    state = undefined;
+    state = defaultState;
   } else if (action.type === 'RESET_TO') {
     return cloneObject(action.state);
   }

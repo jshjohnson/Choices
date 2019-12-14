@@ -1,5 +1,11 @@
 import { sanitise, sortByAlpha } from './lib/utils';
-import { Options, ClassNames } from './interfaces';
+import {
+  Options,
+  ClassNames,
+  EventMap,
+  ActionType,
+  KeyCodeMap,
+} from './interfaces';
 
 export const DEFAULT_CLASSNAMES: ClassNames = {
   containerOuter: 'choices',
@@ -77,7 +83,7 @@ export const DEFAULT_CONFIG: Options = {
   classNames: DEFAULT_CLASSNAMES,
 };
 
-export const EVENTS = {
+export const EVENTS: Record<keyof EventMap, keyof EventMap> = {
   showDropdown: 'showDropdown',
   hideDropdown: 'hideDropdown',
   change: 'change',
@@ -87,9 +93,10 @@ export const EVENTS = {
   removeItem: 'removeItem',
   highlightItem: 'highlightItem',
   highlightChoice: 'highlightChoice',
+  unhighlightItem: 'unhighlightItem',
 };
 
-export const ACTION_TYPES = {
+export const ACTION_TYPES: Record<ActionType, ActionType> = {
   ADD_CHOICE: 'ADD_CHOICE',
   FILTER_CHOICES: 'FILTER_CHOICES',
   ACTIVATE_CHOICES: 'ACTIVATE_CHOICES',
@@ -101,7 +108,7 @@ export const ACTION_TYPES = {
   CLEAR_ALL: 'CLEAR_ALL',
 };
 
-export const KEY_CODES = {
+export const KEY_CODES: KeyCodeMap = {
   BACK_KEY: 46,
   DELETE_KEY: 8,
   ENTER_KEY: 13,
@@ -113,8 +120,9 @@ export const KEY_CODES = {
   PAGE_DOWN_KEY: 34,
 };
 
-export const TEXT_TYPE = 'text';
-export const SELECT_ONE_TYPE = 'select-one';
-export const SELECT_MULTIPLE_TYPE = 'select-multiple';
+export const TEXT_TYPE: HTMLInputElement['type'] = 'text';
+export const SELECT_ONE_TYPE: HTMLSelectElement['type'] = 'select-one';
+export const SELECT_MULTIPLE_TYPE: HTMLSelectElement['type'] =
+  'select-multiple';
 
 export const SCROLLING_SPEED = 4;

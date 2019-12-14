@@ -2,7 +2,7 @@ import WrappedElement from './wrapped-element';
 import { ClassNames, Item, Choice } from '../interfaces';
 
 export default class WrappedSelect extends WrappedElement {
-  element: HTMLInputElement;
+  element: HTMLSelectElement;
   classNames: ClassNames;
   template: () => HTMLElement;
 
@@ -11,7 +11,7 @@ export default class WrappedSelect extends WrappedElement {
     classNames,
     template,
   }: {
-    element: HTMLInputElement;
+    element: HTMLSelectElement;
     classNames: ClassNames;
     template: () => HTMLElement;
   }) {

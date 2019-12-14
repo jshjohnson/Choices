@@ -133,7 +133,7 @@ export default class Container {
     this.isDisabled = true;
   }
 
-  wrap(element: HTMLElement): void {
+  wrap(element: HTMLSelectElement | HTMLInputElement | HTMLElement): void {
     wrap(element, this.element);
   }
 
