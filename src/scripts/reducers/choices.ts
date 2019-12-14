@@ -1,15 +1,24 @@
-import { Choice } from '../interfaces';
+import { Action } from 'redux';
+import { Choice, Item } from '../interfaces';
 
 export const defaultState = [];
 
-export default function choices(state = defaultState, action): Choice[] {
+interface Result {
+  item: Choice;
+  score: number;
+}
+
+export default function choices(
+  state: Choice[] = defaultState,
+  action: Action,
+): Choice[] {
   switch (action.type) {
     case 'ADD_CHOICE': {
       /*
-          A disabled choice appears in the choice dropdown but cannot be selected
-          A selected choice has been added to the passed input's value (added as an item)
-          An active choice appears within the choice dropdown
-       */
+        A disabled choice appears in the choice dropdown but cannot be selected
+        A selected choice has been added to the passed input's value (added as an item)
+        An active choice appears within the choice dropdown
+      */
       return [
         ...state,
         {
@@ -59,10 +68,10 @@ export default function choices(state = defaultState, action): Choice[] {
     case 'REMOVE_ITEM': {
       // When an item is removed and it has an associated choice,
       // we want to re-enable it so it can be chosen again
-      if (action.choiceId > -1) {
+      if (action.choiceId && action.choiceId > -1) {
         return state.map(obj => {
           const choice = obj;
-          if (choice.id === parseInt(action.choiceId, 10)) {
+          if (choice.id === parseInt(`${action.choiceId}`, 10)) {
             choice.selected = false;
           }
 
@@ -78,7 +87,7 @@ export default function choices(state = defaultState, action): Choice[] {
         const choice = obj;
         // Set active state based on whether choice is
         // within filtered results
-        choice.active = action.results.some(({ item, score }) => {
+        choice.active = action.results.some(({ item, score }: Result) => {
           if (item.id === choice.id) {
             choice.score = score;
 

@@ -1,8 +1,12 @@
+import { Action } from 'redux';
 import { Group } from '../interfaces';
 
 export const defaultState = [];
 
-export default function groups(state = defaultState, action): Group[] {
+export default function groups(
+  state: Group[] = defaultState,
+  action: Action & Group,
+): Group[] {
   switch (action.type) {
     case 'ADD_GROUP': {
       return [

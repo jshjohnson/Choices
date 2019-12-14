@@ -18,7 +18,7 @@ export default class WrappedInput extends WrappedElement {
     this.delimiter = delimiter;
   }
 
-  get value(): Item['value'] {
+  get value(): string {
     return this.element.value;
   }
 

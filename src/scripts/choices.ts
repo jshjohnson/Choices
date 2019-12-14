@@ -38,7 +38,6 @@ import {
   sortByScore,
   generateId,
   existsInArray,
-  cloneObject,
   diff,
 } from './lib/utils';
 import {
@@ -50,6 +49,7 @@ import {
   Notice,
   KeyDownAction,
   State,
+  PassedElement,
 } from './interfaces';
 import { defaultState } from './reducers';
 
@@ -110,8 +110,8 @@ class Choices {
   _idNames: {
     itemChoice: string;
   };
-  _presetGroups: HTMLOptGroupElement[];
-  _presetOptions: HTMLOptionElement[];
+  _presetGroups: Group[] | HTMLOptGroupElement[] | Element[];
+  _presetOptions: Item[] | HTMLOptionElement[];
   _presetChoices: Partial<Choice>[];
   _presetItems: Item[] | string[];
 
@@ -226,9 +226,9 @@ class Choices {
 
     if (this._isSelectElement) {
       // Assign preset groups from passed element
-      this._presetGroups = this.passedElement.optionGroups;
+      this._presetGroups = (this.passedElement as WrappedSelect).optionGroups;
       // Assign preset options from passed element
-      this._presetOptions = this.passedElement.options;
+      this._presetOptions = (this.passedElement as WrappedSelect).options;
     }
 
     // Assign preset choices from passed object
@@ -236,14 +236,15 @@ class Choices {
     // Assign preset items from passed object first
     this._presetItems = this.config.items;
     // Add any values passed from attribute
-    if (this.passedElement.value) {
-      this._presetItems = this._presetItems.concat(
-        this.passedElement.value.split(this.config.delimiter),
+    if (this.passedElement.value && this._isTextElement) {
+      const splitValues: string[] = this.passedElement.value.split(
+        this.config.delimiter,
       );
+      this._presetItems = (this._presetItems as string[]).concat(splitValues);
     }
     // Create array of choices from option elements
-    if (this.passedElement.options) {
-      this.passedElement.options.forEach(o => {
+    if ((this.passedElement as WrappedSelect).options) {
+      (this.passedElement as WrappedSelect).options.forEach(o => {
         this._presetChoices.push({
           value: o.value,
           label: o.innerHTML,
@@ -299,10 +300,8 @@ class Choices {
     this._createElements();
     this._createStructure();
 
-    // Set initial state (We need to clone the state because some reducers
-    // modify the inner objects properties in the state) 🤢
-    this._initialState = cloneObject(this._store.state);
     this._store.subscribe(this._render);
+
     this._render();
     this._addEventListeners();
 
@@ -335,7 +334,7 @@ class Choices {
     this.clearStore();
 
     if (this._isSelectElement) {
-      this.passedElement.options = this._presetOptions;
+      (this.passedElement as WrappedSelect).options = this._presetOptions;
     }
 
     this._templates = TEMPLATES;
@@ -491,13 +490,16 @@ class Choices {
     return this;
   }
 
-  getValue(valueOnly = false): string[] | string {
-    const values = this._store.activeItems.reduce((selectedItems, item) => {
-      const itemValue = valueOnly ? item.value : item;
-      selectedItems.push(itemValue);
+  getValue(valueOnly = false): string[] | Item[] | Item | string {
+    const values = this._store.activeItems.reduce<any[]>(
+      (selectedItems, item) => {
+        const itemValue = valueOnly ? item.value : item;
+        selectedItems.push(itemValue);
 
-      return selectedItems;
-    }, []);
+        return selectedItems;
+      },
+      [],
+    );
 
     return this._isSelectOneElement ? values[0] : values;
   }
@@ -593,7 +595,7 @@ class Choices {
     choicesArrayOrFetcher:
       | Choice[]
       | Group[]
-      | ((instance: Choices) => object[] | Promise<object[]>) = [],
+      | ((instance: Choices) => Choice[] | Promise<Choice[]>) = [],
     value = 'value',
     label = 'label',
     replaceChoices = false,
@@ -628,7 +630,9 @@ class Choices {
         return new Promise(resolve => requestAnimationFrame(resolve))
           .then(() => this._handleLoadingState(true))
           .then(() => fetcher)
-          .then(data => this.setChoices(data, value, label, replaceChoices))
+          .then((data: Choice[]) =>
+            this.setChoices(data, value, label, replaceChoices),
+          )
           .catch(err => {
             if (!this.config.silent) {
               console.error(err);
@@ -659,8 +663,13 @@ class Choices {
 
     this._startLoading();
 
-    choicesArrayOrFetcher.forEach(groupOrChoice => {
-      if (groupOrChoice.choices) {
+    type ChoiceGroup = {
+      id: string;
+      choices: Choice[];
+    };
+
+    choicesArrayOrFetcher.forEach((groupOrChoice: ChoiceGroup | Choice) => {
+      if ((groupOrChoice as ChoiceGroup).choices) {
         this._addGroup({
           id: groupOrChoice.id ? parseInt(`${groupOrChoice.id}`, 10) : null,
           group: groupOrChoice,
@@ -668,13 +677,14 @@ class Choices {
           labelKey: label,
         });
       } else {
+        const choice = groupOrChoice as Choice;
         this._addChoice({
-          value: groupOrChoice[value],
-          label: groupOrChoice[label],
-          isSelected: !!groupOrChoice.selected,
-          isDisabled: !!groupOrChoice.disabled,
-          placeholder: !!groupOrChoice.placeholder,
-          customProperties: groupOrChoice.customProperties,
+          value: choice[value],
+          label: choice[label],
+          isSelected: !!choice.selected,
+          isDisabled: !!choice.disabled,
+          placeholder: !!choice.placeholder,
+          customProperties: choice.customProperties,
         });
       }
     });
@@ -875,7 +885,7 @@ class Choices {
       renderChoiceLimit,
     } = this.config;
     const filter = this._isSearching ? sortByScore : this.config.sorter;
-    const appendChoice = (choice): void => {
+    const appendChoice = (choice: Choice): void => {
       const shouldRender =
         renderSelectedChoices === 'auto'
           ? this._isSelectOneElement || !choice.selected
@@ -900,7 +910,7 @@ class Choices {
 
     // Split array into placeholders and "normal" choices
     const { placeholderChoices, normalChoices } = rendererableChoices.reduce(
-      (acc, choice) => {
+      (acc, choice: Choice) => {
         if (choice.placeholder) {
           acc.placeholderChoices.push(choice);
         } else {
@@ -909,7 +919,10 @@ class Choices {
 
         return acc;
       },
-      { placeholderChoices: [], normalChoices: [] },
+      {
+        placeholderChoices: [] as Choice[],
+        normalChoices: [] as Choice[],
+      },
     );
 
     // If sorting is enabled or the user is searching, filter choices
@@ -957,7 +970,7 @@ class Choices {
       this.passedElement.value = items;
     } else {
       // Update the options of the hidden input
-      this.passedElement.options = items;
+      (this.passedElement as WrappedSelect).options = items;
     }
 
     const addItemToFragment = (item: Item): void => {
@@ -1458,7 +1471,8 @@ class Choices {
       }
     } else {
       const wasRemovalKeyCode = keyCode === backKey || keyCode === deleteKey;
-      const userHasRemovedValue = wasRemovalKeyCode && target && !target.value;
+      const userHasRemovedValue =
+        wasRemovalKeyCode && target && !(target as HTMLSelectElement).value;
       const canReactivateChoices = !this._isTextElement && this._isSearching;
       const canSearch = this._canSearch && canAddItem.response;
 
@@ -1506,7 +1520,7 @@ class Choices {
     const targetWasButton =
       target && (target as HTMLElement).hasAttribute('data-button');
 
-    if (this._isTextElement && target && target.value) {
+    if (this._isTextElement && target && (target as HTMLInputElement).value) {
       const { value } = this.input;
       const canAddItem = this._canAddItem(activeItems, value);
 
@@ -1551,6 +1565,10 @@ class Choices {
   }
 
   _onDirectionKey({ event, hasActiveDropdown }: Partial<KeyDownAction>): void {
+    if (!event) {
+      return;
+    }
+
     const { keyCode, metaKey } = event;
     const {
       DOWN_KEY: downKey,
@@ -1625,7 +1643,11 @@ class Choices {
 
     const { target } = event;
     // If backspace or delete key is pressed and the input has no value
-    if (hasFocusedInput && !target.value && !this._isSelectOneElement) {
+    if (
+      !this._isSelectOneElement &&
+      !(target as HTMLInputElement).value &&
+      hasFocusedInput
+    ) {
       this._handleBackspace(activeItems);
       event.preventDefault();
     }
@@ -1638,7 +1660,7 @@ class Choices {
   }
 
   _onTouchEnd(event: TouchEvent): void {
-    const { target } = event || event.touches[0];
+    const { target } = event || (event as TouchEvent).touches[0];
     const touchWasWithinContainer =
       this._wasTap && this.containerOuter.element.contains(target as Node);
 
@@ -1674,8 +1696,9 @@ class Choices {
     // If we have our mouse down on the scrollbar and are on IE11...
     if (IS_IE11 && this.choiceList.element.contains(target)) {
       // check if click was on a scrollbar area
-      const firstChoice = /** @type {HTMLElement} */ this.choiceList.element
-        .firstElementChild;
+      const firstChoice = this.choiceList.element
+        .firstElementChild as HTMLElement;
+
       const isOnScrollbar =
         this._direction === 'ltr'
           ? event.offsetX >= firstChoice.offsetWidth
@@ -1717,7 +1740,7 @@ class Choices {
 
   _onClick({ target }: Partial<MouseEvent>): void {
     const clickWasWithinContainer = this.containerOuter.element.contains(
-      target,
+      target as Node,
     );
 
     if (clickWasWithinContainer) {
@@ -1733,7 +1756,7 @@ class Choices {
       } else if (
         this._isSelectOneElement &&
         target !== this.input.element &&
-        !this.dropdown.element.contains(target)
+        !this.dropdown.element.contains(target as Node)
       ) {
         this.hideDropdown();
       }
@@ -2020,7 +2043,7 @@ class Choices {
   }
 
   _addGroup({ group, id, valueKey = 'value', labelKey = 'label' }): void {
-    const groupChoices = isType('Object', group)
+    const groupChoices: Choice[] | HTMLOptionElement[] = isType('Object', group)
       ? group.choices
       : Array.from(group.getElementsByTagName('OPTION'));
     const groupId = id || Math.floor(new Date().valueOf() * Math.random());
@@ -2036,7 +2059,7 @@ class Choices {
         }),
       );
 
-      const addGroupChoices = choice => {
+      const addGroupChoices = (choice: any): void => {
         const isOptDisabled =
           choice.disabled || (choice.parentNode && choice.parentNode.disabled);
 
@@ -2064,10 +2087,7 @@ class Choices {
     }
   }
 
-  _getTemplate<K extends keyof Templates>(
-    template: K,
-    ...args: any
-  ): HTMLElement | HTMLOptionElement {
+  _getTemplate<K extends keyof Templates>(template: K, ...args: any): any {
     const { classNames } = this.config;
 
     return this._templates[template].call(this, classNames, ...args);
@@ -2098,21 +2118,21 @@ class Choices {
         this.passedElement.element.type,
       ),
       classNames: this.config.classNames,
-      type: this.passedElement.element.type,
+      type: this.passedElement.element.type as PassedElement['type'],
       position: this.config.position,
     });
 
     this.containerInner = new Container({
       element: this._getTemplate('containerInner'),
       classNames: this.config.classNames,
-      type: this.passedElement.element.type,
+      type: this.passedElement.element.type as PassedElement['type'],
       position: this.config.position,
     });
 
     this.input = new Input({
       element: this._getTemplate('input', this._placeholderValue),
       classNames: this.config.classNames,
-      type: this.passedElement.element.type,
+      type: this.passedElement.element.type as PassedElement['type'],
       preventPaste: !this.config.paste,
     });
 
@@ -2127,7 +2147,7 @@ class Choices {
     this.dropdown = new Dropdown({
       element: this._getTemplate('dropdown'),
       classNames: this.config.classNames,
-      type: this.passedElement.element.type,
+      type: this.passedElement.element.type as PassedElement['type'],
     });
   }
 
@@ -2182,12 +2202,17 @@ class Choices {
     }
   }
 
-  _addPredefinedGroups(groups: Group[] | HTMLOptGroupElement[]): void {
+  _addPredefinedGroups(
+    groups: Group[] | HTMLOptGroupElement[] | Element[],
+  ): void {
     // If we have a placeholder option
-    const placeholderChoice = this.passedElement.placeholderOption;
+    const placeholderChoice = (this.passedElement as WrappedSelect)
+      .placeholderOption;
+
     if (
       placeholderChoice &&
-      placeholderChoice.parentNode.tagName === 'SELECT'
+      placeholderChoice.parentNode &&
+      (placeholderChoice.parentNode as HTMLElement).tagName === 'SELECT'
     ) {
       this._addChoice({
         value: placeholderChoice.value,
@@ -2206,7 +2231,7 @@ class Choices {
     );
   }
 
-  _addPredefinedChoices(choices: Choice[]): void {
+  _addPredefinedChoices(choices: Partial<Choice>[]): void {
     // If sorting is enabled or the user is searching, filter choices
     if (this.config.shouldSort) {
       choices.sort(this.config.sorter);
@@ -2218,7 +2243,7 @@ class Choices {
     );
 
     choices.forEach((choice, index) => {
-      const { value, label, customProperties, placeholder } = choice;
+      const { value = '', label, customProperties, placeholder } = choice;
 
       if (this._isSelectElement) {
         // If the choice is actually a group
@@ -2284,10 +2309,10 @@ class Choices {
     });
   }
 
-  _setChoiceOrItem(item: Item | string): void {
+  _setChoiceOrItem(item: any): void {
     const itemType = getType(item).toLowerCase();
     const handleType = {
-      object: () => {
+      object: (): void => {
         if (!item.value) {
           return;
         }
@@ -2313,7 +2338,7 @@ class Choices {
           });
         }
       },
-      string: () => {
+      string: (): void => {
         if (!this._isTextElement) {
           this._addChoice({
             value: item,
@@ -2354,9 +2379,9 @@ class Choices {
 
   _generatePlaceholderValue(): string | null {
     if (this._isSelectElement) {
-      const { placeholderOption } = this.passedElement;
+      const { placeholderOption } = this.passedElement as WrappedSelect;
 
-      return placeholderOption ? placeholderOption.text : false;
+      return placeholderOption ? placeholderOption.text : null;
     }
 
     const { placeholder, placeholderValue } = this.config;

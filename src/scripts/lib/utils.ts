@@ -126,11 +126,10 @@ export const sortByAlpha = (
     numeric: true,
   });
 
-interface RecordToSort {
-  score: number;
-}
-export const sortByScore = (a: RecordToSort, b: RecordToSort): number =>
-  a.score - b.score;
+export const sortByScore = (
+  a: { score: number },
+  b: { score: number },
+): number => a.score - b.score;
 
 export const dispatchEvent = (
   element: HTMLElement,

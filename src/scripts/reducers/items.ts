@@ -1,8 +1,12 @@
+import { Action } from 'redux';
 import { Item } from '../interfaces';
 
 export const defaultState = [];
 
-export default function items(state = defaultState, action): Item[] {
+export default function items(
+  state: Item[] = defaultState,
+  action: Action & Item,
+): Item[] {
   switch (action.type) {
     case 'ADD_ITEM': {
       // Add object to items array
@@ -22,7 +26,7 @@ export default function items(state = defaultState, action): Item[] {
         },
       ];
 
-      return newState.map(obj => {
+      return newState.map((obj: Item) => {
         const item = obj;
         item.highlighted = false;
 

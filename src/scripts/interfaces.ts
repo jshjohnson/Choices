@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { FuseOptions } from 'fuse.js';
 import Choices from './choices';
 
 export namespace Types {
@@ -16,7 +17,6 @@ export namespace Types {
 }
 
 export interface Choice {
-  choices: any;
   id?: number;
   customProperties?: Record<string, any>;
   disabled?: boolean;
@@ -28,6 +28,7 @@ export interface Choice {
   placeholder?: boolean;
   selected?: boolean;
   value: string;
+  score?: number;
 }
 
 export interface Group {

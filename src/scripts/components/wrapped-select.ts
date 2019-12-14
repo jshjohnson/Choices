@@ -31,7 +31,7 @@ export default class WrappedSelect extends WrappedElement {
     return Array.from(this.element.getElementsByTagName('OPTGROUP'));
   }
 
-  get options(): HTMLOptionElement[] {
+  get options(): Item[] | HTMLOptionElement[] {
     return Array.from(this.element.options);
   }
 
