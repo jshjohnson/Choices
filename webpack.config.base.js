@@ -8,12 +8,6 @@ const exclude = /node_modules/;
  */
 module.exports = {
   entry: ['./src/scripts/choices'],
-  output: {
-    library: 'Choices',
-    libraryTarget: 'window',
-    libraryExport: 'default',
-    globalObject: 'window',
-  },
   module: {
     rules: [
       {
@@ -28,13 +22,28 @@ module.exports = {
       },
       {
         loader: 'babel-loader',
-        test: /\.js?$/,
+        test: /\.ts?$/,
         include,
         exclude,
         options: {
           babelrc: true,
         },
       },
+      {
+        loader: 'ts-loader',
+        test: /\.ts?$/,
+        include,
+        exclude
+      }
     ],
+  },
+  resolve: {
+    extensions: [".ts", ".js"]
+  },
+  output: {
+    library: 'Choices',
+    libraryTarget: 'window',
+    libraryExport: 'default',
+    globalObject: 'window',
   },
 };

@@ -1,6 +1,8 @@
+import { Item } from '../interfaces';
+
 export const defaultState = [];
 
-export default function items(state = defaultState, action) {
+export default function items(state = defaultState, action): Item[] {
   switch (action.type) {
     case 'ADD_ITEM': {
       // Add object to items array

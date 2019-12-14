@@ -1,11 +1,6 @@
 import { createStore } from 'redux';
 import rootReducer from '../reducers/index';
-
-/**
- * @typedef {import('../../../types/index').Choices.Choice} Choice
- * @typedef {import('../../../types/index').Choices.Group} Group
- * @typedef {import('../../../types/index').Choices.Item} Item
- */
+import { Choice, Group, Item } from '../interfaces';
 
 export default class Store {
   constructor() {
@@ -21,7 +16,7 @@ export default class Store {
    * @param  {Function} onChange Function to trigger when state changes
    * @return
    */
-  subscribe(onChange) {
+  subscribe(onChange): void {
     this._store.subscribe(onChange);
   }
 
@@ -30,7 +25,7 @@ export default class Store {
    * @param  {{ type: string, [x: string]: any }} action Action to trigger
    * @return
    */
-  dispatch(action) {
+  dispatch(action): void {
     this._store.dispatch(action);
   }
 
@@ -38,7 +33,7 @@ export default class Store {
    * Get store object (wrapping Redux method)
    * @returns {object} State
    */
-  get state() {
+  get state(): any {
     return this._store.getState();
   }
 
@@ -46,7 +41,7 @@ export default class Store {
    * Get items from store
    * @returns {Item[]} Item objects
    */
-  get items() {
+  get items(): Item[] {
     return this.state.items;
   }
 
@@ -54,7 +49,7 @@ export default class Store {
    * Get active items from store
    * @returns {Item[]} Item objects
    */
-  get activeItems() {
+  get activeItems(): Item[] {
     return this.items.filter(item => item.active === true);
   }
 
@@ -62,7 +57,7 @@ export default class Store {
    * Get highlighted items from store
    * @returns {Item[]} Item objects
    */
-  get highlightedActiveItems() {
+  get highlightedActiveItems(): Item[] {
     return this.items.filter(item => item.active && item.highlighted);
   }
 
@@ -70,7 +65,7 @@ export default class Store {
    * Get choices from store
    * @returns {Choice[]} Option objects
    */
-  get choices() {
+  get choices(): Choice[] {
     return this.state.choices;
   }
 
@@ -78,7 +73,7 @@ export default class Store {
    * Get active choices from store
    * @returns {Choice[]} Option objects
    */
-  get activeChoices() {
+  get activeChoices(): Choice[] {
     return this.choices.filter(choice => choice.active === true);
   }
 
@@ -86,7 +81,7 @@ export default class Store {
    * Get selectable choices from store
    * @returns {Choice[]} Option objects
    */
-  get selectableChoices() {
+  get selectableChoices(): Choice[] {
     return this.choices.filter(choice => choice.disabled !== true);
   }
 
@@ -94,7 +89,7 @@ export default class Store {
    * Get choices that can be searched (excluding placeholders)
    * @returns {Choice[]} Option objects
    */
-  get searchableChoices() {
+  get searchableChoices(): Choice[] {
     return this.selectableChoices.filter(choice => choice.placeholder !== true);
   }
 
@@ -102,7 +97,7 @@ export default class Store {
    * Get placeholder choice from store
    * @returns {Choice | undefined} Found placeholder
    */
-  get placeholderChoice() {
+  get placeholderChoice(): Choice | undefined {
     return [...this.choices]
       .reverse()
       .find(choice => choice.placeholder === true);
@@ -112,7 +107,7 @@ export default class Store {
    * Get groups from store
    * @returns {Group[]} Group objects
    */
-  get groups() {
+  get groups(): Group[] {
     return this.state.groups;
   }
 
@@ -120,7 +115,7 @@ export default class Store {
    * Get active groups from store
    * @returns {Group[]} Group objects
    */
-  get activeGroups() {
+  get activeGroups(): Group[] {
     const { groups, choices } = this;
 
     return groups.filter(group => {
@@ -137,7 +132,7 @@ export default class Store {
    * Get loading state from store
    * @returns {boolean} Loading State
    */
-  isLoading() {
+  isLoading(): boolean {
     return this.state.general.loading;
   }
 
@@ -146,7 +141,7 @@ export default class Store {
    * @param {string} id
    * @returns {Choice | undefined} Found choice
    */
-  getChoiceById(id) {
+  getChoiceById(id): Choice | undefined {
     return this.activeChoices.find(choice => choice.id === parseInt(id, 10));
   }
 
@@ -155,7 +150,7 @@ export default class Store {
    * @param  {number} id Group ID
    * @returns {Group | undefined} Group data
    */
-  getGroupById(id) {
+  getGroupById(id): Group | undefined {
     return this.groups.find(group => group.id === id);
   }
 }

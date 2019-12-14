@@ -1,12 +1,7 @@
 import { sanitise, sortByAlpha } from './lib/utils';
+import { Options, ClassNames } from './interfaces';
 
-/**
- * @typedef {import('../../types/index').Choices.ClassNames} ClassNames
- * @typedef {import('../../types/index').Choices.Options} Options
- */
-
-/** @type {ClassNames} */
-export const DEFAULT_CLASSNAMES = {
+export const DEFAULT_CLASSNAMES: ClassNames = {
   containerOuter: 'choices',
   containerInner: 'choices__inner',
   input: 'choices__input',
@@ -35,8 +30,7 @@ export const DEFAULT_CLASSNAMES = {
   noChoices: 'has-no-choices',
 };
 
-/** @type {Options} */
-export const DEFAULT_CONFIG = {
+export const DEFAULT_CONFIG: Options = {
   items: [],
   choices: [],
   silent: false,

@@ -1,16 +1,20 @@
 {
-  "parserOptions": {
-    "ecmaVersion": 2020
-  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["@typescript-eslint", "prettier", "sort-class-members"],
   "extends": [
     "airbnb-base",
     "plugin:prettier/recommended",
-    "plugin:compat/recommended"
+    "plugin:compat/recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
-  "plugins": ["prettier", "sort-class-members"],
   "env": {
     "es6": true,
-    "browser": true
+    "browser": true,
+    "mocha": true
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": 2020
   },
   "rules": {
     "import/prefer-default-export": "off",
@@ -54,7 +58,9 @@
         ],
         "accessorPairPositioning": "getThenSet"
       }
-    ]
+    ],
+    "lines-between-class-members": "off",
+    "@typescript-eslint/no-namespace": "off"
   },
   "overrides": [
     {
@@ -92,6 +98,11 @@
       "Element.prototype.classList",
       "Element.prototype.closest",
       "Element.prototype.dataset"
-    ]
+    ],
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    }
   }
 }

@@ -40,21 +40,23 @@ import {
   cloneObject,
   diff,
 } from './lib/utils';
+import {
+  Templates,
+  Options,
+  PassedElement,
+  Choice,
+  Item,
+  Group,
+  Notice,
+  KeyDownAction,
+} from './interfaces';
 
 /** @see {@link http://browserhacks.com/#hack-acea075d0ac6954f275a70023906050c} */
 const IS_IE11 =
   '-ms-scroll-limit' in document.documentElement.style &&
   '-ms-ime-align' in document.documentElement.style;
 
-/**
- * @typedef {import('../../types/index').Choices.Choice} Choice
- * @typedef {import('../../types/index').Choices.Item} Item
- * @typedef {import('../../types/index').Choices.Group} Group
- * @typedef {import('../../types/index').Choices.Options} Options
- */
-
-/** @type {Partial<Options>} */
-const USER_DEFAULTS = {};
+const USER_DEFAULTS: Partial<Options> = {};
 
 /**
  * Choices
@@ -63,21 +65,51 @@ const USER_DEFAULTS = {};
 class Choices {
   static get defaults() {
     return Object.preventExtensions({
-      get options() {
+      get options(): Partial<Options> {
         return USER_DEFAULTS;
       },
-      get templates() {
+      get templates(): Templates {
         return TEMPLATES;
       },
     });
   }
 
+  initialised: boolean;
+  config: Partial<Options>;
+  passedElement: PassedElement;
+
+  _isTextElement: boolean;
+  _isSelectOneElement: boolean;
+  _isSelectMultipleElement: boolean;
+  _isSelectElement: boolean;
+  _store: Store;
+  _initialState: object;
+  _currentState: object;
+  _prevState: object;
+  _currentValue: string;
+  _canSearch: boolean;
+  _isScrollingOnIe: boolean;
+  _highlightPosition: number;
+  _wasTap: boolean;
+  _placeholderValue: string;
+  _baseId: string;
+  _direction: 'ltr' | 'rtl';
+  _idNames: {
+    itemChoice: string;
+  };
+  _presetGroups: HTMLOptGroupElement[];
+  _presetOptions: HTMLOptionElement[];
+  _presetChoices: Choice[];
+  _presetItems: Item[];
+
   /**
    * @param {string | HTMLInputElement | HTMLSelectElement} element
    * @param {Partial<Options>} userConfig
    */
-  constructor(element = '[data-choice]', userConfig = {}) {
-    /** @type {Partial<Options>} */
+  constructor(
+    element: string | HTMLInputElement | HTMLSelectElement = '[data-choice]',
+    userConfig: Partial<Options> = {},
+  ) {
     this.config = merge.all(
       [DEFAULT_CONFIG, Choices.defaults.options, userConfig],
       // When merging array configs, replace with a copy of the userConfig array,
@@ -244,7 +276,7 @@ class Choices {
     this.init();
   }
 
-  init() {
+  init(): void {
     if (this.initialised) {
       return;
     }
@@ -277,7 +309,7 @@ class Choices {
     }
   }
 
-  destroy() {
+  destroy(): void {
     if (!this.initialised) {
       return;
     }
@@ -296,7 +328,7 @@ class Choices {
     this.initialised = false;
   }
 
-  enable() {
+  enable(): this {
     if (this.passedElement.isDisabled) {
       this.passedElement.enable();
     }
@@ -310,7 +342,7 @@ class Choices {
     return this;
   }
 
-  disable() {
+  disable(): this {
     if (!this.passedElement.isDisabled) {
       this.passedElement.disable();
     }
@@ -324,7 +356,7 @@ class Choices {
     return this;
   }
 
-  highlightItem(item, runEvent = true) {
+  highlightItem(item, runEvent = true): this {
     if (!item) {
       return this;
     }
@@ -346,7 +378,7 @@ class Choices {
     return this;
   }
 
-  unhighlightItem(item) {
+  unhighlightItem(item): this {
     if (!item) {
       return this;
     }
@@ -365,19 +397,19 @@ class Choices {
     return this;
   }
 
-  highlightAll() {
+  highlightAll(): this {
     this._store.items.forEach(item => this.highlightItem(item));
 
     return this;
   }
 
-  unhighlightAll() {
+  unhighlightAll(): this {
     this._store.items.forEach(item => this.unhighlightItem(item));
 
     return this;
   }
 
-  removeActiveItemsByValue(value) {
+  removeActiveItemsByValue(value): this {
     this._store.activeItems
       .filter(item => item.value === value)
       .forEach(item => this._removeItem(item));
@@ -385,7 +417,7 @@ class Choices {
     return this;
   }
 
-  removeActiveItems(excludedId) {
+  removeActiveItems(excludedId): this {
     this._store.activeItems
       .filter(({ id }) => id !== excludedId)
       .forEach(item => this._removeItem(item));
@@ -393,7 +425,7 @@ class Choices {
     return this;
   }
 
-  removeHighlightedItems(runEvent = false) {
+  removeHighlightedItems(runEvent = false): this {
     this._store.highlightedActiveItems.forEach(item => {
       this._removeItem(item);
       // If this action was performed by the user
@@ -406,7 +438,7 @@ class Choices {
     return this;
   }
 
-  showDropdown(preventInputFocus) {
+  showDropdown(preventInputFocus): this {
     if (this.dropdown.isActive) {
       return this;
     }
@@ -425,7 +457,7 @@ class Choices {
     return this;
   }
 
-  hideDropdown(preventInputBlur) {
+  hideDropdown(preventInputBlur): this {
     if (!this.dropdown.isActive) {
       return this;
     }
@@ -445,7 +477,7 @@ class Choices {
     return this;
   }
 
-  getValue(valueOnly = false) {
+  getValue(valueOnly = false): string[] | string {
     const values = this._store.activeItems.reduce((selectedItems, item) => {
       const itemValue = valueOnly ? item.value : item;
       selectedItems.push(itemValue);
@@ -456,10 +488,7 @@ class Choices {
     return this._isSelectOneElement ? values[0] : values;
   }
 
-  /**
-   * @param {string[] | Item[]} items
-   */
-  setValue(items) {
+  setValue(items: string[] | Item[]): this {
     if (!this.initialised) {
       return this;
     }
@@ -469,7 +498,7 @@ class Choices {
     return this;
   }
 
-  setChoiceByValue(value) {
+  setChoiceByValue(value: string): this {
     if (!this.initialised || this._isTextElement) {
       return this;
     }
@@ -558,7 +587,7 @@ class Choices {
     value = 'value',
     label = 'label',
     replaceChoices = false,
-  ) {
+  ): this | Promise<this> {
     if (!this.initialised) {
       throw new ReferenceError(
         `setChoices was called on a non-initialized instance of Choices`,
@@ -645,19 +674,19 @@ class Choices {
     return this;
   }
 
-  clearChoices() {
+  clearChoices(): this {
     this._store.dispatch(clearChoices());
 
     return this;
   }
 
-  clearStore() {
+  clearStore(): this {
     this._store.dispatch(clearAll());
 
     return this;
   }
 
-  clearInput() {
+  clearInput(): this {
     const shouldSetInputWidth = !this._isSelectOneElement;
     this.input.clear(shouldSetInputWidth);
 
@@ -669,7 +698,7 @@ class Choices {
     return this;
   }
 
-  _render() {
+  _render(): void {
     if (this._store.isLoading()) {
       return;
     }
@@ -699,7 +728,7 @@ class Choices {
     this._prevState = this._currentState;
   }
 
-  _renderChoices() {
+  _renderChoices(): void {
     const { activeGroups, activeChoices } = this._store;
     let choiceListFragment = document.createDocumentFragment();
 
@@ -776,7 +805,7 @@ class Choices {
     }
   }
 
-  _renderItems() {
+  _renderItems(): void {
     const activeItems = this._store.activeItems || [];
     this.itemList.clear();
 
@@ -791,10 +820,10 @@ class Choices {
   }
 
   _createGroupsFragment(
-    groups,
-    choices,
-    fragment = document.createDocumentFragment(),
-  ) {
+    groups: Group[],
+    choices: Choice[],
+    fragment: DocumentFragment = document.createDocumentFragment(),
+  ): DocumentFragment {
     const getGroupChoices = group =>
       choices.filter(choice => {
         if (this._isSelectOneElement) {
@@ -825,10 +854,10 @@ class Choices {
   }
 
   _createChoicesFragment(
-    choices,
-    fragment = document.createDocumentFragment(),
+    choices: Choice[],
+    fragment: DocumentFragment = document.createDocumentFragment(),
     withinGroup = false,
-  ) {
+  ): DocumentFragment {
     // Create a fragment to store our list items (so we don't have to update the DOM for each item)
     const {
       renderSelectedChoices,
@@ -899,7 +928,10 @@ class Choices {
     return fragment;
   }
 
-  _createItemsFragment(items, fragment = document.createDocumentFragment()) {
+  _createItemsFragment(
+    items: Item[],
+    fragment: DocumentFragment = document.createDocumentFragment(),
+  ): DocumentFragment {
     // Create fragment to add elements to
     const { shouldSortItems, sorter, removeItemButton } = this.config;
 
@@ -929,7 +961,7 @@ class Choices {
     return fragment;
   }
 
-  _triggerChange(value) {
+  _triggerChange(value): void {
     if (value === undefined || value === null) {
       return;
     }
@@ -939,7 +971,7 @@ class Choices {
     });
   }
 
-  _selectPlaceholderChoice() {
+  _selectPlaceholderChoice(): void {
     const { placeholderChoice } = this._store;
 
     if (placeholderChoice) {
@@ -955,7 +987,7 @@ class Choices {
     }
   }
 
-  _handleButtonAction(activeItems, element) {
+  _handleButtonAction(activeItems: Item[], element: HTMLElement): void {
     if (
       !activeItems ||
       !element ||
@@ -979,7 +1011,11 @@ class Choices {
     }
   }
 
-  _handleItemAction(activeItems, element, hasShiftKey = false) {
+  _handleItemAction(
+    activeItems: Item[],
+    element: HTMLElement,
+    hasShiftKey = false,
+  ): void {
     if (
       !activeItems ||
       !element ||
@@ -1007,7 +1043,7 @@ class Choices {
     this.input.focus();
   }
 
-  _handleChoiceAction(activeItems, element) {
+  _handleChoiceAction(activeItems: Item[], element: HTMLElement): void {
     if (!activeItems || !element) {
       return;
     }
@@ -1056,7 +1092,7 @@ class Choices {
     }
   }
 
-  _handleBackspace(activeItems) {
+  _handleBackspace(activeItems: Item[]): void {
     if (!this.config.removeItems || !activeItems) {
       return;
     }
@@ -1080,15 +1116,15 @@ class Choices {
     }
   }
 
-  _startLoading() {
+  _startLoading(): void {
     this._store.dispatch(setIsLoading(true));
   }
 
-  _stopLoading() {
+  _stopLoading(): void {
     this._store.dispatch(setIsLoading(false));
   }
 
-  _handleLoadingState(setLoading = true) {
+  _handleLoadingState(setLoading = true): void {
     let placeholderItem = this.itemList.getChild(
       `.${this.config.classNames.placeholder}`,
     );
@@ -1122,7 +1158,7 @@ class Choices {
     }
   }
 
-  _handleSearch(value) {
+  _handleSearch(value: string): void {
     if (!value || !this.input.isFocussed) {
       return;
     }
@@ -1146,7 +1182,7 @@ class Choices {
     }
   }
 
-  _canAddItem(activeItems, value) {
+  _canAddItem(activeItems: Item[], value: string): Notice {
     let canAddItem = true;
     let notice =
       typeof this.config.addItemText === 'function'
@@ -1202,7 +1238,7 @@ class Choices {
     };
   }
 
-  _searchChoices(value) {
+  _searchChoices(value: string): number {
     const newValue = typeof value === 'string' ? value.trim() : value;
     const currentValue =
       typeof this._currentValue === 'string'
@@ -1229,7 +1265,7 @@ class Choices {
     return results.length;
   }
 
-  _addEventListeners() {
+  _addEventListeners(): void {
     const { documentElement } = document;
 
     // capture events - can cancel event processing or propagation
@@ -1283,7 +1319,7 @@ class Choices {
     this.input.addEventListeners();
   }
 
-  _removeEventListeners() {
+  _removeEventListeners(): void {
     const { documentElement } = document;
 
     documentElement.removeEventListener('touchend', this._onTouchEnd, true);
@@ -1318,10 +1354,7 @@ class Choices {
     this.input.removeEventListeners();
   }
 
-  /**
-   * @param {KeyboardEvent} event
-   */
-  _onKeyDown(event) {
+  _onKeyDown(event: KeyboardEvent): void {
     const { keyCode } = event;
     const { activeItems } = this._store;
     const hasFocusedInput = this.input.isFocussed;
@@ -1379,7 +1412,7 @@ class Choices {
     }
   }
 
-  _onKeyUp({ target, keyCode }) {
+  _onKeyUp({ target, keyCode }: Partial<KeyboardEvent>): void {
     const { value } = this.input;
     const { activeItems } = this._store;
     const canAddItem = this._canAddItem(activeItems, value);
@@ -1414,7 +1447,7 @@ class Choices {
     this._canSearch = this.config.searchEnabled;
   }
 
-  _onAKey({ event, hasItems }) {
+  _onAKey({ event, hasItems }: Partial<KeyDownAction>): void {
     const { ctrlKey, metaKey } = event;
     const hasCtrlDownKeyPressed = ctrlKey || metaKey;
 
@@ -1433,7 +1466,11 @@ class Choices {
     }
   }
 
-  _onEnterKey({ event, activeItems, hasActiveDropdown }) {
+  _onEnterKey({
+    event,
+    activeItems,
+    hasActiveDropdown,
+  }: Partial<KeyDownAction>): void {
     const { target } = event;
     const { ENTER_KEY: enterKey } = KEY_CODES;
     const targetWasButton = target.hasAttribute('data-button');
@@ -1475,14 +1512,14 @@ class Choices {
     }
   }
 
-  _onEscapeKey({ hasActiveDropdown }) {
+  _onEscapeKey({ hasActiveDropdown }: Partial<KeyDownAction>): void {
     if (hasActiveDropdown) {
       this.hideDropdown(true);
       this.containerOuter.focus();
     }
   }
 
-  _onDirectionKey({ event, hasActiveDropdown }) {
+  _onDirectionKey({ event, hasActiveDropdown }: Partial<KeyDownAction>): void {
     const { keyCode, metaKey } = event;
     const {
       DOWN_KEY: downKey,
@@ -1546,7 +1583,11 @@ class Choices {
     }
   }
 
-  _onDeleteKey({ event, hasFocusedInput, activeItems }) {
+  _onDeleteKey({
+    event,
+    hasFocusedInput,
+    activeItems,
+  }: Partial<KeyDownAction>): void {
     const { target } = event;
     // If backspace or delete key is pressed and the input has no value
     if (hasFocusedInput && !target.value && !this._isSelectOneElement) {
@@ -1555,13 +1596,13 @@ class Choices {
     }
   }
 
-  _onTouchMove() {
+  _onTouchMove(): void {
     if (this._wasTap) {
       this._wasTap = false;
     }
   }
 
-  _onTouchEnd(event) {
+  _onTouchEnd(event: TouchEvent): void {
     const { target } = event || event.touches[0];
     const touchWasWithinContainer =
       this._wasTap && this.containerOuter.element.contains(target);
@@ -1588,9 +1629,8 @@ class Choices {
 
   /**
    * Handles mousedown event in capture mode for containetOuter.element
-   * @param {MouseEvent} event
    */
-  _onMouseDown(event) {
+  _onMouseDown(event: MouseEvent): void {
     const { target } = event;
     if (!(target instanceof HTMLElement)) {
       return;
@@ -1599,8 +1639,8 @@ class Choices {
     // If we have our mouse down on the scrollbar and are on IE11...
     if (IS_IE11 && this.choiceList.element.contains(target)) {
       // check if click was on a scrollbar area
-      const firstChoice = /** @type {HTMLElement} */ (this.choiceList.element
-        .firstElementChild);
+      const firstChoice = /** @type {HTMLElement} */ this.choiceList.element
+        .firstElementChild;
       const isOnScrollbar =
         this._direction === 'ltr'
           ? event.offsetX >= firstChoice.offsetWidth
@@ -1634,13 +1674,13 @@ class Choices {
    * Handles mouseover event over this.dropdown
    * @param {MouseEvent} event
    */
-  _onMouseOver({ target }) {
+  _onMouseOver({ target }: Partial<MouseEvent>): void {
     if (target instanceof HTMLElement && 'choice' in target.dataset) {
       this._highlightChoice(target);
     }
   }
 
-  _onClick({ target }) {
+  _onClick({ target }: Partial<MouseEvent>): void {
     const clickWasWithinContainer = this.containerOuter.element.contains(
       target,
     );
@@ -1674,7 +1714,7 @@ class Choices {
     }
   }
 
-  _onFocus({ target }) {
+  _onFocus({ target }: Partial<FocusEvent>): void {
     const focusWasWithinContainer = this.containerOuter.element.contains(
       target,
     );
@@ -1708,7 +1748,7 @@ class Choices {
     focusActions[this.passedElement.element.type]();
   }
 
-  _onBlur({ target }) {
+  _onBlur({ target }: Partial<FocusEvent>): void {
     const blurWasWithinContainer = this.containerOuter.element.contains(target);
 
     if (blurWasWithinContainer && !this._isScrollingOnIe) {
@@ -1754,11 +1794,11 @@ class Choices {
     }
   }
 
-  _onFormReset() {
+  _onFormReset(): void {
     this._store.dispatch(resetTo(this._initialState));
   }
 
-  _highlightChoice(el = null) {
+  _highlightChoice(el: HTMLElement | null = null): void {
     const choices = Array.from(
       this.dropdown.element.querySelectorAll('[data-choice-selectable]'),
     );
@@ -1817,7 +1857,7 @@ class Choices {
     customProperties = null,
     placeholder = false,
     keyCode = null,
-  }) {
+  }: Item): void {
     let passedValue = typeof value === 'string' ? value.trim() : value;
 
     const passedKeyCode = keyCode;
@@ -1866,10 +1906,7 @@ class Choices {
     });
   }
 
-  /**
-   * @param {Item} item
-   */
-  _removeItem(item) {
+  _removeItem(item: Item): void {
     const { id, value, label, customProperties, choiceId, groupId } = item;
     const group = groupId >= 0 ? this._store.getGroupById(groupId) : null;
 
@@ -1892,7 +1929,7 @@ class Choices {
     customProperties = null,
     placeholder = false,
     keyCode = null,
-  }) {
+  }: Choice): void {
     if (typeof value === 'undefined' || value === null) {
       return;
     }
@@ -1929,7 +1966,7 @@ class Choices {
     }
   }
 
-  _addGroup({ group, id, valueKey = 'value', labelKey = 'label' }) {
+  _addGroup({ group, id, valueKey = 'value', labelKey = 'label' }): void {
     const groupChoices = isType('Object', group)
       ? group.choices
       : Array.from(group.getElementsByTagName('OPTION'));
@@ -1974,7 +2011,10 @@ class Choices {
     }
   }
 
-  _getTemplate(template, ...args) {
+  _getTemplate<K extends keyof Templates>(
+    template: K,
+    ...args
+  ): Templates[K] | null {
     if (!template) {
       return null;
     }
@@ -1984,7 +2024,7 @@ class Choices {
     return this._templates[template].call(this, classNames, ...args);
   }
 
-  _createTemplates() {
+  _createTemplates(): void {
     const { callbackOnCreateTemplates } = this.config;
     let userTemplates = {};
 
@@ -1998,7 +2038,7 @@ class Choices {
     this._templates = merge(TEMPLATES, userTemplates);
   }
 
-  _createElements() {
+  _createElements(): void {
     this.containerOuter = new Container({
       element: this._getTemplate(
         'containerOuter',
@@ -2042,7 +2082,7 @@ class Choices {
     });
   }
 
-  _createStructure() {
+  _createStructure(): void {
     // Hide original element
     this.passedElement.conceal();
     // Wrap input in container preserving DOM ordering
@@ -2093,7 +2133,7 @@ class Choices {
     }
   }
 
-  _addPredefinedGroups(groups) {
+  _addPredefinedGroups(groups: Group[]): void {
     // If we have a placeholder option
     const placeholderChoice = this.passedElement.placeholderOption;
     if (
@@ -2117,7 +2157,7 @@ class Choices {
     );
   }
 
-  _addPredefinedChoices(choices) {
+  _addPredefinedChoices(choices: Choice[]): void {
     // If sorting is enabled or the user is searching, filter choices
     if (this.config.shouldSort) {
       choices.sort(this.config.sorter);
@@ -2175,10 +2215,7 @@ class Choices {
     });
   }
 
-  /**
-   * @param {Item[]} items
-   */
-  _addPredefinedItems(items) {
+  _addPredefinedItems(items: Item[]): void {
     items.forEach(item => {
       if (typeof item === 'object' && item.value) {
         this._addItem({
@@ -2198,7 +2235,7 @@ class Choices {
     });
   }
 
-  _setChoiceOrItem(item) {
+  _setChoiceOrItem(item: Item | string): void {
     const itemType = getType(item).toLowerCase();
     const handleType = {
       object: () => {
@@ -2246,11 +2283,11 @@ class Choices {
     handleType[itemType]();
   }
 
-  _findAndSelectChoiceByValue(val) {
+  _findAndSelectChoiceByValue(value: string): void {
     const { choices } = this._store;
     // Check 'value' property exists and the choice isn't already selected
     const foundChoice = choices.find(choice =>
-      this.config.valueComparer(choice.value, val),
+      this.config.valueComparer(choice.value, value),
     );
 
     if (foundChoice && !foundChoice.selected) {
@@ -2266,7 +2303,7 @@ class Choices {
     }
   }
 
-  _generatePlaceholderValue() {
+  _generatePlaceholderValue(): string | boolean {
     if (this._isSelectElement) {
       const { placeholderOption } = this.passedElement;
 

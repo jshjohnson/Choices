@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": "/",
+    "outDir": "./dist/",
+    "allowJs": true,
+    "sourceMap": true,
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "es5",
+    "lib": ["es2015", "dom"],
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true
+  },
+  "include": ["./src/**/*"]
+}

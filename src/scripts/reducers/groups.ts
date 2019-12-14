@@ -1,6 +1,8 @@
+import { Group } from '../interfaces';
+
 export const defaultState = [];
 
-export default function groups(state = defaultState, action) {
+export default function groups(state = defaultState, action): Group[] {
   switch (action.type) {
     case 'ADD_GROUP': {
       return [

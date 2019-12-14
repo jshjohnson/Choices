@@ -1,15 +1,11 @@
+import { Templates } from './interfaces';
+
 /**
  * Helpers to create HTML elements used by Choices
  * Can be overridden by providing `callbackOnCreateTemplates` option
- * @typedef {import('../../types/index').Choices.Templates} Templates
- * @typedef {import('../../types/index').Choices.ClassNames} ClassNames
- * @typedef {import('../../types/index').Choices.Options} Options
- * @typedef {import('../../types/index').Choices.Item} Item
- * @typedef {import('../../types/index').Choices.Choice} Choice
- * @typedef {import('../../types/index').Choices.Group} Group
  */
 
-export const TEMPLATES = /** @type {Templates} */ ({
+export const TEMPLATES: Templates = {
   /**
    * @param {Partial<ClassNames>} classNames
    * @param {"ltr" | "rtl" | "auto"} dir
@@ -326,6 +322,6 @@ export const TEMPLATES = /** @type {Templates} */ ({
 
     return opt;
   },
-});
+};
 
 export default TEMPLATES;

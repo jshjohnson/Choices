@@ -1,6 +1,8 @@
+import { Choice } from '../interfaces';
+
 export const defaultState = [];
 
-export default function choices(state = defaultState, action) {
+export default function choices(state = defaultState, action): Choice[] {
   switch (action.type) {
     case 'ADD_CHOICE': {
       /*
