@@ -1,45 +1,42 @@
-import { createStore } from 'redux';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { createStore, Store as IStore, AnyAction } from 'redux';
 import rootReducer from '../reducers/index';
-import { Choice, Group, Item } from '../interfaces';
+import { Choice, Group, Item, State } from '../interfaces';
 
 export default class Store {
+  _store: IStore;
+
   constructor() {
     this._store = createStore(
       rootReducer,
-      window.__REDUX_DEVTOOLS_EXTENSION__ &&
-        window.__REDUX_DEVTOOLS_EXTENSION__(),
+      (window as any).__REDUX_DEVTOOLS_EXTENSION__ &&
+        (window as any).__REDUX_DEVTOOLS_EXTENSION__(),
     );
   }
 
   /**
    * Subscribe store to function call (wrapped Redux method)
-   * @param  {Function} onChange Function to trigger when state changes
-   * @return
    */
-  subscribe(onChange): void {
+  subscribe(onChange: () => void): void {
     this._store.subscribe(onChange);
   }
 
   /**
    * Dispatch event to store (wrapped Redux method)
-   * @param  {{ type: string, [x: string]: any }} action Action to trigger
-   * @return
    */
-  dispatch(action): void {
+  dispatch(action: AnyAction): void {
     this._store.dispatch(action);
   }
 
   /**
    * Get store object (wrapping Redux method)
-   * @returns {object} State
    */
-  get state(): any {
+  get state(): State {
     return this._store.getState();
   }
 
   /**
    * Get items from store
-   * @returns {Item[]} Item objects
    */
   get items(): Item[] {
     return this.state.items;
@@ -47,7 +44,6 @@ export default class Store {
 
   /**
    * Get active items from store
-   * @returns {Item[]} Item objects
    */
   get activeItems(): Item[] {
     return this.items.filter(item => item.active === true);
@@ -55,7 +51,6 @@ export default class Store {
 
   /**
    * Get highlighted items from store
-   * @returns {Item[]} Item objects
    */
   get highlightedActiveItems(): Item[] {
     return this.items.filter(item => item.active && item.highlighted);
@@ -63,7 +58,6 @@ export default class Store {
 
   /**
    * Get choices from store
-   * @returns {Choice[]} Option objects
    */
   get choices(): Choice[] {
     return this.state.choices;
@@ -71,7 +65,6 @@ export default class Store {
 
   /**
    * Get active choices from store
-   * @returns {Choice[]} Option objects
    */
   get activeChoices(): Choice[] {
     return this.choices.filter(choice => choice.active === true);
@@ -79,7 +72,6 @@ export default class Store {
 
   /**
    * Get selectable choices from store
-   * @returns {Choice[]} Option objects
    */
   get selectableChoices(): Choice[] {
     return this.choices.filter(choice => choice.disabled !== true);
@@ -87,7 +79,6 @@ export default class Store {
 
   /**
    * Get choices that can be searched (excluding placeholders)
-   * @returns {Choice[]} Option objects
    */
   get searchableChoices(): Choice[] {
     return this.selectableChoices.filter(choice => choice.placeholder !== true);
@@ -95,7 +86,6 @@ export default class Store {
 
   /**
    * Get placeholder choice from store
-   * @returns {Choice | undefined} Found placeholder
    */
   get placeholderChoice(): Choice | undefined {
     return [...this.choices]
@@ -105,7 +95,6 @@ export default class Store {
 
   /**
    * Get groups from store
-   * @returns {Group[]} Group objects
    */
   get groups(): Group[] {
     return this.state.groups;
@@ -113,7 +102,6 @@ export default class Store {
 
   /**
    * Get active groups from store
-   * @returns {Group[]} Group objects
    */
   get activeGroups(): Group[] {
     const { groups, choices } = this;
@@ -130,7 +118,6 @@ export default class Store {
 
   /**
    * Get loading state from store
-   * @returns {boolean} Loading State
    */
   isLoading(): boolean {
     return this.state.general.loading;
@@ -138,19 +125,15 @@ export default class Store {
 
   /**
    * Get single choice by it's ID
-   * @param {string} id
-   * @returns {Choice | undefined} Found choice
    */
-  getChoiceById(id): Choice | undefined {
+  getChoiceById(id: string): Choice | undefined {
     return this.activeChoices.find(choice => choice.id === parseInt(id, 10));
   }
 
   /**
    * Get group by group id
-   * @param  {number} id Group ID
-   * @returns {Group | undefined} Group data
    */
-  getGroupById(id): Group | undefined {
+  getGroupById(id: number): Group | undefined {
     return this.groups.find(group => group.id === id);
   }
 }

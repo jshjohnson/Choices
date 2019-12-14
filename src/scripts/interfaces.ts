@@ -34,7 +34,6 @@ export interface Group {
   disabled?: boolean;
   value: any;
 }
-
 export interface Item extends Choice {
   choiceId?: number;
   keyCode?: number;
@@ -785,4 +784,13 @@ export interface KeyDownAction {
 export interface Notice {
   response: boolean;
   notice: string;
+}
+
+export interface State {
+  choices: Choice[];
+  groups: Group[];
+  items: Item[];
+  general: {
+    loading: boolean;
+  };
 }

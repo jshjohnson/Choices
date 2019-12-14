@@ -49,6 +49,7 @@ import {
   Group,
   Notice,
   KeyDownAction,
+  State,
 } from './interfaces';
 
 /** @see {@link http://browserhacks.com/#hack-acea075d0ac6954f275a70023906050c} */
@@ -83,14 +84,15 @@ class Choices {
   _isSelectMultipleElement: boolean;
   _isSelectElement: boolean;
   _store: Store;
-  _initialState: object;
-  _currentState: object;
-  _prevState: object;
+  _initialState: State;
+  _currentState: State;
+  _prevState: State;
   _currentValue: string;
   _canSearch: boolean;
   _isScrollingOnIe: boolean;
   _highlightPosition: number;
   _wasTap: boolean;
+  _isSearching: boolean;
   _placeholderValue: string;
   _baseId: string;
   _direction: 'ltr' | 'rtl';
@@ -102,10 +104,6 @@ class Choices {
   _presetChoices: Choice[];
   _presetItems: Item[];
 
-  /**
-   * @param {string | HTMLInputElement | HTMLSelectElement} element
-   * @param {Partial<Options>} userConfig
-   */
   constructor(
     element: string | HTMLInputElement | HTMLSelectElement = '[data-choice]',
     userConfig: Partial<Options> = {},
@@ -148,7 +146,7 @@ class Choices {
     this.config.searchEnabled =
       this._isSelectMultipleElement || this.config.searchEnabled;
 
-    if (!['auto', 'always'].includes(this.config.renderSelectedChoices)) {
+    if (!['auto', 'always'].includes(`${this.config.renderSelectedChoices}`)) {
       this.config.renderSelectedChoices = 'auto';
     }
 
@@ -356,7 +354,7 @@ class Choices {
     return this;
   }
 
-  highlightItem(item, runEvent = true): this {
+  highlightItem(item: Item, runEvent = true): this {
     if (!item) {
       return this;
     }
@@ -378,7 +376,7 @@ class Choices {
     return this;
   }
 
-  unhighlightItem(item): this {
+  unhighlightItem(item: Item): this {
     if (!item) {
       return this;
     }
@@ -409,7 +407,7 @@ class Choices {
     return this;
   }
 
-  removeActiveItemsByValue(value): this {
+  removeActiveItemsByValue(value: string): this {
     this._store.activeItems
       .filter(item => item.value === value)
       .forEach(item => this._removeItem(item));
@@ -417,7 +415,7 @@ class Choices {
     return this;
   }
 
-  removeActiveItems(excludedId): this {
+  removeActiveItems(excludedId: number): this {
     this._store.activeItems
       .filter(({ id }) => id !== excludedId)
       .forEach(item => this._removeItem(item));
@@ -438,7 +436,7 @@ class Choices {
     return this;
   }
 
-  showDropdown(preventInputFocus): this {
+  showDropdown(preventInputFocus: boolean): this {
     if (this.dropdown.isActive) {
       return this;
     }
@@ -457,7 +455,7 @@ class Choices {
     return this;
   }
 
-  hideDropdown(preventInputBlur): this {
+  hideDropdown(preventInputBlur: boolean): this {
     if (!this.dropdown.isActive) {
       return this;
     }
@@ -583,7 +581,10 @@ class Choices {
    * ```
    */
   setChoices(
-    choicesArrayOrFetcher = [],
+    choicesArrayOrFetcher:
+      | Choice[]
+      | Group[]
+      | ((instance: Choices) => object[] | Promise<object[]>) = [],
     value = 'value',
     label = 'label',
     replaceChoices = false,

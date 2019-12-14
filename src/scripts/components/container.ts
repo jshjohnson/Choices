@@ -1,20 +1,29 @@
 import { wrap } from '../lib/utils';
 import { SELECT_ONE_TYPE } from '../constants';
+import { PassedElement, ClassNames, Options } from '../interfaces';
 
-/**
- * @typedef {import('../../../types/index').Choices.passedElement} passedElement
- * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
- */
 export default class Container {
-  /**
-   * @param {{
-   *  element: HTMLElement,
-   *  type: passedElement['type'],
-   *  classNames: ClassNames,
-   *  position
-   * }} args
-   */
-  constructor({ element, type, classNames, position }) {
+  element: HTMLElement;
+  type: PassedElement['type'];
+  classNames: ClassNames;
+  position: Options['position'];
+  isOpen: boolean;
+  isFlipped: boolean;
+  isFocussed: boolean;
+  isDisabled: boolean;
+  isLoading: boolean;
+
+  constructor({
+    element,
+    type,
+    classNames,
+    position,
+  }: {
+    element: HTMLElement;
+    type: PassedElement['type'];
+    classNames: ClassNames;
+    position: Options['position'];
+  }) {
     this.element = element;
     this.classNames = classNames;
     this.type = type;
@@ -28,12 +37,12 @@ export default class Container {
     this._onBlur = this._onBlur.bind(this);
   }
 
-  addEventListeners() {
+  addEventListeners(): void {
     this.element.addEventListener('focus', this._onFocus);
     this.element.addEventListener('blur', this._onBlur);
   }
 
-  removeEventListeners() {
+  removeEventListeners(): void {
     this.element.removeEventListener('focus', this._onFocus);
     this.element.removeEventListener('blur', this._onBlur);
   }
@@ -41,10 +50,8 @@ export default class Container {
   /**
    * Determine whether container should be flipped based on passed
    * dropdown position
-   * @param {number} dropdownPos
-   * @returns {boolean}
    */
-  shouldFlip(dropdownPos) {
+  shouldFlip(dropdownPos: number): boolean {
     if (typeof dropdownPos !== 'number') {
       return false;
     }
@@ -62,21 +69,15 @@ export default class Container {
     return shouldFlip;
   }
 
-  /**
-   * @param {string} activeDescendantID
-   */
-  setActiveDescendant(activeDescendantID) {
+  setActiveDescendant(activeDescendantID: string): void {
     this.element.setAttribute('aria-activedescendant', activeDescendantID);
   }
 
-  removeActiveDescendant() {
+  removeActiveDescendant(): void {
     this.element.removeAttribute('aria-activedescendant');
   }
 
-  /**
-   * @param {number} dropdownPos
-   */
-  open(dropdownPos) {
+  open(dropdownPos: number): void {
     this.element.classList.add(this.classNames.openState);
     this.element.setAttribute('aria-expanded', 'true');
     this.isOpen = true;
@@ -87,7 +88,7 @@ export default class Container {
     }
   }
 
-  close() {
+  close(): void {
     this.element.classList.remove(this.classNames.openState);
     this.element.setAttribute('aria-expanded', 'false');
     this.removeActiveDescendant();
@@ -100,21 +101,21 @@ export default class Container {
     }
   }
 
-  focus() {
+  focus(): void {
     if (!this.isFocussed) {
       this.element.focus();
     }
   }
 
-  addFocusState() {
+  addFocusState(): void {
     this.element.classList.add(this.classNames.focusState);
   }
 
-  removeFocusState() {
+  removeFocusState(): void {
     this.element.classList.remove(this.classNames.focusState);
   }
 
-  enable() {
+  enable(): void {
     this.element.classList.remove(this.classNames.disabledState);
     this.element.removeAttribute('aria-disabled');
     if (this.type === SELECT_ONE_TYPE) {
@@ -123,7 +124,7 @@ export default class Container {
     this.isDisabled = false;
   }
 
-  disable() {
+  disable(): void {
     this.element.classList.add(this.classNames.disabledState);
     this.element.setAttribute('aria-disabled', 'true');
     if (this.type === SELECT_ONE_TYPE) {
@@ -132,40 +133,36 @@ export default class Container {
     this.isDisabled = true;
   }
 
-  /**
-   * @param {HTMLElement} element
-   */
-  wrap(element) {
+  wrap(element: HTMLElement): void {
     wrap(element, this.element);
   }
 
-  /**
-   * @param {Element} element
-   */
-  unwrap(element) {
-    // Move passed element outside this element
-    this.element.parentNode.insertBefore(element, this.element);
-    // Remove this element
-    this.element.parentNode.removeChild(this.element);
+  unwrap(element: HTMLElement): void {
+    if (this.element.parentNode) {
+      // Move passed element outside this element
+      this.element.parentNode.insertBefore(element, this.element);
+      // Remove this element
+      this.element.parentNode.removeChild(this.element);
+    }
   }
 
-  addLoadingState() {
+  addLoadingState(): void {
     this.element.classList.add(this.classNames.loadingState);
     this.element.setAttribute('aria-busy', 'true');
     this.isLoading = true;
   }
 
-  removeLoadingState() {
+  removeLoadingState(): void {
     this.element.classList.remove(this.classNames.loadingState);
     this.element.removeAttribute('aria-busy');
     this.isLoading = false;
   }
 
-  _onFocus() {
+  _onFocus(): void {
     this.isFocussed = true;
   }
 
-  _onBlur() {
+  _onBlur(): void {
     this.isFocussed = false;
   }
 }

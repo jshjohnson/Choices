@@ -1,17 +1,11 @@
 import { dispatchEvent } from '../lib/utils';
-
-/**
- * @typedef {import('../../../types/index').Choices.passedElement} passedElement
- * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
- */
+import { ClassNames, EventMap } from '../interfaces';
 
 export default class WrappedElement {
-  /**
-   * @param {{
-   *  element: HTMLInputElement | HTMLSelectElement,
-   *  classNames: ClassNames,
-   * }} args
-   */
+  element: HTMLInputElement | HTMLSelectElement;
+  classNames: ClassNames;
+  isDisabled: boolean;
+
   constructor({ element, classNames }) {
     this.element = element;
     this.classNames = classNames;
@@ -26,24 +20,24 @@ export default class WrappedElement {
     this.isDisabled = false;
   }
 
-  get isActive() {
+  get isActive(): boolean {
     return this.element.dataset.choice === 'active';
   }
 
-  get dir() {
+  get dir(): string {
     return this.element.dir;
   }
 
-  get value() {
+  get value(): string {
     return this.element.value;
   }
 
-  set value(value) {
+  set value(value: string) {
     // you must define setter here otherwise it will be readonly property
     this.element.value = value;
   }
 
-  conceal() {
+  conceal(): void {
     // Hide passed input
     this.element.classList.add(this.classNames.input);
     this.element.hidden = true;
@@ -61,7 +55,7 @@ export default class WrappedElement {
     this.element.setAttribute('data-choice', 'active');
   }
 
-  reveal() {
+  reveal(): void {
     // Reinstate passed element
     this.element.classList.remove(this.classNames.input);
     this.element.hidden = false;
@@ -83,19 +77,19 @@ export default class WrappedElement {
     this.element.value = this.element.value; // eslint-disable-line no-self-assign
   }
 
-  enable() {
+  enable(): void {
     this.element.removeAttribute('disabled');
     this.element.disabled = false;
     this.isDisabled = false;
   }
 
-  disable() {
+  disable(): void {
     this.element.setAttribute('disabled', '');
     this.element.disabled = true;
     this.isDisabled = true;
   }
 
-  triggerEvent(eventType, data) {
+  triggerEvent<K extends keyof EventMap>(eventType: K, data?: object): void {
     dispatchEvent(this.element, eventType, data);
   }
 }

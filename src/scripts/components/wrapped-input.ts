@@ -1,34 +1,20 @@
 import WrappedElement from './wrapped-element';
-
-/**
- * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
- * @typedef {import('../../../types/index').Choices.Item} Item
- */
+import { ClassNames } from '../interfaces';
 
 export default class WrappedInput extends WrappedElement {
-  /**
-   * @param {{
-   *  element: HTMLInputElement,
-   *  classNames: ClassNames,
-   *  delimiter: string
-   * }} args
-   */
+  element: HTMLInputElement;
+  delimiter: string;
+
   constructor({ element, classNames, delimiter }) {
     super({ element, classNames });
     this.delimiter = delimiter;
   }
 
-  /**
-   * @returns {string}
-   */
-  get value() {
+  get value(): string {
     return this.element.value;
   }
 
-  /**
-   * @param {Item[]} items
-   */
-  set value(items) {
+  set value(items: Item[]): void {
     const itemValues = items.map(({ value }) => value);
     const joinedValues = itemValues.join(this.delimiter);
 

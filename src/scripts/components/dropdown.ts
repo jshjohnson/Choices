@@ -1,17 +1,20 @@
-/**
- * @typedef {import('../../../types/index').Choices.passedElement} passedElement
- * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
- */
+import { PassedElement, ClassNames } from '../interfaces';
 
 export default class Dropdown {
-  /**
-   * @param {{
-   *  element: HTMLElement,
-   *  type: passedElement['type'],
-   *  classNames: ClassNames,
-   * }} args
-   */
-  constructor({ element, type, classNames }) {
+  element: HTMLElement;
+  type: PassedElement['type'];
+  classNames: ClassNames;
+  isActive: boolean;
+
+  constructor({
+    element,
+    type,
+    classNames,
+  }: {
+    element: HTMLElement;
+    type: PassedElement['type'];
+    classNames: ClassNames;
+  }) {
     this.element = element;
     this.classNames = classNames;
     this.type = type;
@@ -20,26 +23,19 @@ export default class Dropdown {
 
   /**
    * Bottom position of dropdown in viewport coordinates
-   * @returns {number} Vertical position
    */
-  get distanceFromTopWindow() {
+  get distanceFromTopWindow(): number {
     return this.element.getBoundingClientRect().bottom;
   }
 
-  /**
-   * Find element that matches passed selector
-   * @param {string} selector
-   * @returns {HTMLElement | null}
-   */
-  getChild(selector) {
+  getChild(selector: string): HTMLElement | null {
     return this.element.querySelector(selector);
   }
 
   /**
    * Show dropdown to user by adding active state class
-   * @returns {this}
    */
-  show() {
+  show(): this {
     this.element.classList.add(this.classNames.activeState);
     this.element.setAttribute('aria-expanded', 'true');
     this.isActive = true;
@@ -49,9 +45,8 @@ export default class Dropdown {
 
   /**
    * Hide dropdown from user
-   * @returns {this}
    */
-  hide() {
+  hide(): this {
     this.element.classList.remove(this.classNames.activeState);
     this.element.setAttribute('aria-expanded', 'false');
     this.isActive = false;

@@ -1,21 +1,26 @@
 import { sanitise } from '../lib/utils';
 import { SELECT_ONE_TYPE } from '../constants';
-
-/**
- * @typedef {import('../../../types/index').Choices.passedElement} passedElement
- * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
- */
+import { PassedElement, ClassNames } from '../interfaces';
 
 export default class Input {
-  /**
-   * @param {{
-   *  element: HTMLInputElement,
-   *  type: passedElement['type'],
-   *  classNames: ClassNames,
-   *  preventPaste: boolean
-   * }} args
-   */
-  constructor({ element, type, classNames, preventPaste }) {
+  element: HTMLInputElement;
+  type: PassedElement['type'];
+  classNames: ClassNames;
+  preventPaste: boolean;
+  isFocussed: boolean;
+  isDisabled: boolean;
+
+  constructor({
+    element,
+    type,
+    classNames,
+    preventPaste,
+  }: {
+    element: HTMLInputElement;
+    type: PassedElement['type'];
+    classNames: ClassNames;
+    preventPaste: boolean;
+  }) {
     this.element = element;
     this.type = type;
     this.classNames = classNames;
@@ -29,28 +34,19 @@ export default class Input {
     this._onBlur = this._onBlur.bind(this);
   }
 
-  /**
-   * @param {string} placeholder
-   */
-  set placeholder(placeholder) {
+  set placeholder(placeholder: string) {
     this.element.placeholder = placeholder;
   }
 
-  /**
-   * @returns {string}
-   */
-  get value() {
+  get value(): string {
     return sanitise(this.element.value);
   }
 
-  /**
-   * @param {string} value
-   */
-  set value(value) {
+  set value(value: string) {
     this.element.value = value;
   }
 
-  addEventListeners() {
+  addEventListeners(): void {
     this.element.addEventListener('paste', this._onPaste);
     this.element.addEventListener('input', this._onInput, {
       passive: true,
@@ -63,47 +59,36 @@ export default class Input {
     });
   }
 
-  removeEventListeners() {
-    this.element.removeEventListener('input', this._onInput, {
-      passive: true,
-    });
+  removeEventListeners(): void {
+    this.element.removeEventListener('input', this._onInput);
     this.element.removeEventListener('paste', this._onPaste);
-    this.element.removeEventListener('focus', this._onFocus, {
-      passive: true,
-    });
-    this.element.removeEventListener('blur', this._onBlur, {
-      passive: true,
-    });
+    this.element.removeEventListener('focus', this._onFocus);
+    this.element.removeEventListener('blur', this._onBlur);
   }
 
-  enable() {
+  enable(): void {
     this.element.removeAttribute('disabled');
     this.isDisabled = false;
   }
 
-  disable() {
+  disable(): void {
     this.element.setAttribute('disabled', '');
     this.isDisabled = true;
   }
 
-  focus() {
+  focus(): void {
     if (!this.isFocussed) {
       this.element.focus();
     }
   }
 
-  blur() {
+  blur(): void {
     if (this.isFocussed) {
       this.element.blur();
     }
   }
 
-  /**
-   * Set value of input to blank
-   * @param {boolean} setWidth
-   * @returns {this}
-   */
-  clear(setWidth = true) {
+  clear(setWidth = true): this {
     if (this.element.value) {
       this.element.value = '';
     }
@@ -119,44 +104,38 @@ export default class Input {
    * Set the correct input width based on placeholder
    * value or input value
    */
-  setWidth() {
+  setWidth(): void {
     // Resize input to contents or placeholder
     const { style, value, placeholder } = this.element;
     style.minWidth = `${placeholder.length + 1}ch`;
     style.width = `${value.length + 1}ch`;
   }
 
-  /**
-   * @param {string} activeDescendantID
-   */
-  setActiveDescendant(activeDescendantID) {
+  setActiveDescendant(activeDescendantID: string): void {
     this.element.setAttribute('aria-activedescendant', activeDescendantID);
   }
 
-  removeActiveDescendant() {
+  removeActiveDescendant(): void {
     this.element.removeAttribute('aria-activedescendant');
   }
 
-  _onInput() {
+  _onInput(): void {
     if (this.type !== SELECT_ONE_TYPE) {
       this.setWidth();
     }
   }
 
-  /**
-   * @param {Event} event
-   */
-  _onPaste(event) {
+  _onPaste(event: ClipboardEvent): void {
     if (this.preventPaste) {
       event.preventDefault();
     }
   }
 
-  _onFocus() {
+  _onFocus(): void {
     this.isFocussed = true;
   }
 
-  _onBlur() {
+  _onBlur(): void {
     this.isFocussed = false;
   }
 }

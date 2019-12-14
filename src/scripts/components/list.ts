@@ -1,53 +1,37 @@
 import { SCROLLING_SPEED } from '../constants';
 
-/**
- * @typedef {import('../../../types/index').Choices.Choice} Choice
- */
 export default class List {
-  /**
-   * @param {{ element: HTMLElement }} args
-   */
-  constructor({ element }) {
+  element: HTMLElement;
+  scrollPos: number;
+  height: number;
+
+  constructor({ element }: { element: HTMLElement }) {
     this.element = element;
     this.scrollPos = this.element.scrollTop;
     this.height = this.element.offsetHeight;
   }
 
-  clear() {
+  clear(): void {
     this.element.innerHTML = '';
   }
 
-  /**
-   * @param {Element | DocumentFragment} node
-   */
-  append(node) {
+  append(node: Element | DocumentFragment): void {
     this.element.appendChild(node);
   }
 
-  /**
-   * @param {string} selector
-   * @returns {Element | null}
-   */
-  getChild(selector) {
+  getChild(selector: string): HTMLElement | null {
     return this.element.querySelector(selector);
   }
 
-  /**
-   * @returns {boolean}
-   */
-  hasChildren() {
+  hasChildren(): boolean {
     return this.element.hasChildNodes();
   }
 
-  scrollToTop() {
+  scrollToTop(): void {
     this.element.scrollTop = 0;
   }
 
-  /**
-   * @param {Element} element
-   * @param {1 | -1} direction
-   */
-  scrollToChildElement(element, direction) {
+  scrollToChildElement(element: Element, direction: 1 | -1): void {
     if (!element) {
       return;
     }
@@ -71,35 +55,21 @@ export default class List {
     });
   }
 
-  /**
-   * @param {number} scrollPos
-   * @param {number} strength
-   * @param {number} destination
-   */
-  _scrollDown(scrollPos, strength, destination) {
+  _scrollDown(scrollPos: number, strength: number, destination: number): void {
     const easing = (destination - scrollPos) / strength;
     const distance = easing > 1 ? easing : 1;
 
     this.element.scrollTop = scrollPos + distance;
   }
 
-  /**
-   * @param {number} scrollPos
-   * @param {number} strength
-   * @param {number} destination
-   */
-  _scrollUp(scrollPos, strength, destination) {
+  _scrollUp(scrollPos: number, strength: number, destination: number): void {
     const easing = (scrollPos - destination) / strength;
     const distance = easing > 1 ? easing : 1;
 
     this.element.scrollTop = scrollPos - distance;
   }
 
-  /**
-   * @param {*} destination
-   * @param {*} direction
-   */
-  _animateScroll(destination, direction) {
+  _animateScroll(destination: number, direction: number): void {
     const strength = SCROLLING_SPEED;
     const choiceListScrollTop = this.element.scrollTop;
     let continueAnimation = false;

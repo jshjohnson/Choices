@@ -1,26 +1,25 @@
 import WrappedElement from './wrapped-element';
-
-/**
- * @typedef {import('../../../types/index').Choices.ClassNames} ClassNames
- * @typedef {import('../../../types/index').Choices.Item} Item
- * @typedef {import('../../../types/index').Choices.Choice} Choice
- */
+import { ClassNames, Item, Choice } from '../interfaces';
 
 export default class WrappedSelect extends WrappedElement {
-  /**
-   * @param {{
-   *  element: HTMLSelectElement,
-   *  classNames: ClassNames,
-   *  delimiter: string
-   *  template: function
-   * }} args
-   */
-  constructor({ element, classNames, template }) {
+  element: HTMLInputElement;
+  classNames: ClassNames;
+  template: () => HTMLElement;
+
+  constructor({
+    element,
+    classNames,
+    template,
+  }: {
+    element: HTMLInputElement;
+    classNames: ClassNames;
+    template: () => HTMLElement;
+  }) {
     super({ element, classNames });
     this.template = template;
   }
 
-  get placeholderOption() {
+  get placeholderOption(): HTMLOptionElement | null {
     return (
       this.element.querySelector('option[value=""]') ||
       // Backward compatibility layer for the non-standard placeholder attribute supported in older versions.
@@ -28,24 +27,15 @@ export default class WrappedSelect extends WrappedElement {
     );
   }
 
-  /**
-   * @returns {Element[]}
-   */
-  get optionGroups() {
+  get optionGroups(): Element[] {
     return Array.from(this.element.getElementsByTagName('OPTGROUP'));
   }
 
-  /**
-   * @returns {Item[] | Choice[]}
-   */
-  get options() {
+  get options(): HTMLOptionElement[] {
     return Array.from(this.element.options);
   }
 
-  /**
-   * @param {Item[] | Choice[]} options
-   */
-  set options(options) {
+  set options(options: Item[] | Choice[]): void {
     const fragment = document.createDocumentFragment();
     const addOptionToFragment = data => {
       // Create a standard select option
@@ -60,10 +50,7 @@ export default class WrappedSelect extends WrappedElement {
     this.appendDocFragment(fragment);
   }
 
-  /**
-   * @param {DocumentFragment} fragment
-   */
-  appendDocFragment(fragment) {
+  appendDocFragment(fragment: DocumentFragment): void {
     this.element.innerHTML = '';
     this.element.appendChild(fragment);
   }
