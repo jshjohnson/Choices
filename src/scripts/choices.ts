@@ -1503,7 +1503,8 @@ class Choices {
   }: Pick<KeyDownAction, 'event' | 'activeItems' | 'hasActiveDropdown'>): void {
     const { target } = event;
     const { ENTER_KEY: enterKey } = KEY_CODES;
-    const targetWasButton = target && target.hasAttribute('data-button');
+    const targetWasButton =
+      target && (target as HTMLElement).hasAttribute('data-button');
 
     if (this._isTextElement && target && target.value) {
       const { value } = this.input;
@@ -1518,7 +1519,7 @@ class Choices {
     }
 
     if (targetWasButton) {
-      this._handleButtonAction(activeItems, target);
+      this._handleButtonAction(activeItems, target as HTMLElement);
       event.preventDefault();
     }
 
@@ -1618,6 +1619,10 @@ class Choices {
     hasFocusedInput,
     activeItems,
   }: Partial<KeyDownAction>): void {
+    if (!event || event.type !== 'KeyboardEvent' || !event.target) {
+      return;
+    }
+
     const { target } = event;
     // If backspace or delete key is pressed and the input has no value
     if (hasFocusedInput && !target.value && !this._isSelectOneElement) {
@@ -1635,7 +1640,7 @@ class Choices {
   _onTouchEnd(event: TouchEvent): void {
     const { target } = event || event.touches[0];
     const touchWasWithinContainer =
-      this._wasTap && this.containerOuter.element.contains(target);
+      this._wasTap && this.containerOuter.element.contains(target as Node);
 
     if (touchWasWithinContainer) {
       const containerWasExactTarget =
@@ -1829,7 +1834,7 @@ class Choices {
   }
 
   _highlightChoice(el: HTMLElement | null = null): void {
-    const choices = Array.from(
+    const choices: HTMLElement[] = Array.from(
       this.dropdown.element.querySelectorAll('[data-choice-selectable]'),
     );
 
@@ -2059,7 +2064,10 @@ class Choices {
     }
   }
 
-  _getTemplate<K extends keyof Templates>(template: K, ...args): Templates[K] {
+  _getTemplate<K extends keyof Templates>(
+    template: K,
+    ...args: any
+  ): HTMLElement | HTMLOptionElement {
     const { classNames } = this.config;
 
     return this._templates[template].call(this, classNames, ...args);

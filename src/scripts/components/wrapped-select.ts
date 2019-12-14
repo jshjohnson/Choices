@@ -4,7 +4,7 @@ import { ClassNames, Item, Choice } from '../interfaces';
 export default class WrappedSelect extends WrappedElement {
   element: HTMLSelectElement;
   classNames: ClassNames;
-  template: () => HTMLElement;
+  template: (data: object) => HTMLOptionElement;
 
   constructor({
     element,
@@ -13,7 +13,7 @@ export default class WrappedSelect extends WrappedElement {
   }: {
     element: HTMLSelectElement;
     classNames: ClassNames;
-    template: () => HTMLElement;
+    template: (data: object) => HTMLOptionElement;
   }) {
     super({ element, classNames });
     this.template = template;
@@ -37,7 +37,7 @@ export default class WrappedSelect extends WrappedElement {
 
   set options(options: Item[] | Choice[]): void {
     const fragment = document.createDocumentFragment();
-    const addOptionToFragment = data => {
+    const addOptionToFragment = (data): void => {
       // Create a standard select option
       const option = this.template(data);
       // Append it to fragment

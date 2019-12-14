@@ -1,24 +1,17 @@
-/**
- * @param {number} min
- * @param {number} max
- * @returns {number}
- */
-export const getRandomNumber = (min, max) =>
+import { EventMap } from '../interfaces';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+export const getRandomNumber = (min: number, max: number): number =>
   Math.floor(Math.random() * (max - min) + min);
 
-/**
- * @param {number} length
- * @returns {string}
- */
-export const generateChars = length =>
+export const generateChars = (length: number): string =>
   Array.from({ length }, () => getRandomNumber(0, 36).toString(36)).join('');
 
-/**
- * @param {HTMLInputElement | HTMLSelectElement} element
- * @param {string} prefix
- * @returns {string}
- */
-export const generateId = (element, prefix) => {
+export const generateId = (
+  element: HTMLInputElement | HTMLSelectElement,
+  prefix: string,
+): string => {
   let id =
     element.id ||
     (element.name && `${element.name}-${generateChars(2)}`) ||
@@ -29,46 +22,31 @@ export const generateId = (element, prefix) => {
   return id;
 };
 
-/**
- * @param {any} obj
- * @returns {string}
- */
-export const getType = obj => Object.prototype.toString.call(obj).slice(8, -1);
+export const getType = (obj: any): string =>
+  Object.prototype.toString.call(obj).slice(8, -1);
 
-/**
- * @param {string} type
- * @param {any} obj
- * @returns {boolean}
- */
-export const isType = (type, obj) =>
+export const isType = (type: string, obj: any): boolean =>
   obj !== undefined && obj !== null && getType(obj) === type;
 
-/**
- * @param {HTMLElement} element
- * @param {HTMLElement} [wrapper={HTMLDivElement}]
- * @returns {HTMLElement}
- */
-export const wrap = (element, wrapper = document.createElement('div')) => {
+export const wrap = (
+  element: HTMLElement,
+  wrapper: HTMLElement = document.createElement('div'),
+): HTMLElement => {
   if (element.nextSibling) {
-    element.parentNode.insertBefore(wrapper, element.nextSibling);
+    element.parentNode &&
+      element.parentNode.insertBefore(wrapper, element.nextSibling);
   } else {
-    element.parentNode.appendChild(wrapper);
+    element.parentNode && element.parentNode.appendChild(wrapper);
   }
 
   return wrapper.appendChild(element);
 };
 
-/**
- * @param {Element} startEl
- * @param {string} selector
- * @param {1 | -1} direction
- * @returns {Element | undefined}
- */
-export const getAdjacentEl = (startEl, selector, direction = 1) => {
-  if (!(startEl instanceof Element) || typeof selector !== 'string') {
-    return undefined;
-  }
-
+export const getAdjacentEl = (
+  startEl: Element,
+  selector: string,
+  direction = 1,
+): Element => {
   const prop = `${direction > 0 ? 'next' : 'previous'}ElementSibling`;
 
   let sibling = startEl[prop];
@@ -82,13 +60,11 @@ export const getAdjacentEl = (startEl, selector, direction = 1) => {
   return sibling;
 };
 
-/**
- * @param {Element} element
- * @param {Element} parent
- * @param {-1 | 1} direction
- * @returns {boolean}
- */
-export const isScrolledIntoView = (element, parent, direction = 1) => {
+export const isScrolledIntoView = (
+  element: HTMLElement,
+  parent: HTMLElement,
+  direction = 1,
+): boolean => {
   if (!element) {
     return false;
   }
@@ -108,11 +84,7 @@ export const isScrolledIntoView = (element, parent, direction = 1) => {
   return isVisible;
 };
 
-/**
- * @param {any} value
- * @returns {any}
- */
-export const sanitise = value => {
+export const sanitise = <T>(value: T | string): T | string => {
   if (typeof value !== 'string') {
     return value;
   }
@@ -124,13 +96,10 @@ export const sanitise = value => {
     .replace(/"/g, '&quot;');
 };
 
-/**
- * @returns {() => (str: string) => Element}
- */
-export const strToEl = (() => {
+export const strToEl = ((): ((str: string) => Element) => {
   const tmpEl = document.createElement('div');
 
-  return str => {
+  return (str): Element => {
     const cleanedInput = str.trim();
     tmpEl.innerHTML = cleanedInput;
     const firldChild = tmpEl.children[0];
@@ -143,33 +112,31 @@ export const strToEl = (() => {
   };
 })();
 
-/**
- * @param {{ label?: string, value: string }} a
- * @param {{ label?: string, value: string }} b
- * @returns {number}
- */
+interface RecordToCompare {
+  value: string;
+  label?: string;
+}
 export const sortByAlpha = (
-  { value, label = value },
-  { value: value2, label: label2 = value2 },
-) =>
+  { value, label = value }: RecordToCompare,
+  { value: value2, label: label2 = value2 }: RecordToCompare,
+): number =>
   label.localeCompare(label2, [], {
     sensitivity: 'base',
     ignorePunctuation: true,
     numeric: true,
   });
 
-/**
- * @param {{ score: number }} a
- * @param {{ score: number }} b
- */
-export const sortByScore = (a, b) => a.score - b.score;
+interface RecordToSort {
+  score: number;
+}
+export const sortByScore = (a: RecordToSort, b: RecordToSort): number =>
+  a.score - b.score;
 
-/**
- * @param {HTMLElement} element
- * @param {string} type
- * @param {object} customArgs
- */
-export const dispatchEvent = (element, type, customArgs = null) => {
+export const dispatchEvent = (
+  element: HTMLElement,
+  type: keyof EventMap,
+  customArgs: object | null = null,
+): boolean => {
   const event = new CustomEvent(type, {
     detail: customArgs,
     bubbles: true,
@@ -179,13 +146,11 @@ export const dispatchEvent = (element, type, customArgs = null) => {
   return element.dispatchEvent(event);
 };
 
-/**
- * @param {array} array
- * @param {any} value
- * @param {string} [key="value"]
- * @returns {boolean}
- */
-export const existsInArray = (array, value, key = 'value') =>
+export const existsInArray = (
+  array: any[],
+  value: string,
+  key = 'value',
+): boolean =>
   array.some(item => {
     if (typeof value === 'string') {
       return item[key] === value.trim();
@@ -194,19 +159,16 @@ export const existsInArray = (array, value, key = 'value') =>
     return item[key] === value;
   });
 
-/**
- * @param {any} obj
- * @returns {any}
- */
-export const cloneObject = obj => JSON.parse(JSON.stringify(obj));
+export const cloneObject = (obj: object): object =>
+  JSON.parse(JSON.stringify(obj));
 
 /**
  * Returns an array of keys present on the first but missing on the second object
- * @param {object} a
- * @param {object} b
- * @returns {string[]}
  */
-export const diff = (a, b) => {
+export const diff = (
+  a: Record<string, any>,
+  b: Record<string, any>,
+): string[] => {
   const aKeys = Object.keys(a).sort();
   const bKeys = Object.keys(b).sort();
 
