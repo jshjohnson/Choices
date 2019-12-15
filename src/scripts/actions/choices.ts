@@ -1,6 +1,32 @@
-import { Action } from 'redux';
 import { ACTION_TYPES } from '../constants';
 import { Choice } from '../interfaces';
+
+export interface AddChoiceAction {
+  type: typeof ACTION_TYPES.ADD_CHOICE;
+  id: number;
+  value: string;
+  label: string;
+  groupId: number;
+  disabled: boolean;
+  elementId: number;
+  customProperties: object;
+  placeholder: boolean;
+  keyCode: number;
+}
+
+export interface FilterChoicesAction {
+  type: typeof ACTION_TYPES.FILTER_CHOICES;
+  results: Choice[];
+}
+
+export interface ActivateChoicesAction {
+  type: typeof ACTION_TYPES.ACTIVATE_CHOICES;
+  active: boolean;
+}
+
+export interface ClearChoicesAction {
+  type: typeof ACTION_TYPES.CLEAR_CHOICES;
+}
 
 export const addChoice = ({
   value,
@@ -12,7 +38,7 @@ export const addChoice = ({
   customProperties,
   placeholder,
   keyCode,
-}): Action & Choice => ({
+}): AddChoiceAction => ({
   type: ACTION_TYPES.ADD_CHOICE,
   value,
   label,
@@ -25,20 +51,16 @@ export const addChoice = ({
   keyCode,
 });
 
-export const filterChoices = (
-  results: Choice[],
-): Action & { results: Choice[] } => ({
+export const filterChoices = (results: Choice[]): FilterChoicesAction => ({
   type: ACTION_TYPES.FILTER_CHOICES,
   results,
 });
 
-export const activateChoices = (
-  active = true,
-): Action & { active: boolean } => ({
+export const activateChoices = (active = true): ActivateChoicesAction => ({
   type: ACTION_TYPES.ACTIVATE_CHOICES,
   active,
 });
 
-export const clearChoices = (): Action => ({
+export const clearChoices = (): ClearChoicesAction => ({
   type: ACTION_TYPES.CLEAR_CHOICES,
 });

@@ -29,6 +29,7 @@ export interface Choice {
   selected?: boolean;
   value: string;
   score?: number;
+  choices?: Choice[];
 }
 
 export interface Group {
@@ -39,7 +40,6 @@ export interface Group {
 }
 export interface Item extends Choice {
   choiceId?: number;
-  keyCode?: number;
   highlighted?: boolean;
 }
 
@@ -179,7 +179,9 @@ export type ActionType =
   | 'ADD_ITEM'
   | 'REMOVE_ITEM'
   | 'HIGHLIGHT_ITEM'
-  | 'CLEAR_ALL';
+  | 'CLEAR_ALL'
+  | 'RESET_TO'
+  | 'SET_IS_LOADING';
 
 export interface Templates {
   containerOuter: (
@@ -813,9 +815,9 @@ export interface Notice {
 }
 
 export interface State {
-  choices: Choice[];
-  groups: Group[];
-  items: Item[];
+  choices: object[];
+  groups: object[];
+  items: object[];
   general: {
     loading: boolean;
   };

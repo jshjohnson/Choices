@@ -21,7 +21,7 @@ const appReducer = combineReducers({
   general,
 });
 
-const rootReducer = (passedState, action) => {
+const rootReducer = (passedState, action): object => {
   let state = passedState;
   // If we are clearing all items, groups and options we reassign
   // state and then pass that state to our proper reducer. This isn't

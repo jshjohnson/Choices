@@ -1,21 +1,26 @@
-import { Action } from 'redux';
-import { Group } from '../interfaces';
+import { Group, State } from '../interfaces';
+import { AddGroupAction } from '../actions/groups';
+import { ClearChoicesAction } from '../actions/choices';
 
 export const defaultState = [];
 
+type ActionTypes = AddGroupAction | ClearChoicesAction;
+
 export default function groups(
   state: Group[] = defaultState,
-  action: Action & Group,
-): Group[] {
+  action: ActionTypes,
+): State['groups'] {
   switch (action.type) {
     case 'ADD_GROUP': {
+      const addGroupAction = action as AddGroupAction;
+
       return [
         ...state,
         {
-          id: action.id,
-          value: action.value,
-          active: action.active,
-          disabled: action.disabled,
+          id: addGroupAction.id,
+          value: addGroupAction.value,
+          active: addGroupAction.active,
+          disabled: addGroupAction.disabled,
         },
       ];
     }

@@ -370,7 +370,7 @@ class Choices {
   }
 
   highlightItem(item: Item, runEvent = true): this {
-    if (!item) {
+    if (!item || !item.id) {
       return this;
     }
 
@@ -392,7 +392,7 @@ class Choices {
   }
 
   unhighlightItem(item: Item): this {
-    if (!item) {
+    if (!item || !item.id) {
       return this;
     }
 
@@ -967,7 +967,9 @@ class Choices {
 
     if (this._isTextElement) {
       // Update the value of the hidden input
-      this.passedElement.value = items;
+      this.passedElement.value = items
+        .map(({ value }) => value)
+        .join(this.config.delimiter);
     } else {
       // Update the options of the hidden input
       (this.passedElement as WrappedSelect).options = items;
@@ -1912,22 +1914,20 @@ class Choices {
     label = null,
     choiceId = -1,
     groupId = -1,
-    customProperties = null,
+    customProperties = {},
     placeholder = false,
-    keyCode = null,
+    keyCode = -1,
   }: {
     value: string;
     label?: string | null;
     choiceId?: number;
     groupId?: number;
-    customProperties?: object | null;
+    customProperties?: object;
     placeholder?: boolean;
-    keyCode?: number | null;
+    keyCode?: number;
   }): void {
     let passedValue = typeof value === 'string' ? value.trim() : value;
 
-    const passedKeyCode = keyCode;
-    const passedCustomProperties = customProperties;
     const { items } = this._store;
     const passedLabel = label || passedValue;
     const passedOptionId = choiceId || -1;
@@ -1953,7 +1953,7 @@ class Choices {
         groupId,
         customProperties,
         placeholder,
-        keyCode: passedKeyCode,
+        keyCode,
       }),
     );
 
@@ -1966,9 +1966,9 @@ class Choices {
       id,
       value: passedValue,
       label: passedLabel,
-      customProperties: passedCustomProperties,
+      customProperties,
       groupValue: group && group.value ? group.value : null,
-      keyCode: passedKeyCode,
+      keyCode,
     });
   }
 
@@ -1976,6 +1976,10 @@ class Choices {
     const { id, value, label, customProperties, choiceId, groupId } = item;
     const group =
       groupId && groupId >= 0 ? this._store.getGroupById(groupId) : null;
+
+    if (!id || !choiceId) {
+      return;
+    }
 
     this._store.dispatch(removeItem(id, choiceId));
     this.passedElement.triggerEvent(EVENTS.removeItem, {
@@ -1993,18 +1997,18 @@ class Choices {
     isSelected = false,
     isDisabled = false,
     groupId = -1,
-    customProperties = null,
+    customProperties = {},
     placeholder = false,
-    keyCode = null,
+    keyCode = -1,
   }: {
     value: string;
     label?: string | null;
     isSelected?: boolean;
     isDisabled?: boolean;
     groupId?: number;
-    customProperties?: Record<string, any> | null;
+    customProperties?: Record<string, any>;
     placeholder?: boolean;
-    keyCode?: number | null;
+    keyCode?: number;
   }): void {
     if (typeof value === 'undefined' || value === null) {
       return;

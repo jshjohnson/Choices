@@ -106,6 +106,8 @@ export const ACTION_TYPES: Record<ActionType, ActionType> = {
   REMOVE_ITEM: 'REMOVE_ITEM',
   HIGHLIGHT_ITEM: 'HIGHLIGHT_ITEM',
   CLEAR_ALL: 'CLEAR_ALL',
+  RESET_TO: 'RESET_TO',
+  SET_IS_LOADING: 'SET_IS_LOADING',
 };
 
 export const KEY_CODES: KeyCodeMap = {

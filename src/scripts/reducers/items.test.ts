@@ -16,7 +16,7 @@ describe('reducers/items', () => {
       const customProperties = {
         property: 'value',
       };
-      const placeholder = 'This is a placeholder';
+      const placeholder = true;
       const keyCode = 10;
 
       describe('passing expected values', () => {

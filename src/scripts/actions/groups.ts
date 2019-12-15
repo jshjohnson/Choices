@@ -1,13 +1,24 @@
-import { Action } from 'redux';
 import { ACTION_TYPES } from '../constants';
-import { Group } from '../interfaces';
+
+export interface AddGroupAction {
+  type: typeof ACTION_TYPES.ADD_GROUP;
+  id: number;
+  value: string;
+  active: boolean;
+  disabled: boolean;
+}
 
 export const addGroup = ({
   value,
   id,
   active,
   disabled,
-}: Group): Action & Group => ({
+}: {
+  id: number;
+  value: string;
+  active: boolean;
+  disabled: boolean;
+}): AddGroupAction => ({
   type: ACTION_TYPES.ADD_GROUP,
   value,
   id,

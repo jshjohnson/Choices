@@ -1,27 +1,34 @@
-import { Action } from 'redux';
-import { Item } from '../interfaces';
+import { Item, State } from '../interfaces';
+import {
+  AddItemAction,
+  RemoveItemAction,
+  HighlightItemAction,
+} from '../actions/items';
 
 export const defaultState = [];
 
+type ActionTypes = AddItemAction | RemoveItemAction | HighlightItemAction;
+
 export default function items(
   state: Item[] = defaultState,
-  action: Action & Item,
-): Item[] {
+  action: ActionTypes,
+): State['items'] {
   switch (action.type) {
     case 'ADD_ITEM': {
+      const addItemAction = action as AddItemAction;
       // Add object to items array
       const newState = [
         ...state,
         {
-          id: action.id,
-          choiceId: action.choiceId,
-          groupId: action.groupId,
-          value: action.value,
-          label: action.label,
+          id: addItemAction.id,
+          choiceId: addItemAction.choiceId,
+          groupId: addItemAction.groupId,
+          value: addItemAction.value,
+          label: addItemAction.label,
           active: true,
           highlighted: false,
-          customProperties: action.customProperties,
-          placeholder: action.placeholder || false,
+          customProperties: addItemAction.customProperties,
+          placeholder: addItemAction.placeholder || false,
           keyCode: null,
         },
       ];
@@ -47,10 +54,12 @@ export default function items(
     }
 
     case 'HIGHLIGHT_ITEM': {
+      const highlightItemAction = action as HighlightItemAction;
+
       return state.map(obj => {
         const item = obj;
-        if (item.id === action.id) {
-          item.highlighted = action.highlighted;
+        if (item.id === highlightItemAction.id) {
+          item.highlighted = highlightItemAction.highlighted;
         }
 
         return item;

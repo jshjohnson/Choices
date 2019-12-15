@@ -1,18 +1,30 @@
-import { Action } from 'redux';
 import { State } from '../interfaces';
+import { ACTION_TYPES } from '../constants';
 
-export const clearAll = (): Action => ({
-  type: 'CLEAR_ALL',
+export interface ClearAllAction {
+  type: typeof ACTION_TYPES.CLEAR_ALL;
+}
+
+export interface ResetToAction {
+  type: typeof ACTION_TYPES.RESET_TO;
+  state: State;
+}
+
+export interface SetIsLoadingAction {
+  type: typeof ACTION_TYPES.SET_IS_LOADING;
+  isLoading: boolean;
+}
+
+export const clearAll = (): ClearAllAction => ({
+  type: ACTION_TYPES.CLEAR_ALL,
 });
 
-export const resetTo = (state: State): Action & { state: State } => ({
-  type: 'RESET_TO',
+export const resetTo = (state: State): ResetToAction => ({
+  type: ACTION_TYPES.RESET_TO,
   state,
 });
 
-export const setIsLoading = (
-  isLoading: boolean,
-): Action & { isLoading: boolean } => ({
-  type: 'SET_IS_LOADING',
+export const setIsLoading = (isLoading: boolean): SetIsLoadingAction => ({
+  type: ACTION_TYPES.SET_IS_LOADING,
   isLoading,
 });

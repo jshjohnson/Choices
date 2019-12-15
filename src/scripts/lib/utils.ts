@@ -1,4 +1,4 @@
-import { EventMap } from '../interfaces';
+import { EventMap, Choice } from '../interfaces';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -126,10 +126,12 @@ export const sortByAlpha = (
     numeric: true,
   });
 
-export const sortByScore = (
-  a: { score: number },
-  b: { score: number },
-): number => a.score - b.score;
+export const sortByScore = (a: Choice, b: Choice): number => {
+  const { score: scoreA = 0 } = a;
+  const { score: scoreB = 0 } = b;
+
+  return scoreA - scoreB;
+};
 
 export const dispatchEvent = (
   element: HTMLElement,
