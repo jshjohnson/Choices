@@ -33,7 +33,6 @@ describe('reducers/choices', () => {
               selected: false,
               active: true,
               score: 9999,
-              keyCode: null,
             },
           ];
 
@@ -69,7 +68,6 @@ describe('reducers/choices', () => {
                 selected: false,
                 active: true,
                 score: 9999,
-                keyCode: null,
               },
             ];
 
@@ -104,7 +102,6 @@ describe('reducers/choices', () => {
                 selected: false,
                 active: true,
                 score: 9999,
-                keyCode: null,
               },
             ];
 
@@ -144,7 +141,6 @@ describe('reducers/choices', () => {
           score: 9999,
           customProperties: null,
           placeholder: false,
-          keyCode: null,
         },
         {
           id: 2,
@@ -158,7 +154,6 @@ describe('reducers/choices', () => {
           score: 9999,
           customProperties: null,
           placeholder: false,
-          keyCode: null,
         },
       ];
     });
@@ -226,39 +221,30 @@ describe('reducers/choices', () => {
     });
 
     describe('ADD_ITEM', () => {
-      it('disables choice if action has choice id', () => {
-        const id = 2;
-        const clonedState = state.slice(0);
-        const expectedResponse = [
-          {
-            ...state[0],
-          },
-          {
-            ...state[1],
-            selected: true,
-          },
-        ];
+      describe('when action has a choice id', () => {
+        it('disables choice corresponding with id', () => {
+          const id = 2;
+          const clonedState = state.slice(0);
+          const expectedResponse = [
+            {
+              ...state[0],
+            },
+            {
+              ...state[1],
+              selected: true,
+            },
+          ];
 
-        const actualResponse = choices(clonedState, {
-          type: 'ADD_ITEM',
-          choiceId: id,
+          const actualResponse = choices(clonedState, {
+            type: 'ADD_ITEM',
+            choiceId: id,
+          });
+
+          expect(actualResponse).to.eql(expectedResponse);
         });
-
-        expect(actualResponse).to.eql(expectedResponse);
       });
 
-      it('activates all choices if active flag passed', () => {
-        const clonedState = state.slice(0);
-        const actualResponse = choices(clonedState, {
-          type: 'ADD_ITEM',
-          active: true,
-        });
-
-        expect(actualResponse[0].active).to.equal(true);
-        expect(actualResponse[1].active).to.equal(true);
-      });
-
-      describe('neither of the above conditions are satisified', () => {
+      describe('when action has no choice id', () => {
         it('returns state', () => {
           const clonedState = state.slice(0);
           const actualResponse = choices(clonedState, {
