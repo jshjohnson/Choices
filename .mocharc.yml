@@ -1,7 +1,8 @@
 require:
   - 'ts-node/register'
   - './config/jsdom.js'
-
 exit: true
-
 spec: src/**/*.test.ts
+extension:
+  - ts
+  - js

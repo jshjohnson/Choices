@@ -8,6 +8,7 @@ import { EVENTS, ACTION_TYPES, DEFAULT_CONFIG, KEY_CODES } from './constants';
 import { WrappedSelect, WrappedInput } from './components/index';
 import { removeItem } from './actions/items';
 import { Item, Choice, Group } from './interfaces';
+import templates from './templates';
 
 chai.use(sinonChai);
 
@@ -382,8 +383,8 @@ describe('choices', () => {
           expect(clearStoreSpy.called).to.equal(true);
         });
 
-        it('nullifys templates config', () => {
-          expect(instance._templates).to.equal(null);
+        it('restes templates config', () => {
+          expect(instance._templates).to.deep.equal(templates);
         });
 
         it('resets initialise flag', () => {
@@ -1206,7 +1207,9 @@ describe('choices', () => {
           expect(handleLoadingStateSpy.callCount).to.equal(2);
           expect(choice._store.choices[1].value).to.equal('v2');
           expect(choice._store.choices[1].label).to.equal('l2');
-          expect(choice._store.choices[1].customProperties).to.equal('prop2');
+          expect(choice._store.choices[1].customProperties).to.deep.equal({
+            prop2: false,
+          });
         });
       });
     });
@@ -1581,11 +1584,15 @@ describe('choices', () => {
           id: 1,
           value: '1',
           label: 'Test 1',
+          selected: false,
+          disabled: false,
         },
         {
           id: 2,
           value: '2',
           label: 'Test 2',
+          selected: false,
+          disabled: true,
         },
       ];
       const groups: Group[] = [
@@ -1672,10 +1679,10 @@ describe('choices', () => {
               expect(call.args[0]).to.eql({
                 value: choices[index][value],
                 label: choices[index][label],
-                isSelected: choices[index].selected,
-                isDisabled: choices[index].disabled,
+                isSelected: !!choices[index].selected,
+                isDisabled: !!choices[index].disabled,
                 customProperties: choices[index].customProperties,
-                placeholder: choices[index].placeholder,
+                placeholder: !!choices[index].placeholder,
               });
             });
           });
@@ -1963,12 +1970,12 @@ describe('choices', () => {
         });
 
         describe('when a placeholder option is not defined', () => {
-          it('returns false', () => {
+          it('returns null', () => {
             instance._isSelectElement = true;
             instance.passedElement.placeholderOption = undefined;
 
             const value = instance._generatePlaceholderValue();
-            expect(value).to.equal(false);
+            expect(value).to.equal(null);
           });
         });
       });
@@ -2008,7 +2015,7 @@ describe('choices', () => {
             });
 
             describe('when the placeholder attribute is not defined on the passed element', () => {
-              it('returns false', () => {
+              it('returns null', () => {
                 instance._isSelectElement = false;
                 instance.config.placeholder = true;
                 instance.config.placeholderValue = undefined;
@@ -2019,32 +2026,25 @@ describe('choices', () => {
                 };
 
                 const value = instance._generatePlaceholderValue();
-                expect(value).to.equal(false);
+                expect(value).to.equal(null);
               });
             });
           });
         });
 
         describe('when the placeholder config option is set to false', () => {
-          it('returns false', () => {
+          it('returns null', () => {
             instance._isSelectElement = false;
             instance.config.placeholder = false;
 
             const value = instance._generatePlaceholderValue();
-            expect(value).to.equal(false);
+            expect(value).to.equal(null);
           });
         });
       });
     });
 
     describe('_getTemplate', () => {
-      describe('when not passing a template key', () => {
-        it('returns null', () => {
-          output = instance._getTemplate();
-          expect(output).to.equal(null);
-        });
-      });
-
       describe('when passing a template key', () => {
         it('returns the generated template for the given template key', () => {
           const templateKey = 'test';

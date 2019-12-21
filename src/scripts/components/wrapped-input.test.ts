@@ -56,27 +56,11 @@ describe('components/wrappedInput', () => {
   });
 
   describe('value setter', () => {
-    const data = [
-      {
-        id: 'ID 1',
-        value: 'Value 1',
-      },
-      {
-        id: 'ID 2',
-        value: 'Value 2',
-      },
-      {
-        id: 'ID 3',
-        value: 'Value 3',
-      },
-    ];
-
-    it('sets delimited value of element based on passed data', () => {
+    it('sets the value of the input to the given value', () => {
+      const newValue = 'Value 1, Value 2, Value 3';
       expect(instance.element.value).to.equal('');
-      instance.value = data;
-      expect(instance.value).to.equal(
-        `Value 1${delimiter}Value 2${delimiter}Value 3`,
-      );
+      instance.value = newValue;
+      expect(instance.value).to.equal(newValue);
     });
   });
 });

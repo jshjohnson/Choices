@@ -421,7 +421,7 @@ class Choices {
   }
 
   unhighlightAll(): this {
-    this._store.items.forEach(item => this.unhighlightItem(item));
+    this._store.items.forEach(this.unhighlightItem);
 
     return this;
   }
