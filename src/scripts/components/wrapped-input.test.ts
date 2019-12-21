@@ -34,10 +34,12 @@ describe('components/wrappedInput', () => {
   });
 
   describe('inherited methods', () => {
-    ['conceal', 'reveal', 'enable', 'disable'].forEach(method => {
+    const methods: string[] = ['conceal', 'reveal', 'enable', 'disable'];
+
+    methods.forEach(method => {
       describe(method, () => {
         beforeEach(() => {
-          stub(WrappedElement.prototype, method);
+          stub(WrappedElement.prototype, method as keyof WrappedElement);
         });
 
         afterEach(() => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-new-wrappers */
 import { expect } from 'chai';
 import { stub } from 'sinon';
 import {
@@ -140,19 +141,19 @@ describe('utils', () => {
 
       it('sorts by label alphabetically', () => {
         const values = [
-          { label: 'The Strokes' },
-          { label: 'Arctic Monkeys' },
-          { label: 'Oasis' },
-          { label: 'Tame Impala' },
+          { value: '0', label: 'The Strokes' },
+          { value: '0', label: 'Arctic Monkeys' },
+          { value: '0', label: 'Oasis' },
+          { value: '0', label: 'Tame Impala' },
         ];
 
         const output = values.sort(sortByAlpha);
 
         expect(output).to.eql([
-          { label: 'Arctic Monkeys' },
-          { label: 'Oasis' },
-          { label: 'Tame Impala' },
-          { label: 'The Strokes' },
+          { value: '0', label: 'Arctic Monkeys' },
+          { value: '0', label: 'Oasis' },
+          { value: '0', label: 'Tame Impala' },
+          { value: '0', label: 'The Strokes' },
         ]);
       });
     });
@@ -185,12 +186,12 @@ describe('utils', () => {
       const fakeElement = {
         dispatchEvent: stub(),
       };
-      const eventType = 'testEvent';
+      const eventType = 'addItem';
       const customArgs = {
         testing: true,
       };
 
-      dispatchEvent(fakeElement, eventType, customArgs);
+      dispatchEvent(fakeElement as any, eventType, customArgs);
 
       expect(fakeElement.dispatchEvent.called).to.equal(true);
       const event = fakeElement.dispatchEvent.lastCall.args[0];

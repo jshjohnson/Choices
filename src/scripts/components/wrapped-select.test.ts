@@ -32,7 +32,7 @@ describe('components/wrappedSelect', () => {
     document.body.appendChild(element);
 
     instance = new WrappedSelect({
-      element: document.getElementById('target'),
+      element: document.getElementById('target') as HTMLSelectElement,
       classNames: DEFAULT_CLASSNAMES,
       template: spy(Templates.option),
     });
@@ -54,9 +54,11 @@ describe('components/wrappedSelect', () => {
   });
 
   describe('inherited methods', () => {
-    ['conceal', 'reveal', 'enable', 'disable'].forEach(method => {
+    const methods: string[] = ['conceal', 'reveal', 'enable', 'disable'];
+
+    methods.forEach(method => {
       beforeEach(() => {
-        stub(WrappedElement.prototype, method);
+        stub(WrappedElement.prototype, method as keyof WrappedElement);
       });
 
       afterEach(() => {

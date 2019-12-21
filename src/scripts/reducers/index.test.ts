@@ -11,9 +11,9 @@ describe('reducers/rootReducer', () => {
   it('returns expected reducers', () => {
     const state = store.getState();
 
-    expect(state.groups).to.equal(groups(undefined, {}));
-    expect(state.choices).to.equal(choices(undefined, {}));
-    expect(state.items).to.equal(items(undefined, {}));
+    expect(state.groups).to.equal(groups(undefined, {} as any));
+    expect(state.choices).to.equal(choices(undefined, {} as any));
+    expect(state.items).to.equal(items(undefined, {} as any));
   });
 
   describe('CLEAR_ALL', () => {

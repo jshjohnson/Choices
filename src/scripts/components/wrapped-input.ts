@@ -1,5 +1,5 @@
 import WrappedElement from './wrapped-element';
-import { ClassNames, Item } from '../interfaces';
+import { ClassNames } from '../interfaces';
 
 export default class WrappedInput extends WrappedElement {
   element: HTMLInputElement;

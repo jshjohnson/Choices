@@ -1,9 +1,10 @@
 import { expect } from 'chai';
 import items, { defaultState } from './items';
+import { RemoveItemAction } from '../actions/items';
 
 describe('reducers/items', () => {
   it('should return same state when no action matches', () => {
-    expect(items(defaultState, {})).to.equal(defaultState);
+    expect(items(defaultState, {} as any)).to.equal(defaultState);
   });
 
   describe('when items do not exist', () => {
@@ -148,7 +149,7 @@ describe('reducers/items', () => {
         const actualResponse = items(clonedState, {
           type: 'REMOVE_ITEM',
           id,
-        });
+        } as RemoveItemAction);
 
         expect(actualResponse).to.eql(expectedResponse);
       });

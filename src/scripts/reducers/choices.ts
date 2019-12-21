@@ -1,4 +1,4 @@
-import { Choice, State } from '../interfaces';
+import { Choice } from '../interfaces';
 import {
   AddChoiceAction,
   FilterChoicesAction,
@@ -8,11 +8,6 @@ import {
 import { AddItemAction, RemoveItemAction } from '../actions/items';
 
 export const defaultState = [];
-
-interface Result {
-  item: Choice;
-  score: number;
-}
 
 type ActionTypes =
   | AddChoiceAction
@@ -25,7 +20,7 @@ type ActionTypes =
 export default function choices(
   state: Choice[] = defaultState,
   action: ActionTypes,
-): State['choices'] {
+): Choice[] {
   switch (action.type) {
     case 'ADD_CHOICE': {
       const addChoiceAction = action as AddChoiceAction;
@@ -41,7 +36,6 @@ export default function choices(
         score: 9999,
         customProperties: addChoiceAction.customProperties,
         placeholder: addChoiceAction.placeholder || false,
-        keyCode: null,
       };
 
       /*
@@ -49,7 +43,7 @@ export default function choices(
         A selected choice has been added to the passed input's value (added as an item)
         An active choice appears within the choice dropdown
       */
-      return [...state, choice];
+      return [...state, choice as Choice];
     }
 
     case 'ADD_ITEM': {
@@ -97,17 +91,15 @@ export default function choices(
         const choice = obj;
         // Set active state based on whether choice is
         // within filtered results
-        choice.active = filterChoicesAction.results.some(
-          ({ item, score }: Result) => {
-            if (item.id === choice.id) {
-              choice.score = score;
+        choice.active = filterChoicesAction.results.some(({ item, score }) => {
+          if (item.id === choice.id) {
+            choice.score = score;
 
-              return true;
-            }
+            return true;
+          }
 
-            return false;
-          },
-        );
+          return false;
+        });
 
         return choice;
       });

@@ -13,7 +13,6 @@ describe('components/input', () => {
       element: choicesElement,
       type: 'text',
       classNames: DEFAULT_CLASSNAMES,
-      placeholderValue: null,
       preventPaste: false,
     });
   });
@@ -49,7 +48,7 @@ describe('components/input', () => {
       expect(['input', 'paste', 'focus', 'blur']).to.have.members(
         Array.from(
           { length: addEventListenerStub.callCount },
-          (v, i) => addEventListenerStub.getCall(i).args[0],
+          (_, i) => addEventListenerStub.getCall(i).args[0],
         ),
       );
     });

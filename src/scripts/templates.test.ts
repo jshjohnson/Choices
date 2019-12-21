@@ -7,7 +7,7 @@ import { strToEl } from './lib/utils';
  * @param {HTMLElement} element1
  * @param {HTMLElement} element2
  */
-function expectEqualElements(element1, element2) {
+function expectEqualElements(element1, element2): void {
   expect(element1.tagName).to.equal(element2.tagName);
   expect(element1.attributes.length).to.equal(element2.attributes.length);
   expect(Object.keys(element1.dataset)).to.have.members(
@@ -516,11 +516,10 @@ describe('templates', () => {
     };
 
     it('returns expected html', () => {
-      const value = 'test';
       const expectedOutput = strToEl(
         `<div class="${classes.list} ${classes.listDropdown}" aria-expanded="false"></div>`,
       );
-      const actualOutput = templates.dropdown(classes, value);
+      const actualOutput = templates.dropdown(classes);
 
       expectEqualElements(actualOutput, expectedOutput);
     });

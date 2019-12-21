@@ -3,13 +3,13 @@ import groups, { defaultState } from './groups';
 
 describe('reducers/groups', () => {
   it('should return same state when no action matches', () => {
-    expect(groups(defaultState, {})).to.equal(defaultState);
+    expect(groups(defaultState, {} as any)).to.equal(defaultState);
   });
 
   describe('when groups do not exist', () => {
     describe('ADD_GROUP', () => {
       it('adds group', () => {
-        const id = '1';
+        const id = 1;
         const value = 'Group one';
         const active = true;
         const disabled = false;

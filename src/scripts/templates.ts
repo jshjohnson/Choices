@@ -1,26 +1,19 @@
-import {
-  Templates,
-  ClassNames,
-  Item,
-  Choice,
-  Group,
-  PassedElement,
-} from './interfaces';
+import { ClassNames, Item, Choice, Group, PassedElement } from './interfaces';
 
 /**
  * Helpers to create HTML elements used by Choices
  * Can be overridden by providing `callbackOnCreateTemplates` option
  */
 
-export const TEMPLATES: Templates = {
+const templates = {
   containerOuter(
-    { containerOuter }: ClassNames,
+    { containerOuter }: Pick<ClassNames, 'containerOuter'>,
     dir: HTMLElement['dir'],
     isSelectElement: boolean,
     isSelectOneElement: boolean,
     searchEnabled: boolean,
     passedElementType: PassedElement['type'],
-  ) {
+  ): HTMLDivElement {
     const div = Object.assign(document.createElement('div'), {
       className: containerOuter,
     });
@@ -48,22 +41,31 @@ export const TEMPLATES: Templates = {
     return div;
   },
 
-  containerInner({ containerInner }: ClassNames) {
+  containerInner({
+    containerInner,
+  }: Pick<ClassNames, 'containerInner'>): HTMLDivElement {
     return Object.assign(document.createElement('div'), {
       className: containerInner,
     });
   },
 
   itemList(
-    { list, listSingle, listItems }: ClassNames,
+    {
+      list,
+      listSingle,
+      listItems,
+    }: Pick<ClassNames, 'list' | 'listSingle' | 'listItems'>,
     isSelectOneElement: boolean,
-  ) {
+  ): HTMLDivElement {
     return Object.assign(document.createElement('div'), {
       className: `${list} ${isSelectOneElement ? listSingle : listItems}`,
     });
   },
 
-  placeholder({ placeholder }: ClassNames, value: string) {
+  placeholder(
+    { placeholder }: Pick<ClassNames, 'placeholder'>,
+    value: string,
+  ): HTMLDivElement {
     return Object.assign(document.createElement('div'), {
       className: placeholder,
       innerHTML: value,
@@ -71,7 +73,16 @@ export const TEMPLATES: Templates = {
   },
 
   item(
-    { item, button, highlightedState, itemSelectable, placeholder }: ClassNames,
+    {
+      item,
+      button,
+      highlightedState,
+      itemSelectable,
+      placeholder,
+    }: Pick<
+      ClassNames,
+      'item' | 'button' | 'highlightedState' | 'itemSelectable' | 'placeholder'
+    >,
     {
       id,
       value,
@@ -83,7 +94,7 @@ export const TEMPLATES: Templates = {
       placeholder: isPlaceholder,
     }: Item,
     removeItemButton: boolean,
-  ) {
+  ): HTMLDivElement {
     const div = Object.assign(document.createElement('div'), {
       className: item,
       innerHTML: label,
@@ -133,7 +144,10 @@ export const TEMPLATES: Templates = {
     return div;
   },
 
-  choiceList({ list }: ClassNames, isSelectOneElement: boolean) {
+  choiceList(
+    { list }: Pick<ClassNames, 'list'>,
+    isSelectOneElement: boolean,
+  ): HTMLDivElement {
     const div = Object.assign(document.createElement('div'), {
       className: list,
     });
@@ -147,9 +161,13 @@ export const TEMPLATES: Templates = {
   },
 
   choiceGroup(
-    { group, groupHeading, itemDisabled }: ClassNames,
+    {
+      group,
+      groupHeading,
+      itemDisabled,
+    }: Pick<ClassNames, 'group' | 'groupHeading' | 'itemDisabled'>,
     { id, value, disabled }: Group,
-  ) {
+  ): HTMLDivElement {
     const div = Object.assign(document.createElement('div'), {
       className: `${group} ${disabled ? itemDisabled : ''}`,
     });
@@ -184,7 +202,15 @@ export const TEMPLATES: Templates = {
       selectedState,
       itemDisabled,
       placeholder,
-    }: ClassNames,
+    }: Pick<
+      ClassNames,
+      | 'item'
+      | 'itemChoice'
+      | 'itemSelectable'
+      | 'selectedState'
+      | 'itemDisabled'
+      | 'placeholder'
+    >,
     {
       id,
       value,
@@ -233,7 +259,7 @@ export const TEMPLATES: Templates = {
   },
 
   input(
-    { input, inputCloned }: ClassNames,
+    { input, inputCloned }: Pick<ClassNames, 'input' | 'inputCloned'>,
     placeholderValue: string,
   ): HTMLInputElement {
     const inp = Object.assign(document.createElement('input'), {
@@ -251,7 +277,10 @@ export const TEMPLATES: Templates = {
     return inp;
   },
 
-  dropdown({ list, listDropdown }: ClassNames): HTMLDivElement {
+  dropdown({
+    list,
+    listDropdown,
+  }: Pick<ClassNames, 'list' | 'listDropdown'>): HTMLDivElement {
     const div = document.createElement('div');
 
     div.classList.add(list, listDropdown);
@@ -261,7 +290,12 @@ export const TEMPLATES: Templates = {
   },
 
   notice(
-    { item, itemChoice, noResults, noChoices }: ClassNames,
+    {
+      item,
+      itemChoice,
+      noResults,
+      noChoices,
+    }: Pick<ClassNames, 'item' | 'itemChoice' | 'noResults' | 'noChoices'>,
     innerHTML: string,
     type: 'no-choices' | 'no-results' | '' = '',
   ): HTMLDivElement {
@@ -298,4 +332,4 @@ export const TEMPLATES: Templates = {
   },
 };
 
-export default TEMPLATES;
+export default templates;

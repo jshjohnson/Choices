@@ -33,7 +33,7 @@ describe('reducers/store', () => {
 
   describe('subscribe', () => {
     it('wraps redux subscribe method', () => {
-      const onChange = () => {};
+      const onChange = (): void => {};
       expect(subscribeStub.callCount).to.equal(0);
       instance.subscribe(onChange);
       expect(subscribeStub.callCount).to.equal(1);

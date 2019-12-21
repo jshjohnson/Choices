@@ -14,9 +14,14 @@ export interface AddChoiceAction {
   keyCode: number;
 }
 
+export interface Result<T> {
+  item: T;
+  score: number;
+}
+
 export interface FilterChoicesAction {
   type: typeof ACTION_TYPES.FILTER_CHOICES;
-  results: Choice[];
+  results: Result<Choice>[];
 }
 
 export interface ActivateChoicesAction {
@@ -51,7 +56,9 @@ export const addChoice = ({
   keyCode,
 });
 
-export const filterChoices = (results: Choice[]): FilterChoicesAction => ({
+export const filterChoices = (
+  results: Result<Choice>[],
+): FilterChoicesAction => ({
   type: ACTION_TYPES.FILTER_CHOICES,
   results,
 });

@@ -1,21 +1,22 @@
 import { expect } from 'chai';
 import choices, { defaultState } from './choices';
+import { Choice } from '../interfaces';
 
 describe('reducers/choices', () => {
   it('should return same state when no action matches', () => {
-    expect(choices(defaultState, {})).to.equal(defaultState);
+    expect(choices(defaultState, {} as any)).to.equal(defaultState);
   });
 
   describe('when choices do not exist', () => {
     describe('ADD_CHOICE', () => {
       const value = 'test';
       const label = 'test';
-      const id = 'test';
-      const groupId = 'test';
+      const id = 1;
+      const groupId = 1;
       const disabled = false;
-      const elementId = 'test';
-      const customProperties = 'test';
-      const placeholder = 'test';
+      const elementId = 1;
+      const customProperties = { test: true };
+      const placeholder = true;
 
       describe('passing expected values', () => {
         it('adds choice', () => {
@@ -75,7 +76,7 @@ describe('reducers/choices', () => {
             const actualResponse = choices(undefined, {
               type: 'ADD_CHOICE',
               value,
-              label: null,
+              label: undefined,
               id,
               groupId,
               disabled,
@@ -110,7 +111,7 @@ describe('reducers/choices', () => {
             const actualResponse = choices(undefined, {
               type: 'ADD_CHOICE',
               value,
-              label: null,
+              label: undefined,
               id,
               groupId,
               disabled,
@@ -178,9 +179,7 @@ describe('reducers/choices', () => {
           type: 'FILTER_CHOICES',
           results: [
             {
-              item: {
-                id,
-              },
+              item: { id } as Choice,
               score,
             },
           ],
@@ -248,11 +247,10 @@ describe('reducers/choices', () => {
         expect(actualResponse).to.eql(expectedResponse);
       });
 
-      it('activates all choices if activateOptions flag passed', () => {
+      it('activates all choices if active flag passed', () => {
         const clonedState = state.slice(0);
         const actualResponse = choices(clonedState, {
           type: 'ADD_ITEM',
-          activateOptions: true,
           active: true,
         });
 
@@ -265,7 +263,6 @@ describe('reducers/choices', () => {
           const clonedState = state.slice(0);
           const actualResponse = choices(clonedState, {
             type: 'ADD_ITEM',
-            activateOptions: false,
             choiceId: undefined,
           });
 

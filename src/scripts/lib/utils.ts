@@ -126,7 +126,10 @@ export const sortByAlpha = (
     numeric: true,
   });
 
-export const sortByScore = (a: Choice, b: Choice): number => {
+export const sortByScore = (
+  a: Pick<Choice, 'score'>,
+  b: Pick<Choice, 'score'>,
+): number => {
   const { score: scoreA = 0 } = a;
   const { score: scoreB = 0 } = b;
 

@@ -13,7 +13,7 @@ describe('components/container', () => {
 
     document.body.appendChild(element);
     instance = new Container({
-      element: document.getElementById('container'),
+      element: document.getElementById('container') as HTMLElement,
       classNames: DEFAULT_CLASSNAMES,
       position: 'auto',
       type: 'text',
@@ -383,7 +383,7 @@ describe('components/container', () => {
     });
 
     afterEach(() => {
-      document.getElementById('wrap-test').remove();
+      document.getElementById('wrap-test')!.remove();
     });
 
     it('wraps passed element inside element', () => {
@@ -406,7 +406,7 @@ describe('components/container', () => {
     });
 
     afterEach(() => {
-      document.body.removeChild(document.getElementById('unwrap-test'));
+      document.body.removeChild(document.getElementById('unwrap-test') as Node);
     });
 
     it('moves wrapped element outside of element', () => {

@@ -1,5 +1,5 @@
 import WrappedElement from './wrapped-element';
-import { ClassNames, Item, Choice } from '../interfaces';
+import { ClassNames, Item } from '../interfaces';
 
 export default class WrappedSelect extends WrappedElement {
   element: HTMLSelectElement;
@@ -35,7 +35,7 @@ export default class WrappedSelect extends WrappedElement {
     return Array.from(this.element.options);
   }
 
-  set options(options: Item[] | Choice[]): void {
+  set options(options: Item[] | HTMLOptionElement[]) {
     const fragment = document.createDocumentFragment();
     const addOptionToFragment = (data): void => {
       // Create a standard select option

@@ -19,12 +19,13 @@ import {
   SELECT_ONE_TYPE,
   SELECT_MULTIPLE_TYPE,
 } from './constants';
-import { TEMPLATES } from './templates';
+import templates from './templates';
 import {
   addChoice,
   filterChoices,
   activateChoices,
   clearChoices,
+  Result,
 } from './actions/choices';
 import { addItem, removeItem, highlightItem } from './actions/items';
 import { addGroup } from './actions/groups';
@@ -41,7 +42,6 @@ import {
   diff,
 } from './lib/utils';
 import {
-  Templates,
   Options,
   Choice,
   Item,
@@ -67,14 +67,14 @@ const USER_DEFAULTS: Partial<Options> = {};
 class Choices {
   static get defaults(): {
     options: Partial<Options>;
-    templates: Templates;
+    templates: typeof templates;
   } {
     return Object.preventExtensions({
       get options(): Partial<Options> {
         return USER_DEFAULTS;
       },
-      get templates(): Templates {
-        return TEMPLATES;
+      get templates(): typeof templates {
+        return templates;
       },
     });
   }
@@ -94,7 +94,7 @@ class Choices {
   _isSelectMultipleElement: boolean;
   _isSelectElement: boolean;
   _store: Store;
-  _templates: Templates;
+  _templates: typeof templates;
   _initialState: State;
   _currentState: State;
   _prevState: State;
@@ -116,7 +116,11 @@ class Choices {
   _presetItems: Item[] | string[];
 
   constructor(
-    element: string | HTMLInputElement | HTMLSelectElement = '[data-choice]',
+    element:
+      | string
+      | Element
+      | HTMLInputElement
+      | HTMLSelectElement = '[data-choice]',
     userConfig: Partial<Options> = {},
   ) {
     this.config = merge.all<Options>(
@@ -183,7 +187,7 @@ class Choices {
       this.passedElement = new WrappedSelect({
         element: passedElement as HTMLSelectElement,
         classNames: this.config.classNames,
-        template: (data: object): HTMLOptionElement =>
+        template: (data: Item): HTMLOptionElement =>
           this._templates.option(data),
       });
     }
@@ -337,7 +341,7 @@ class Choices {
       (this.passedElement as WrappedSelect).options = this._presetOptions;
     }
 
-    this._templates = TEMPLATES;
+    this._templates = templates;
     this.initialised = false;
   }
 
@@ -627,7 +631,7 @@ class Choices {
       if (typeof Promise === 'function' && fetcher instanceof Promise) {
         // that's a promise
         // eslint-disable-next-line compat/compat
-        return new Promise(resolve => requestAnimationFrame(resolve))
+        return new Promise(resolve => requestAnimationFrame(resolve)) // eslint-disable-line compat/compat
           .then(() => this._handleLoadingState(true))
           .then(() => fetcher)
           .then((data: Choice[]) =>
@@ -1294,9 +1298,12 @@ class Choices {
     const haystack = this._store.searchableChoices;
     const needle = newValue;
     const keys = [...this.config.searchFields];
-    const options = Object.assign(this.config.fuseOptions, { keys });
+    const options = Object.assign(this.config.fuseOptions, {
+      keys,
+      includeMatches: true,
+    });
     const fuse = new Fuse(haystack, options);
-    const results = fuse.search(needle);
+    const results: Result<Choice>[] = fuse.search(needle) as any[]; // see https://github.com/krisk/Fuse/issues/303
 
     this._currentValue = newValue;
     this._highlightPosition = 0;
@@ -2091,7 +2098,7 @@ class Choices {
     }
   }
 
-  _getTemplate<K extends keyof Templates>(template: K, ...args: any): any {
+  _getTemplate(template: string, ...args: any): any {
     const { classNames } = this.config;
 
     return this._templates[template].call(this, classNames, ...args);
@@ -2108,7 +2115,7 @@ class Choices {
       userTemplates = callbackOnCreateTemplates.call(this, strToEl);
     }
 
-    this._templates = merge(TEMPLATES, userTemplates);
+    this._templates = merge(templates, userTemplates);
   }
 
   _createElements(): void {

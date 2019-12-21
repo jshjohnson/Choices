@@ -14,7 +14,14 @@ describe('actions/misc', () => {
 
   describe('resetTo action', () => {
     it('returns RESET_TO action', () => {
-      const state = { test: true };
+      const state = {
+        choices: [],
+        items: [],
+        groups: [],
+        general: {
+          loading: false,
+        },
+      };
       const expectedAction = {
         type: 'RESET_TO',
         state,

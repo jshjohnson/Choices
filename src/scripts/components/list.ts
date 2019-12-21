@@ -31,7 +31,7 @@ export default class List {
     this.element.scrollTop = 0;
   }
 
-  scrollToChildElement(element: Element, direction: 1 | -1): void {
+  scrollToChildElement(element: HTMLElement, direction: 1 | -1): void {
     if (!element) {
       return;
     }
