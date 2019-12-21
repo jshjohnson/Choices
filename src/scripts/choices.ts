@@ -421,7 +421,7 @@ class Choices {
   }
 
   unhighlightAll(): this {
-    this._store.items.forEach(this.unhighlightItem);
+    this._store.items.forEach(item => this.unhighlightItem(item));
 
     return this;
   }
@@ -1497,7 +1497,7 @@ class Choices {
   }
 
   _onAKey({ event, hasItems }: Partial<KeyDownAction>): void {
-    if (!event || event.type !== 'KeyboardEvent') {
+    if (!event || !(event instanceof KeyboardEvent)) {
       return;
     }
 
@@ -1646,7 +1646,7 @@ class Choices {
     hasFocusedInput,
     activeItems,
   }: Partial<KeyDownAction>): void {
-    if (!event || event.type !== 'KeyboardEvent' || !event.target) {
+    if (!event || !(event instanceof KeyboardEvent) || !event.target) {
       return;
     }
 
