@@ -11,7 +11,7 @@
     "es6": true,
     "browser": true,
     "mocha": true,
-    "cypress": true
+    "cypress/globals": true
   },
   "parserOptions": {
     "project": "./tsconfig.json",
