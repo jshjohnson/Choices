@@ -255,7 +255,7 @@ class Choices {
           selected: !!o.selected,
           disabled: o.parentNode ? !!o.parentNode.disabled : !!o.disabled,
           placeholder: o.value === '' || o.hasAttribute('placeholder'),
-          customProperties: o.getAttribute('data-custom-properties'),
+          customProperties: o.dataset['custom-properties'],
         });
       });
     }
@@ -1029,9 +1029,7 @@ class Choices {
     }
 
     const itemId =
-      element.parentNode &&
-      (element.parentNode as HTMLElement).dataset['data-id'];
-
+      element.parentNode && (element.parentNode as HTMLElement).dataset.id;
     const itemToRemove =
       itemId && activeItems.find(item => item.id === parseInt(itemId, 10));
 
@@ -1062,7 +1060,7 @@ class Choices {
       return;
     }
 
-    const passedId = element.getAttribute('data-id');
+    const passedId = element.dataset.id;
 
     // We only want to select one item with a click
     // so we deselect any items that aren't the target

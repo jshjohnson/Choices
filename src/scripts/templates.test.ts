@@ -3,7 +3,6 @@ import templates from './templates';
 import { strToEl } from './lib/utils';
 
 /**
- *
  * @param {HTMLElement} element1
  * @param {HTMLElement} element2
  */
