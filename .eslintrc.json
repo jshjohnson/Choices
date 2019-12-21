@@ -64,14 +64,15 @@
   },
   "overrides": [
     {
-      "files": ["*.test.js"],
+      "files": ["*.test.ts"],
       "env": {
         "mocha": true
       },
       "rules": {
         "no-restricted-syntax": "off",
         "compat/compat": "off",
-        "no-new": "off"
+        "no-new": "off",
+        "@typescript-eslint/no-empty-function": "off"
       }
     },
     {

@@ -59,5 +59,8 @@
       "fileMatch": [".prettierrc.json"],
       "url": "http://json.schemastore.org/prettierrc"
     }
-  ]
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
