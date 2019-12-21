@@ -11,7 +11,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitAny": false,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "types": ["cypress"]
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*", "./cypress/**/*"]
 }

@@ -10,7 +10,8 @@
   "env": {
     "es6": true,
     "browser": true,
-    "mocha": true
+    "mocha": true,
+    "cypress": true
   },
   "parserOptions": {
     "project": "./tsconfig.json",
