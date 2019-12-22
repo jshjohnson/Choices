@@ -177,5 +177,17 @@ describe('reducers/items', () => {
         expect(actualResponse).to.eql(expectedResponse);
       });
     });
+
+    describe('CLEAR_ITEMS', () => {
+      it('restores to defaultState', () => {
+        const clonedState = state.slice(0);
+        const expectedResponse = defaultState;
+        const actualResponse = items(clonedState, {
+          type: 'CLEAR_ITEMS',
+        });
+
+        expect(actualResponse).to.eql(expectedResponse);
+      });
+    });
   });
 });

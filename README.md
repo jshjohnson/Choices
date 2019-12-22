@@ -824,12 +824,6 @@ choices.setValue(['Set value 1', 'Set value 2']);
 choices.disable();
 ```
 
-### destroy();
-
-**Input types affected:** `text`, `select-multiple`, `select-one`
-
-**Usage:** Kills the instance of Choices, removes all event listeners and returns passed input to its initial state.
-
 ### init();
 
 **Input types affected:** `text`, `select-multiple`, `select-one`
@@ -837,6 +831,12 @@ choices.disable();
 **Usage:** Creates a new instance of Choices, adds event listeners, creates templates and renders a Choices element to the DOM.
 
 **Note:** This is called implicitly when a new instance of Choices is created. This would be used after a Choices instance had already been destroyed (using `destroy()`).
+
+### destroy();
+
+**Input types affected:** `text`, `select-multiple`, `select-one`
+
+**Usage:** Kills the instance of Choices, removes all event listeners and returns passed input to its initial state.
 
 ### highlightAll();
 
@@ -880,7 +880,7 @@ choices.disable();
 
 **Usage:** Hide option list dropdown (only affects select inputs).
 
-### setChoices(choices, value, label, replaceChoices);
+### setChoices(choices[, value[, label[, replaceChoices]]]);
 
 **Input types affected:** `select-one`, `select-multiple`
 
@@ -966,7 +966,13 @@ example.setChoices(
 
 **Input types affected:** `select-one`, `select-multiple`
 
-**Usage:** Clear all choices from select
+**Usage:** Clear all choices
+
+### clearItems();
+
+**Input types affected:** `text`, `select-one`, `select-multiple`
+
+**Usage:** Clear all items
 
 ### getValue(valueOnly)
 

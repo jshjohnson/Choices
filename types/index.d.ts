@@ -933,7 +933,7 @@ export default class Choices {
    *
    * @param {string} [value = 'value'] - name of `value` field
    * @param {string} [label = 'label'] - name of 'label' field
-   * @param {boolean} [replaceChoices = false] - whether to replace of add choices
+   * @param {boolean} [replaceChoices = false] - whether to clear existing choices
    *
    * @example
    * ```js

@@ -120,6 +120,7 @@ describe('constants', () => {
           'ADD_ITEM',
           'REMOVE_ITEM',
           'HIGHLIGHT_ITEM',
+          'CLEAR_ITEMS',
           'CLEAR_ALL',
         ]);
       });

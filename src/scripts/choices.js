@@ -25,7 +25,12 @@ import {
   activateChoices,
   clearChoices,
 } from './actions/choices';
-import { addItem, removeItem, highlightItem } from './actions/items';
+import {
+  addItem,
+  removeItem,
+  highlightItem,
+  clearItems,
+} from './actions/items';
 import { addGroup } from './actions/groups';
 import { clearAll, resetTo, setIsLoading } from './actions/misc';
 import {
@@ -496,7 +501,7 @@ class Choices {
    * @param {T} [choicesArrayOrFetcher]
    * @param {string} [value = 'value'] - name of `value` field
    * @param {string} [label = 'label'] - name of 'label' field
-   * @param {boolean} [replaceChoices = false] - whether to replace of add choices
+   * @param {boolean} [replaceChoices = false] - whether to clear existing choices
    * @returns {this | Promise<this>}
    *
    * @example
@@ -574,9 +579,9 @@ class Choices {
       );
     }
 
-    // Clear choices if needed
     if (replaceChoices) {
       this.clearChoices();
+      this.clearItems();
     }
 
     if (typeof choicesArrayOrFetcher === 'function') {
@@ -647,6 +652,12 @@ class Choices {
 
   clearChoices() {
     this._store.dispatch(clearChoices());
+
+    return this;
+  }
+
+  clearItems() {
+    this._store.dispatch(clearItems());
 
     return this;
   }

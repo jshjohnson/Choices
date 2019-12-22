@@ -51,3 +51,10 @@ export const highlightItem = (id, highlighted) => ({
   id,
   highlighted,
 });
+
+/**
+ * @returns {Action}
+ */
+export const clearItems = () => ({
+  type: ACTION_TYPES.CLEAR_ITEMS,
+});

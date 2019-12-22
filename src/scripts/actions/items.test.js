@@ -68,4 +68,14 @@ describe('actions/items', () => {
       expect(actions.highlightItem(id, highlighted)).to.eql(expectedAction);
     });
   });
+
+  describe('clearItems action', () => {
+    it('returns CLEAR_ITEMS action', () => {
+      const expectedAction = {
+        type: 'CLEAR_ITEMS',
+      };
+
+      expect(actions.clearItems()).to.eql(expectedAction);
+    });
+  });
 });

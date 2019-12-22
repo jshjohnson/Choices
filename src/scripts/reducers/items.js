@@ -51,6 +51,10 @@ export default function items(state = defaultState, action) {
       });
     }
 
+    case 'CLEAR_ITEMS': {
+      return defaultState;
+    }
+
     default: {
       return state;
     }
