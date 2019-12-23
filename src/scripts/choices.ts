@@ -248,14 +248,15 @@ class Choices {
     }
     // Create array of choices from option elements
     if ((this.passedElement as WrappedSelect).options) {
-      (this.passedElement as WrappedSelect).options.forEach(o => {
+      (this.passedElement as WrappedSelect).options.forEach(option => {
         this._presetChoices.push({
-          value: o.value,
-          label: o.innerHTML,
-          selected: !!o.selected,
-          disabled: o.parentNode ? !!o.parentNode.disabled : !!o.disabled,
-          placeholder: o.value === '' || o.hasAttribute('placeholder'),
-          customProperties: o.dataset['custom-properties'],
+          value: option.value,
+          label: option.innerHTML,
+          selected: !!option.selected,
+          disabled: option.disabled || option.parentNode.disabled,
+          placeholder:
+            option.value === '' || option.hasAttribute('placeholder'),
+          customProperties: option.dataset['custom-properties'],
         });
       });
     }
@@ -1495,7 +1496,7 @@ class Choices {
   }
 
   _onAKey({ event, hasItems }: Partial<KeyDownAction>): void {
-    if (!event || !(event instanceof KeyboardEvent)) {
+    if (!event) {
       return;
     }
 
@@ -1644,7 +1645,7 @@ class Choices {
     hasFocusedInput,
     activeItems,
   }: Partial<KeyDownAction>): void {
-    if (!event || !(event instanceof KeyboardEvent) || !event.target) {
+    if (!event || !event.target) {
       return;
     }
 
@@ -2275,6 +2276,8 @@ class Choices {
 
           const isSelected = shouldPreselect ? true : choice.selected;
           const isDisabled = choice.disabled;
+
+          console.log(isDisabled, choice);
 
           this._addChoice({
             value,
