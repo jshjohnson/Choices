@@ -4,6 +4,7 @@ import rootReducer from '.';
 import groups from './groups';
 import choices from './choices';
 import items from './items';
+import loading from './loading';
 
 describe('reducers/rootReducer', () => {
   const store = createStore(rootReducer);
@@ -14,6 +15,7 @@ describe('reducers/rootReducer', () => {
     expect(state.groups).to.equal(groups(undefined, {} as any));
     expect(state.choices).to.equal(choices(undefined, {} as any));
     expect(state.items).to.equal(items(undefined, {} as any));
+    expect(state.loading).to.equal(loading(undefined, {} as any));
   });
 
   describe('CLEAR_ALL', () => {
@@ -33,9 +35,7 @@ describe('reducers/rootReducer', () => {
         items: [],
         groups: [],
         choices: [],
-        general: {
-          loading: false,
-        },
+        loading: false,
       });
     });
   });

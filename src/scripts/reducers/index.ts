@@ -2,23 +2,21 @@ import { combineReducers } from 'redux';
 import items from './items';
 import groups from './groups';
 import choices from './choices';
-import general from './general';
+import loading from './loading';
 import { cloneObject } from '../lib/utils';
 
 export const defaultState = {
   groups: [],
   items: [],
   choices: [],
-  general: {
-    loading: false,
-  },
+  loading: false,
 };
 
 const appReducer = combineReducers({
   items,
   groups,
   choices,
-  general,
+  loading,
 });
 
 const rootReducer = (passedState, action): object => {
