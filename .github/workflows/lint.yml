@@ -27,10 +27,10 @@ jobs:
 
       - name: run eslint
         run: |
-          CHANGED_JS=$(git --no-pager diff --name-only ..origin/master | grep '^src\/scripts\/.*\.js$' | xargs ls -d 2>/dev/null | paste -sd " " -)
-          if [[ -z $(sed -e 's/[[:space:]]*$//' <<<${CHANGED_JS}) ]]; then CHANGED_JS="src/scripts"; fi
-          echo $CHANGED_JS
-          node node_modules/eslint/bin/eslint.js $CHANGED_JS
+          CHANGED_TS=$(git --no-pager diff --name-only ..origin/master | grep '^src\/scripts\/.*\.ts$' | xargs ls -d 2>/dev/null | paste -sd " " -)
+          if [[ -z $(sed -e 's/[[:space:]]*$//' <<<${CHANGED_TS}) ]]; then CHANGED_TS="src/scripts"; fi
+          echo $CHANGED_TS
+          node node_modules/eslint/bin/eslint.js $CHANGED_TS
 
       - name: Lint JS bundle
         run: |
