@@ -47,7 +47,6 @@ import {
   Item,
   Group,
   Notice,
-  KeyDownAction,
   State,
   PassedElement,
 } from './interfaces';
@@ -1435,27 +1434,22 @@ class Choices {
       }
     }
 
-    // Map keys to key actions
-    const keyDownActions = {
-      [A_KEY]: this._onAKey,
-      [ENTER_KEY]: this._onEnterKey,
-      [ESC_KEY]: this._onEscapeKey,
-      [UP_KEY]: this._onDirectionKey,
-      [PAGE_UP_KEY]: this._onDirectionKey,
-      [DOWN_KEY]: this._onDirectionKey,
-      [PAGE_DOWN_KEY]: this._onDirectionKey,
-      [DELETE_KEY]: this._onDeleteKey,
-      [BACK_KEY]: this._onDeleteKey,
-    };
-
-    if (keyDownActions[keyCode]) {
-      keyDownActions[keyCode]({
-        event,
-        activeItems,
-        hasFocusedInput,
-        hasActiveDropdown,
-        hasItems,
-      });
+    switch (keyCode) {
+      case A_KEY:
+        return this._onAKey(event, hasItems);
+      case ENTER_KEY:
+        return this._onEnterKey(event, activeItems, hasActiveDropdown);
+      case ESC_KEY:
+        return this._onEscapeKey(hasActiveDropdown);
+      case UP_KEY:
+      case PAGE_UP_KEY:
+      case DOWN_KEY:
+      case PAGE_DOWN_KEY:
+        return this._onDirectionKey(event, hasActiveDropdown);
+      case DELETE_KEY:
+      case BACK_KEY:
+        return this._onDeleteKey(event, activeItems, hasFocusedInput);
+      default:
     }
   }
 
@@ -1495,11 +1489,7 @@ class Choices {
     this._canSearch = this.config.searchEnabled;
   }
 
-  _onAKey({ event, hasItems }: Partial<KeyDownAction>): void {
-    if (!event) {
-      return;
-    }
-
+  _onAKey(event: KeyboardEvent, hasItems: boolean): void {
     const { ctrlKey, metaKey } = event;
     const hasCtrlDownKeyPressed = ctrlKey || metaKey;
 
@@ -1518,11 +1508,11 @@ class Choices {
     }
   }
 
-  _onEnterKey({
-    event,
-    activeItems,
-    hasActiveDropdown,
-  }: Pick<KeyDownAction, 'event' | 'activeItems' | 'hasActiveDropdown'>): void {
+  _onEnterKey(
+    event: KeyboardEvent,
+    activeItems: Item[],
+    hasActiveDropdown: boolean,
+  ): void {
     const { target } = event;
     const { ENTER_KEY: enterKey } = KEY_CODES;
     const targetWasButton =
@@ -1565,18 +1555,14 @@ class Choices {
     }
   }
 
-  _onEscapeKey({ hasActiveDropdown }: Partial<KeyDownAction>): void {
+  _onEscapeKey(hasActiveDropdown: boolean): void {
     if (hasActiveDropdown) {
       this.hideDropdown(true);
       this.containerOuter.focus();
     }
   }
 
-  _onDirectionKey({ event, hasActiveDropdown }: Partial<KeyDownAction>): void {
-    if (!event) {
-      return;
-    }
-
+  _onDirectionKey(event: KeyboardEvent, hasActiveDropdown: boolean): void {
     const { keyCode, metaKey } = event;
     const {
       DOWN_KEY: downKey,
@@ -1640,15 +1626,11 @@ class Choices {
     }
   }
 
-  _onDeleteKey({
-    event,
-    hasFocusedInput,
-    activeItems,
-  }: Partial<KeyDownAction>): void {
-    if (!event || !event.target) {
-      return;
-    }
-
+  _onDeleteKey(
+    event: KeyboardEvent,
+    activeItems: Item[],
+    hasFocusedInput: boolean,
+  ): void {
     const { target } = event;
     // If backspace or delete key is pressed and the input has no value
     if (
@@ -1740,13 +1722,13 @@ class Choices {
    * Handles mouseover event over this.dropdown
    * @param {MouseEvent} event
    */
-  _onMouseOver({ target }: Partial<MouseEvent>): void {
+  _onMouseOver({ target }: Pick<MouseEvent, 'target'>): void {
     if (target instanceof HTMLElement && 'choice' in target.dataset) {
       this._highlightChoice(target);
     }
   }
 
-  _onClick({ target }: Partial<MouseEvent>): void {
+  _onClick({ target }: Pick<MouseEvent, 'target'>): void {
     const clickWasWithinContainer = this.containerOuter.element.contains(
       target as Node,
     );
@@ -1780,7 +1762,7 @@ class Choices {
     }
   }
 
-  _onFocus({ target }: Partial<FocusEvent>): void {
+  _onFocus({ target }: Pick<FocusEvent, 'target'>): void {
     const focusWasWithinContainer =
       target && this.containerOuter.element.contains(target as Node);
 

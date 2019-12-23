@@ -740,14 +740,6 @@ export interface Options {
   callbackOnCreateTemplates: ((template: Types.strToEl) => void) | null;
 }
 
-export interface KeyDownAction {
-  event: KeyboardEvent;
-  activeItems: Item[];
-  hasFocusedInput: boolean;
-  hasActiveDropdown: boolean;
-  hasItems: boolean;
-}
-
 // @todo rename
 export interface Notice {
   response: boolean;
