@@ -8,7 +8,8 @@ describe('actions/groups', () => {
       const id = 1;
       const active = true;
       const disabled = false;
-      const expectedAction = {
+
+      const expectedAction: actions.AddGroupAction = {
         type: 'ADD_GROUP',
         value,
         id,

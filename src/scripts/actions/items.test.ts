@@ -13,7 +13,7 @@ describe('actions/items', () => {
       const placeholder = true;
       const keyCode = 10;
 
-      const expectedAction = {
+      const expectedAction: actions.AddItemAction = {
         type: 'ADD_ITEM',
         value,
         label,
@@ -44,7 +44,8 @@ describe('actions/items', () => {
     it('returns REMOVE_ITEM action', () => {
       const id = 1;
       const choiceId = 1;
-      const expectedAction = {
+
+      const expectedAction: actions.RemoveItemAction = {
         type: 'REMOVE_ITEM',
         id,
         choiceId,
@@ -59,7 +60,7 @@ describe('actions/items', () => {
       const id = 1;
       const highlighted = true;
 
-      const expectedAction = {
+      const expectedAction: actions.HighlightItemAction = {
         type: 'HIGHLIGHT_ITEM',
         id,
         highlighted,

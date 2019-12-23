@@ -1,10 +1,11 @@
 import { expect } from 'chai';
 import * as actions from './misc';
+import { State } from '../interfaces';
 
 describe('actions/misc', () => {
   describe('clearAll action', () => {
     it('returns CLEAR_ALL action', () => {
-      const expectedAction = {
+      const expectedAction: actions.ClearAllAction = {
         type: 'CLEAR_ALL',
       };
 
@@ -14,15 +15,13 @@ describe('actions/misc', () => {
 
   describe('resetTo action', () => {
     it('returns RESET_TO action', () => {
-      const state = {
+      const state: State = {
         choices: [],
         items: [],
         groups: [],
-        general: {
-          loading: false,
-        },
+        loading: false,
       };
-      const expectedAction = {
+      const expectedAction: actions.ResetToAction = {
         type: 'RESET_TO',
         state,
       };
@@ -34,7 +33,7 @@ describe('actions/misc', () => {
   describe('setIsLoading action', () => {
     describe('setting loading state to true', () => {
       it('returns expected action', () => {
-        const expectedAction = {
+        const expectedAction: actions.SetIsLoadingAction = {
           type: 'SET_IS_LOADING',
           isLoading: true,
         };
@@ -45,7 +44,7 @@ describe('actions/misc', () => {
 
     describe('setting loading state to false', () => {
       it('returns expected action', () => {
-        const expectedAction = {
+        const expectedAction: actions.SetIsLoadingAction = {
           type: 'SET_IS_LOADING',
           isLoading: false,
         };
