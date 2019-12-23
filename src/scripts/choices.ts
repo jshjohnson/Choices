@@ -1449,7 +1449,10 @@ class Choices {
     }
   }
 
-  _onKeyUp({ target, keyCode }: Partial<KeyboardEvent>): void {
+  _onKeyUp({
+    target,
+    keyCode,
+  }: Pick<KeyboardEvent, 'target' | 'keyCode'>): void {
     const { value } = this.input;
     const { activeItems } = this._store;
     const canAddItem = this._canAddItem(activeItems, value);
