@@ -2371,7 +2371,10 @@ class Choices {
   }
 
   _generatePlaceholderValue(): string | null {
-    if (this._isSelectElement) {
+    if (
+      this._isSelectElement &&
+      (this.passedElement as WrappedSelect).placeholderOption
+    ) {
       const { placeholderOption } = this.passedElement as WrappedSelect;
 
       return placeholderOption ? placeholderOption.text : null;
