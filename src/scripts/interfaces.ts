@@ -750,7 +750,5 @@ export interface State {
   choices: Choice[];
   groups: Group[];
   items: Item[];
-  general: {
-    loading: boolean;
-  };
+  loading: boolean;
 }

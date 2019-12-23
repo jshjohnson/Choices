@@ -271,7 +271,7 @@ class Choices {
     this._onMouseDown = this._onMouseDown.bind(this);
     this._onMouseOver = this._onMouseOver.bind(this);
     this._onFormReset = this._onFormReset.bind(this);
-    this._onAKey = this._onAKey.bind(this);
+    this._onSelectKey = this._onSelectKey.bind(this);
     this._onEnterKey = this._onEnterKey.bind(this);
     this._onEscapeKey = this._onEscapeKey.bind(this);
     this._onDirectionKey = this._onDirectionKey.bind(this);
@@ -1002,20 +1002,16 @@ class Choices {
     });
   }
 
-  _selectPlaceholderChoice(): void {
-    const { placeholderChoice } = this._store;
+  _selectPlaceholderChoice(placeholderChoice: Choice): void {
+    this._addItem({
+      value: placeholderChoice.value,
+      label: placeholderChoice.label,
+      choiceId: placeholderChoice.id,
+      groupId: placeholderChoice.groupId,
+      placeholder: placeholderChoice.placeholder,
+    });
 
-    if (placeholderChoice) {
-      this._addItem({
-        value: placeholderChoice.value,
-        label: placeholderChoice.label,
-        choiceId: placeholderChoice.id,
-        groupId: placeholderChoice.groupId,
-        placeholder: placeholderChoice.placeholder,
-      });
-
-      this._triggerChange(placeholderChoice.value);
-    }
+    this._triggerChange(placeholderChoice.value);
   }
 
   _handleButtonAction(activeItems?: Item[], element?: HTMLElement): void {
@@ -1041,8 +1037,8 @@ class Choices {
     this._removeItem(itemToRemove);
     this._triggerChange(itemToRemove.value);
 
-    if (this._isSelectOneElement) {
-      this._selectPlaceholderChoice();
+    if (this._isSelectOneElement && this._store.placeholderChoice) {
+      this._selectPlaceholderChoice(this._store.placeholderChoice);
     }
   }
 
@@ -1436,7 +1432,7 @@ class Choices {
 
     switch (keyCode) {
       case A_KEY:
-        return this._onAKey(event, hasItems);
+        return this._onSelectKey(event, hasItems);
       case ENTER_KEY:
         return this._onEnterKey(event, activeItems, hasActiveDropdown);
       case ESC_KEY:
@@ -1489,7 +1485,7 @@ class Choices {
     this._canSearch = this.config.searchEnabled;
   }
 
-  _onAKey(event: KeyboardEvent, hasItems: boolean): void {
+  _onSelectKey(event: KeyboardEvent, hasItems: boolean): void {
     const { ctrlKey, metaKey } = event;
     const hasCtrlDownKeyPressed = ctrlKey || metaKey;
 

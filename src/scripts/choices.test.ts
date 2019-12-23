@@ -2066,130 +2066,96 @@ describe('choices', () => {
     });
 
     describe('_onKeyDown', () => {
+      let activeItems;
+      let hasItems;
+      let hasActiveDropdown;
+      let hasFocussedInput;
+
       beforeEach(() => {
         instance.showDropdown = stub();
-        instance._onAKey = stub();
+        instance._onSelectKey = stub();
         instance._onEnterKey = stub();
         instance._onEscapeKey = stub();
         instance._onDirectionKey = stub();
         instance._onDeleteKey = stub();
+
+        ({ activeItems } = instance._store);
+        hasItems = instance.itemList.hasChildren();
+        hasActiveDropdown = instance.dropdown.isActive;
+        hasFocussedInput = instance.input.isFocussed;
       });
 
-      const scenarios = [
-        {
-          keyCode: KEY_CODES.BACK_KEY,
-          expectedFunctionCall: '_onDeleteKey',
-        },
-        {
-          keyCode: KEY_CODES.DELETE_KEY,
-          expectedFunctionCall: '_onDeleteKey',
-        },
-        {
-          keyCode: KEY_CODES.A_KEY,
-          expectedFunctionCall: '_onAKey',
-        },
-        {
-          keyCode: KEY_CODES.ENTER_KEY,
-          expectedFunctionCall: '_onEnterKey',
-        },
-        {
-          keyCode: KEY_CODES.UP_KEY,
-          expectedFunctionCall: '_onDirectionKey',
-        },
-        {
-          keyCode: KEY_CODES.DOWN_KEY,
-          expectedFunctionCall: '_onDirectionKey',
-        },
-        {
-          keyCode: KEY_CODES.DOWN_KEY,
-          expectedFunctionCall: '_onDirectionKey',
-        },
-        {
-          keyCode: KEY_CODES.ESC_KEY,
-          expectedFunctionCall: '_onEscapeKey',
-        },
-      ];
+      describe('direction key', () => {
+        const keyCodes = [
+          KEY_CODES.UP_KEY,
+          KEY_CODES.DOWN_KEY,
+          KEY_CODES.PAGE_UP_KEY,
+          KEY_CODES.PAGE_DOWN_KEY,
+        ];
 
-      describe('when called with a keydown event', () => {
-        scenarios.forEach(({ keyCode, expectedFunctionCall }) => {
-          describe(`when the keyCode is ${keyCode}`, () => {
-            it(`calls ${expectedFunctionCall} with the expected arguments`, () => {
-              const mockEvent = {
-                keyCode,
-              };
+        keyCodes.forEach(keyCode => {
+          it(`calls _onDirectionKey with the expected arguments`, () => {
+            const event = {
+              keyCode,
+            };
 
-              instance._onKeyDown(mockEvent);
+            instance._onKeyDown(event);
 
-              expect(instance[expectedFunctionCall]).to.have.been.calledWith({
-                event: mockEvent,
-                activeItems: instance._store.activeItems,
-                hasActiveDropdown: instance.dropdown.isActive,
-                hasFocusedInput: instance.input.isFocussed,
-                hasItems: instance.itemList.hasChildren(),
-              });
-            });
+            expect(instance._onDirectionKey).to.have.been.calledWith(
+              event,
+              hasActiveDropdown,
+            );
           });
         });
+      });
 
-        describe('select input', () => {
-          describe('when the dropdown is not active', () => {
-            describe('when the key was alpha-numeric', () => {
-              beforeEach(() => {
-                instance._isTextElement = false;
-                instance.dropdown.isActive = false;
-              });
+      describe('select key', () => {
+        it(`calls _onSelectKey with the expected arguments`, () => {
+          const event = {
+            keyCode: KEY_CODES.A_KEY,
+          };
 
-              it('shows the dropdown', () => {
-                instance._onKeyDown({
-                  keyCode: KEY_CODES.A_KEY,
-                });
+          instance._onKeyDown(event);
 
-                expect(instance.showDropdown).to.have.been.calledWith();
-              });
+          expect(instance._onSelectKey).to.have.been.calledWith(
+            event,
+            hasItems,
+          );
+        });
+      });
 
-              describe('when the input is not focussed', () => {
-                beforeEach(() => {
-                  instance.input.isFocussed = false;
-                });
+      describe('enter key', () => {
+        it(`calls _onEnterKey with the expected arguments`, () => {
+          const event = {
+            keyCode: KEY_CODES.ENTER_KEY,
+          };
 
-                it('updates the input value with the character corresponding to the key code', () => {
-                  instance._onKeyDown({
-                    keyCode: KEY_CODES.A_KEY,
-                  });
+          instance._onKeyDown(event);
 
-                  expect(instance.input.value).to.contain('a');
-                });
-              });
+          expect(instance._onEnterKey).to.have.been.calledWith(
+            event,
+            activeItems,
+            hasActiveDropdown,
+          );
+        });
+      });
 
-              describe('when the input is focussed', () => {
-                beforeEach(() => {
-                  instance.input.isFocussed = true;
-                });
+      describe('delete key', () => {
+        const keyCodes = [KEY_CODES.DELETE_KEY, KEY_CODES.BACK_KEY];
 
-                it('does not update the input value', () => {
-                  instance._onKeyDown({
-                    keyCode: KEY_CODES.A_KEY,
-                  });
+        keyCodes.forEach(keyCode => {
+          it(`calls _onDeleteKey with the expected arguments`, () => {
+            const event = {
+              keyCode,
+            };
 
-                  expect(instance.input.value).to.not.contain('a');
-                });
-              });
-            });
+            instance._onKeyDown(event);
 
-            describe('when the input was not alpha-numeric', () => {
-              beforeEach(() => {
-                instance._isTextElement = false;
-                instance.dropdown.isActive = false;
-              });
-
-              it('does not show the dropdown', () => {
-                instance._onKeyDown({
-                  keyCode: KEY_CODES.DELETE_KEY,
-                });
-
-                expect(instance.showDropdown).to.not.have.been.called;
-              });
-            });
+            expect(instance._onDeleteKey).to.have.been.calledWith(
+              event,
+              activeItems,
+              hasFocussedInput,
+            );
           });
         });
       });
