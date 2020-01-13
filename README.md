@@ -316,7 +316,7 @@ Pass an array of objects:
 
 **Input types affected:** `text`
 
-**Usage:** What divides each value. The default delimiter seperates each value with a comma: `"Value 1, Value 2, Value 3"`.
+**Usage:** What divides each value. The default delimiter separates each value with a comma: `"Value 1, Value 2, Value 3"`.
 
 ### paste
 
