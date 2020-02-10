@@ -255,7 +255,7 @@ class Choices {
           disabled: option.disabled || option.parentNode.disabled,
           placeholder:
             option.value === '' || option.hasAttribute('placeholder'),
-          customProperties: option.dataset['custom-properties'],
+          customProperties: option.dataset.customProperties,
         });
       });
     }
@@ -2060,7 +2060,7 @@ class Choices {
           isSelected: choice.selected,
           isDisabled: isOptDisabled,
           groupId,
-          customProperties: choice.customProperties,
+          customProperties: choice.dataset.customProperties,
           placeholder: choice.placeholder,
         });
       };
