@@ -1362,9 +1362,11 @@ class Choices {
   }
 
   _removeEventListeners(): void {
-    const { documentElement } = document;
-
-    documentElement.removeEventListener('touchend', this._onTouchEnd, true);
+    this.containerOuter.element.removeEventListener(
+      'touchend',
+      this._onTouchEnd,
+      true,
+    );
     this.containerOuter.element.removeEventListener(
       'keydown',
       this._onKeyDown,
@@ -1376,8 +1378,11 @@ class Choices {
       true,
     );
 
-    documentElement.removeEventListener('click', this._onClick);
-    documentElement.removeEventListener('touchmove', this._onTouchMove);
+    this.containerOuter.element.removeEventListener('click', this._onClick);
+    this.containerOuter.element.removeEventListener(
+      'touchmove',
+      this._onTouchMove,
+    );
     this.dropdown.element.removeEventListener('mouseover', this._onMouseOver);
 
     if (this._isSelectOneElement) {
