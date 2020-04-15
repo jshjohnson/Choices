@@ -2571,16 +2571,15 @@ function () {
   };
 
   Choices.prototype._addEventListeners = function () {
-    var documentElement = document.documentElement; // capture events - can cancel event processing or propagation
-
-    documentElement.addEventListener('touchend', this._onTouchEnd, true);
+    // capture events - can cancel event processing or propagation
+    this.containerOuter.element.addEventListener('touchend', this._onTouchEnd, true);
     this.containerOuter.element.addEventListener('keydown', this._onKeyDown, true);
     this.containerOuter.element.addEventListener('mousedown', this._onMouseDown, true); // passive events - doesn't call `preventDefault` or `stopPropagation`
 
-    documentElement.addEventListener('click', this._onClick, {
+    this.containerOuter.element.addEventListener('click', this._onClick, {
       passive: true
     });
-    documentElement.addEventListener('touchmove', this._onTouchMove, {
+    this.containerOuter.element.addEventListener('touchmove', this._onTouchMove, {
       passive: true
     });
     this.dropdown.element.addEventListener('mouseover', this._onMouseOver, {
