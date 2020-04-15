@@ -1198,7 +1198,7 @@ class Choices {
   }
 
   _handleSearch(value: string): void {
-    if (!value || !this.input.isFocussed) {
+    if (!this.input.isFocussed) {
       return;
     }
 
@@ -1207,7 +1207,11 @@ class Choices {
     const hasUnactiveChoices = choices.some(option => !option.active);
 
     // Check that we have a value to search and the input was an alphanumeric character
-    if (value && value.length >= searchFloor) {
+    if (
+      value !== null &&
+      typeof value !== 'undefined' &&
+      value.length >= searchFloor
+    ) {
       const resultCount = searchChoices ? this._searchChoices(value) : 0;
       // Trigger search event
       this.passedElement.triggerEvent(EVENTS.search, {
