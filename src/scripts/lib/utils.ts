@@ -1,5 +1,11 @@
 import { EventMap, Choice } from '../interfaces';
 
+export const canUseDom = !!(
+  typeof window !== 'undefined' &&
+  window.document &&
+  window.document.createElement
+);
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export const getRandomNumber = (min: number, max: number): number =>
@@ -97,6 +103,14 @@ export const sanitise = <T>(value: T | string): T | string => {
 };
 
 export const strToEl = ((): ((str: string) => Element) => {
+  // do not run this in non-browser environment
+  if (!canUseDom) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    return (): void => {};
+  }
+
   const tmpEl = document.createElement('div');
 
   return (str): Element => {
