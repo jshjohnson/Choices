@@ -178,3 +178,39 @@ export const diff = (
 
   return aKeys.filter(i => bKeys.indexOf(i) < 0);
 };
+
+function getParents(node, memo): typeof getParents {
+  const { parentNode } = node;
+  memo = memo || []; // eslint-disable-line no-param-reassign
+
+  if (!parentNode) {
+    return memo;
+  }
+
+  return getParents(parentNode, memo.concat([parentNode]));
+}
+
+/**
+ * Returns an array with all DOM elements affected by an event.
+ * The function serves as a polyfill for
+ * [`Event.composedPath()`](https://dom.spec.whatwg.org/#dom-event-composedpath).
+ * https://gist.github.com/leofavre/d029cdda0338d878889ba73c88319295
+ */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+export const eventPath = evt => {
+  let path = (evt.composedPath && evt.composedPath()) || evt.path; // eslint-disable-line
+  const { target } = evt;
+
+  if (path != null) {
+    path = path.indexOf(window) < 0 ? path.concat([window]) : path;
+
+    return path;
+  }
+
+  if (target === window) {
+    return [window];
+  }
+
+  return [target].concat(getParents(target, [])).concat([window]); // eslint-disable-line
+};
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
