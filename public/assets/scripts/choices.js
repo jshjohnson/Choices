@@ -1,4 +1,4 @@
-/*! choices.js v9.0.1 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v9.0.1 | © 2020 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -1561,7 +1561,7 @@ function () {
 
     this._addEventListeners();
 
-    var shouldDisable = !this.config.addItems || this.passedElement.element.hasAttribute('disabled');
+    var shouldDisable = this.passedElement.element.hasAttribute('disabled');
 
     if (shouldDisable) {
       this.disable();
@@ -2058,8 +2058,15 @@ function () {
     var _this = this;
 
     var _a = this._store,
+        activeItems = _a.activeItems,
+        disabledChoices = _a.disabledChoices,
+        choices = _a.choices,
         activeGroups = _a.activeGroups,
         activeChoices = _a.activeChoices;
+    var value = this.input.value;
+
+    var canAddItem = this._canAddItem(activeItems, value);
+
     var choiceListFragment = document.createDocumentFragment();
     this.choiceList.clear();
 
@@ -2087,17 +2094,37 @@ function () {
 
 
     if (choiceListFragment.childNodes && choiceListFragment.childNodes.length > 0) {
-      var activeItems = this._store.activeItems;
-
-      var canAddItem = this._canAddItem(activeItems, this.input.value); // ...and we can select them
-
+      var addNotice = false; // ...and we can select them
 
       if (canAddItem.response) {
-        // ...append them and highlight the first choice
-        this.choiceList.append(choiceListFragment);
+        // ...append them
+        this.choiceList.append(choiceListFragment); // ...handle case that items can be added
 
-        this._highlightChoice();
+        if (this.config.addItems && value) {
+          var isInChoices = utils_1.existsInArray(choices, value);
+          addNotice = true;
+
+          if (this._isSelectMultipleElement && utils_1.existsInArray(disabledChoices, value)) {
+            // adding disabled element is disabled here, so remove message
+            addNotice = false;
+          } else if (this._isSelectOneElement && isInChoices) {
+            // adding existing element is disabled here, so remove message
+            addNotice = false;
+          } // ...highlight the first choice when element exists in choices
+
+
+          if (isInChoices) {
+            this._highlightChoice();
+          }
+        } else {
+          // ...highlight the first choice
+          this._highlightChoice();
+        }
       } else {
+        addNotice = true;
+      }
+
+      if (addNotice) {
         var notice = this._getTemplate('notice', canAddItem.notice);
 
         this.choiceList.append(notice);
@@ -2107,7 +2134,9 @@ function () {
       var dropdownItem = void 0;
       var notice = void 0;
 
-      if (this._isSearching) {
+      if (this.config.addItems && canAddItem.response && value) {
+        dropdownItem = this._getTemplate('notice', canAddItem.notice);
+      } else if (this._isSearching) {
         notice = typeof this.config.noResultsText === 'function' ? this.config.noResultsText() : this.config.noResultsText;
         dropdownItem = this._getTemplate('notice', notice, 'no-results');
       } else {
@@ -2527,11 +2556,11 @@ function () {
         canAddItem = false;
         notice = typeof this.config.uniqueItemText === 'function' ? this.config.uniqueItemText(value) : this.config.uniqueItemText;
       }
+    }
 
-      if (this._isTextElement && this.config.addItems && canAddItem && typeof this.config.addItemFilter === 'function' && !this.config.addItemFilter(value)) {
-        canAddItem = false;
-        notice = typeof this.config.customAddItemText === 'function' ? this.config.customAddItemText(value) : this.config.customAddItemText;
-      }
+    if (this.config.addItems && canAddItem && typeof this.config.addItemFilter === 'function' && !this.config.addItemFilter(value)) {
+      canAddItem = false;
+      notice = typeof this.config.customAddItemText === 'function' ? this.config.customAddItemText(value) : this.config.customAddItemText;
     }
 
     return {
@@ -2642,7 +2671,10 @@ function () {
 
   Choices.prototype._onKeyDown = function (event) {
     var keyCode = event.keyCode;
-    var activeItems = this._store.activeItems;
+    var _a = this._store,
+        activeItems = _a.activeItems,
+        choices = _a.choices,
+        disabledChoices = _a.disabledChoices;
     var hasFocusedInput = this.input.isFocussed;
     var hasActiveDropdown = this.dropdown.isActive;
     var hasItems = this.itemList.hasChildren();
@@ -2676,7 +2708,12 @@ function () {
         return this._onSelectKey(event, hasItems);
 
       case ENTER_KEY:
-        return this._onEnterKey(event, activeItems, hasActiveDropdown);
+        // existing choices are not producable
+        if (this._isSelectOneElement) {
+          return this._onEnterKey(event, activeItems, choices, hasActiveDropdown);
+        }
+
+        return this._onEnterKey(event, activeItems, disabledChoices, hasActiveDropdown);
 
       case ESC_KEY:
         return this._onEscapeKey(hasActiveDropdown);
@@ -2685,7 +2722,12 @@ function () {
       case PAGE_UP_KEY:
       case DOWN_KEY:
       case PAGE_DOWN_KEY:
-        return this._onDirectionKey(event, hasActiveDropdown);
+        // don't activate deselect for existing choices
+        if (this._isSelectOneElement) {
+          return this._onDirectionKey(event, activeItems, choices, hasActiveDropdown);
+        }
+
+        return this._onDirectionKey(event, activeItems, disabledChoices, hasActiveDropdown);
 
       case DELETE_KEY:
       case BACK_KEY:
@@ -2704,12 +2746,11 @@ function () {
     var canAddItem = this._canAddItem(activeItems, value);
 
     var backKey = constants_1.KEY_CODES.BACK_KEY,
-        deleteKey = constants_1.KEY_CODES.DELETE_KEY; // We are typing into a text input and have a value, we want to show a dropdown
+        deleteKey = constants_1.KEY_CODES.DELETE_KEY;
+    var canShowDropdownNotice = this.config.addItems && canAddItem.notice && value; // We are typing into a text input and have a value, we want to show a dropdown
     // notice. Otherwise hide the dropdown
 
     if (this._isTextElement) {
-      var canShowDropdownNotice = canAddItem.notice && value;
-
       if (canShowDropdownNotice) {
         var dropdownItem = this._getTemplate('notice', canAddItem.notice);
 
@@ -2728,7 +2769,7 @@ function () {
         this._isSearching = false;
 
         this._store.dispatch(choices_1.activateChoices(true));
-      } else if (canSearch) {
+      } else if (canSearch || canShowDropdownNotice) {
         this._handleSearch(this.input.value);
       }
     }
@@ -2751,28 +2792,11 @@ function () {
     }
   };
 
-  Choices.prototype._onEnterKey = function (event, activeItems, hasActiveDropdown) {
+  Choices.prototype._onEnterKey = function (event, activeItems, nonproducibleChoices, hasActiveDropdown) {
     var target = event.target;
     var enterKey = constants_1.KEY_CODES.ENTER_KEY;
     var targetWasButton = target && target.hasAttribute('data-button');
-
-    if (this._isTextElement && target && target.value) {
-      var value = this.input.value;
-
-      var canAddItem = this._canAddItem(activeItems, value);
-
-      if (canAddItem.response) {
-        this.hideDropdown(true);
-
-        this._addItem({
-          value: value
-        });
-
-        this._triggerChange(value);
-
-        this.clearInput();
-      }
-    }
+    var highlightedChoice = null;
 
     if (targetWasButton) {
       this._handleButtonAction(activeItems, target);
@@ -2781,7 +2805,7 @@ function () {
     }
 
     if (hasActiveDropdown) {
-      var highlightedChoice = this.dropdown.getChild("." + this.config.classNames.highlightedState);
+      highlightedChoice = this.dropdown.getChild("." + this.config.classNames.highlightedState);
 
       if (highlightedChoice) {
         // add enter keyCode value
@@ -2796,6 +2820,25 @@ function () {
     } else if (this._isSelectOneElement) {
       this.showDropdown();
       event.preventDefault();
+      return;
+    }
+
+    if (this.config.addItems && !highlightedChoice && target && target.value) {
+      var value = this.input.value;
+
+      var canAddItem = this._canAddItem(activeItems, value);
+
+      if (canAddItem.response && !utils_1.existsInArray(nonproducibleChoices, value)) {
+        this.hideDropdown(true);
+
+        this._setChoiceOrItem({
+          value: value
+        });
+
+        this._triggerChange(value);
+
+        this.clearInput();
+      }
     }
   };
 
@@ -2806,9 +2849,10 @@ function () {
     }
   };
 
-  Choices.prototype._onDirectionKey = function (event, hasActiveDropdown) {
+  Choices.prototype._onDirectionKey = function (event, activeItems, nonproducibleChoices, hasActiveDropdown) {
     var keyCode = event.keyCode,
-        metaKey = event.metaKey;
+        metaKey = event.metaKey,
+        target = event.target;
     var downKey = constants_1.KEY_CODES.DOWN_KEY,
         pageUpKey = constants_1.KEY_CODES.PAGE_UP_KEY,
         pageDownKey = constants_1.KEY_CODES.PAGE_DOWN_KEY; // If up or down key is pressed, traverse through options
@@ -2845,6 +2889,15 @@ function () {
         }
 
         this._highlightChoice(nextEl);
+      } else if (this.config.addItems && target && target.value) {
+        // can unselect all items for creating new options
+        var value = this.input.value;
+
+        var canAddItem = this._canAddItem(activeItems, value);
+
+        if (canAddItem.response && !utils_1.existsInArray(nonproducibleChoices, value)) {
+          this.unhighlightAll();
+        }
       } // Prevent default to maintain cursor position whilst
       // traversing dropdown options
 
@@ -3577,7 +3630,7 @@ function () {
   };
 
   Choices.prototype._generatePlaceholderValue = function () {
-    if (this._isSelectElement) {
+    if (this._isSelectElement && this.passedElement.placeholderOption) {
       var placeholderOption = this.passedElement.placeholderOption;
       return placeholderOption ? placeholderOption.text : null;
     }
@@ -3877,6 +3930,18 @@ function () {
     get: function get() {
       return this.choices.filter(function (choice) {
         return choice.active === true;
+      });
+    },
+    enumerable: true,
+    configurable: true
+  });
+  Object.defineProperty(Store.prototype, "disabledChoices", {
+    /**
+     * Get disabled choices from store
+     */
+    get: function get() {
+      return this.choices.filter(function (choice) {
+        return choice.disabled === true;
       });
     },
     enumerable: true,
