@@ -191,6 +191,16 @@ Or include Choices directly:
 | Group  | A group is a collection of choices. A group should be seen as equivalent to a `<optgroup></optgroup>` element within a select input.                                                                                                                                                                                    |
 | Item   | An item is an inputted value (text input) or a selected choice (select element). In the context of a select element, an item is equivalent to a selected option element: `<option value="Hello" selected></option>` whereas in the context of a text input an item is equivalent to `<input type="text" value="Hello">` |
 
+## Input Types
+
+Choices works with the following input types, referenced in the doucmentation as noted.
+
+| HTML input elemnt    | w3schools reference | Documentation "input type" name                        |
+| -------------------- | ------------------- |------------------------------------------------------- |
+| `<input type="text">`| <https://www.w3schools.com/html/html_form_input_types.asp> | `text`          |
+| `<select>`           | <https://www.w3schools.com/tags/tag_select.asp> | `select-single`            |
+| `<select multiple>`  | <https://www.w3schools.com/tags/att_select_multiple.asp> | `select-multiple` |
+
 ## Configuration options
 
 ### silent
