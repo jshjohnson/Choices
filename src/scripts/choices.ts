@@ -40,6 +40,7 @@ import {
   generateId,
   existsInArray,
   diff,
+  canUseDom,
 } from './lib/utils';
 import {
   Options,
@@ -54,6 +55,7 @@ import { defaultState } from './reducers';
 
 /** @see {@link http://browserhacks.com/#hack-acea075d0ac6954f275a70023906050c} */
 const IS_IE11 =
+  canUseDom &&
   '-ms-scroll-limit' in document.documentElement.style &&
   '-ms-ime-align' in document.documentElement.style;
 

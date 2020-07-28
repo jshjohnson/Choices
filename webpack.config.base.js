@@ -44,6 +44,6 @@ module.exports = {
     library: 'Choices',
     libraryTarget: 'window',
     libraryExport: 'default',
-    globalObject: 'window',
+    globalObject: 'this',
   },
 };
