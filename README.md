@@ -176,7 +176,7 @@ Or include Choices directly:
     // Choices uses the great Fuse library for searching. You
     // can find more options here: https://github.com/krisk/Fuse#options
     fuseOptions: {
-      include: 'score'
+      includeScore: true
     },
     callbackOnInit: null,
     callbackOnCreateTemplates: null
