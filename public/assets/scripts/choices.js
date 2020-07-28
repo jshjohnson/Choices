@@ -1,4 +1,4 @@
-/*! choices.js v9.0.1 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v9.0.1 | © 2020 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -2482,7 +2482,7 @@ function () {
   };
 
   Choices.prototype._handleSearch = function (value) {
-    if (!value || !this.input.isFocussed) {
+    if (!this.input.isFocussed) {
       return;
     }
 
@@ -2494,7 +2494,7 @@ function () {
       return !option.active;
     }); // Check that we have a value to search and the input was an alphanumeric character
 
-    if (value && value.length >= searchFloor) {
+    if (value !== null && typeof value !== "undefined" && value.length >= searchFloor) {
       var resultCount = searchChoices ? this._searchChoices(value) : 0; // Trigger search event
 
       this.passedElement.triggerEvent(constants_1.EVENTS.search, {
@@ -3577,7 +3577,7 @@ function () {
   };
 
   Choices.prototype._generatePlaceholderValue = function () {
-    if (this._isSelectElement) {
+    if (this._isSelectElement && this.passedElement.placeholderOption) {
       var placeholderOption = this.passedElement.placeholderOption;
       return placeholderOption ? placeholderOption.text : null;
     }
