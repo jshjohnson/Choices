@@ -353,6 +353,7 @@ class Choices {
     if (this.containerOuter.isDisabled) {
       this._addEventListeners();
       this.input.enable();
+      this.input.element.focus();
       this.containerOuter.enable();
     }
 
@@ -627,7 +628,6 @@ class Choices {
     if (typeof choicesArrayOrFetcher === 'function') {
       // it's a choices fetcher function
       const fetcher = choicesArrayOrFetcher(this);
-
       if (typeof Promise === 'function' && fetcher instanceof Promise) {
         // that's a promise
         // eslint-disable-next-line compat/compat
