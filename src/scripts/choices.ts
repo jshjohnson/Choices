@@ -1308,10 +1308,12 @@ class Choices {
   }
 
   _addEventListeners(): void {
-    const { documentElement } = document;
-
     // capture events - can cancel event processing or propagation
-    documentElement.addEventListener('touchend', this._onTouchEnd, true);
+    this.containerOuter.element.addEventListener(
+      'touchend',
+      this._onTouchEnd,
+      true,
+    );
     this.containerOuter.element.addEventListener(
       'keydown',
       this._onKeyDown,
@@ -1324,10 +1326,16 @@ class Choices {
     );
 
     // passive events - doesn't call `preventDefault` or `stopPropagation`
-    documentElement.addEventListener('click', this._onClick, { passive: true });
-    documentElement.addEventListener('touchmove', this._onTouchMove, {
+    this.containerOuter.element.addEventListener('click', this._onClick, {
       passive: true,
     });
+    this.containerOuter.element.addEventListener(
+      'touchmove',
+      this._onTouchMove,
+      {
+        passive: true,
+      },
+    );
     this.dropdown.element.addEventListener('mouseover', this._onMouseOver, {
       passive: true,
     });
@@ -1362,9 +1370,11 @@ class Choices {
   }
 
   _removeEventListeners(): void {
-    const { documentElement } = document;
-
-    documentElement.removeEventListener('touchend', this._onTouchEnd, true);
+    this.containerOuter.element.removeEventListener(
+      'touchend',
+      this._onTouchEnd,
+      true,
+    );
     this.containerOuter.element.removeEventListener(
       'keydown',
       this._onKeyDown,
@@ -1376,8 +1386,11 @@ class Choices {
       true,
     );
 
-    documentElement.removeEventListener('click', this._onClick);
-    documentElement.removeEventListener('touchmove', this._onTouchMove);
+    this.containerOuter.element.removeEventListener('click', this._onClick);
+    this.containerOuter.element.removeEventListener(
+      'touchmove',
+      this._onTouchMove,
+    );
     this.dropdown.element.removeEventListener('mouseover', this._onMouseOver);
 
     if (this._isSelectOneElement) {
