@@ -132,15 +132,15 @@ describe('constants', () => {
       it('exports as an object with expected keys', () => {
         expect(KEY_CODES).to.be.an('object');
         expect(Object.keys(KEY_CODES)).to.eql([
-          'BACK_KEY',
-          'DELETE_KEY',
-          'ENTER_KEY',
-          'A_KEY',
-          'ESC_KEY',
-          'UP_KEY',
-          'DOWN_KEY',
-          'PAGE_UP_KEY',
-          'PAGE_DOWN_KEY',
+          'backKey',
+          'deleteKey',
+          'enterKey',
+          'aKey',
+          'escKey',
+          'upKey',
+          'downKey',
+          'pageUpKey',
+          'pageDownKey',
         ]);
       });
 

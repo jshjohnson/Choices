@@ -228,6 +228,7 @@ exports.TEXT_TYPE = 'text';
 exports.SELECT_ONE_TYPE = 'select-one';
 exports.SELECT_MULTIPLE_TYPE = 'select-multiple';
 exports.SCROLLING_SPEED = 4;
+exports.DEFAULT_ID = -1;
 
 /***/ }),
 /* 1 */
@@ -1412,8 +1413,8 @@ function () {
     }
 
     if (userConfig.addItemFilter && typeof userConfig.addItemFilter !== 'function') {
-      var re = userConfig.addItemFilter instanceof RegExp ? userConfig.addItemFilter : new RegExp(userConfig.addItemFilter);
-      this.config.addItemFilter = re.test.bind(re);
+      var exp = userConfig.addItemFilter instanceof RegExp ? userConfig.addItemFilter : new RegExp(userConfig.addItemFilter);
+      this.config.addItemFilter = exp.test.bind(exp);
     }
 
     if (this._isTextElement) {
@@ -1434,9 +1435,11 @@ function () {
 
     this.initialised = false;
     this._store = new store_1.default();
-    this._initialState = reducers_1.defaultState;
-    this._currentState = reducers_1.defaultState;
-    this._prevState = reducers_1.defaultState;
+    this._state = {
+      initial: reducers_1.defaultState,
+      current: reducers_1.defaultState,
+      previous: reducers_1.defaultState
+    };
     this._currentValue = '';
     this._canSearch = !!this.config.searchEnabled;
     this._isScrollingOnIe = false;
@@ -1444,6 +1447,9 @@ function () {
     this._wasTap = true;
     this._placeholderValue = this._generatePlaceholderValue();
     this._baseId = utils_1.generateId(this.passedElement.element, 'choices-');
+    this._idNames = {
+      itemChoice: 'item-choice'
+    };
     /**
      * setting direction in cases where it's explicitly set on passedElement
      * or when calculated direction is different from the document
@@ -1460,31 +1466,23 @@ function () {
       }
     }
 
-    this._idNames = {
-      itemChoice: 'item-choice'
-    };
-
-    if (this._isSelectElement) {
-      // Assign preset groups from passed element
-      this._presetGroups = this.passedElement.optionGroups; // Assign preset options from passed element
-
-      this._presetOptions = this.passedElement.options;
-    } // Assign preset choices from passed object
-
-
-    this._presetChoices = this.config.choices; // Assign preset items from passed object first
-
-    this._presetItems = this.config.items; // Add any values passed from attribute
+    this._presetData = {
+      choices: this.config.choices,
+      items: this.config.items,
+      // Assign preset option groups/options from passed element
+      groups: this._isSelectElement ? this.passedElement.optionGroups : [],
+      options: this._isSelectElement ? this.passedElement.options : []
+    }; // Add any values passed from attribute
 
     if (this.passedElement.value && this._isTextElement) {
       var splitValues = this.passedElement.value.split(this.config.delimiter);
-      this._presetItems = this._presetItems.concat(splitValues);
+      this._presetData.items = this._presetData.items.concat(splitValues);
     } // Create array of choices from option elements
 
 
     if (this.passedElement.options) {
       this.passedElement.options.forEach(function (option) {
-        _this._presetChoices.push({
+        _this._presetData.choices.push({
           value: option.value,
           label: option.innerHTML,
           selected: !!option.selected,
@@ -1543,6 +1541,7 @@ function () {
     enumerable: true,
     configurable: true
   });
+  ;
 
   Choices.prototype.init = function () {
     if (this.initialised) {
@@ -1587,7 +1586,7 @@ function () {
     this.clearStore();
 
     if (this._isSelectElement) {
-      this.passedElement.options = this._presetOptions;
+      this.passedElement.options = this._presetData.options;
     }
 
     this._templates = templates_1.default;
@@ -1635,7 +1634,7 @@ function () {
 
     var id = item.id,
         _a = item.groupId,
-        groupId = _a === void 0 ? -1 : _a,
+        groupId = _a === void 0 ? constants_1.DEFAULT_ID : _a,
         _b = item.value,
         value = _b === void 0 ? '' : _b,
         _c = item.label,
@@ -1663,7 +1662,7 @@ function () {
 
     var id = item.id,
         _a = item.groupId,
-        groupId = _a === void 0 ? -1 : _a,
+        groupId = _a === void 0 ? constants_1.DEFAULT_ID : _a,
         _b = item.value,
         value = _b === void 0 ? '' : _b,
         _c = item.label,
@@ -2034,10 +2033,10 @@ function () {
       return;
     }
 
-    this._currentState = this._store.state;
-    var stateChanged = this._currentState.choices !== this._prevState.choices || this._currentState.groups !== this._prevState.groups || this._currentState.items !== this._prevState.items;
+    this._state.current = this._store.state;
+    var stateChanged = this._state.current.choices !== this._state.previous.choices || this._state.current.groups !== this._state.previous.groups || this._state.current.items !== this._state.previous.items;
     var shouldRenderChoices = this._isSelectElement;
-    var shouldRenderItems = this._currentState.items !== this._prevState.items;
+    var shouldRenderItems = this._state.current.items !== this._state.previous.items;
 
     if (!stateChanged) {
       return;
@@ -2051,7 +2050,7 @@ function () {
       this._renderItems();
     }
 
-    this._prevState = this._currentState;
+    this._state.previous = this._state.current;
   };
 
   Choices.prototype._renderChoices = function () {
@@ -2073,7 +2072,7 @@ function () {
     if (activeGroups.length >= 1 && !this._isSearching) {
       // If we have a placeholder choice along with groups
       var activePlaceholders = activeChoices.filter(function (activeChoice) {
-        return activeChoice.placeholder === true && activeChoice.groupId === -1;
+        return activeChoice.placeholder === true && activeChoice.groupId === constants_1.DEFAULT_ID;
       });
 
       if (activePlaceholders.length >= 1) {
@@ -2784,7 +2783,6 @@ function () {
       var highlightedChoice = this.dropdown.getChild("." + this.config.classNames.highlightedState);
 
       if (highlightedChoice) {
-        // add enter keyCode value
         if (activeItems[0]) {
           activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
         }
@@ -3060,7 +3058,7 @@ function () {
   };
 
   Choices.prototype._onFormReset = function () {
-    this._store.dispatch(misc_1.resetTo(this._initialState));
+    this._store.dispatch(misc_1.resetTo(this._state.initial));
   };
 
   Choices.prototype._highlightChoice = function (el) {
@@ -3120,9 +3118,9 @@ function () {
         _b = _a.label,
         label = _b === void 0 ? null : _b,
         _c = _a.choiceId,
-        choiceId = _c === void 0 ? -1 : _c,
+        choiceId = _c === void 0 ? constants_1.DEFAULT_ID : _c,
         _d = _a.groupId,
-        groupId = _d === void 0 ? -1 : _d,
+        groupId = _d === void 0 ? constants_1.DEFAULT_ID : _d,
         _e = _a.customProperties,
         customProperties = _e === void 0 ? {} : _e,
         _f = _a.placeholder,
@@ -3132,7 +3130,6 @@ function () {
     var passedValue = typeof value === 'string' ? value.trim() : value;
     var items = this._store.items;
     var passedLabel = label || passedValue;
-    var passedOptionId = choiceId || -1;
     var group = groupId >= 0 ? this._store.getGroupById(groupId) : null;
     var id = items ? items.length + 1 : 1; // If a prepended value has been passed, prepend it
 
@@ -3149,7 +3146,7 @@ function () {
       value: passedValue,
       label: passedLabel,
       id: id,
-      choiceId: passedOptionId,
+      choiceId: choiceId,
       groupId: groupId,
       customProperties: customProperties,
       placeholder: placeholder,
@@ -3204,7 +3201,7 @@ function () {
         _d = _a.isDisabled,
         isDisabled = _d === void 0 ? false : _d,
         _e = _a.groupId,
-        groupId = _e === void 0 ? -1 : _e,
+        groupId = _e === void 0 ? constants_1.DEFAULT_ID : _e,
         _f = _a.customProperties,
         customProperties = _f === void 0 ? {} : _f,
         _g = _a.placeholder,
@@ -3214,8 +3211,7 @@ function () {
 
     if (typeof value === 'undefined' || value === null) {
       return;
-    } // Generate unique id
-
+    }
 
     var choices = this._store.choices;
     var choiceLabel = label || value;
@@ -3259,37 +3255,37 @@ function () {
     var groupId = id || Math.floor(new Date().valueOf() * Math.random());
     var isDisabled = group.disabled ? group.disabled : false;
 
-    if (groupChoices) {
-      this._store.dispatch(groups_1.addGroup({
-        value: group.label,
-        id: groupId,
-        active: true,
-        disabled: isDisabled
-      }));
-
-      var addGroupChoices = function addGroupChoices(choice) {
-        var isOptDisabled = choice.disabled || choice.parentNode && choice.parentNode.disabled;
-
-        _this._addChoice({
-          value: choice[valueKey],
-          label: utils_1.isType('Object', choice) ? choice[labelKey] : choice.innerHTML,
-          isSelected: choice.selected,
-          isDisabled: isOptDisabled,
-          groupId: groupId,
-          customProperties: choice.customProperties,
-          placeholder: choice.placeholder
-        });
-      };
-
-      groupChoices.forEach(addGroupChoices);
-    } else {
-      this._store.dispatch(groups_1.addGroup({
+    if (!groupChoices) {
+      return this._store.dispatch(groups_1.addGroup({
         value: group.label,
         id: group.id,
         active: false,
         disabled: group.disabled
       }));
     }
+
+    this._store.dispatch(groups_1.addGroup({
+      value: group.label,
+      id: groupId,
+      active: true,
+      disabled: isDisabled
+    }));
+
+    var addGroupChoices = function addGroupChoices(choice) {
+      var isOptDisabled = choice.disabled || choice.parentNode && choice.parentNode.disabled;
+
+      _this._addChoice({
+        value: choice[valueKey],
+        label: utils_1.isType('Object', choice) ? choice[labelKey] : choice.innerHTML,
+        isSelected: choice.selected,
+        isDisabled: isOptDisabled,
+        groupId: groupId,
+        customProperties: choice.customProperties,
+        placeholder: choice.placeholder
+      });
+    };
+
+    groupChoices.forEach(addGroupChoices);
   };
 
   Choices.prototype._getTemplate = function (template) {
@@ -3383,17 +3379,17 @@ function () {
 
       this._startLoading();
 
-      if (this._presetGroups.length) {
-        this._addPredefinedGroups(this._presetGroups);
+      if (this._presetData.groups.length) {
+        this._addPredefinedGroups(this._presetData.groups);
       } else {
-        this._addPredefinedChoices(this._presetChoices);
+        this._addPredefinedChoices(this._presetData.choices);
       }
 
       this._stopLoading();
     }
 
     if (this._isTextElement) {
-      this._addPredefinedItems(this._presetItems);
+      this._addPredefinedItems(this._presetData.items);
     }
   };
 
@@ -3442,36 +3438,8 @@ function () {
           customProperties = choice.customProperties,
           placeholder = choice.placeholder;
 
-      if (_this._isSelectElement) {
-        // If the choice is actually a group
-        if (choice.choices) {
-          _this._addGroup({
-            group: choice,
-            id: choice.id || null
-          });
-        } else {
-          /**
-           * If there is a selected choice already or the choice is not the first in
-           * the array, add each choice normally.
-           *
-           * Otherwise we pre-select the first enabled choice in the array ("select-one" only)
-           */
-          var shouldPreselect = _this._isSelectOneElement && !hasSelectedChoice && index === firstEnabledChoiceIndex;
-          var isSelected = shouldPreselect ? true : choice.selected;
-          var isDisabled = choice.disabled;
-          console.log(isDisabled, choice);
-
-          _this._addChoice({
-            value: value,
-            label: label,
-            isSelected: !!isSelected,
-            isDisabled: !!isDisabled,
-            placeholder: !!placeholder,
-            customProperties: customProperties
-          });
-        }
-      } else {
-        _this._addChoice({
+      if (!_this._isSelectElement) {
+        return _this._addChoice({
           value: value,
           label: label,
           isSelected: !!choice.selected,
@@ -3479,7 +3447,35 @@ function () {
           placeholder: !!choice.placeholder,
           customProperties: customProperties
         });
+      } // If the choice is actually a group
+
+
+      if (choice.choices) {
+        return _this._addGroup({
+          group: choice,
+          id: choice.id || null
+        });
       }
+      /**
+       * If there is a selected choice already or the choice is not the first in
+       * the array, add each choice normally.
+       *
+       * Otherwise we pre-select the first enabled choice in the array ("select-one" only)
+       */
+
+
+      var shouldPreselect = _this._isSelectOneElement && !hasSelectedChoice && index === firstEnabledChoiceIndex;
+      var isSelected = shouldPreselect ? true : choice.selected;
+      var isDisabled = choice.disabled;
+
+      _this._addChoice({
+        value: value,
+        label: label,
+        isSelected: !!isSelected,
+        isDisabled: !!isDisabled,
+        placeholder: !!placeholder,
+        customProperties: customProperties
+      });
     });
   };
 
@@ -3518,7 +3514,7 @@ function () {
 
 
         if (!_this._isTextElement) {
-          _this._addChoice({
+          return _this._addChoice({
             value: item.value,
             label: item.label,
             isSelected: true,
@@ -3526,29 +3522,29 @@ function () {
             customProperties: item.customProperties,
             placeholder: item.placeholder
           });
-        } else {
-          _this._addItem({
-            value: item.value,
-            label: item.label,
-            choiceId: item.id,
-            customProperties: item.customProperties,
-            placeholder: item.placeholder
-          });
         }
+
+        _this._addItem({
+          value: item.value,
+          label: item.label,
+          choiceId: item.id,
+          customProperties: item.customProperties,
+          placeholder: item.placeholder
+        });
       },
       string: function string() {
         if (!_this._isTextElement) {
-          _this._addChoice({
+          return _this._addChoice({
             value: item,
             label: item,
             isSelected: true,
             isDisabled: false
           });
-        } else {
-          _this._addItem({
-            value: item
-          });
         }
+
+        _this._addItem({
+          value: item
+        });
       }
     };
     handleType[itemType]();
@@ -3577,7 +3573,7 @@ function () {
   };
 
   Choices.prototype._generatePlaceholderValue = function () {
-    if (this._isSelectElement) {
+    if (this._isSelectElement && this.passedElement.placeholderOption) {
       var placeholderOption = this.passedElement.placeholderOption;
       return placeholderOption ? placeholderOption.text : null;
     }

@@ -2085,15 +2085,15 @@ describe('choices', () => {
         hasFocussedInput = instance.input.isFocussed;
       });
 
-      describe('direction key', () => {
-        const keyCodes = [
-          KEY_CODES.UP_KEY,
-          KEY_CODES.DOWN_KEY,
-          KEY_CODES.PAGE_UP_KEY,
-          KEY_CODES.PAGE_DOWN_KEY,
+      describe('direction keys', () => {
+        const directionKeyCodes = [
+          KEY_CODES.upKey,
+          KEY_CODES.downKey,
+          KEY_CODES.pageUpKey,
+          KEY_CODES.pageDownKey,
         ];
 
-        keyCodes.forEach(keyCode => {
+        directionKeyCodes.forEach(keyCode => {
           it(`calls _onDirectionKey with the expected arguments`, () => {
             const event = {
               keyCode,
@@ -2112,7 +2112,7 @@ describe('choices', () => {
       describe('select key', () => {
         it(`calls _onSelectKey with the expected arguments`, () => {
           const event = {
-            keyCode: KEY_CODES.A_KEY,
+            keyCode: KEY_CODES.aKey,
           };
 
           instance._onKeyDown(event);
@@ -2127,7 +2127,7 @@ describe('choices', () => {
       describe('enter key', () => {
         it(`calls _onEnterKey with the expected arguments`, () => {
           const event = {
-            keyCode: KEY_CODES.ENTER_KEY,
+            keyCode: KEY_CODES.enterKey,
           };
 
           instance._onKeyDown(event);
@@ -2141,9 +2141,9 @@ describe('choices', () => {
       });
 
       describe('delete key', () => {
-        const keyCodes = [KEY_CODES.DELETE_KEY, KEY_CODES.BACK_KEY];
+        const deleteKeyCodes = [KEY_CODES.deleteKey, KEY_CODES.backKey];
 
-        keyCodes.forEach(keyCode => {
+        deleteKeyCodes.forEach(keyCode => {
           it(`calls _onDeleteKey with the expected arguments`, () => {
             const event = {
               keyCode,

@@ -18,6 +18,7 @@ import {
   TEXT_TYPE,
   SELECT_ONE_TYPE,
   SELECT_MULTIPLE_TYPE,
+  DEFAULT_ID,
 } from './constants';
 import templates from './templates';
 import {
@@ -93,9 +94,12 @@ class Choices {
   _isSelectMultipleElement: boolean;
   _isSelectElement: boolean;
   _store: Store;
+  _state: {
+    initial: State;
+    previous: State;
+    current: State;
+  };
   _templates: typeof templates;
-  _initialState: State;
-  _currentState: State;
   _prevState: State;
   _currentValue: string;
   _canSearch: boolean;
@@ -109,10 +113,12 @@ class Choices {
   _idNames: {
     itemChoice: string;
   };
-  _presetGroups: Group[] | HTMLOptGroupElement[] | Element[];
-  _presetOptions: Item[] | HTMLOptionElement[];
-  _presetChoices: Partial<Choice>[];
-  _presetItems: Item[] | string[];
+  _presetData: {
+    groups: Group[] | HTMLOptGroupElement[] | Element[];
+    options: Item[] | HTMLOptionElement[];
+    choices: Partial<Choice>[];
+    items: Item[] | string[];
+  };
 
   constructor(
     element:
@@ -168,12 +174,12 @@ class Choices {
       userConfig.addItemFilter &&
       typeof userConfig.addItemFilter !== 'function'
     ) {
-      const re =
+      const exp =
         userConfig.addItemFilter instanceof RegExp
           ? userConfig.addItemFilter
           : new RegExp(userConfig.addItemFilter);
 
-      this.config.addItemFilter = re.test.bind(re);
+      this.config.addItemFilter = exp.test.bind(exp);
     }
 
     if (this._isTextElement) {
@@ -194,9 +200,11 @@ class Choices {
     this.initialised = false;
 
     this._store = new Store();
-    this._initialState = defaultState;
-    this._currentState = defaultState;
-    this._prevState = defaultState;
+    this._state = {
+      initial: defaultState,
+      current: defaultState,
+      previous: defaultState,
+    };
     this._currentValue = '';
     this._canSearch = !!this.config.searchEnabled;
     this._isScrollingOnIe = false;
@@ -204,7 +212,9 @@ class Choices {
     this._wasTap = true;
     this._placeholderValue = this._generatePlaceholderValue();
     this._baseId = generateId(this.passedElement.element, 'choices-');
-
+    this._idNames = {
+      itemChoice: 'item-choice',
+    };
     /**
      * setting direction in cases where it's explicitly set on passedElement
      * or when calculated direction is different from the document
@@ -223,32 +233,30 @@ class Choices {
       }
     }
 
-    this._idNames = {
-      itemChoice: 'item-choice',
+    this._presetData = {
+      choices: this.config.choices,
+      items: this.config.items,
+      // Assign preset option groups/options from passed element
+      groups: this._isSelectElement
+        ? (this.passedElement as WrappedSelect).optionGroups
+        : [],
+      options: this._isSelectElement
+        ? (this.passedElement as WrappedSelect).options
+        : [],
     };
-
-    if (this._isSelectElement) {
-      // Assign preset groups from passed element
-      this._presetGroups = (this.passedElement as WrappedSelect).optionGroups;
-      // Assign preset options from passed element
-      this._presetOptions = (this.passedElement as WrappedSelect).options;
-    }
-
-    // Assign preset choices from passed object
-    this._presetChoices = this.config.choices;
-    // Assign preset items from passed object first
-    this._presetItems = this.config.items;
     // Add any values passed from attribute
     if (this.passedElement.value && this._isTextElement) {
       const splitValues: string[] = this.passedElement.value.split(
         this.config.delimiter,
       );
-      this._presetItems = (this._presetItems as string[]).concat(splitValues);
+      this._presetData.items = (this._presetData.items as string[]).concat(
+        splitValues,
+      );
     }
     // Create array of choices from option elements
     if ((this.passedElement as WrappedSelect).options) {
       (this.passedElement as WrappedSelect).options.forEach(option => {
-        this._presetChoices.push({
+        this._presetData.choices.push({
           value: option.value,
           label: option.innerHTML,
           selected: !!option.selected,
@@ -338,7 +346,7 @@ class Choices {
     this.clearStore();
 
     if (this._isSelectElement) {
-      (this.passedElement as WrappedSelect).options = this._presetOptions;
+      (this.passedElement as WrappedSelect).options = this._presetData.options;
     }
 
     this._templates = templates;
@@ -378,7 +386,7 @@ class Choices {
       return this;
     }
 
-    const { id, groupId = -1, value = '', label = '' } = item;
+    const { id, groupId = DEFAULT_ID, value = '', label = '' } = item;
     const group = groupId >= 0 ? this._store.getGroupById(groupId) : null;
 
     this._store.dispatch(highlightItem(id, true));
@@ -400,7 +408,7 @@ class Choices {
       return this;
     }
 
-    const { id, groupId = -1, value = '', label = '' } = item;
+    const { id, groupId = DEFAULT_ID, value = '', label = '' } = item;
     const group = groupId >= 0 ? this._store.getGroupById(groupId) : null;
 
     this._store.dispatch(highlightItem(id, false));
@@ -629,8 +637,6 @@ class Choices {
       const fetcher = choicesArrayOrFetcher(this);
 
       if (typeof Promise === 'function' && fetcher instanceof Promise) {
-        // that's a promise
-        // eslint-disable-next-line compat/compat
         return new Promise(resolve => requestAnimationFrame(resolve)) // eslint-disable-line compat/compat
           .then(() => this._handleLoadingState(true))
           .then(() => fetcher)
@@ -659,7 +665,7 @@ class Choices {
 
     if (!Array.isArray(choicesArrayOrFetcher)) {
       throw new TypeError(
-        `.setChoices must be called either with array of choices with a function resulting into Promise of array of choices`,
+        `setChoices must be called either with array of choices with a function resulting into Promise of array of choices`,
       );
     }
 
@@ -727,15 +733,15 @@ class Choices {
       return;
     }
 
-    this._currentState = this._store.state;
+    this._state.current = this._store.state;
 
     const stateChanged =
-      this._currentState.choices !== this._prevState.choices ||
-      this._currentState.groups !== this._prevState.groups ||
-      this._currentState.items !== this._prevState.items;
+      this._state.current.choices !== this._state.previous.choices ||
+      this._state.current.groups !== this._state.previous.groups ||
+      this._state.current.items !== this._state.previous.items;
     const shouldRenderChoices = this._isSelectElement;
     const shouldRenderItems =
-      this._currentState.items !== this._prevState.items;
+      this._state.current.items !== this._state.previous.items;
 
     if (!stateChanged) {
       return;
@@ -749,12 +755,11 @@ class Choices {
       this._renderItems();
     }
 
-    this._prevState = this._currentState;
+    this._state.previous = this._state.current;
   }
 
   _renderChoices(): void {
     const { activeGroups, activeChoices } = this._store;
-    let choiceListFragment = document.createDocumentFragment();
 
     this.choiceList.clear();
 
@@ -762,30 +767,10 @@ class Choices {
       requestAnimationFrame(() => this.choiceList.scrollToTop());
     }
 
-    // If we have grouped options
-    if (activeGroups.length >= 1 && !this._isSearching) {
-      // If we have a placeholder choice along with groups
-      const activePlaceholders = activeChoices.filter(
-        activeChoice =>
-          activeChoice.placeholder === true && activeChoice.groupId === -1,
-      );
-      if (activePlaceholders.length >= 1) {
-        choiceListFragment = this._createChoicesFragment(
-          activePlaceholders,
-          choiceListFragment,
-        );
-      }
-      choiceListFragment = this._createGroupsFragment(
-        activeGroups,
-        activeChoices,
-        choiceListFragment,
-      );
-    } else if (activeChoices.length >= 1) {
-      choiceListFragment = this._createChoicesFragment(
-        activeChoices,
-        choiceListFragment,
-      );
-    }
+    const choiceListFragment = this._createChoiceListFragment(
+      activeGroups,
+      activeChoices,
+    );
 
     // If we have choices to show
     if (
@@ -805,28 +790,30 @@ class Choices {
         this.choiceList.append(notice);
       }
     } else {
-      // Otherwise show a notice
-      let dropdownItem;
-      let notice;
-
-      if (this._isSearching) {
-        notice =
-          typeof this.config.noResultsText === 'function'
-            ? this.config.noResultsText()
-            : this.config.noResultsText;
-
-        dropdownItem = this._getTemplate('notice', notice, 'no-results');
-      } else {
-        notice =
-          typeof this.config.noChoicesText === 'function'
-            ? this.config.noChoicesText()
-            : this.config.noChoicesText;
-
-        dropdownItem = this._getTemplate('notice', notice, 'no-choices');
-      }
-
-      this.choiceList.append(dropdownItem);
+      this.choiceList.append(
+        this._isSearching
+          ? this._getNoResultsTemplate()
+          : this._getNoChoicesTemplate(),
+      );
     }
+  }
+
+  _getNoChoicesTemplate(): HTMLElement {
+    const textToDisplay =
+      typeof this.config.noChoicesText === 'function'
+        ? this.config.noChoicesText()
+        : this.config.noChoicesText;
+
+    return this._getTemplate('notice', textToDisplay, 'no-choices');
+  }
+
+  _getNoResultsTemplate(): HTMLElement {
+    const textToDisplay =
+      typeof this.config.noResultsText === 'function'
+        ? this.config.noResultsText()
+        : this.config.noResultsText;
+
+    return this._getTemplate('notice', textToDisplay, 'no-results');
   }
 
   _renderItems(): void {
@@ -992,6 +979,40 @@ class Choices {
     return fragment;
   }
 
+  _createChoiceListFragment(
+    groups: Group[],
+    choices: Choice[],
+  ): DocumentFragment {
+    let choiceListFragment = document.createDocumentFragment();
+    // If we have grouped options
+    if (groups.length >= 1 && !this._isSearching) {
+      // If we have a placeholder choice along with groups
+      const activePlaceholders = choices.filter(
+        activeChoice =>
+          activeChoice.placeholder === true &&
+          activeChoice.groupId === DEFAULT_ID,
+      );
+      if (activePlaceholders.length >= 1) {
+        choiceListFragment = this._createChoicesFragment(
+          activePlaceholders,
+          choiceListFragment,
+        );
+      }
+      choiceListFragment = this._createGroupsFragment(
+        groups,
+        choices,
+        choiceListFragment,
+      );
+    } else if (choices.length >= 1) {
+      choiceListFragment = this._createChoicesFragment(
+        choices,
+        choiceListFragment,
+      );
+    }
+
+    return choiceListFragment;
+  }
+
   _triggerChange(value): void {
     if (value === undefined || value === null) {
       return;
@@ -1043,16 +1064,11 @@ class Choices {
   }
 
   _handleItemAction(
-    activeItems?: Item[],
-    element?: HTMLElement,
+    activeItems: Item[],
+    element: HTMLElement,
     hasShiftKey = false,
   ): void {
-    if (
-      !activeItems ||
-      !element ||
-      !this.config.removeItems ||
-      this._isSelectOneElement
-    ) {
+    if (!this.config.removeItems || this._isSelectOneElement) {
       return;
     }
 
@@ -1074,14 +1090,11 @@ class Choices {
     this.input.focus();
   }
 
-  _handleChoiceAction(activeItems?: Item[], element?: HTMLElement): void {
-    if (!activeItems || !element) {
-      return;
-    }
-
+  _handleChoiceAction(activeItems: Item[], element: HTMLElement): void {
     // If we are clicking on an option
     const { id } = element.dataset;
     const choice = id && this._store.getChoiceById(id);
+
     if (!choice) {
       return;
     }
@@ -1126,8 +1139,8 @@ class Choices {
     }
   }
 
-  _handleBackspace(activeItems?: Item[]): void {
-    if (!this.config.removeItems || !activeItems) {
+  _handleBackspace(activeItems: Item[]): void {
+    if (!this.config.removeItems) {
       return;
     }
 
@@ -1146,6 +1159,8 @@ class Choices {
         // Highlight last item if none already highlighted
         this.highlightItem(lastItem, false);
       }
+
+      // then remove all highlighted items
       this.removeHighlightedItems(true);
     }
   }
@@ -1158,12 +1173,12 @@ class Choices {
     this._store.dispatch(setIsLoading(false));
   }
 
-  _handleLoadingState(setLoading = true): void {
+  _handleLoadingState(isLoading = true): void {
     let placeholderItem = this.itemList.getChild(
       `.${this.config.classNames.placeholder}`,
     );
 
-    if (setLoading) {
+    if (isLoading) {
       this.disable();
       this.containerOuter.addLoadingState();
 
@@ -1406,15 +1421,15 @@ class Choices {
     const wasAlphaNumericChar = /[a-zA-Z0-9-_ ]/.test(keyString);
 
     const {
-      BACK_KEY,
-      DELETE_KEY,
-      ENTER_KEY,
-      A_KEY,
-      ESC_KEY,
-      UP_KEY,
-      DOWN_KEY,
-      PAGE_UP_KEY,
-      PAGE_DOWN_KEY,
+      backKey,
+      deleteKey,
+      enterKey,
+      aKey,
+      escKey,
+      upKey,
+      downKey,
+      pageUpKey,
+      pageDownKey,
     } = KEY_CODES;
 
     if (!this._isTextElement && !hasActiveDropdown && wasAlphaNumericChar) {
@@ -1431,19 +1446,19 @@ class Choices {
     }
 
     switch (keyCode) {
-      case A_KEY:
+      case aKey:
         return this._onSelectKey(event, hasItems);
-      case ENTER_KEY:
+      case enterKey:
         return this._onEnterKey(event, activeItems, hasActiveDropdown);
-      case ESC_KEY:
+      case escKey:
         return this._onEscapeKey(hasActiveDropdown);
-      case UP_KEY:
-      case PAGE_UP_KEY:
-      case DOWN_KEY:
-      case PAGE_DOWN_KEY:
+      case upKey:
+      case pageUpKey:
+      case downKey:
+      case pageDownKey:
         return this._onDirectionKey(event, hasActiveDropdown);
-      case DELETE_KEY:
-      case BACK_KEY:
+      case deleteKey:
+      case backKey:
         return this._onDeleteKey(event, activeItems, hasFocusedInput);
       default:
     }
@@ -1456,7 +1471,7 @@ class Choices {
     const { value } = this.input;
     const { activeItems } = this._store;
     const canAddItem = this._canAddItem(activeItems, value);
-    const { BACK_KEY: backKey, DELETE_KEY: deleteKey } = KEY_CODES;
+    const { backKey, deleteKey } = KEY_CODES;
 
     // We are typing into a text input and have a value, we want to show a dropdown
     // notice. Otherwise hide the dropdown
@@ -1513,7 +1528,7 @@ class Choices {
     hasActiveDropdown: boolean,
   ): void {
     const { target } = event;
-    const { ENTER_KEY: enterKey } = KEY_CODES;
+    const { enterKey: enterKey } = KEY_CODES;
     const targetWasButton =
       target && (target as HTMLElement).hasAttribute('data-button');
 
@@ -1540,7 +1555,6 @@ class Choices {
       );
 
       if (highlightedChoice) {
-        // add enter keyCode value
         if (activeItems[0]) {
           activeItems[0].keyCode = enterKey; // eslint-disable-line no-param-reassign
         }
@@ -1564,9 +1578,9 @@ class Choices {
   _onDirectionKey(event: KeyboardEvent, hasActiveDropdown: boolean): void {
     const { keyCode, metaKey } = event;
     const {
-      DOWN_KEY: downKey,
-      PAGE_UP_KEY: pageUpKey,
-      PAGE_DOWN_KEY: pageDownKey,
+      downKey: downKey,
+      pageUpKey: pageUpKey,
+      pageDownKey: pageDownKey,
     } = KEY_CODES;
 
     // If up or down key is pressed, traverse through options
@@ -1842,7 +1856,7 @@ class Choices {
   }
 
   _onFormReset(): void {
-    this._store.dispatch(resetTo(this._initialState));
+    this._store.dispatch(resetTo(this._state.initial));
   }
 
   _highlightChoice(el: HTMLElement | null = null): void {
@@ -1899,8 +1913,8 @@ class Choices {
   _addItem({
     value,
     label = null,
-    choiceId = -1,
-    groupId = -1,
+    choiceId = DEFAULT_ID,
+    groupId = DEFAULT_ID,
     customProperties = {},
     placeholder = false,
     keyCode = -1,
@@ -1917,7 +1931,6 @@ class Choices {
 
     const { items } = this._store;
     const passedLabel = label || passedValue;
-    const passedOptionId = choiceId || -1;
     const group = groupId >= 0 ? this._store.getGroupById(groupId) : null;
     const id = items ? items.length + 1 : 1;
 
@@ -1936,7 +1949,7 @@ class Choices {
         value: passedValue,
         label: passedLabel,
         id,
-        choiceId: passedOptionId,
+        choiceId,
         groupId,
         customProperties,
         placeholder,
@@ -1983,7 +1996,7 @@ class Choices {
     label = null,
     isSelected = false,
     isDisabled = false,
-    groupId = -1,
+    groupId = DEFAULT_ID,
     customProperties = {},
     placeholder = false,
     keyCode = -1,
@@ -2001,7 +2014,6 @@ class Choices {
       return;
     }
 
-    // Generate unique id
     const { choices } = this._store;
     const choiceLabel = label || value;
     const choiceId = choices ? choices.length + 1 : 1;
@@ -2040,34 +2052,8 @@ class Choices {
     const groupId = id || Math.floor(new Date().valueOf() * Math.random());
     const isDisabled = group.disabled ? group.disabled : false;
 
-    if (groupChoices) {
-      this._store.dispatch(
-        addGroup({
-          value: group.label,
-          id: groupId,
-          active: true,
-          disabled: isDisabled,
-        }),
-      );
-
-      const addGroupChoices = (choice: any): void => {
-        const isOptDisabled =
-          choice.disabled || (choice.parentNode && choice.parentNode.disabled);
-
-        this._addChoice({
-          value: choice[valueKey],
-          label: isType('Object', choice) ? choice[labelKey] : choice.innerHTML,
-          isSelected: choice.selected,
-          isDisabled: isOptDisabled,
-          groupId,
-          customProperties: choice.customProperties,
-          placeholder: choice.placeholder,
-        });
-      };
-
-      groupChoices.forEach(addGroupChoices);
-    } else {
-      this._store.dispatch(
+    if (!groupChoices) {
+      return this._store.dispatch(
         addGroup({
           value: group.label,
           id: group.id,
@@ -2076,6 +2062,32 @@ class Choices {
         }),
       );
     }
+
+    this._store.dispatch(
+      addGroup({
+        value: group.label,
+        id: groupId,
+        active: true,
+        disabled: isDisabled,
+      }),
+    );
+
+    const addGroupChoices = (choice: any): void => {
+      const isOptDisabled =
+        choice.disabled || (choice.parentNode && choice.parentNode.disabled);
+
+      this._addChoice({
+        value: choice[valueKey],
+        label: isType('Object', choice) ? choice[labelKey] : choice.innerHTML,
+        isSelected: choice.selected,
+        isDisabled: isOptDisabled,
+        groupId,
+        customProperties: choice.customProperties,
+        placeholder: choice.placeholder,
+      });
+    };
+
+    groupChoices.forEach(addGroupChoices);
   }
 
   _getTemplate(template: string, ...args: any): any {
@@ -2179,17 +2191,17 @@ class Choices {
       this._isSearching = false;
       this._startLoading();
 
-      if (this._presetGroups.length) {
-        this._addPredefinedGroups(this._presetGroups);
+      if (this._presetData.groups.length) {
+        this._addPredefinedGroups(this._presetData.groups);
       } else {
-        this._addPredefinedChoices(this._presetChoices);
+        this._addPredefinedChoices(this._presetData.choices);
       }
 
       this._stopLoading();
     }
 
     if (this._isTextElement) {
-      this._addPredefinedItems(this._presetItems);
+      this._addPredefinedItems(this._presetData.items);
     }
   }
 
@@ -2236,41 +2248,8 @@ class Choices {
     choices.forEach((choice, index) => {
       const { value = '', label, customProperties, placeholder } = choice;
 
-      if (this._isSelectElement) {
-        // If the choice is actually a group
-        if (choice.choices) {
-          this._addGroup({
-            group: choice,
-            id: choice.id || null,
-          });
-        } else {
-          /**
-           * If there is a selected choice already or the choice is not the first in
-           * the array, add each choice normally.
-           *
-           * Otherwise we pre-select the first enabled choice in the array ("select-one" only)
-           */
-          const shouldPreselect =
-            this._isSelectOneElement &&
-            !hasSelectedChoice &&
-            index === firstEnabledChoiceIndex;
-
-          const isSelected = shouldPreselect ? true : choice.selected;
-          const isDisabled = choice.disabled;
-
-          console.log(isDisabled, choice);
-
-          this._addChoice({
-            value,
-            label,
-            isSelected: !!isSelected,
-            isDisabled: !!isDisabled,
-            placeholder: !!placeholder,
-            customProperties,
-          });
-        }
-      } else {
-        this._addChoice({
+      if (!this._isSelectElement) {
+        return this._addChoice({
           value,
           label,
           isSelected: !!choice.selected,
@@ -2279,6 +2258,37 @@ class Choices {
           customProperties,
         });
       }
+
+      // If the choice is actually a group
+      if (choice.choices) {
+        return this._addGroup({
+          group: choice,
+          id: choice.id || null,
+        });
+      }
+
+      /**
+       * If there is a selected choice already or the choice is not the first in
+       * the array, add each choice normally.
+       *
+       * Otherwise we pre-select the first enabled choice in the array ("select-one" only)
+       */
+      const shouldPreselect =
+        this._isSelectOneElement &&
+        !hasSelectedChoice &&
+        index === firstEnabledChoiceIndex;
+
+      const isSelected = shouldPreselect ? true : choice.selected;
+      const isDisabled = choice.disabled;
+
+      this._addChoice({
+        value,
+        label,
+        isSelected: !!isSelected,
+        isDisabled: !!isDisabled,
+        placeholder: !!placeholder,
+        customProperties,
+      });
     });
   }
 
@@ -2313,7 +2323,7 @@ class Choices {
         // If we are dealing with a select input, we need to create an option first
         // that is then selected. For text inputs we can just add items normally.
         if (!this._isTextElement) {
-          this._addChoice({
+          return this._addChoice({
             value: item.value,
             label: item.label,
             isSelected: true,
@@ -2321,29 +2331,29 @@ class Choices {
             customProperties: item.customProperties,
             placeholder: item.placeholder,
           });
-        } else {
-          this._addItem({
-            value: item.value,
-            label: item.label,
-            choiceId: item.id,
-            customProperties: item.customProperties,
-            placeholder: item.placeholder,
-          });
         }
+
+        this._addItem({
+          value: item.value,
+          label: item.label,
+          choiceId: item.id,
+          customProperties: item.customProperties,
+          placeholder: item.placeholder,
+        });
       },
       string: (): void => {
         if (!this._isTextElement) {
-          this._addChoice({
+          return this._addChoice({
             value: item,
             label: item,
             isSelected: true,
             isDisabled: false,
           });
-        } else {
-          this._addItem({
-            value: item,
-          });
         }
+
+        this._addItem({
+          value: item,
+        });
       },
     };
 

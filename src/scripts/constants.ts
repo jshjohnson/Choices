@@ -111,15 +111,15 @@ export const ACTION_TYPES: Record<ActionType, ActionType> = {
 };
 
 export const KEY_CODES: KeyCodeMap = {
-  BACK_KEY: 46,
-  DELETE_KEY: 8,
-  ENTER_KEY: 13,
-  A_KEY: 65,
-  ESC_KEY: 27,
-  UP_KEY: 38,
-  DOWN_KEY: 40,
-  PAGE_UP_KEY: 33,
-  PAGE_DOWN_KEY: 34,
+  backKey: 46,
+  deleteKey: 8,
+  enterKey: 13,
+  aKey: 65,
+  escKey: 27,
+  upKey: 38,
+  downKey: 40,
+  pageUpKey: 33,
+  pageDownKey: 34,
 };
 
 export const TEXT_TYPE: HTMLInputElement['type'] = 'text';
@@ -128,3 +128,5 @@ export const SELECT_MULTIPLE_TYPE: HTMLSelectElement['type'] =
   'select-multiple';
 
 export const SCROLLING_SPEED = 4;
+
+export const DEFAULT_ID = -1;
