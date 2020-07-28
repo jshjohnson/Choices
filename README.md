@@ -1057,7 +1057,7 @@ example.setChoiceByValue('Two'); // Choice with value of 'Two' has now been sele
 ## Browser compatibility
 
 Choices is compiled using [Babel](https://babeljs.io/) targeting browsers [with more than 1% of global usage](https://github.com/jshjohnson/Choices/blob/master/.browserslistrc) and expecting that features [listed below](https://github.com/jshjohnson/Choices/blob/master/.eslintrc.json#L62) are available or polyfilled in browser.
-You may see exact list of target browsers by running `npx browserslist` withing this repository folder.
+You may see exact list of target browsers by running `npx browserslist` within this repository folder.
 If you need to support a browser that does not have one of the features listed below,
 I suggest including a polyfill from the very good [polyfill.io](https://polyfill.io/v3/):
 
