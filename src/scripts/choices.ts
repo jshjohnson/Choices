@@ -40,6 +40,7 @@ import {
   generateId,
   existsInArray,
   diff,
+  eventPath,
 } from './lib/utils';
 import {
   Options,
@@ -1727,7 +1728,9 @@ class Choices {
     }
   }
 
-  _onClick({ target }: Pick<MouseEvent, 'target'>): void {
+  _onClick(event: MouseEvent): void {
+    const path = eventPath(event);
+    const target = (path && path[0]) || event.target;
     const clickWasWithinContainer = this.containerOuter.element.contains(
       target as Node,
     );

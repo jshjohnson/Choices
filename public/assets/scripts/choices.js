@@ -1,4 +1,4 @@
-/*! choices.js v9.0.1 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v9.0.1 | © 2020 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -410,6 +410,44 @@ exports.diff = function (a, b) {
     return bKeys.indexOf(i) < 0;
   });
 };
+
+function getParents(node, memo) {
+  var parentNode = node.parentNode;
+  memo = memo || []; // eslint-disable-line no-param-reassign
+
+  if (!parentNode) {
+    return memo;
+  }
+
+  return getParents(parentNode, memo.concat([parentNode]));
+}
+/**
+ * Returns an array with all DOM elements affected by an event.
+ * The function serves as a polyfill for
+ * [`Event.composedPath()`](https://dom.spec.whatwg.org/#dom-event-composedpath).
+ * https://gist.github.com/leofavre/d029cdda0338d878889ba73c88319295
+ */
+
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
+
+exports.eventPath = function (evt) {
+  var path = evt.composedPath && evt.composedPath() || evt.path; // eslint-disable-line
+
+  var target = evt.target;
+
+  if (path != null) {
+    path = path.indexOf(window) < 0 ? path.concat([window]) : path;
+    return path;
+  }
+
+  if (target === window) {
+    return [window];
+  }
+
+  return [target].concat(getParents(target, [])).concat([window]); // eslint-disable-line
+};
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 /***/ }),
 /* 2 */
@@ -2946,8 +2984,9 @@ function () {
     }
   };
 
-  Choices.prototype._onClick = function (_a) {
-    var target = _a.target;
+  Choices.prototype._onClick = function (event) {
+    var path = utils_1.eventPath(event);
+    var target = path && path[0] || event.target;
     var clickWasWithinContainer = this.containerOuter.element.contains(target);
 
     if (clickWasWithinContainer) {
@@ -3577,7 +3616,7 @@ function () {
   };
 
   Choices.prototype._generatePlaceholderValue = function () {
-    if (this._isSelectElement) {
+    if (this._isSelectElement && this.passedElement.placeholderOption) {
       var placeholderOption = this.passedElement.placeholderOption;
       return placeholderOption ? placeholderOption.text : null;
     }
