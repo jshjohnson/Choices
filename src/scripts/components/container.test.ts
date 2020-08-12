@@ -2,19 +2,29 @@ import { expect } from 'chai';
 import { stub } from 'sinon';
 import Container from './container';
 import { DEFAULT_CLASSNAMES } from '../constants';
+import { containsClassNames } from '../lib/utils';
 
 describe('components/container', () => {
   let instance;
   let element;
+  let classNames;
 
   beforeEach(() => {
     element = document.createElement('div');
     element.id = 'container';
+    classNames = {
+      ...DEFAULT_CLASSNAMES,
+      openState: `${DEFAULT_CLASSNAMES.openState} other`,
+      loadingState: `${DEFAULT_CLASSNAMES.loadingState} other`,
+      flippedState: `${DEFAULT_CLASSNAMES.flippedState} other`,
+      disabledState: `${DEFAULT_CLASSNAMES.disabledState} other`,
+      focusState: `${DEFAULT_CLASSNAMES.focusState} other`,
+    };
 
     document.body.appendChild(element);
     instance = new Container({
       element: document.getElementById('container') as HTMLElement,
-      classNames: DEFAULT_CLASSNAMES,
+      classNames,
       position: 'auto',
       type: 'text',
     });
@@ -24,6 +34,7 @@ describe('components/container', () => {
     document.body.innerHTML = '';
     element = null;
     instance = null;
+    classNames = null;
   });
 
   describe('constructor', () => {
@@ -32,7 +43,7 @@ describe('components/container', () => {
     });
 
     it('assigns classnames to class', () => {
-      expect(instance.classNames).to.eql(DEFAULT_CLASSNAMES);
+      expect(instance.classNames).to.eql(classNames);
     });
   });
 
@@ -163,7 +174,7 @@ describe('components/container', () => {
 
     it('adds open state class', () => {
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.openState),
+        containsClassNames(instance.element, classNames.openState),
       ).to.equal(true);
     });
 
@@ -190,7 +201,7 @@ describe('components/container', () => {
 
       it('adds adds flipped state class', () => {
         expect(
-          instance.element.classList.contains(DEFAULT_CLASSNAMES.flippedState),
+          containsClassNames(instance.element, classNames.flippedState),
         ).to.equal(true);
       });
 
@@ -207,7 +218,7 @@ describe('components/container', () => {
 
     it('adds open state class', () => {
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.openState),
+        containsClassNames(instance.element, classNames.openState),
       ).to.equal(false);
     });
 
@@ -227,7 +238,7 @@ describe('components/container', () => {
 
       it('removes adds flipped state class', () => {
         expect(
-          instance.element.classList.contains(DEFAULT_CLASSNAMES.flippedState),
+          containsClassNames(instance.element, classNames.flippedState),
         ).to.equal(false);
       });
 
@@ -272,11 +283,11 @@ describe('components/container', () => {
 
     it('adds focus state class', () => {
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.focusState),
+        containsClassNames(instance.element, classNames.focusState),
       ).to.equal(false);
       instance.addFocusState();
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.focusState),
+        containsClassNames(instance.element, classNames.focusState),
       ).to.equal(true);
     });
   });
@@ -288,11 +299,11 @@ describe('components/container', () => {
 
     it('removes focus state class', () => {
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.focusState),
+        containsClassNames(instance.element, classNames.focusState),
       ).to.equal(true);
       instance.removeFocusState();
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.focusState),
+        containsClassNames(instance.element, classNames.focusState),
       ).to.equal(false);
     });
   });
@@ -304,11 +315,11 @@ describe('components/container', () => {
 
     it('removes disabled state class', () => {
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.disabledState),
+        containsClassNames(instance.element, classNames.disabledState),
       ).to.equal(true);
       instance.enable();
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.disabledState),
+        containsClassNames(instance.element, classNames.disabledState),
       ).to.equal(false);
     });
 
@@ -342,11 +353,11 @@ describe('components/container', () => {
 
     it('removes disabled state class', () => {
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.disabledState),
+        containsClassNames(instance.element, classNames.disabledState),
       ).to.equal(false);
       instance.disable();
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.disabledState),
+        containsClassNames(instance.element, classNames.disabledState),
       ).to.equal(true);
     });
 
@@ -434,11 +445,11 @@ describe('components/container', () => {
 
     it('adds loading state class', () => {
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.loadingState),
+        containsClassNames(instance.element, classNames.loadingState),
       ).to.equal(false);
       instance.addLoadingState();
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.loadingState),
+        containsClassNames(instance.element, classNames.loadingState),
       ).to.equal(true);
     });
 
@@ -462,11 +473,11 @@ describe('components/container', () => {
 
     it('removes loading state class', () => {
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.loadingState),
+        containsClassNames(instance.element, classNames.loadingState),
       ).to.equal(true);
       instance.removeLoadingState();
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.loadingState),
+        containsClassNames(instance.element, classNames.loadingState),
       ).to.equal(false);
     });
 
