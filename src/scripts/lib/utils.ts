@@ -178,3 +178,12 @@ export const diff = (
 
   return aKeys.filter(i => bKeys.indexOf(i) < 0);
 };
+
+export const containsClassNames = (
+  element: HTMLElement,
+  classNames: string,
+): boolean => {
+  return classNames
+    .split(' ')
+    .every(className => element.classList.contains(className));
+};
