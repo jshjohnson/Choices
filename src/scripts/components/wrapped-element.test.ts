@@ -1,22 +1,29 @@
 import { expect } from 'chai';
 import WrappedElement from './wrapped-element';
 import { DEFAULT_CLASSNAMES } from '../constants';
+import { containsClassNames } from '../lib/utils';
 
 describe('components/wrappedElement', () => {
   let instance;
   let element;
+  let classNames;
 
   beforeEach(() => {
     element = document.createElement('select');
+    classNames = {
+      ...DEFAULT_CLASSNAMES,
+      input: `${DEFAULT_CLASSNAMES.input} other`,
+    };
     instance = new WrappedElement({
       element,
-      classNames: DEFAULT_CLASSNAMES,
+      classNames,
     });
   });
 
   afterEach(() => {
     document.body.innerHTML = '';
     instance = null;
+    classNames = null;
   });
 
   describe('constructor', () => {
@@ -25,7 +32,7 @@ describe('components/wrappedElement', () => {
     });
 
     it('assigns classnames to class', () => {
-      expect(instance.classNames).to.eql(DEFAULT_CLASSNAMES);
+      expect(instance.classNames).to.eql(classNames);
     });
 
     it('sets isDisabled flag to false', () => {
@@ -79,9 +86,9 @@ describe('components/wrappedElement', () => {
     it('hides element', () => {
       instance.conceal();
       expect(instance.element.tabIndex).to.equal(-1);
-      expect(
-        instance.element.classList.contains(instance.classNames.input),
-      ).to.equal(true);
+      expect(containsClassNames(instance.element, classNames.input)).to.equal(
+        true,
+      );
       expect(instance.element.hidden).to.be.true;
       expect(instance.element.getAttribute('data-choice')).to.equal('active');
       expect(instance.element.getAttribute('data-choice-orig-style')).to.equal(
@@ -101,9 +108,9 @@ describe('components/wrappedElement', () => {
     it('shows element', () => {
       instance.reveal();
       expect(instance.element.tabIndex).to.equal(0);
-      expect(
-        instance.element.classList.contains(instance.classNames.input),
-      ).to.equal(false);
+      expect(containsClassNames(instance.element, classNames.input)).to.equal(
+        false,
+      );
       expect(instance.element.hidden).to.be.false;
       expect(instance.element.getAttribute('style')).to.equal(originalStyling);
       expect(instance.element.getAttribute('aria-hidden')).to.equal(null);

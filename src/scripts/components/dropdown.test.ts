@@ -2,24 +2,31 @@ import { expect } from 'chai';
 import sinon from 'sinon';
 import Dropdown from './dropdown';
 import { DEFAULT_CLASSNAMES } from '../constants';
+import { containsClassNames } from '../lib/utils';
 
 describe('components/dropdown', () => {
   let instance;
   let choicesElement;
+  let classNames;
 
   beforeEach(() => {
     choicesElement = document.createElement('div');
     document.body.appendChild(choicesElement);
+    classNames = {
+      ...DEFAULT_CLASSNAMES,
+      activeState: `${DEFAULT_CLASSNAMES.activeState} other`,
+    };
     instance = new Dropdown({
       element: choicesElement,
       type: 'text',
-      classNames: DEFAULT_CLASSNAMES,
+      classNames,
     });
   });
 
   afterEach(() => {
     document.body.innerHTML = '';
     instance = null;
+    classNames = null;
   });
 
   describe('constructor', () => {
@@ -28,7 +35,7 @@ describe('components/dropdown', () => {
     });
 
     it('assigns classnames to instance', () => {
-      expect(instance.classNames).to.eql(DEFAULT_CLASSNAMES);
+      expect(instance.classNames).to.eql(classNames);
     });
   });
 
@@ -94,7 +101,7 @@ describe('components/dropdown', () => {
 
     it('adds active class', () => {
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.activeState),
+        containsClassNames(instance.element, classNames.activeState),
       ).to.equal(true);
     });
 
@@ -124,7 +131,7 @@ describe('components/dropdown', () => {
 
     it('adds active class', () => {
       expect(
-        instance.element.classList.contains(DEFAULT_CLASSNAMES.activeState),
+        containsClassNames(instance.element, classNames.activeState),
       ).to.equal(false);
     });
 

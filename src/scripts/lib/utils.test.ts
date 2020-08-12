@@ -14,6 +14,7 @@ import {
   cloneObject,
   dispatchEvent,
   diff,
+  containsClassNames,
 } from './utils';
 
 describe('utils', () => {
@@ -253,6 +254,18 @@ describe('utils', () => {
       const output = diff(obj1, obj2);
 
       expect(output).to.deep.equal(['baz']);
+    });
+  });
+
+  describe('containsClassNames', () => {
+    it('determines if the element contains all the classNames', () => {
+      const classNames = 'first second';
+      const element = document.createElement('p');
+      element.classList.add('first');
+
+      expect(containsClassNames(element, classNames)).to.equal(false);
+      element.classList.add('second');
+      expect(containsClassNames(element, classNames)).to.equal(true);
     });
   });
 });
