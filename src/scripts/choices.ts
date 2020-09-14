@@ -92,6 +92,7 @@ class Choices {
   _isSelectOneElement: boolean;
   _isSelectMultipleElement: boolean;
   _isSelectElement: boolean;
+  _needInputMoveToTop: boolean;
   _store: Store;
   _templates: typeof templates;
   _initialState: State;
@@ -159,6 +160,9 @@ class Choices {
 
     this.config.searchEnabled =
       this._isSelectMultipleElement || this.config.searchEnabled;
+
+    this._needInputMoveToTop =
+      this._isSelectOneElement && this.config.searchInputMoveToTop;
 
     if (!['auto', 'always'].includes(`${this.config.renderSelectedChoices}`)) {
       this.config.renderSelectedChoices = 'auto';
@@ -475,6 +479,11 @@ class Choices {
   }
 
   hideDropdown(preventInputBlur?: boolean): this {
+    let { activeItems } = this._store;
+    if (this._needInputMoveToTop && activeItems) {
+      this.input.value = activeItems[0].label;
+    }
+
     if (!this.dropdown.isActive) {
       return this;
     }
@@ -1117,7 +1126,9 @@ class Choices {
       }
     }
 
-    this.clearInput();
+    if (!this._needInputMoveToTop) {
+      this.clearInput();
+    }
 
     // We want to close the dropdown if we are dealing with a single select box
     if (hasActiveDropdown && this._isSelectOneElement) {
@@ -1525,7 +1536,9 @@ class Choices {
         this.hideDropdown(true);
         this._addItem({ value });
         this._triggerChange(value);
-        this.clearInput();
+        if (!this._needInputMoveToTop) {
+          this.clearInput();
+        }
       }
     }
 
@@ -1948,6 +1961,10 @@ class Choices {
       this.removeActiveItems(id);
     }
 
+    if (this._needInputMoveToTop) {
+      this.input.value = passedLabel;
+    }
+
     // Trigger change event
     this.passedElement.triggerEvent(EVENTS.addItem, {
       id,
@@ -2140,6 +2157,8 @@ class Choices {
       classNames: this.config.classNames,
       type: this.passedElement.element.type as PassedElement['type'],
     });
+    console.log('this');
+    console.log(this);
   }
 
   _createStructure(): void {
@@ -2159,13 +2178,16 @@ class Choices {
 
     this.containerOuter.element.appendChild(this.containerInner.element);
     this.containerOuter.element.appendChild(this.dropdown.element);
-    this.containerInner.element.appendChild(this.itemList.element);
+
+    if (!this._needInputMoveToTop) {
+      this.containerInner.element.appendChild(this.itemList.element);
+    }
 
     if (!this._isTextElement) {
       this.dropdown.element.appendChild(this.choiceList.element);
     }
 
-    if (!this._isSelectOneElement) {
+    if (!this._isSelectOneElement || this._needInputMoveToTop) {
       this.containerInner.element.appendChild(this.input.element);
     } else if (this.config.searchEnabled) {
       this.dropdown.element.insertBefore(

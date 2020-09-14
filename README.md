@@ -128,6 +128,7 @@ Or include Choices directly:
     sorter: () => {...},
     placeholder: true,
     placeholderValue: null,
+    searchInputMoveToTop: false,
     searchPlaceholderValue: null,
     prependValue: null,
     appendValue: null,
@@ -484,6 +485,14 @@ For backward compatibility, `<option placeholder>This is a placeholder</option>`
 **Input types affected:** `select-one`
 
 **Usage:** The value of the search inputs placeholder.
+
+### searchInputMoveToTop
+
+**Type:** `Boolean` **Default:** `false`
+
+**Input types affected:** `select-one`
+
+**Usage:** The move search input to top.
 
 ### prependValue
 

@@ -439,6 +439,15 @@ export interface Options {
   paste: boolean;
 
   /**
+   * Whether search input should be in top.
+   *
+   * **Input types affected:** select-one
+   *
+   * @default false
+   */
+  searchInputMoveToTop: boolean;
+
+  /**
    * Whether a search area should be shown.
    *
    * @note Multiple select boxes will always show search areas.

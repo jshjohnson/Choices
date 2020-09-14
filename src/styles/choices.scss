@@ -58,6 +58,11 @@ $choices-z-index: 1;
   cursor: pointer;
   .#{$choices-selector}__inner {
     padding-bottom: 7.5px;
+    .#{$choices-selector}__input {
+      padding: 5px;
+      border-bottom: none;
+      background-color: transparent;
+    }
   }
   .#{$choices-selector}__input {
     display: block;
@@ -355,6 +360,10 @@ $choices-z-index: 1;
 
 .#{$choices-selector}__placeholder {
   opacity: 0.5;
+}
+
+.#{$choices-selector}__placeholder.#{$choices-selector}__item--disabled {
+  display: none;
 }
 
 /*=====  End of Choices  ======*/
