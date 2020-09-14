@@ -479,7 +479,7 @@ class Choices {
   }
 
   hideDropdown(preventInputBlur?: boolean): this {
-    let { activeItems } = this._store;
+    const { activeItems } = this._store;
     if (this._needInputMoveToTop && activeItems) {
       this.input.value = activeItems[0].label;
     }
@@ -2277,8 +2277,6 @@ class Choices {
 
           const isSelected = shouldPreselect ? true : choice.selected;
           const isDisabled = choice.disabled;
-
-          console.log(isDisabled, choice);
 
           this._addChoice({
             value,
