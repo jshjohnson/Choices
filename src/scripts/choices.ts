@@ -2157,8 +2157,6 @@ class Choices {
       classNames: this.config.classNames,
       type: this.passedElement.element.type as PassedElement['type'],
     });
-    console.log('this');
-    console.log(this);
   }
 
   _createStructure(): void {
