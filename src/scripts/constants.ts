@@ -50,6 +50,7 @@ export const DEFAULT_CONFIG: Options = {
   duplicateItemsAllowed: true,
   delimiter: ',',
   paste: true,
+  searchInputMoveToTop: false,
   searchEnabled: true,
   searchChoices: true,
   searchFloor: 1,

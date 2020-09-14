@@ -45,6 +45,12 @@
   padding-bottom: 7.5px;
 }
 
+.choices[data-type*='select-one'] .choices__inner .choices__input {
+  padding: 5px;
+  border-bottom: none;
+  background-color: transparent;
+}
+
 .choices[data-type*='select-one'] .choices__input {
   display: block;
   width: 100%;
@@ -372,6 +378,10 @@
 
 .choices__placeholder {
   opacity: 0.5;
+}
+
+.choices__placeholder.choices__item--disabled {
+  display: none;
 }
 
 /*=====  End of Choices  ======*/

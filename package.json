@@ -125,7 +125,7 @@
   "bundlesize": [
     {
       "path": "public/assets/scripts/choices.min.js",
-      "maxSize": "20 kB"
+      "maxSize": "22 kB"
     },
     {
       "path": "public/assets/styles/choices.min.css",

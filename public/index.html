@@ -498,6 +498,14 @@
           >
         </select>
 
+        <label for="choices-single-input-move-to-top">Search input move to top</label>
+        <select
+          class="form-control"
+          name="choices-single-input-move-to-top"
+          id="choices-single-input-move-to-top"
+        >
+        </select>
+
         <hr />
         <h2>Form interaction</h2>
         <p>Change the values and press reset to restore to initial state.</p>
@@ -709,6 +717,16 @@
                 return { label: release.title, value: release.title };
               });
             });
+        });
+
+        var singleInputMoveToTop = new Choices('#choices-single-input-move-to-top', {
+          searchInputMoveToTop: true,
+          searchPlaceholderValue: 'This is a search placeholder',
+          choices: [
+            { value: '', label: '', placeholder: true, disabled: true },
+            { value: 'Two', label: 'Label Two', selected: true },
+            { value: 'Three', label: 'Label Three' },
+          ],
         });
 
         var singleNoSearch = new Choices('#choices-single-no-search', {
