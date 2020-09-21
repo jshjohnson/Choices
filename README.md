@@ -174,9 +174,9 @@ Or include Choices directly:
       noChoices: 'has-no-choices'
     },
     // Choices uses the great Fuse library for searching. You
-    // can find more options here: https://github.com/krisk/Fuse#options
+    // can find more options here: https://fusejs.io/api/options.html
     fuseOptions: {
-      include: 'score'
+      includeScore: true
     },
     callbackOnInit: null,
     callbackOnCreateTemplates: null
