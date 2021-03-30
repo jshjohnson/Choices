@@ -372,6 +372,23 @@ Pass an array of objects:
 
 **Usage:** The maximum amount of search results to show.
 
+### shadowRoot
+
+**Type:** Document Element **Default:** null
+
+**Input types affected:** `select-one`, `select-multiple`
+
+**Usage:** You can pass along the shadowRoot from your application like so.
+
+```js
+var shadowRoot = document
+  .getElementById('wrapper')
+  .attachShadow({ mode: 'open' });
+var choices = new Choices({
+  shadowRoot: shadowRoot,
+});
+```
+
 ### position
 
 **Type:** `String` **Default:** `auto`
