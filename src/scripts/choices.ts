@@ -1458,7 +1458,7 @@ class Choices {
     const canAddItem = this._canAddItem(activeItems, value);
     const { BACK_KEY: backKey, DELETE_KEY: deleteKey } = KEY_CODES;
 
-    // Trigger queryChanged event
+    // Trigger changeQuery event
     this.passedElement.triggerEvent(EVENTS.changeQuery, {
       value,
     });
