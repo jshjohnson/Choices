@@ -774,13 +774,21 @@ example.passedElement.element.addEventListener(
 
 **Usage:** Triggered each time an item is added/removed **by a user**.
 
+### changeQuery
+
+**Payload:** `value`
+
+**Input types affected:** `select-one`, `select-multiple`
+
+**Usage:** Triggered when a user types into the search input.
+
 ### search
 
 **Payload:** `value`, `resultCount`
 
 **Input types affected:** `select-one`, `select-multiple`
 
-**Usage:** Triggered when a user types into an input to search choices.
+**Usage:** Triggered after a search caused by the user's input.
 
 ### showDropdown
 
