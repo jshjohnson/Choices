@@ -1,4 +1,4 @@
-/*! choices.js v9.0.1 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
+/*! choices.js v9.0.1 | © 2021 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -193,6 +193,7 @@ exports.EVENTS = {
   hideDropdown: 'hideDropdown',
   change: 'change',
   choice: 'choice',
+  changeQuery: 'changeQuery',
   search: 'search',
   addItem: 'addItem',
   removeItem: 'removeItem',
@@ -2704,7 +2705,11 @@ function () {
     var canAddItem = this._canAddItem(activeItems, value);
 
     var backKey = constants_1.KEY_CODES.BACK_KEY,
-        deleteKey = constants_1.KEY_CODES.DELETE_KEY; // We are typing into a text input and have a value, we want to show a dropdown
+        deleteKey = constants_1.KEY_CODES.DELETE_KEY; // Trigger queryChanged event
+
+    this.passedElement.triggerEvent(constants_1.EVENTS.changeQuery, {
+      value: value
+    }); // We are typing into a text input and have a value, we want to show a dropdown
     // notice. Otherwise hide the dropdown
 
     if (this._isTextElement) {
@@ -3577,7 +3582,7 @@ function () {
   };
 
   Choices.prototype._generatePlaceholderValue = function () {
-    if (this._isSelectElement) {
+    if (this._isSelectElement && this.passedElement.placeholderOption) {
       var placeholderOption = this.passedElement.placeholderOption;
       return placeholderOption ? placeholderOption.text : null;
     }

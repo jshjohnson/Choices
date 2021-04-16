@@ -99,6 +99,7 @@ describe('constants', () => {
           'hideDropdown',
           'change',
           'choice',
+          'changeQuery',
           'search',
           'addItem',
           'removeItem',

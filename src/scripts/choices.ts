@@ -1458,6 +1458,11 @@ class Choices {
     const canAddItem = this._canAddItem(activeItems, value);
     const { BACK_KEY: backKey, DELETE_KEY: deleteKey } = KEY_CODES;
 
+    // Trigger changeQuery event
+    this.passedElement.triggerEvent(EVENTS.changeQuery, {
+      value,
+    });
+
     // We are typing into a text input and have a value, we want to show a dropdown
     // notice. Otherwise hide the dropdown
     if (this._isTextElement) {
