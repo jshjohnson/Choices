@@ -123,7 +123,16 @@ export interface EventMap {
   change: CustomEvent<{ value: string }>;
 
   /**
-   * Triggered when a user types into an input to search choices.
+   * Triggered when a user types into the search input.
+   *
+   * **Input types affected:** select-one, select-multiple
+   *
+   * Arguments: value
+   */
+  changeQuery: CustomEvent<{ value: string }>;
+
+  /**
+   * Triggered after a search caused by the user's input.
    *
    * **Input types affected:** select-one, select-multiple
    *

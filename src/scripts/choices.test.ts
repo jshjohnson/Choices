@@ -2161,6 +2161,24 @@ describe('choices', () => {
       });
     });
 
+    describe('_onKeyUp', () => {
+      it('triggers a changeQuery event on the passed element', done => {
+        instance.input.value = 'foobar';
+        passedElement.addEventListener(
+          'changeQuery',
+          event => {
+            expect(event.detail).to.eql({
+              value: 'foobar',
+            });
+            done();
+          },
+          false,
+        );
+
+        instance._onKeyUp({ target: null, keyCode: null });
+      });
+    });
+
     describe('_removeItem', () => {
       beforeEach(() => {
         instance._store.dispatch = stub();

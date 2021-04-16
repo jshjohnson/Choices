@@ -88,6 +88,7 @@ export const EVENTS: Record<keyof EventMap, keyof EventMap> = {
   hideDropdown: 'hideDropdown',
   change: 'change',
   choice: 'choice',
+  changeQuery: 'changeQuery',
   search: 'search',
   addItem: 'addItem',
   removeItem: 'removeItem',
