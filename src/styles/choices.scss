@@ -1,6 +1,7 @@
 /*===============================
 =            Choices            =
 ===============================*/
+@use "sass:math";
 
 $choices-selector: 'choices' !default;
 $choices-font-size-lg: 16px !default;
@@ -131,7 +132,7 @@ $choices-z-index: 1;
     position: relative;
     display: inline-block;
     margin-top: 0;
-    margin-right: -$choices-button-offset/2;
+    margin-right: math.div(-$choices-button-offset, 2);
     margin-bottom: 0;
     margin-left: $choices-button-offset;
     padding-left: $choices-button-offset * 2;
