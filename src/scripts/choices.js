@@ -170,12 +170,7 @@ class Choices {
       const { direction: elementDirection } = window.getComputedStyle(
         this.passedElement.element,
       );
-      const { direction: documentDirection } = window.getComputedStyle(
-        document.documentElement,
-      );
-      if (elementDirection !== documentDirection) {
-        this._direction = elementDirection;
-      }
+      this._direction = elementDirection;
     }
 
     this._idNames = {
@@ -218,6 +213,7 @@ class Choices {
     this._onTouchMove = this._onTouchMove.bind(this);
     this._onTouchEnd = this._onTouchEnd.bind(this);
     this._onMouseDown = this._onMouseDown.bind(this);
+    this._onMouseUp = this._onMouseUp.bind(this);
     this._onMouseOver = this._onMouseOver.bind(this);
     this._onFormReset = this._onFormReset.bind(this);
     this._onAKey = this._onAKey.bind(this);
@@ -1243,7 +1239,11 @@ class Choices {
       this._onMouseDown,
       true,
     );
-
+    this.containerOuter.element.addEventListener(
+      'mouseup',
+      this._onMouseUp,
+      true,
+    );
     // passive events - doesn't call `preventDefault` or `stopPropagation`
     documentElement.addEventListener('click', this._onClick, { passive: true });
     documentElement.addEventListener('touchmove', this._onTouchMove, {
@@ -1294,6 +1294,11 @@ class Choices {
     this.containerOuter.element.removeEventListener(
       'mousedown',
       this._onMouseDown,
+      true,
+    );
+    this.containerOuter.element.removeEventListener(
+      'mouseup',
+      this._onMouseUp,
       true,
     );
 
@@ -1576,6 +1581,15 @@ class Choices {
   }
 
   /**
+   * Handles mouseup event in capture mode for containetOuter.element
+   */
+  _onMouseUp() {
+    if (IS_IE11) {
+      this._isScrollingOnIe = false;
+    }
+  }
+
+  /**
    * Handles mousedown event in capture mode for containetOuter.element
    * @param {MouseEvent} event
    */
@@ -1737,7 +1751,6 @@ class Choices {
       // On IE11, clicking the scollbar blurs our input and thus
       // closes the dropdown. To stop this, we refocus our input
       // if we know we are on IE *and* are scrolling.
-      this._isScrollingOnIe = false;
       this.input.element.focus();
     }
   }
